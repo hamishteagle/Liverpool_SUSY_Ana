@@ -1,0 +1,26 @@
+{
+	"sources" : 
+	[
+		{
+			"file" : "/user/hteagle/AnalysisDirectory/Rel21/Base.21.2.20/build/MyAnalysis/CMakeFiles/MyAnalysisDictReflexDict.cxx",
+			"labels" : 
+			[
+				"MyAnalysis"
+			]
+		},
+		{
+			"file" : "/user/hteagle/AnalysisDirectory/Rel21/Base.21.2.20/athena/Projects/WorkDir/MyAnalysis/MyAnalysis/MyAnalysisDict.h"
+		},
+		{
+			"file" : "/user/hteagle/AnalysisDirectory/Rel21/Base.21.2.20/athena/Projects/WorkDir/MyAnalysis/MyAnalysis/selection.xml"
+		}
+	],
+	"target" : 
+	{
+		"labels" : 
+		[
+			"MyAnalysis"
+		],
+		"name" : "MyAnalysisDict"
+	}
+}

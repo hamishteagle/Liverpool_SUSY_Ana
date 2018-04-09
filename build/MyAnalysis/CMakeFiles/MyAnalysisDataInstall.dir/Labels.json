@@ -1,0 +1,19 @@
+{
+	"sources" : 
+	[
+		{
+			"file" : "/user/hteagle/AnalysisDirectory/Rel21/Base.21.2.20/build/x86_64-slc6-gcc62-opt/data/MyAnalysis/MyAnalysis"
+		},
+		{
+			"file" : "/user/hteagle/AnalysisDirectory/Rel21/Base.21.2.20/build/x86_64-slc6-gcc62-opt/data/MyAnalysis/MyAnalysis.rule"
+		}
+	],
+	"target" : 
+	{
+		"labels" : 
+		[
+			"MyAnalysis"
+		],
+		"name" : "MyAnalysisDataInstall"
+	}
+}

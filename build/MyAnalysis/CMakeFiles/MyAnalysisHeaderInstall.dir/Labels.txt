@@ -1,0 +1,15 @@
+# Target labels
+ MyAnalysis
+# Source files and their labels
+/user/hteagle/AnalysisDirectory/Rel21/Base.21.2.20/build/x86_64-slc6-gcc62-opt/include/MyAnalysis
+/user/hteagle/AnalysisDirectory/Rel21/Base.21.2.20/build/x86_64-slc6-gcc62-opt/include/BoostedJetTaggers
+/user/hteagle/AnalysisDirectory/Rel21/Base.21.2.20/build/x86_64-slc6-gcc62-opt/include/SUSYTools
+/user/hteagle/AnalysisDirectory/Rel21/Base.21.2.20/build/x86_64-slc6-gcc62-opt/include/NewMT2
+/user/hteagle/AnalysisDirectory/Rel21/Base.21.2.20/build/x86_64-slc6-gcc62-opt/include/METUtilities
+/user/hteagle/AnalysisDirectory/Rel21/Base.21.2.20/build/x86_64-slc6-gcc62-opt/include/RestFrames
+/user/hteagle/AnalysisDirectory/Rel21/Base.21.2.20/build/x86_64-slc6-gcc62-opt/include/MyAnalysis.rule
+/user/hteagle/AnalysisDirectory/Rel21/Base.21.2.20/build/x86_64-slc6-gcc62-opt/include/BoostedJetTaggers.rule
+/user/hteagle/AnalysisDirectory/Rel21/Base.21.2.20/build/x86_64-slc6-gcc62-opt/include/SUSYTools.rule
+/user/hteagle/AnalysisDirectory/Rel21/Base.21.2.20/build/x86_64-slc6-gcc62-opt/include/NewMT2.rule
+/user/hteagle/AnalysisDirectory/Rel21/Base.21.2.20/build/x86_64-slc6-gcc62-opt/include/METUtilities.rule
+/user/hteagle/AnalysisDirectory/Rel21/Base.21.2.20/build/x86_64-slc6-gcc62-opt/include/RestFrames.rule

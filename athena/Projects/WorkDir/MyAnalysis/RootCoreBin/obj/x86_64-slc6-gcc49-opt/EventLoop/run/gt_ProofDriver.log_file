@@ -1,0 +1,5 @@
+xAOD::Init                INFO    Environment initialised for data access
+Note: Google Test filter = -SLOW_*.*:*.SLOW_*:MANUAL_*.*:*.MANUAL_*
+[==========] Running 0 tests from 0 test cases.
+[==========] 0 tests from 0 test cases ran. (0 ms total)
+[  PASSED  ] 0 tests.

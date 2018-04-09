@@ -1,0 +1,19 @@
+{
+	"sources" : 
+	[
+		{
+			"file" : "/user/hteagle/AnalysisDirectory/Rel21/Base.21.2.20/build/MyAnalysis/CMakeFiles/testRunExeAttribSet"
+		},
+		{
+			"file" : "/user/hteagle/AnalysisDirectory/Rel21/Base.21.2.20/build/MyAnalysis/CMakeFiles/testRunExeAttribSet.rule"
+		}
+	],
+	"target" : 
+	{
+		"labels" : 
+		[
+			"MyAnalysis"
+		],
+		"name" : "testRunExeAttribSet"
+	}
+}

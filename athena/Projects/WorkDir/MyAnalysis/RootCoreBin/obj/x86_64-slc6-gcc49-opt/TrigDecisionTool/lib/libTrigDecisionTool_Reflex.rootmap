@@ -1,0 +1,25 @@
+{ decls }
+namespace Trig {  }
+namespace Trig { class TrigDecisionTool; }
+
+[ libTrigDecisionTool_Reflex.so ]
+# List of selected classes
+class ToolHandle<Trig::TrigDecisionTool>
+class Trig::CacheGlobalMemory
+class Trig::ChainGroup
+class Trig::ChainGroupFunctions
+class Trig::ConfigurationAccess
+class Trig::ExpertMethods
+class Trig::Logger
+class Trig::TrigDecisionTool
+class Trig::TrigDecisionToolCore
+header TrigDecisionTool/CacheGlobalMemory.h
+header TrigDecisionTool/ChainGroup.h
+header TrigDecisionTool/ChainGroupFunctions.h
+header TrigDecisionTool/ConfigurationAccess.h
+header TrigDecisionTool/ExpertMethods.h
+header TrigDecisionTool/Logger.h
+header TrigDecisionTool/TrigDecisionTool.h
+header TrigDecisionTool/TrigDecisionToolCore.h
+# List of selected namespaces
+namespace TrigDefs

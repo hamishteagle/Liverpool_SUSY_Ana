@@ -1,0 +1,37 @@
+{ decls }
+namespace CP {  }
+namespace AtlasRoot {  }
+namespace EgammaCalibPeriodRunNumbersExample {  }
+namespace egEnergyCorr {  }
+namespace egEnergyCorr { namespace Resolution {  } }
+namespace egEnergyCorr { namespace Scale {  } }
+
+[ libElectronPhotonFourMomentumCorrection_Reflex.so ]
+# List of selected classes
+class AtlasRoot::egammaEnergyCorrectionTool
+class CP::EgammaCalibrationAndSmearingTool
+class CP::IEgammaCalibrationAndSmearingTool
+class EgammaCalibPeriodRunNumbersExample::ROOT6_NamespaceAutoloadHook
+class EgammaFactory
+class LArTemperatureCorrectionTool
+class egEnergyCorr::ROOT6_OpenNamespaceWorkaround
+class egEnergyCorr::Resolution::ROOT6_OpenNamespaceWorkaround
+class egEnergyCorr::Scale::ROOT6_OpenNamespaceWorkaround
+class eg_resolution
+header ElectronPhotonFourMomentumCorrection/egammaEnergyCorrectionTool.h
+header ElectronPhotonFourMomentumCorrection/EgammaCalibrationAndSmearingTool.h
+header ElectronPhotonFourMomentumCorrection/IEgammaCalibrationAndSmearingTool.h
+header ElectronPhotonFourMomentumCorrection/EgammaFactory.h
+header ElectronPhotonFourMomentumCorrection/LArTemperatureCorrectionTool.h
+header ElectronPhotonFourMomentumCorrection/eg_resolution.h
+# List of selected namespaces
+namespace egEnergyCorr
+namespace egEnergyCorr::Resolution
+namespace egEnergyCorr::Scale
+# List of selected enums and outer classes
+enum egEnergyCorr::Resolution::Variation
+enum egEnergyCorr::Resolution::resolutionType
+enum egEnergyCorr::Scale::Variation
+enum egEnergyCorr::ESModel
+enum egEnergyCorr::Geometry
+enum egEnergyCorr::MaterialCategory

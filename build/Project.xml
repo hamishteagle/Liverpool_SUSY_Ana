@@ -1,0 +1,32 @@
+<!-- Auto-generated file, please do not edit -->
+<Project name="UserAnalysis" >
+   <SubProject name="SUSYTools" >
+   </SubProject>
+   <SubProject name="MyAnalysis" >
+      <Dependency name="SUSYTools" />
+   </SubProject>
+   <SubProject name="xAODRootAccess" >
+   </SubProject>
+   <SubProject name="AsgTools" >
+   </SubProject>
+   <SubProject name="PATInterfaces" >
+   </SubProject>
+   <SubProject name="xAODBase" >
+   </SubProject>
+   <SubProject name="xAODTruth" >
+   </SubProject>
+   <SubProject name="NewMT2" >
+      <Dependency name="xAODRootAccess" />
+      <Dependency name="AsgTools" />
+      <Dependency name="PATInterfaces" />
+      <Dependency name="xAODBase" />
+      <Dependency name="xAODTruth" />
+   </SubProject>
+   <SubProject name="RestFrames" >
+      <Dependency name="xAODRootAccess" />
+      <Dependency name="AsgTools" />
+      <Dependency name="PATInterfaces" />
+      <Dependency name="xAODBase" />
+      <Dependency name="xAODTruth" />
+   </SubProject>
+</Project>

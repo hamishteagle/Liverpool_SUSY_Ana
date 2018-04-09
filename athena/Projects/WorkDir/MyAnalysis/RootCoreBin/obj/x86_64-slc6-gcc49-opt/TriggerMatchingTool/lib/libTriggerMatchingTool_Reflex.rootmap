@@ -1,0 +1,11 @@
+{ decls }
+namespace Trig {  }
+
+[ libTriggerMatchingTool_Reflex.so ]
+# List of selected classes
+class Trig::IMatchingTool
+class Trig::MatchingTool
+header TriggerMatchingTool/IMatchingTool.h
+header TriggerMatchingTool/MatchingTool.h
+# List of selected namespaces
+namespace Trig

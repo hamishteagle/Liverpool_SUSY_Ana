@@ -1,0 +1,9 @@
+{ decls }
+namespace ST {  }
+
+[ libSUSYTools_Reflex.so ]
+# List of selected classes
+class ST::ISUSYObjDef_xAODTool
+class ST::SUSYObjDef_xAOD
+header SUSYTools/ISUSYObjDef_xAODTool.h
+header SUSYTools/SUSYObjDef_xAOD.h

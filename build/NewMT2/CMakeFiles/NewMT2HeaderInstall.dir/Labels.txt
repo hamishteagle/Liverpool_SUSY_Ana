@@ -1,0 +1,5 @@
+# Target labels
+ NewMT2
+# Source files and their labels
+/user/hteagle/AnalysisDirectory/Rel21/Base.21.2.20/build/x86_64-slc6-gcc62-opt/include/NewMT2
+/user/hteagle/AnalysisDirectory/Rel21/Base.21.2.20/build/x86_64-slc6-gcc62-opt/include/NewMT2.rule

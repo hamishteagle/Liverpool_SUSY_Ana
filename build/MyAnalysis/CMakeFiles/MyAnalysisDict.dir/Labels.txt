@@ -1,0 +1,7 @@
+# Target labels
+ MyAnalysis
+# Source files and their labels
+/user/hteagle/AnalysisDirectory/Rel21/Base.21.2.20/build/MyAnalysis/CMakeFiles/MyAnalysisDictReflexDict.cxx
+ MyAnalysis
+/user/hteagle/AnalysisDirectory/Rel21/Base.21.2.20/athena/Projects/WorkDir/MyAnalysis/MyAnalysis/MyAnalysisDict.h
+/user/hteagle/AnalysisDirectory/Rel21/Base.21.2.20/athena/Projects/WorkDir/MyAnalysis/MyAnalysis/selection.xml
