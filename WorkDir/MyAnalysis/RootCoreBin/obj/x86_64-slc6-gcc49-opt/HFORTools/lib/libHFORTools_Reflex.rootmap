@@ -1,0 +1,6 @@
+[ libHFORTools_Reflex.so ]
+# List of selected classes
+class HFORSelectionTool
+class IHFORSelectionTool
+header HFORTools/HFORSelectionTool.h
+header HFORTools/IHFORSelectionTool.h

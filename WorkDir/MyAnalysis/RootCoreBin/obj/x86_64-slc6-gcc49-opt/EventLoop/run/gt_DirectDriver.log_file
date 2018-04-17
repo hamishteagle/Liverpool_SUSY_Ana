@@ -1,0 +1,257 @@
+xAOD::Init                INFO    Environment initialised for data access
+Note: Google Test filter = -SLOW_*.*:*.SLOW_*:MANUAL_*.*:*.MANUAL_*
+[==========] Running 13 tests from 1 test case.
+[----------] Global test environment set-up.
+[----------] 13 tests from DirectDriverTest/UnitTestFixture
+[ RUN      ] DirectDriverTest/UnitTestFixture.null_eventCount/0
+Running sample: null
+worker finished:
+Real time 0:00:00, CP time 0.020
+Running sample: empty
+Processing File: file:///user/hteagle/AnalysisDirectory/Base_2_4_34/RootCoreBin/obj/x86_64-slc6-gcc49-opt/EventLoop/run/gt_DirectDriver/data/file-1.root
+INFO: tree physics not found in input file: /user/hteagle/AnalysisDirectory/Base_2_4_34/RootCoreBin/obj/x86_64-slc6-gcc49-opt/EventLoop/run/gt_DirectDriver/data/file-1.root
+INFO: treating this like a tree with no events
+worker finished:
+Real time 0:00:00, CP time 0.110
+Running sample: single
+Processing File: file:///user/hteagle/AnalysisDirectory/Base_2_4_34/RootCoreBin/obj/x86_64-slc6-gcc49-opt/EventLoop/run/gt_DirectDriver/data/file-2.root
+UnnamedAlgorithm         INFO    message test
+UnnamedAlgorithm         INFO    message test
+Processed 10000 events
+worker finished:
+Real time 0:00:00, CP time 0.020
+Running sample: multi
+Processing File: file:///user/hteagle/AnalysisDirectory/Base_2_4_34/RootCoreBin/obj/x86_64-slc6-gcc49-opt/EventLoop/run/gt_DirectDriver/data/file-3.root
+UnnamedAlgorithm         INFO    message test
+UnnamedAlgorithm         INFO    message test
+Processed 10000 events
+Processing File: file:///user/hteagle/AnalysisDirectory/Base_2_4_34/RootCoreBin/obj/x86_64-slc6-gcc49-opt/EventLoop/run/gt_DirectDriver/data/file-4.root
+Processed 20000 events
+Processing File: file:///user/hteagle/AnalysisDirectory/Base_2_4_34/RootCoreBin/obj/x86_64-slc6-gcc49-opt/EventLoop/run/gt_DirectDriver/data/file-5.root
+Processed 30000 events
+Processing File: file:///user/hteagle/AnalysisDirectory/Base_2_4_34/RootCoreBin/obj/x86_64-slc6-gcc49-opt/EventLoop/run/gt_DirectDriver/data/file-6.root
+Processed 40000 events
+Processing File: file:///user/hteagle/AnalysisDirectory/Base_2_4_34/RootCoreBin/obj/x86_64-slc6-gcc49-opt/EventLoop/run/gt_DirectDriver/data/file-7.root
+Processed 50000 events
+Processing File: file:///user/hteagle/AnalysisDirectory/Base_2_4_34/RootCoreBin/obj/x86_64-slc6-gcc49-opt/EventLoop/run/gt_DirectDriver/data/file-8.root
+Processed 60000 events
+Processing File: file:///user/hteagle/AnalysisDirectory/Base_2_4_34/RootCoreBin/obj/x86_64-slc6-gcc49-opt/EventLoop/run/gt_DirectDriver/data/file-9.root
+Processed 70000 events
+Processing File: file:///user/hteagle/AnalysisDirectory/Base_2_4_34/RootCoreBin/obj/x86_64-slc6-gcc49-opt/EventLoop/run/gt_DirectDriver/data/file-10.root
+Processed 80000 events
+Processing File: file:///user/hteagle/AnalysisDirectory/Base_2_4_34/RootCoreBin/obj/x86_64-slc6-gcc49-opt/EventLoop/run/gt_DirectDriver/data/file-11.root
+Processed 90000 events
+Processing File: file:///user/hteagle/AnalysisDirectory/Base_2_4_34/RootCoreBin/obj/x86_64-slc6-gcc49-opt/EventLoop/run/gt_DirectDriver/data/file-12.root
+Processed 100000 events
+Processing File: file:///user/hteagle/AnalysisDirectory/Base_2_4_34/RootCoreBin/obj/x86_64-slc6-gcc49-opt/EventLoop/run/gt_DirectDriver/data/file-13.root
+Processed 110000 events
+Processing File: file:///user/hteagle/AnalysisDirectory/Base_2_4_34/RootCoreBin/obj/x86_64-slc6-gcc49-opt/EventLoop/run/gt_DirectDriver/data/file-14.root
+Processed 120000 events
+Processing File: file:///user/hteagle/AnalysisDirectory/Base_2_4_34/RootCoreBin/obj/x86_64-slc6-gcc49-opt/EventLoop/run/gt_DirectDriver/data/file-15.root
+Processed 130000 events
+Processing File: file:///user/hteagle/AnalysisDirectory/Base_2_4_34/RootCoreBin/obj/x86_64-slc6-gcc49-opt/EventLoop/run/gt_DirectDriver/data/file-16.root
+Processed 140000 events
+Processing File: file:///user/hteagle/AnalysisDirectory/Base_2_4_34/RootCoreBin/obj/x86_64-slc6-gcc49-opt/EventLoop/run/gt_DirectDriver/data/file-17.root
+Processed 150000 events
+Processing File: file:///user/hteagle/AnalysisDirectory/Base_2_4_34/RootCoreBin/obj/x86_64-slc6-gcc49-opt/EventLoop/run/gt_DirectDriver/data/file-18.root
+Processed 160000 events
+Processing File: file:///user/hteagle/AnalysisDirectory/Base_2_4_34/RootCoreBin/obj/x86_64-slc6-gcc49-opt/EventLoop/run/gt_DirectDriver/data/file-19.root
+Processed 170000 events
+Processing File: file:///user/hteagle/AnalysisDirectory/Base_2_4_34/RootCoreBin/obj/x86_64-slc6-gcc49-opt/EventLoop/run/gt_DirectDriver/data/file-20.root
+Processed 180000 events
+Processing File: file:///user/hteagle/AnalysisDirectory/Base_2_4_34/RootCoreBin/obj/x86_64-slc6-gcc49-opt/EventLoop/run/gt_DirectDriver/data/file-21.root
+Processed 190000 events
+Processing File: file:///user/hteagle/AnalysisDirectory/Base_2_4_34/RootCoreBin/obj/x86_64-slc6-gcc49-opt/EventLoop/run/gt_DirectDriver/data/file-22.root
+Processed 200000 events
+Processing File: file:///user/hteagle/AnalysisDirectory/Base_2_4_34/RootCoreBin/obj/x86_64-slc6-gcc49-opt/EventLoop/run/gt_DirectDriver/data/file-23.root
+Processed 210000 events
+Processing File: file:///user/hteagle/AnalysisDirectory/Base_2_4_34/RootCoreBin/obj/x86_64-slc6-gcc49-opt/EventLoop/run/gt_DirectDriver/data/file-24.root
+Processed 220000 events
+Processing File: file:///user/hteagle/AnalysisDirectory/Base_2_4_34/RootCoreBin/obj/x86_64-slc6-gcc49-opt/EventLoop/run/gt_DirectDriver/data/file-25.root
+Processed 230000 events
+Processing File: file:///user/hteagle/AnalysisDirectory/Base_2_4_34/RootCoreBin/obj/x86_64-slc6-gcc49-opt/EventLoop/run/gt_DirectDriver/data/file-26.root
+Processed 240000 events
+Processing File: file:///user/hteagle/AnalysisDirectory/Base_2_4_34/RootCoreBin/obj/x86_64-slc6-gcc49-opt/EventLoop/run/gt_DirectDriver/data/file-27.root
+Processed 250000 events
+Processing File: file:///user/hteagle/AnalysisDirectory/Base_2_4_34/RootCoreBin/obj/x86_64-slc6-gcc49-opt/EventLoop/run/gt_DirectDriver/data/file-28.root
+Processed 260000 events
+Processing File: file:///user/hteagle/AnalysisDirectory/Base_2_4_34/RootCoreBin/obj/x86_64-slc6-gcc49-opt/EventLoop/run/gt_DirectDriver/data/file-29.root
+Processed 270000 events
+Processing File: file:///user/hteagle/AnalysisDirectory/Base_2_4_34/RootCoreBin/obj/x86_64-slc6-gcc49-opt/EventLoop/run/gt_DirectDriver/data/file-30.root
+Processed 280000 events
+Processing File: file:///user/hteagle/AnalysisDirectory/Base_2_4_34/RootCoreBin/obj/x86_64-slc6-gcc49-opt/EventLoop/run/gt_DirectDriver/data/file-31.root
+Processed 290000 events
+Processing File: file:///user/hteagle/AnalysisDirectory/Base_2_4_34/RootCoreBin/obj/x86_64-slc6-gcc49-opt/EventLoop/run/gt_DirectDriver/data/file-32.root
+Processed 300000 events
+Processing File: file:///user/hteagle/AnalysisDirectory/Base_2_4_34/RootCoreBin/obj/x86_64-slc6-gcc49-opt/EventLoop/run/gt_DirectDriver/data/file-33.root
+Processed 310000 events
+Processing File: file:///user/hteagle/AnalysisDirectory/Base_2_4_34/RootCoreBin/obj/x86_64-slc6-gcc49-opt/EventLoop/run/gt_DirectDriver/data/file-34.root
+Processed 320000 events
+Processing File: file:///user/hteagle/AnalysisDirectory/Base_2_4_34/RootCoreBin/obj/x86_64-slc6-gcc49-opt/EventLoop/run/gt_DirectDriver/data/file-35.root
+Processed 330000 events
+Processing File: file:///user/hteagle/AnalysisDirectory/Base_2_4_34/RootCoreBin/obj/x86_64-slc6-gcc49-opt/EventLoop/run/gt_DirectDriver/data/file-36.root
+Processed 340000 events
+Processing File: file:///user/hteagle/AnalysisDirectory/Base_2_4_34/RootCoreBin/obj/x86_64-slc6-gcc49-opt/EventLoop/run/gt_DirectDriver/data/file-37.root
+Processed 350000 events
+Processing File: file:///user/hteagle/AnalysisDirectory/Base_2_4_34/RootCoreBin/obj/x86_64-slc6-gcc49-opt/EventLoop/run/gt_DirectDriver/data/file-38.root
+Processed 360000 events
+Processing File: file:///user/hteagle/AnalysisDirectory/Base_2_4_34/RootCoreBin/obj/x86_64-slc6-gcc49-opt/EventLoop/run/gt_DirectDriver/data/file-39.root
+Processed 370000 events
+Processing File: file:///user/hteagle/AnalysisDirectory/Base_2_4_34/RootCoreBin/obj/x86_64-slc6-gcc49-opt/EventLoop/run/gt_DirectDriver/data/file-40.root
+Processed 380000 events
+Processing File: file:///user/hteagle/AnalysisDirectory/Base_2_4_34/RootCoreBin/obj/x86_64-slc6-gcc49-opt/EventLoop/run/gt_DirectDriver/data/file-41.root
+Processed 390000 events
+Processing File: file:///user/hteagle/AnalysisDirectory/Base_2_4_34/RootCoreBin/obj/x86_64-slc6-gcc49-opt/EventLoop/run/gt_DirectDriver/data/file-42.root
+Processed 400000 events
+Processing File: file:///user/hteagle/AnalysisDirectory/Base_2_4_34/RootCoreBin/obj/x86_64-slc6-gcc49-opt/EventLoop/run/gt_DirectDriver/data/file-43.root
+Processed 410000 events
+Processing File: file:///user/hteagle/AnalysisDirectory/Base_2_4_34/RootCoreBin/obj/x86_64-slc6-gcc49-opt/EventLoop/run/gt_DirectDriver/data/file-44.root
+Processed 420000 events
+Processing File: file:///user/hteagle/AnalysisDirectory/Base_2_4_34/RootCoreBin/obj/x86_64-slc6-gcc49-opt/EventLoop/run/gt_DirectDriver/data/file-45.root
+Processed 430000 events
+Processing File: file:///user/hteagle/AnalysisDirectory/Base_2_4_34/RootCoreBin/obj/x86_64-slc6-gcc49-opt/EventLoop/run/gt_DirectDriver/data/file-46.root
+Processed 440000 events
+Processing File: file:///user/hteagle/AnalysisDirectory/Base_2_4_34/RootCoreBin/obj/x86_64-slc6-gcc49-opt/EventLoop/run/gt_DirectDriver/data/file-47.root
+Processed 450000 events
+Processing File: file:///user/hteagle/AnalysisDirectory/Base_2_4_34/RootCoreBin/obj/x86_64-slc6-gcc49-opt/EventLoop/run/gt_DirectDriver/data/file-48.root
+Processed 460000 events
+Processing File: file:///user/hteagle/AnalysisDirectory/Base_2_4_34/RootCoreBin/obj/x86_64-slc6-gcc49-opt/EventLoop/run/gt_DirectDriver/data/file-49.root
+Processed 470000 events
+Processing File: file:///user/hteagle/AnalysisDirectory/Base_2_4_34/RootCoreBin/obj/x86_64-slc6-gcc49-opt/EventLoop/run/gt_DirectDriver/data/file-50.root
+Processed 480000 events
+Processing File: file:///user/hteagle/AnalysisDirectory/Base_2_4_34/RootCoreBin/obj/x86_64-slc6-gcc49-opt/EventLoop/run/gt_DirectDriver/data/file-51.root
+Processed 490000 events
+Processing File: file:///user/hteagle/AnalysisDirectory/Base_2_4_34/RootCoreBin/obj/x86_64-slc6-gcc49-opt/EventLoop/run/gt_DirectDriver/data/file-52.root
+Processed 500000 events
+Processing File: file:///user/hteagle/AnalysisDirectory/Base_2_4_34/RootCoreBin/obj/x86_64-slc6-gcc49-opt/EventLoop/run/gt_DirectDriver/data/file-53.root
+Processed 510000 events
+Processing File: file:///user/hteagle/AnalysisDirectory/Base_2_4_34/RootCoreBin/obj/x86_64-slc6-gcc49-opt/EventLoop/run/gt_DirectDriver/data/file-54.root
+Processed 520000 events
+Processing File: file:///user/hteagle/AnalysisDirectory/Base_2_4_34/RootCoreBin/obj/x86_64-slc6-gcc49-opt/EventLoop/run/gt_DirectDriver/data/file-55.root
+Processed 530000 events
+Processing File: file:///user/hteagle/AnalysisDirectory/Base_2_4_34/RootCoreBin/obj/x86_64-slc6-gcc49-opt/EventLoop/run/gt_DirectDriver/data/file-56.root
+Processed 540000 events
+Processing File: file:///user/hteagle/AnalysisDirectory/Base_2_4_34/RootCoreBin/obj/x86_64-slc6-gcc49-opt/EventLoop/run/gt_DirectDriver/data/file-57.root
+Processed 550000 events
+Processing File: file:///user/hteagle/AnalysisDirectory/Base_2_4_34/RootCoreBin/obj/x86_64-slc6-gcc49-opt/EventLoop/run/gt_DirectDriver/data/file-58.root
+Processed 560000 events
+Processing File: file:///user/hteagle/AnalysisDirectory/Base_2_4_34/RootCoreBin/obj/x86_64-slc6-gcc49-opt/EventLoop/run/gt_DirectDriver/data/file-59.root
+Processed 570000 events
+Processing File: file:///user/hteagle/AnalysisDirectory/Base_2_4_34/RootCoreBin/obj/x86_64-slc6-gcc49-opt/EventLoop/run/gt_DirectDriver/data/file-60.root
+Processed 580000 events
+Processing File: file:///user/hteagle/AnalysisDirectory/Base_2_4_34/RootCoreBin/obj/x86_64-slc6-gcc49-opt/EventLoop/run/gt_DirectDriver/data/file-61.root
+Processed 590000 events
+Processing File: file:///user/hteagle/AnalysisDirectory/Base_2_4_34/RootCoreBin/obj/x86_64-slc6-gcc49-opt/EventLoop/run/gt_DirectDriver/data/file-62.root
+Processed 600000 events
+Processing File: file:///user/hteagle/AnalysisDirectory/Base_2_4_34/RootCoreBin/obj/x86_64-slc6-gcc49-opt/EventLoop/run/gt_DirectDriver/data/file-63.root
+Processed 610000 events
+Processing File: file:///user/hteagle/AnalysisDirectory/Base_2_4_34/RootCoreBin/obj/x86_64-slc6-gcc49-opt/EventLoop/run/gt_DirectDriver/data/file-64.root
+Processed 620000 events
+Processing File: file:///user/hteagle/AnalysisDirectory/Base_2_4_34/RootCoreBin/obj/x86_64-slc6-gcc49-opt/EventLoop/run/gt_DirectDriver/data/file-65.root
+Processed 630000 events
+Processing File: file:///user/hteagle/AnalysisDirectory/Base_2_4_34/RootCoreBin/obj/x86_64-slc6-gcc49-opt/EventLoop/run/gt_DirectDriver/data/file-66.root
+Processed 640000 events
+Processing File: file:///user/hteagle/AnalysisDirectory/Base_2_4_34/RootCoreBin/obj/x86_64-slc6-gcc49-opt/EventLoop/run/gt_DirectDriver/data/file-67.root
+Processed 650000 events
+Processing File: file:///user/hteagle/AnalysisDirectory/Base_2_4_34/RootCoreBin/obj/x86_64-slc6-gcc49-opt/EventLoop/run/gt_DirectDriver/data/file-68.root
+Processed 660000 events
+Processing File: file:///user/hteagle/AnalysisDirectory/Base_2_4_34/RootCoreBin/obj/x86_64-slc6-gcc49-opt/EventLoop/run/gt_DirectDriver/data/file-69.root
+Processed 670000 events
+Processing File: file:///user/hteagle/AnalysisDirectory/Base_2_4_34/RootCoreBin/obj/x86_64-slc6-gcc49-opt/EventLoop/run/gt_DirectDriver/data/file-70.root
+Processed 680000 events
+Processing File: file:///user/hteagle/AnalysisDirectory/Base_2_4_34/RootCoreBin/obj/x86_64-slc6-gcc49-opt/EventLoop/run/gt_DirectDriver/data/file-71.root
+Processed 690000 events
+Processing File: file:///user/hteagle/AnalysisDirectory/Base_2_4_34/RootCoreBin/obj/x86_64-slc6-gcc49-opt/EventLoop/run/gt_DirectDriver/data/file-72.root
+Processed 700000 events
+Processing File: file:///user/hteagle/AnalysisDirectory/Base_2_4_34/RootCoreBin/obj/x86_64-slc6-gcc49-opt/EventLoop/run/gt_DirectDriver/data/file-73.root
+Processed 710000 events
+Processing File: file:///user/hteagle/AnalysisDirectory/Base_2_4_34/RootCoreBin/obj/x86_64-slc6-gcc49-opt/EventLoop/run/gt_DirectDriver/data/file-74.root
+Processed 720000 events
+Processing File: file:///user/hteagle/AnalysisDirectory/Base_2_4_34/RootCoreBin/obj/x86_64-slc6-gcc49-opt/EventLoop/run/gt_DirectDriver/data/file-75.root
+Processed 730000 events
+Processing File: file:///user/hteagle/AnalysisDirectory/Base_2_4_34/RootCoreBin/obj/x86_64-slc6-gcc49-opt/EventLoop/run/gt_DirectDriver/data/file-76.root
+Processed 740000 events
+Processing File: file:///user/hteagle/AnalysisDirectory/Base_2_4_34/RootCoreBin/obj/x86_64-slc6-gcc49-opt/EventLoop/run/gt_DirectDriver/data/file-77.root
+Processed 750000 events
+Processing File: file:///user/hteagle/AnalysisDirectory/Base_2_4_34/RootCoreBin/obj/x86_64-slc6-gcc49-opt/EventLoop/run/gt_DirectDriver/data/file-78.root
+Processed 760000 events
+Processing File: file:///user/hteagle/AnalysisDirectory/Base_2_4_34/RootCoreBin/obj/x86_64-slc6-gcc49-opt/EventLoop/run/gt_DirectDriver/data/file-79.root
+Processed 770000 events
+Processing File: file:///user/hteagle/AnalysisDirectory/Base_2_4_34/RootCoreBin/obj/x86_64-slc6-gcc49-opt/EventLoop/run/gt_DirectDriver/data/file-80.root
+Processed 780000 events
+Processing File: file:///user/hteagle/AnalysisDirectory/Base_2_4_34/RootCoreBin/obj/x86_64-slc6-gcc49-opt/EventLoop/run/gt_DirectDriver/data/file-81.root
+Processed 790000 events
+Processing File: file:///user/hteagle/AnalysisDirectory/Base_2_4_34/RootCoreBin/obj/x86_64-slc6-gcc49-opt/EventLoop/run/gt_DirectDriver/data/file-82.root
+Processed 800000 events
+Processing File: file:///user/hteagle/AnalysisDirectory/Base_2_4_34/RootCoreBin/obj/x86_64-slc6-gcc49-opt/EventLoop/run/gt_DirectDriver/data/file-83.root
+Processed 810000 events
+Processing File: file:///user/hteagle/AnalysisDirectory/Base_2_4_34/RootCoreBin/obj/x86_64-slc6-gcc49-opt/EventLoop/run/gt_DirectDriver/data/file-84.root
+Processed 820000 events
+Processing File: file:///user/hteagle/AnalysisDirectory/Base_2_4_34/RootCoreBin/obj/x86_64-slc6-gcc49-opt/EventLoop/run/gt_DirectDriver/data/file-85.root
+Processed 830000 events
+Processing File: file:///user/hteagle/AnalysisDirectory/Base_2_4_34/RootCoreBin/obj/x86_64-slc6-gcc49-opt/EventLoop/run/gt_DirectDriver/data/file-86.root
+Processed 840000 events
+Processing File: file:///user/hteagle/AnalysisDirectory/Base_2_4_34/RootCoreBin/obj/x86_64-slc6-gcc49-opt/EventLoop/run/gt_DirectDriver/data/file-87.root
+Processed 850000 events
+Processing File: file:///user/hteagle/AnalysisDirectory/Base_2_4_34/RootCoreBin/obj/x86_64-slc6-gcc49-opt/EventLoop/run/gt_DirectDriver/data/file-88.root
+Processed 860000 events
+Processing File: file:///user/hteagle/AnalysisDirectory/Base_2_4_34/RootCoreBin/obj/x86_64-slc6-gcc49-opt/EventLoop/run/gt_DirectDriver/data/file-89.root
+Processed 870000 events
+Processing File: file:///user/hteagle/AnalysisDirectory/Base_2_4_34/RootCoreBin/obj/x86_64-slc6-gcc49-opt/EventLoop/run/gt_DirectDriver/data/file-90.root
+Processed 880000 events
+Processing File: file:///user/hteagle/AnalysisDirectory/Base_2_4_34/RootCoreBin/obj/x86_64-slc6-gcc49-opt/EventLoop/run/gt_DirectDriver/data/file-91.root
+Processed 890000 events
+Processing File: file:///user/hteagle/AnalysisDirectory/Base_2_4_34/RootCoreBin/obj/x86_64-slc6-gcc49-opt/EventLoop/run/gt_DirectDriver/data/file-92.root
+Processed 900000 events
+Processing File: file:///user/hteagle/AnalysisDirectory/Base_2_4_34/RootCoreBin/obj/x86_64-slc6-gcc49-opt/EventLoop/run/gt_DirectDriver/data/file-93.root
+Processed 910000 events
+Processing File: file:///user/hteagle/AnalysisDirectory/Base_2_4_34/RootCoreBin/obj/x86_64-slc6-gcc49-opt/EventLoop/run/gt_DirectDriver/data/file-94.root
+Processed 920000 events
+Processing File: file:///user/hteagle/AnalysisDirectory/Base_2_4_34/RootCoreBin/obj/x86_64-slc6-gcc49-opt/EventLoop/run/gt_DirectDriver/data/file-95.root
+Processed 930000 events
+Processing File: file:///user/hteagle/AnalysisDirectory/Base_2_4_34/RootCoreBin/obj/x86_64-slc6-gcc49-opt/EventLoop/run/gt_DirectDriver/data/file-96.root
+Processed 940000 events
+Processing File: file:///user/hteagle/AnalysisDirectory/Base_2_4_34/RootCoreBin/obj/x86_64-slc6-gcc49-opt/EventLoop/run/gt_DirectDriver/data/file-97.root
+Processed 950000 events
+Processing File: file:///user/hteagle/AnalysisDirectory/Base_2_4_34/RootCoreBin/obj/x86_64-slc6-gcc49-opt/EventLoop/run/gt_DirectDriver/data/file-98.root
+Processed 960000 events
+Processing File: file:///user/hteagle/AnalysisDirectory/Base_2_4_34/RootCoreBin/obj/x86_64-slc6-gcc49-opt/EventLoop/run/gt_DirectDriver/data/file-99.root
+Processed 970000 events
+Processing File: file:///user/hteagle/AnalysisDirectory/Base_2_4_34/RootCoreBin/obj/x86_64-slc6-gcc49-opt/EventLoop/run/gt_DirectDriver/data/file-100.root
+Processed 980000 events
+Processing File: file:///user/hteagle/AnalysisDirectory/Base_2_4_34/RootCoreBin/obj/x86_64-slc6-gcc49-opt/EventLoop/run/gt_DirectDriver/data/file-101.root
+Processed 990000 events
+Processing File: file:///user/hteagle/AnalysisDirectory/Base_2_4_34/RootCoreBin/obj/x86_64-slc6-gcc49-opt/EventLoop/run/gt_DirectDriver/data/file-102.root
+Processed 1000000 events
+worker finished:
+Real time 0:00:00, CP time 0.480
+[       OK ] DirectDriverTest/UnitTestFixture.null_eventCount/0 (1102 ms)
+[ RUN      ] DirectDriverTest/UnitTestFixture.null_callbacks/0
+[       OK ] DirectDriverTest/UnitTestFixture.null_callbacks/0 (3 ms)
+[ RUN      ] DirectDriverTest/UnitTestFixture.null_fileExecuted/0
+[       OK ] DirectDriverTest/UnitTestFixture.null_fileExecuted/0 (4 ms)
+[ RUN      ] DirectDriverTest/UnitTestFixture.empty_eventCount/0
+[       OK ] DirectDriverTest/UnitTestFixture.empty_eventCount/0 (3 ms)
+[ RUN      ] DirectDriverTest/UnitTestFixture.empty_callbacks/0
+[       OK ] DirectDriverTest/UnitTestFixture.empty_callbacks/0 (4 ms)
+[ RUN      ] DirectDriverTest/UnitTestFixture.empty_fileExecuted/0
+[       OK ] DirectDriverTest/UnitTestFixture.empty_fileExecuted/0 (5 ms)
+[ RUN      ] DirectDriverTest/UnitTestFixture.single_eventCount/0
+[       OK ] DirectDriverTest/UnitTestFixture.single_eventCount/0 (4 ms)
+[ RUN      ] DirectDriverTest/UnitTestFixture.single_callbacks/0
+[       OK ] DirectDriverTest/UnitTestFixture.single_callbacks/0 (4 ms)
+[ RUN      ] DirectDriverTest/UnitTestFixture.single_fileExecuted/0
+[       OK ] DirectDriverTest/UnitTestFixture.single_fileExecuted/0 (5 ms)
+[ RUN      ] DirectDriverTest/UnitTestFixture.multi_eventCount/0
+[       OK ] DirectDriverTest/UnitTestFixture.multi_eventCount/0 (4 ms)
+[ RUN      ] DirectDriverTest/UnitTestFixture.multi_callbacks/0
+[       OK ] DirectDriverTest/UnitTestFixture.multi_callbacks/0 (4 ms)
+[ RUN      ] DirectDriverTest/UnitTestFixture.multi_fileExecuted/0
+[       OK ] DirectDriverTest/UnitTestFixture.multi_fileExecuted/0 (4 ms)
+[ RUN      ] DirectDriverTest/UnitTestFixture.multi_out_empty/0
+[       OK ] DirectDriverTest/UnitTestFixture.multi_out_empty/0 (5 ms)
+[----------] 13 tests from DirectDriverTest/UnitTestFixture (1153 ms total)
+
+[----------] Global test environment tear-down
+[==========] 13 tests from 1 test case ran. (1153 ms total)
+[  PASSED  ] 13 tests.

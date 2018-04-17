@@ -1,0 +1,8 @@
+[ libegammaMVACalib_Reflex.so ]
+# List of selected classes
+class IegammaMVATool
+class egammaMVACalib
+class egammaMVATool
+header egammaMVACalib/IegammaMVATool.h
+header egammaMVACalib/egammaMVACalib.h
+header egammaMVACalib/egammaMVATool.h
