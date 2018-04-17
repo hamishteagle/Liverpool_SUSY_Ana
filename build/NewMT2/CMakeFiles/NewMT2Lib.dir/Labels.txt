@@ -1,5 +1,0 @@
-# Target labels
- NewMT2
-# Source files and their labels
-/user/hteagle/AnalysisDirectory/Rel21/Base.21.2.20/athena/Projects/WorkDir/NewMT2/NewMT2/MT2.h
-/user/hteagle/AnalysisDirectory/Rel21/Base.21.2.20/athena/Projects/WorkDir/NewMT2/Root/MT2.cxx

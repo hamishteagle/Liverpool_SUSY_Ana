@@ -1,5 +1,0 @@
-# Target labels
- MyAnalysis
-# Source files and their labels
-/user/hteagle/AnalysisDirectory/Rel21/Base.21.2.20/build/x86_64-slc6-gcc62-opt/data/MyAnalysis/MyAnalysis
-/user/hteagle/AnalysisDirectory/Rel21/Base.21.2.20/build/x86_64-slc6-gcc62-opt/data/MyAnalysis/MyAnalysis.rule

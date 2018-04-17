@@ -1,7 +1,0 @@
-[release_metadata]
-release:1.0.0
-nightly name:master
-project name:UserAnalysis
-nightly release:4e4362dbe2
-date:2018-03-29T1553
-compiler:GNU-6.2.0
