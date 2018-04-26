@@ -23,13 +23,12 @@ bool ptTruthSorter( const xAOD::IParticle* j1, const xAOD::IParticle* j2 ) {
 }
 
 //TruthObject Def with FatJets fails on PseudoJetGetter
-//TruthObjectDef::TruthObjectDef(xAOD::TEvent* event, ST::SUSYObjDef_xAOD* SUSYTool, xAOD::TStore* store, double mcChannelNumber, double eventN, double mcEventWgt, double crossSect, std::string systName, bool doPhotons, JetToolRunner* Tool_FatJets_kt12, JetToolRunner* Tool_FatJets_kt8, asg::AnaToolHandle<IMETSignificance> Tool_METSig):IObjectDef(event, SUSYTool, store, mcChannelNumber, eventN, mcEventWgt, crossSect, systName, doPhotons)
+TruthObjectDef::TruthObjectDef(xAOD::TEvent* event, ST::SUSYObjDef_xAOD* SUSYTool, xAOD::TStore* store, double mcChannelNumber, double eventN, double mcEventWgt, double crossSect, std::string systName, bool doPhotons, JetToolRunner* Tool_FatJets_kt12, JetToolRunner* Tool_FatJets_kt8, asg::AnaToolHandle<IMETSignificance> Tool_METSig):IObjectDef(event, SUSYTool, store, mcChannelNumber, eventN, mcEventWgt, crossSect, systName, doPhotons)
 
-TruthObjectDef::TruthObjectDef(xAOD::TEvent* event, ST::SUSYObjDef_xAOD* SUSYTool, xAOD::TStore* store, double mcChannelNumber, double eventN, double mcEventWgt, double crossSect, std::string systName, bool doPhotons, asg::AnaToolHandle<IMETSignificance> Tool_METSig):IObjectDef(event, SUSYTool, store, mcChannelNumber, eventN, mcEventWgt, crossSect, systName, doPhotons)
 {
 
-  //  fatjet_kt12_tool = Tool_FatJets_kt12;
-  //fatjet_kt8_tool = Tool_FatJets_kt8;
+  fatjet_kt12_tool = Tool_FatJets_kt12;
+  fatjet_kt8_tool = Tool_FatJets_kt8;
 
 
   baselineElectronsBeforeOR = new xAOD::TruthParticleContainer(SG::VIEW_ELEMENTS);
@@ -49,8 +48,8 @@ TruthObjectDef::TruthObjectDef(xAOD::TEvent* event, ST::SUSYObjDef_xAOD* SUSYToo
   baselineMuons = new xAOD::TruthParticleContainer(SG::VIEW_ELEMENTS);
   baselinePhotons = new xAOD::TruthParticleContainer(SG::VIEW_ELEMENTS);
   goodJets = new xAOD::JetContainer(SG::VIEW_ELEMENTS);
-  //  FatJets_kt8 = new xAOD::JetContainer(SG::VIEW_ELEMENTS);
-  //FatJets_kt12 = new xAOD::JetContainer(SG::VIEW_ELEMENTS);
+  FatJets_kt8 = new xAOD::JetContainer(SG::VIEW_ELEMENTS);
+  FatJets_kt12 = new xAOD::JetContainer(SG::VIEW_ELEMENTS);
   goodAntiKt4TruthJets = new xAOD::JetContainer(SG::VIEW_ELEMENTS);
   goodAntiKt3TruthJets = new xAOD::JetContainer(SG::VIEW_ELEMENTS);
   goodElectrons = new xAOD::TruthParticleContainer(SG::VIEW_ELEMENTS);
@@ -78,8 +77,8 @@ TruthObjectDef::TruthObjectDef(xAOD::TEvent* event, ST::SUSYObjDef_xAOD* SUSYToo
   eventStore->record(baselineTaus,"baselineTaus");
   eventStore->record(baselineMuons,"baselineMuons");
   eventStore->record(goodJets,"goodJets");
-  //  eventStore->record(FatJets_kt8,"fatJets_kt8");
-  //eventStore->record(FatJets_kt12,"fatJets_kt12");
+  eventStore->record(FatJets_kt8,"fatJets_kt8");
+  eventStore->record(FatJets_kt12,"fatJets_kt12");
   eventStore->record(goodAntiKt4TruthJets,"goodAntiKt4TruthJets");
   eventStore->record(goodAntiKt3TruthJets,"goodAntiKt3TruthJets");
   eventStore->record(goodElectrons,"goodElectrons");
@@ -113,8 +112,8 @@ TruthObjectDef::TruthObjectDef(xAOD::TEvent* event, ST::SUSYObjDef_xAOD* SUSYToo
   this->FillGoodJets();
   this->SetPrimVertex();
 
-  //  this->FillFatJets_kt8();
-  //  this->FillFatJets_kt12();
+  this->FillFatJets_kt8();
+  this->FillFatJets_kt12();
 
   
 
@@ -879,7 +878,7 @@ void TruthObjectDef::SetPrimVertex(){
   nVertex = 1;
 }
 
-/*
+
 void TruthObjectDef::FillFatJets_kt8(){
 
 
@@ -897,4 +896,4 @@ void TruthObjectDef::FillFatJets_kt12(){
 
 
 }
-*/
+

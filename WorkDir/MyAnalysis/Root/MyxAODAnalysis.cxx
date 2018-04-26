@@ -611,7 +611,6 @@ EL::StatusCode MyxAODAnalysis :: initialize ()
       std::cout << "Running on a tau systematic. Skip" << std::endl;
       continue;
     }
-
  
     std::string treeName = "CollectionTree_"+std::string(sys.name());
     const char * cName = treeName.c_str();
@@ -619,13 +618,21 @@ EL::StatusCode MyxAODAnalysis :: initialize ()
     TDirectory *out_TDir = (TDirectory*) wk()->getOutputFile ("output");
     TreeService* Tree_Service = new TreeService(Temp, out_TDir);
     m_treeServiceVector.push_back(Tree_Service);
+    
+    int found_prw = (std::string(sys.name()).find("PRW"));
+    if(found_prw !=std::string::npos){
+      std::cout<<"Running with prw systematic. Skip"<<std::endl;
+      continue;
+    }
     // Initialise the Jet reclustering tools here systematic by systematic
-    //    SetUpFatJetTools(m_jetRecTool_kt12, 1.2, "goodJets"+std::string(sys.name()), "MyFatJetsKt12"+std::string(sys.name()));
-    //    SetUpFatJetTools(m_jetRecTool_kt8, 0.8, "goodJets"+std::string(sys.name()), "MyFatJetsKt8"+std::string(sys.name()));
-   
+    SetUpFatJetTools(m_jetRecTool_kt12, 1.2, "goodJets"+std::string(sys.name()), "MyFatJetsKt12"+std::string(sys.name()));
+    SetUpFatJetTools(m_jetRecTool_kt8, 0.8, "goodJets"+std::string(sys.name()), "MyFatJetsKt8"+std::string(sys.name()));
+  
   }	
 
-    
+  
+
+  
   //Initialise the new METSignificance tool here
   m_metSignif.setTypeAndName("met::METSignificance/metSignif");
   ANA_CHECK(m_metSignif.setProperty("SoftTermParam", 0));
@@ -702,7 +709,7 @@ EL::StatusCode MyxAODAnalysis :: execute ()
     int year = 0;    
     if (m_fileType != "DAOD_TRUTH1"){
       objTool->ApplyPRWTool();
-      std::cout<<"Applied the PRW Tool"<<std::endl;
+      //      std::cout<<"Applied the PRW Tool"<<std::endl;
       year = objTool->treatAsYear(); 
     }
 
@@ -826,10 +833,10 @@ EL::StatusCode MyxAODAnalysis :: execute ()
     //std::cout << "Filled the objects" << std::endl;
 
     if (m_fileType == "DAOD_TRUTH1"){
-      m_objs  = new TruthObjectDef (m_event, objTool, store, mcChannel, EventNumber, mcWgt, xsecteff,syst.name(), doPhotons, m_metSignif);
+      m_objs  = new TruthObjectDef (m_event, objTool, store, mcChannel, EventNumber, mcWgt, xsecteff, syst.name(), doPhotons, m_jetRecTool_kt12, m_jetRecTool_kt8,  m_metSignif);
     }
     else{
-      m_objs  = new ObjectDef (m_event, objTool, store, mcChannel, EventNumber, mcWgt, xsecteff, syst.name(), doPhotons, m_metSignif);
+      m_objs  = new ObjectDef (m_event, objTool, store, mcChannel, EventNumber, mcWgt, xsecteff, syst.name(), doPhotons, m_jetRecTool_kt12, m_jetRecTool_kt8, m_metSignif);
     }
     
     
@@ -1455,7 +1462,7 @@ EL::StatusCode MyxAODAnalysis :: execute ()
   SRACutList.push_back("Muon Cleaning");
   SRACutList.push_back("ETMiss > 250");
   SRACutList.push_back("njets >= 4");
-  SRACutList.push_back("nbjets == 2");
+  SRACutList.push_back("nbjets >= 3");
   SRACutList.push_back("Signal veto");
   SRACutList.push_back("Baseline veto");
   SRACutList.push_back("JetMET dphi> 0.4");
@@ -1480,7 +1487,7 @@ EL::StatusCode MyxAODAnalysis :: execute ()
   std::cout << "SRA Selections:" << std::endl;
   std::cout << "Raw Events" << std::endl;
   std::cout << "Sum Of Weights = " << h_SumOfWeights->Integral() << std::endl;
-  std::cout << "Cut # " << std::setw(25) << "Cut Name " << std::setw(60) << "Events Passing Selection " << std::setw(25) << " Relative Efficiency" <<std::setw(25) <<" Absolute Efficiency  "  <<std::endl;
+  std::cout << "Cut # " << std::setw(25) << "Cut Name " << std::setw(50) << "Events Passing Selection " << std::setw(25) << " Relative Efficiency" <<std::setw(25) <<" Absolute Efficiency  "  <<std::endl;
   for(size_t icut=0; icut<=SRACutList.size()-1; ++icut)
     {
       if (icut == 0){
@@ -1492,7 +1499,7 @@ EL::StatusCode MyxAODAnalysis :: execute ()
     }  
   
   std::cout << "Scaled Events" << std::endl;
-  std::cout << "Cut # " << std::setw(25) << "Cut Name " << std::setw(60) << "Events Passing Selection " << std::setw(25) << " Relative Efficiency" <<std::setw(25) <<" Absolute Efficiency  "  <<std::endl;
+  std::cout << "Cut # " << std::setw(25) << "Cut Name " << std::setw(50) << "Events Passing Selection " << std::setw(25) << " Relative Efficiency" <<std::setw(25) <<" Absolute Efficiency  "  <<std::endl;
   for(size_t icut=0; icut<=SRACutList.size()-1; ++icut)
     {
 
@@ -1522,7 +1529,7 @@ EL::StatusCode MyxAODAnalysis :: execute ()
   CRT1LCutList.push_back("njets = 2,3,4");
   CRT1LCutList.push_back("pTj1 > 50, pTj2 > 50");
   CRT1LCutList.push_back("pTj4 < 50");
-  CRT1LCutList.push_back("nbjets == 2");
+  CRT1LCutList.push_back("nbjets >= 3");
   CRT1LCutList.push_back("leading b");
   CRT1LCutList.push_back("secondary b");
   CRT1LCutList.push_back("JetMET dphi> 0.4");
@@ -1565,7 +1572,7 @@ EL::StatusCode MyxAODAnalysis :: execute ()
   tbMETSRCutList.push_back("nBaseline/Signal Lep == 1");
   tbMETSRCutList.push_back("pTL > 26");
   tbMETSRCutList.push_back("Trigger matched");
-  tbMETSRCutList.push_back("nbjets == 2");
+  tbMETSRCutList.push_back("nbjets >= 3");
   tbMETSRCutList.push_back("ETMiss > 200");
   tbMETSRCutList.push_back("mT > 140");
   tbMETSRCutList.push_back("amT2 > 250");
@@ -1584,7 +1591,7 @@ EL::StatusCode MyxAODAnalysis :: execute ()
   std::cout << "CRT1L Selections:" << std::endl;
   std::cout << "Raw Events" << std::endl;
   std::cout << "Sum Of Weights = " << h_SumOfWeights->Integral() << std::endl;
-  std::cout << "Cut # " << std::setw(25) << "Cut Name " << std::setw(60) << "Events Passing Selection " << std::setw(25) << " Relative Efficiency" <<std::setw(25) <<" Absolute Efficiency  "  <<std::endl;
+  std::cout << "Cut # " << std::setw(25) << "Cut Name " << std::setw(50) << "Events Passing Selection " << std::setw(25) << " Relative Efficiency" <<std::setw(25) <<" Absolute Efficiency  "  <<std::endl;
   for(size_t icut=0; icut<=CRT1LCutList.size()-1; ++icut)
     {
       if (icut == 0){
@@ -1596,7 +1603,7 @@ EL::StatusCode MyxAODAnalysis :: execute ()
     }  
   
   std::cout << "Scaled Events" << std::endl;
-  std::cout << "Cut # " << std::setw(25) << "Cut Name " << std::setw(60) << "Events Passing Selection " << std::setw(25) << " Relative Efficiency" <<std::setw(25) <<" Absolute Efficiency  "  <<std::endl;
+  std::cout << "Cut # " << std::setw(25) << "Cut Name " << std::setw(50) << "Events Passing Selection " << std::setw(25) << " Relative Efficiency" <<std::setw(25) <<" Absolute Efficiency  "  <<std::endl;
   for(size_t icut=0; icut<=CRT1LCutList.size()-1; ++icut)
     {
 
@@ -1619,7 +1626,7 @@ EL::StatusCode MyxAODAnalysis :: execute ()
   std::cout << "tbMET SRB Selections:" << std::endl;
   std::cout << "Raw Events" << std::endl;
   std::cout << "Sum Of Weights = " << h_SumOfWeights->Integral() << std::endl;
-  std::cout << "Cut # " << std::setw(25) << "Cut Name " << std::setw(60) << "Events Passing Selection " << std::setw(25) << " Relative Efficiency" <<std::setw(25) <<" Absolute Efficiency  "  <<std::endl;
+  std::cout << "Cut # " << std::setw(25) << "Cut Name " << std::setw(50) << "Events Passing Selection " << std::setw(25) << " Relative Efficiency" <<std::setw(25) <<" Absolute Efficiency  "  <<std::endl;
   for(size_t icut=0; icut<=tbMETSRCutList.size()-1; ++icut)
     {
       if (icut == 0){
@@ -1631,7 +1638,7 @@ EL::StatusCode MyxAODAnalysis :: execute ()
     }  
   
   std::cout << "Scaled Events" << std::endl;
-  std::cout << "Cut # " << std::setw(25) << "Cut Name " << std::setw(60) << "Events Passing Selection " << std::setw(25) << " Relative Efficiency" <<std::setw(25) <<" Absolute Efficiency  "  <<std::endl;
+  std::cout << "Cut # " << std::setw(25) << "Cut Name " << std::setw(50) << "Events Passing Selection " << std::setw(25) << " Relative Efficiency" <<std::setw(25) <<" Absolute Efficiency  "  <<std::endl;
   for(size_t icut=0; icut<=tbMETSRCutList.size()-1; ++icut)
     {
 
@@ -1667,7 +1674,7 @@ EL::StatusCode MyxAODAnalysis :: execute ()
   CRZCutList.push_back("pTj4 < 50");
   //CRZCutList.push_back("JetMET_adjs dphi> 0.4");
   CRZCutList.push_back("MET/mEff_corr > 0.25");
-  CRZCutList.push_back("nbjets == 2");
+  CRZCutList.push_back("nbjets >= 3");
   CRZCutList.push_back("leading b");
   CRZCutList.push_back("secondary b");
   CRZCutList.push_back("E_T^Miss (true) < 100");
@@ -1682,7 +1689,7 @@ EL::StatusCode MyxAODAnalysis :: execute ()
   std::cout << "CRZ Selections:" << std::endl;
   std::cout << "Raw Events" << std::endl;
   std::cout << "Sum Of Weights = " << h_SumOfWeights->Integral() << std::endl;
-  std::cout << "Cut # " << std::setw(25) << "Cut Name " << std::setw(60) << "Events Passing Selection " << std::setw(25) << " Relative Efficiency" <<std::setw(25) <<" Absolute Efficiency  "  <<std::endl;
+  std::cout << "Cut # " << std::setw(25) << "Cut Name " << std::setw(50) << "Events Passing Selection " << std::setw(25) << " Relative Efficiency" <<std::setw(25) <<" Absolute Efficiency  "  <<std::endl;
   for(size_t icut=0; icut<=CRZCutList.size()-1; ++icut)
     {
       if (icut == 0){
@@ -1694,7 +1701,7 @@ EL::StatusCode MyxAODAnalysis :: execute ()
     }  
   
   std::cout << "Scaled Events" << std::endl;
-  std::cout << "Cut # " << std::setw(25) << "Cut Name " << std::setw(60) << "Events Passing Selection " << std::setw(25) << " Relative Efficiency" <<std::setw(25) <<" Absolute Efficiency  "  <<std::endl;
+  std::cout << "Cut # " << std::setw(25) << "Cut Name " << std::setw(50) << "Events Passing Selection " << std::setw(25) << " Relative Efficiency" <<std::setw(25) <<" Absolute Efficiency  "  <<std::endl;
   for(size_t icut=0; icut<=CRZCutList.size()-1; ++icut)
     {
 

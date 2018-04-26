@@ -22,8 +22,9 @@
 int main( int argc, char* argv[]) {
 
   // Take the submit directory from the input if provided:
-  std::string submitDir = "/hepstore/hteagle/SubmissionOutputs/";
+  std::string submitDir = "submitDir";
   std::string inputFile = "replaceMeSomewhere";
+  
   bool RunningWithSyst;
   bool RunningWithPhotons;
   
@@ -62,23 +63,31 @@ int main( int argc, char* argv[]) {
 	
 	std::cout << "Running with Syst = " << RunningWithSyst << std::endl;
 	std::cout << "Running with Photons = " << RunningWithPhotons << std::endl;
-	submitDir = inputFile;
-	// Change me here
-	submitDir = "/hepstore/hteagle/SubmissionDir/"+submitDir;
+	submitDir = "mc16_13TeV.390305.MGPy8EG_A14N23LO_BB_onestepN2hN1_900_530_400.deriv.DAOD_SUSY1.e5671_e5984_a875_r9364_r9315_p3404";
+	submitDir = "/hepstore/hteagle/SubmissionOutputs/"+submitDir;
 	std::cout << "The Submission Directory: " << submitDir << std::endl;
+    
+
+
       }
     // Set up the job for xAOD access:
     xAOD::Init().ignore();
     // Construct the samples to run on:
     SH::SampleHandler sh;
     
+    
+    
     // this is the cutflow file, please do not delete
     //inputFile = "/hepstore/janders/mc15_13TeV.390146.MGPy8EG_A14N23LO_BB_onestepN2hN1_600_400_60.merge.DAOD_SUSY7.e5671_a766_a821_r7676_p2879";
     //inputFile = "/scratch/hteagle/ttbar/mc16_13TeV.410501.PowhegPythia8EvtGen_A14_ttbar_hdamp258p75_nonallhad.deriv.DAOD_SUSY1.e5458_s3126_r9781_r9778_p3401";
     // inputFile=  /hepstore/hteagle/recoSamples/ttbar/mc16_13TeV.410471.PhPy8EG_A14_ttbar_hdamp258p75_allhad.e6337_e5984_s3126_r9364_r9315_p3401
     //inputFile = "/scratch/hteagle/data16/data16_13TeV.00310969.physics_Main.deriv.DAOD_SUSY1.r9264_p3083_p3372";
-    inputFile = "/hepstore/hteagle/recoSamples/signal/mc16_13TeV.390305.MGPy8EG_A14N23LO_BB_onestepN2hN1_900_530_400.deriv.DAOD_SUSY1.e5671_e5984_a875_r9364_r9315_p3404";
     //inputFile = "/hepstore/hteagle/recoSamples/ttbar/mc16_13TeV.410470.PhPy8EG_A14_ttbar_hdamp258p75_nonallhad.deriv.DAOD_SUSY1.e6337_e5984_s3126_r10201_r10210_p3401";
+    // Change me here
+    inputFile = "/hepstore/hteagle/recoSamples/signal/mc16_13TeV.390305.MGPy8EG_A14N23LO_BB_onestepN2hN1_900_530_400.deriv.DAOD_SUSY1.e5671_e5984_a875_r9364_r9315_p3404";
+
+
+
 
     SH::DiskListLocal list (inputFile);
     SH::scanFiles (sh, list); // specifying one 

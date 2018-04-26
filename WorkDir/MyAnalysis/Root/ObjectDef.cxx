@@ -7,14 +7,11 @@ bool ptSorter( const xAOD::IParticle* j1, const xAOD::IParticle* j2 ) {
 }
 
 //ObjectDef with FatJets (Crashes on PseudoJetGetter)
-/*ObjectDef::ObjectDef(xAOD::TEvent* event, ST::SUSYObjDef_xAOD* SUSYTool, xAOD::TStore* store, double mcChannelNumber, double eventN, double mcEventWgt, double crossSect, std::string systName, bool doPhotons, JetToolRunner* Tool_FatJets_kt12, JetToolRunner* Tool_FatJets_kt8, asg::AnaToolHandle<IMETSignificance> Tool_METSig):IObjectDef(event, SUSYTool, store, mcChannelNumber, eventN, mcEventWgt, crossSect, systName, doPhotons)
- */
-
-ObjectDef::ObjectDef(xAOD::TEvent* event, ST::SUSYObjDef_xAOD* SUSYTool, xAOD::TStore* store, double mcChannelNumber, double eventN, double mcEventWgt, double crossSect, std::string systName, bool doPhotons, asg::AnaToolHandle<IMETSignificance> Tool_METSig):IObjectDef(event, SUSYTool, store, mcChannelNumber, eventN, mcEventWgt, crossSect, systName, doPhotons)
+ObjectDef::ObjectDef(xAOD::TEvent* event, ST::SUSYObjDef_xAOD* SUSYTool, xAOD::TStore* store, double mcChannelNumber, double eventN, double mcEventWgt, double crossSect, std::string systName, bool doPhotons, JetToolRunner* Tool_FatJets_kt12, JetToolRunner* Tool_FatJets_kt8, asg::AnaToolHandle<IMETSignificance> Tool_METSig):IObjectDef(event, SUSYTool, store, mcChannelNumber, eventN, mcEventWgt, crossSect, systName, doPhotons)
 {
 
-  //fatjet_kt12_tool = Tool_FatJets_kt12;
-  //fatjet_kt8_tool = Tool_FatJets_kt8;
+  fatjet_kt12_tool = Tool_FatJets_kt12;
+  fatjet_kt8_tool = Tool_FatJets_kt8;
 
   METSig_tool = Tool_METSig; 
   
@@ -36,8 +33,8 @@ ObjectDef::ObjectDef(xAOD::TEvent* event, ST::SUSYObjDef_xAOD* SUSYTool, xAOD::T
   baselineMuons = new xAOD::MuonContainer(SG::VIEW_ELEMENTS);
   baselinePhotons = new xAOD::PhotonContainer(SG::VIEW_ELEMENTS);
   goodJets = new xAOD::JetContainer(SG::VIEW_ELEMENTS);
-  //FatJets_kt8 = new xAOD::JetContainer(SG::VIEW_ELEMENTS);
-  //FatJets_kt12 = new xAOD::JetContainer(SG::VIEW_ELEMENTS);
+  FatJets_kt8 = new xAOD::JetContainer(SG::VIEW_ELEMENTS);
+  FatJets_kt12 = new xAOD::JetContainer(SG::VIEW_ELEMENTS);
   goodAntiKt4TruthJets = new xAOD::JetContainer(SG::VIEW_ELEMENTS);
   goodAntiKt3TruthJets = new xAOD::JetContainer(SG::VIEW_ELEMENTS);
   goodElectrons = new xAOD::ElectronContainer(SG::VIEW_ELEMENTS);
@@ -49,8 +46,8 @@ ObjectDef::ObjectDef(xAOD::TEvent* event, ST::SUSYObjDef_xAOD* SUSYTool, xAOD::T
   METmuons  = new xAOD::MuonContainer(SG::VIEW_ELEMENTS);
   //m_goodJets_recl = new xAOD::IParticleContainer(SG::VIEW_ELEMENTS);  
 
-  //FatJets_kt8 = 0;
-  //FatJets_kt12 = 0;
+  FatJets_kt8 = 0;
+  FatJets_kt12 = 0;
   
   eventStore->record(baselineElectronsBeforeOR,"baselineElectronsBeforeOR"+systematic);
   eventStore->record(signalElectronsBeforeOR,"signalElectronsBeforeOR"+systematic);
@@ -69,8 +66,8 @@ ObjectDef::ObjectDef(xAOD::TEvent* event, ST::SUSYObjDef_xAOD* SUSYTool, xAOD::T
   eventStore->record(baselineMuons,"baselineMuons"+systematic);
   eventStore->record(baselinePhotons,"baselinePhotons"+systematic);
   eventStore->record(goodJets,"goodJets"+systematic);
-  //eventStore->record(FatJets_kt8,"fatJets_kt8"+systematic);
-  //eventStore->record(FatJets_kt12,"fatJets_kt12"+systematic);
+  eventStore->record(FatJets_kt8,"fatJets_kt8"+systematic);
+  eventStore->record(FatJets_kt12,"fatJets_kt12"+systematic);
   eventStore->record(goodAntiKt4TruthJets,"goodAntiKt4TruthJets"+systematic);
   eventStore->record(goodAntiKt3TruthJets,"goodAntiKt3TruthJets"+systematic);
   eventStore->record(goodElectrons,"goodElectrons"+systematic);
@@ -103,8 +100,8 @@ ObjectDef::ObjectDef(xAOD::TEvent* event, ST::SUSYObjDef_xAOD* SUSYTool, xAOD::T
   this->FillBaselineTaus();
   this->FillBaselineMuons();
   this->FillGoodJets();
-  //this->FillFatJets_kt8();
-  //this->FillFatJets_kt12();
+  this->FillFatJets_kt8();
+  this->FillFatJets_kt12();
   //this->FillBaselinePhotons();
   
 }
@@ -851,7 +848,7 @@ void ObjectDef::SetPrimVertex(){
    }
   
 }
-/*
+
 void ObjectDef::FillFatJets_kt8(){
 
   fatjet_kt8_tool->execute();
@@ -867,4 +864,4 @@ void ObjectDef::FillFatJets_kt12(){
   currentEvent->retrieve( FatJets_kt12,"MyFatJetsKt12"+systematic );
 
 }
-*/
+

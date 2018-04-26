@@ -11,9 +11,7 @@ class ObjectDef: public virtual IObjectDef
 
  public:
   //ObjectDef with Fat jets (fails on pseudoJetGetter)
-  //  ObjectDef(xAOD::TEvent* event, ST::SUSYObjDef_xAOD* SUSYTool, xAOD::TStore* store, double mcChannelNumber, double eventN, double mcEventWgt, double crosssect, std::string systName, bool doPhotons, JetToolRunner* Tool_FatJets_kt12, JetToolRunner* Tool_FatJets_kt8, asg::AnaToolHandle<IMETSignificance> Tool_METSig);
-
-  ObjectDef(xAOD::TEvent* event, ST::SUSYObjDef_xAOD* SUSYTool, xAOD::TStore* store, double mcChannelNumber, double eventN, double mcEventWgt, double crosssect, std::string systName, bool doPhotons,  asg::AnaToolHandle<IMETSignificance> Tool_METSig);
+  ObjectDef(xAOD::TEvent* event, ST::SUSYObjDef_xAOD* SUSYTool, xAOD::TStore* store, double mcChannelNumber, double eventN, double mcEventWgt, double crosssect, std::string systName, bool doPhotons, JetToolRunner* Tool_FatJets_kt12, JetToolRunner* Tool_FatJets_kt8, asg::AnaToolHandle<IMETSignificance> Tool_METSig);
 
   ~ObjectDef(){};
 
@@ -34,8 +32,8 @@ class ObjectDef: public virtual IObjectDef
   void FillBaselineTaus();
   void FillBaselinePhotons();
   void FillGoodJets();
-  //  void FillFatJets_kt8();
-  //void FillFatJets_kt12();
+  void FillFatJets_kt8();
+  void FillFatJets_kt12();
   void SetPrimVertex();
 
 
@@ -43,8 +41,8 @@ class ObjectDef: public virtual IObjectDef
   // Getters
   xAOD::JetContainer* getBadJets(){return badJets;};
   xAOD::JetContainer* getGoodJets(){return goodJets;};
-  //xAOD::JetContainer* getFatJets_kt8(){return FatJets_kt8;};
-  //xAOD::JetContainer* getFatJets_kt12(){return FatJets_kt12;};
+  xAOD::JetContainer* getFatJets_kt8(){return FatJets_kt8;};
+  xAOD::JetContainer* getFatJets_kt12(){return FatJets_kt12;};
   xAOD::JetContainer* getBJets(){return BJets;};
   xAOD::JetContainer* getNonBJets(){return nonBJets;};
   xAOD::ElectronContainer* getBaselineElectrons(){return baselineElectrons;};
@@ -99,8 +97,8 @@ class ObjectDef: public virtual IObjectDef
   xAOD::MuonContainer* baselineMuons;  
   xAOD::PhotonContainer* baselinePhotons;  
   xAOD::JetContainer* goodJets;
-  //  xAOD::JetContainer* FatJets_kt8;
-  //xAOD::JetContainer* FatJets_kt12;
+  xAOD::JetContainer* FatJets_kt8;
+  xAOD::JetContainer* FatJets_kt12;
   xAOD::JetContainer* goodAntiKt4TruthJets;
   xAOD::JetContainer* goodAntiKt3TruthJets;
   xAOD::ElectronContainer* goodElectrons;
