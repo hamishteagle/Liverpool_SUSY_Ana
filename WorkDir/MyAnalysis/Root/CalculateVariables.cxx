@@ -102,6 +102,7 @@ CalculateVariables::CalculateVariables(IObjectDef *objects, bool isTruth, bool d
   all_Meff = 0;
   amT2 = 0;
   minDelPhi = 99;
+  minDelPhi_4 = 99;
   inMultiJetTriggerPlateau = false;
   int multiJetTriggerCounter = 0;
   
@@ -113,14 +114,12 @@ CalculateVariables::CalculateVariables(IObjectDef *objects, bool isTruth, bool d
     }
     
     all_HT += tempJet->pt()*0.001;
+    delPhi1 = fabs(TVector2::Phi_mpi_pi((*(objects->getGoodJets()))[iJet]->phi()  - eTMissPhi));
     
-    delPhi1 = fabs(TVector2::Phi_mpi_pi( (*(objects->getGoodJets()))[iJet]->phi()  - eTMissPhi));
-    
-    if (iJet == 0){
-      minDelPhi = delPhi1;
-    }
     
     if (delPhi1 < minDelPhi){
+      if (iJet<4)
+	{minDelPhi_4=delPhi1;}
       minDelPhi = delPhi1;
     }
     
@@ -668,6 +667,30 @@ CalculateVariables::CalculateVariables(IObjectDef *objects, bool isTruth, bool d
   minm_Ttj = -99;
   maxm_Ttj = -99;
 
+
+  Stop0L_tauVeto = true;
+  int maxJet = objects->getGoodJets()->size();
+  for (int iJet = 0; iJet < maxJet; iJet++)
+    {
+      if( ((*(objects->getGoodJets()))[iJet]->auxdata< char >("bjet") != true ) && fabs((*(objects->getGoodJets()))[iJet]->eta())<2.5 )
+    	{
+	  std::vector<int> ntrk;
+	  (*(objects->getGoodJets()))[iJet]->getAttribute(xAOD::JetAttribute::NumTrkPt500,ntrk);
+	  if(ntrk.size()>0)
+	    {
+	      if (ntrk[0]<=4)
+		{
+		  double dphi = TVector2::Phi_mpi_pi(eTMissPhi - (*(objects->getGoodJets()))[iJet]->phi());
+		  if (fabs(dphi)<(TMath::Pi()/5.0)){Stop0L_tauVeto = false;}
+		}
+	    }
+	}
+    }
+  
+  
+      
+      
+      
   
   if (nTau >= 1){
     pTtj1 = tj1v.Pt();
@@ -1032,9 +1055,9 @@ CalculateVariables::CalculateVariables(IObjectDef *objects, bool isTruth, bool d
     }
 
   JetAsymmR_min = -99;
-  InvMass_Bij_minR = -99;
+  InvMass_Bij_minR = -99;//maxminmbb
   JetAsymmR_min1 = -99;
-  InvMass_Bij_minR1 = -99; 
+  InvMass_Bij_minR1 = -99; //minmbb
 
   //With exclusion
   if (inummR>-1 && jnummR> -1){

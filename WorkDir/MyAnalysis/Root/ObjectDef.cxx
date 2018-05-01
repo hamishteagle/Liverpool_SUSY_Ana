@@ -6,7 +6,7 @@ bool ptSorter( const xAOD::IParticle* j1, const xAOD::IParticle* j2 ) {
   return ( j1->pt() > j2->pt() );
 }
 
-//ObjectDef with FatJets (Crashes on PseudoJetGetter)
+//ObjectDef with FatJets (Crashes on PseudoJetGetter when running on systematics)
 ObjectDef::ObjectDef(xAOD::TEvent* event, ST::SUSYObjDef_xAOD* SUSYTool, xAOD::TStore* store, double mcChannelNumber, double eventN, double mcEventWgt, double crossSect, std::string systName, bool doPhotons, JetToolRunner* Tool_FatJets_kt12, JetToolRunner* Tool_FatJets_kt8, asg::AnaToolHandle<IMETSignificance> Tool_METSig):IObjectDef(event, SUSYTool, store, mcChannelNumber, eventN, mcEventWgt, crossSect, systName, doPhotons)
 {
 
@@ -90,7 +90,7 @@ ObjectDef::ObjectDef(xAOD::TEvent* event, ST::SUSYObjDef_xAOD* SUSYTool, xAOD::T
   this->FillPreORPhotons();
 
   //this->FillOldMET(); This was the MET calculation without adding the photon to it
-  this->OldOverlapRemoval(); //This was the OR calculation without adding photons
+  //this->OldOverlapRemoval(); //This was the OR calculation without adding photons
   this->OverlapRemoval(); //This now includes photons and taus
   
   this->FillMET();
@@ -800,7 +800,7 @@ void ObjectDef::FillGoodJets(){
            
       {
 	
-	goodJets->push_back( *jet_itr);
+	goodJets->push_back(*jet_itr);
 	
 	
 	flavour = -1;

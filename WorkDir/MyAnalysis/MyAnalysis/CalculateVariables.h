@@ -37,7 +37,7 @@ class CalculateVariables
   int nBaselineElectron; //
   int nBaselineTau; //
   int nBaselineLepton; //
-
+  bool Stop0L_tauVeto; //
   // scale factors
   double electronTrigSF;
   double leptonSF;
@@ -232,6 +232,7 @@ class CalculateVariables
   double delPhi3; //
   double delPhi4; //
   double minDelPhi; //
+  double minDelPhi_4; //
   double adjMinDelPhi; //
   double adjDelPhi1; 
   double dPhib1b2;

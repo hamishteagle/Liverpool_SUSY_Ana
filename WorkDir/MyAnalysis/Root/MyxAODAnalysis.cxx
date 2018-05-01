@@ -497,7 +497,11 @@ EL::StatusCode MyxAODAnalysis :: initialize ()
   bool isMC15b = false;
   bool isMC15c = false;
 
-  if(isMC16a){lumicalcFiles.push_back(PathResolverFindCalibFile("MyAnalysis/MyAnalysis/PileUp/physics_25ns_20.7.lumicalc.OflLumi-13TeV-009.root"));}
+  if(isMC16a)
+    {
+      lumicalcFiles.push_back(PathResolverFindCalibFile("MyAnalysis/MyAnalysis/PileUp/PHYS_StandardGRL_All_Good_25ns_276262-284484_OflLumi-13TeV-008.root"));
+      lumicalcFiles.push_back(PathResolverFindCalibFile("MyAnalysis/MyAnalysis/PileUp/PHYS_StandardGRL_All_Good_25ns_297730-311481_OflLumi-13TeV-009.root"));
+    }
   if(isMC16c){lumicalcFiles.push_back(PathResolverFindCalibFile("MyAnalysis/MyAnalysis/PileUp/physics_25ns_Triggerno17e33prim.lumicalc.OflLumi-13TeV-001.root"));}
   
     
@@ -586,6 +590,7 @@ EL::StatusCode MyxAODAnalysis :: initialize ()
   //  objTool->msg().setLevel( MSG::VERBOSE);
 
   // loop over all systematics if we are running with systematics
+
   if(!doSyst) {
     ST::SystInfo infodef;
     infodef.affectsKinematics = false;
@@ -625,8 +630,12 @@ EL::StatusCode MyxAODAnalysis :: initialize ()
       continue;
     }
     // Initialise the Jet reclustering tools here systematic by systematic
-    SetUpFatJetTools(m_jetRecTool_kt12, 1.2, "goodJets"+std::string(sys.name()), "MyFatJetsKt12"+std::string(sys.name()));
-    SetUpFatJetTools(m_jetRecTool_kt8, 0.8, "goodJets"+std::string(sys.name()), "MyFatJetsKt8"+std::string(sys.name()));
+    //SetUpFatJetTools(m_jetRecTool_kt12, 1.2, "goodJets"+std::string(sys.name()), "MyFatJetsKt12"+std::string(sys.name()));
+    //SetUpFatJetTools(m_jetRecTool_kt8, 0.8, "goodJets"+std::string(sys.name()), "MyFatJetsKt8"+std::string(sys.name()));
+    //Hack to skip fat jets 
+    SetUpFatJetTools(m_jetRecTool_kt12, 1.2, "goodJets", "MyFatJetsKt12"+std::string(sys.name()));
+    SetUpFatJetTools(m_jetRecTool_kt8, 0.8, "goodJets", "MyFatJetsKt8"+std::string(sys.name()));
+
   
   }	
 
@@ -963,30 +972,24 @@ EL::StatusCode MyxAODAnalysis :: execute ()
       
       
     }
-    // Event Passes LAr, TileError and CoreFlags. 
+
 
     bool coreFlags = false;
-    
     bool sctFlag = false;
 
-
-
     if (!isMC){
-      
-      
       if ((eventInfo->errorState(xAOD::EventInfo::SCT) == xAOD::EventInfo::Error )){
 	sctFlag = true;
       }
       if (eventInfo->isEventFlagBitSet(xAOD::EventInfo::Core,18)){
 	coreFlags = true;
       }
-      
       if ( (eventInfo->errorState(xAOD::EventInfo::LAr)==xAOD::EventInfo::Error) || (eventInfo->errorState(xAOD::EventInfo::Tile) == xAOD::EventInfo::Error) || coreFlags || sctFlag){
 	isyst++;
 	continue;
       }
     }
-    
+    // Event Passes LAr, TileError and CoreFlags.     
     if (isyst == 0){
       
       HSRA_noWgt->Fill(3,1);
@@ -1049,8 +1052,6 @@ EL::StatusCode MyxAODAnalysis :: execute ()
 
     }
 
-
-
     else{
       
       if(year==2015){
@@ -1064,41 +1065,28 @@ EL::StatusCode MyxAODAnalysis :: execute ()
 	  }
 	
 	passedMuTrigger=( (objTool->IsTrigPassed("HLT_mu20_iloose_L1MU15 || HLT_mu50 ")));
-	
 	passedGammaTrigger=(objTool->IsTrigPassed("HLT_g120_loose"));
-	
 	passedMETTrigger = objTool->IsMETTrigPassed("HLT_xe70"); // or we use HLT_xe70_mht  or HLT_xe70_tc_lcw 
-	
       }
       else if(year==2016){
 	
 	passedElTrigger=  ((objTool->IsTrigPassed("HLT_e26_lhtight_nod0_ivarloose || HLT_e60_lhmedium_nod0 || HLT_e140_lhloose_nod0")));
-	
 	passedMuTrigger= ((objTool->IsTrigPassed("HLT_mu26_ivarmedium || HLT_mu50 ")));
-	
 	passedGammaTrigger=(objTool->IsTrigPassed("HLT_g140_loose"));
 	
 	if(isData){
-	  
 	  passedMETTrigger = objTool->IsMETTrigPassed("HLT_xe110_mht_L1XE50"); 
 	}
 	else{
 	  passedMETTrigger = objTool->IsMETTrigPassed("HLT_xe100_mht_L1XE50"); 
-	  
 	}
-		  
-      }
-      
+	}
       passedMETTrigger = objTool->IsMETTrigPassed(); 
       passedMultiJetTrigger = objTool->IsTrigPassed("HLT_6j45_0eta240");
       passedTauTrigger = objTool->IsTrigPassed("tau25_medium1_tracktwo");// this will never pass because it's not in the derivation
-
     }
 
-
-    
     if (passedElTrigger == 1 || passedMuTrigger == 1) passedLepTrigger = true;
-	
     
     if (isyst == 0){
       if (passedMETTrigger){
@@ -1111,14 +1099,13 @@ EL::StatusCode MyxAODAnalysis :: execute ()
 	
       }
 
-      if (passedMuTrigger || passedElTrigger){
+      if (passedLepTrigger){
 	HCRgamma_noWgt->Fill(4,1);
 	HCRgamma_mcWgt->Fill(4,mcWgt); 
 	HCRgamma_allWgt->Fill(4,mcWgt*btagWgt*lepWgt*trigWgt*puWgt);
       }
       
-      if (passedMuTrigger || passedElTrigger){
-	passedLepTrigger = true;
+      if (passedLepTrigger){
 	HCRZ_noWgt->Fill(4,1);
 	HCRZ_mcWgt->Fill(4,mcWgt); 
 	HCRZ_allWgt->Fill(4,mcWgt*btagWgt*lepWgt*trigWgt*puWgt);
@@ -1396,7 +1383,7 @@ EL::StatusCode MyxAODAnalysis :: execute ()
     
     // Temp for debugging
     if (isyst == 0){
-      std::unique_ptr<Cutflows> m_cutflows (new Cutflows (*m_varCalc, *m_regions, SRAHists,SRBHists, CRZHists, CRTemuHists, CRT1LHists, CRWHists, CRsTHists, CRgammaHists, btagWgt, lepWgt, trigWgt, puWgt, mcWgt, EventNumber, passedMETTrigger, passedLepTrigger, passedGammaTrigger, truthfilt_MET));
+      std::unique_ptr<Cutflows> m_cutflows (new Cutflows (*m_varCalc, *m_regions, SRAHists, SRBHists, CRZHists, CRTemuHists, CRT1LHists, CRWHists, CRsTHists, CRgammaHists, btagWgt, lepWgt, trigWgt, puWgt, mcWgt, EventNumber, passedMETTrigger, passedLepTrigger, passedGammaTrigger, truthfilt_MET));
     }
     
     if ( m_fileType != "DAOD_TRUTH1"){
@@ -1465,13 +1452,13 @@ EL::StatusCode MyxAODAnalysis :: execute ()
   SRACutList.push_back("nbjets >= 3");
   SRACutList.push_back("Signal veto");
   SRACutList.push_back("Baseline veto");
-  SRACutList.push_back("JetMET dphi> 0.4");
-  SRACutList.push_back("MET/mEff > 0.25");
-  SRACutList.push_back("leading b jets");
-  SRACutList.push_back("m_CT > 150");
-  SRACutList.push_back("ETMiss > 250");
-  SRACutList.push_back("m_bb > 200");
-  SRACutList.push_back("m_CT > 100");
+  SRACutList.push_back("JetMET dphi_4strong> 0.4");
+  SRACutList.push_back("pTb1>100");
+  SRACutList.push_back("maxDR_bb > 2.5");
+  SRACutList.push_back("maxminDR_bb < 2.5");
+  SRACutList.push_back("all_Meff > 1300");
+  SRACutList.push_back("Stop0L_tauVeto");
+  SRACutList.push_back("80 < maxminmbb <150");
   SRACutList.push_back("m_CT > 250");
   SRACutList.push_back("m_CT > 350");
   SRACutList.push_back("m_CT > 450");
@@ -1664,9 +1651,9 @@ EL::StatusCode MyxAODAnalysis :: execute ()
   CRZCutList.push_back("Jet/MET");
   CRZCutList.push_back("Cosmic Muons");
   CRZCutList.push_back("Muon Cleaning");
-  CRZCutList.push_back("nBaseline/Signal Lep == 2");
-  CRZCutList.push_back("pT(e1) || pT(mu1) > 26");
-  CRZCutList.push_back("Trigger matched");
+  CRZCutList.push_back("MET > 250");
+  CRZCutList.push_back("nJets >= 4");
+  CRZCutList.push_back("nBJets >= 3");
   CRZCutList.push_back("76 < m_ll < 106");
   CRZCutList.push_back("ETMiss_corr > 100");
   CRZCutList.push_back("njets = 2,3,4");
@@ -1681,7 +1668,7 @@ EL::StatusCode MyxAODAnalysis :: execute ()
   CRZCutList.push_back("m_bb > 200");
   
 
-  bool doCRZCutflow = false;
+  bool doCRZCutflow = true;
   if (doCRZCutflow){
 
   std::cout << "Number of weighted events total:"  << PUSumOfWeights << std::endl;

@@ -670,6 +670,7 @@ void TreeService::fillTree(IObjectDef *objects ,PreliminarySel &region, Calculat
   dPhiL2b2 = variables.dPhiL2b2;
   
   minDPhijMET = variables.minDelPhi;
+  minDPhijMET_4 = variables.minDelPhi_4;
   minAdjDPhijMET = variables.adjMinDelPhi;
   minDPhiLb = variables.minDPhiLb;
   
@@ -720,6 +721,9 @@ void TreeService::fillTree(IObjectDef *objects ,PreliminarySel &region, Calculat
   MDelR = variables.RJVarsSS_MDelR;
   wrongMDelR = variables.RJVarsSS_wrongMDelR;
 
+  //Vetos for cutflow
+  Stop0L_tauVeto = variables.Stop0L_tauVeto;
+  
   Aplanarity = variables.Aplanarity;
   TransformedAplanarity = variables.transformedAplan;
   Sphericity = variables.Sphericity;
@@ -818,35 +822,39 @@ void TreeService::fillTree(IObjectDef *objects ,PreliminarySel &region, Calculat
   fatJet12_E.clear();
   fatJet12_M.clear();
 
-  Stop0L_tauVeto = true;
+    
+
   int maxJet = objects->getGoodJets()->size();
-  for (int iJet = 0; iJet < maxJet; iJet++){
-    jet_pT.push_back(0.001*(*(objects->getGoodJets()))[iJet]->pt());
-    jet_eta.push_back((*(objects->getGoodJets()))[iJet]->eta());
-    jet_phi.push_back((*(objects->getGoodJets()))[iJet]->phi());
-    jet_E.push_back(0.001*(*(objects->getGoodJets()))[iJet]->e());
-    jet_M.push_back(0.001*(*(objects->getGoodJets()))[iJet]->m());
-    double flav= ( ((*(objects->getGoodJets()))[iJet]->auxdata< char >("bjet") == true ) && fabs((*(objects->getGoodJets()))[iJet]->eta())<2.5 ) ? 5 : 0;
-    jet_flav.push_back(flav);
-    if (flav != 5){
-      std::vector<int> ntrk;
-      (*(objects->getGoodJets()))[iJet]->getAttribute(xAOD::JetAttribute::NumTrkPt500,ntrk);
-      if(ntrk.size()>0){
-	jet_ntrks.push_back(ntrk[0]);
-	if (ntrk[0]<=4){
-	  double dphi = TVector2::Phi_mpi_pi(ETMissPhi - (*(objects->getGoodJets()))[iJet]->phi());
-	  if (fabs(dphi)<(TMath::Pi()/5.0)){Stop0L_tauVeto = false;}
+  for (int iJet = 0; iJet < maxJet; iJet++)
+    {
+      jet_pT.push_back(0.001*(*(objects->getGoodJets()))[iJet]->pt());
+      jet_eta.push_back((*(objects->getGoodJets()))[iJet]->eta());
+      jet_phi.push_back((*(objects->getGoodJets()))[iJet]->phi());
+      jet_E.push_back(0.001*(*(objects->getGoodJets()))[iJet]->e());
+      jet_M.push_back(0.001*(*(objects->getGoodJets()))[iJet]->m());
+      double flav= ( ((*(objects->getGoodJets()))[iJet]->auxdata< char >("bjet") == true ) && fabs((*(objects->getGoodJets()))[iJet]->eta())<2.5 ) ? 5 : 0;
+      jet_flav.push_back(flav);
+      if (flav != 5)
+	{
+	  std::vector<int> ntrk;
+	  (*(objects->getGoodJets()))[iJet]->getAttribute(xAOD::JetAttribute::NumTrkPt500,ntrk);
+	  if(ntrk.size()>0)
+	    {
+	      jet_ntrks.push_back(ntrk[0]);
+	      if (ntrk[0]<=4)
+		{
+		  double dphi = TVector2::Phi_mpi_pi(ETMissPhi - (*(objects->getGoodJets()))[iJet]->phi());
+		}
+	    }
 	}
-      }
+      int flavour = -1;
+      // mcid == 0 for Data
+      if(mcID > 0){(*(objects->getGoodJets()))[iJet]->getAttribute("ConeTruthLabelID",flavour);}
+      jet_truflav.push_back( flavour );
+      double MV2c10wgt = -99;
+      if(mcID > 0){(*(objects->getGoodJets()))[iJet]->btagging()->MVx_discriminant("MV2c10", MV2c10wgt);}
+      jet_bWgt.push_back(MV2c10wgt);
     }
-    int flavour = -1;
-    // mcid == 0 for Data
-    if(mcID > 0){(*(objects->getGoodJets()))[iJet]->getAttribute("ConeTruthLabelID",flavour);}
-    jet_truflav.push_back( flavour );
-    double MV2c10wgt = -99;
-    if(mcID > 0){(*(objects->getGoodJets()))[iJet]->btagging()->MVx_discriminant("MV2c10", MV2c10wgt);}
-    jet_bWgt.push_back(MV2c10wgt);
-  }
   
   
   int maxFatJet8 = objects->getFatJets_kt8()->size();

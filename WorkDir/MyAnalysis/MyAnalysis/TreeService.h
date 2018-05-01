@@ -129,6 +129,7 @@ class TreeService
   double dPhiL2b2;
   
   double minDPhijMET;
+  double minDPhijMET_4;
   double adjDPhij1MET;
   double minAdjDPhijMET;
   double minDPhiLb;

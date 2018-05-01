@@ -127,7 +127,6 @@ void Cutflows::SRACutflows( CalculateVariables variables, PreliminarySel region,
   }
 
 
-
   if (variables.nBaselineLepton==0){
 
     (HSRA)[0]->Fill(internalCut, 1);
@@ -141,7 +140,7 @@ void Cutflows::SRACutflows( CalculateVariables variables, PreliminarySel region,
 
   // Up to here is good. 
 
-  if (variables.minDelPhi>0.4){
+  if (variables.minDelPhi_4 > 0.4){
     (HSRA)[0]->Fill(internalCut, 1);
     (HSRA)[1]->Fill(internalCut, mcWeight);
     (HSRA)[2]->Fill(internalCut, mcWeight*btagWeight*lepWeight*triggerWeight*pileUpWeight*JVTWgt);
@@ -151,9 +150,7 @@ void Cutflows::SRACutflows( CalculateVariables variables, PreliminarySel region,
     return;
   }
 
-
-
-  if (variables.ratioMETmEff2j > 0.25){
+  if (variables.pTb1 > 100){
     (HSRA)[0]->Fill(internalCut, 1);
     (HSRA)[1]->Fill(internalCut, mcWeight);
     (HSRA)[2]->Fill(internalCut, mcWeight*btagWeight*lepWeight*triggerWeight*pileUpWeight*JVTWgt);
@@ -163,9 +160,7 @@ void Cutflows::SRACutflows( CalculateVariables variables, PreliminarySel region,
     return;
   }
 
-
-
-  if (variables.leadingBs){
+  if (variables.maxDR > 2.5){
     (HSRA)[0]->Fill(internalCut, 1);
     (HSRA)[1]->Fill(internalCut, mcWeight);
     (HSRA)[2]->Fill(internalCut, mcWeight*btagWeight*lepWeight*triggerWeight*pileUpWeight*JVTWgt);
@@ -174,10 +169,8 @@ void Cutflows::SRACutflows( CalculateVariables variables, PreliminarySel region,
   else {
     return;
   }
-
-
   
-  if (variables.eTMiss > 250){
+  if (variables.minDR <2.5){
     (HSRA)[0]->Fill(internalCut, 1);
     (HSRA)[1]->Fill(internalCut, mcWeight);
     (HSRA)[2]->Fill(internalCut, mcWeight*btagWeight*lepWeight*triggerWeight*pileUpWeight*JVTWgt);
@@ -187,30 +180,27 @@ void Cutflows::SRACutflows( CalculateVariables variables, PreliminarySel region,
     return;
   }
 
+  if (variables.all_Meff > 1300){
+    (HSRA)[0]->Fill(internalCut, 1);
+    (HSRA)[1]->Fill(internalCut, mcWeight);
+    (HSRA)[2]->Fill(internalCut, mcWeight*btagWeight*lepWeight*triggerWeight*pileUpWeight*JVTWgt);
+    internalCut++;
+  }
+  else {
+    return;
+  }
+
+  if (variables.Stop0L_tauVeto ==true){
+    (HSRA)[0]->Fill(internalCut, 1);
+    (HSRA)[1]->Fill(internalCut, mcWeight);
+    (HSRA)[2]->Fill(internalCut, mcWeight*btagWeight*lepWeight*triggerWeight*pileUpWeight*JVTWgt);
+    internalCut++;
+  }
+  else {
+    return;
+  }
   
-
-  if (variables.m_bb > 200){
-    (HSRA)[0]->Fill(internalCut, 1);
-    (HSRA)[1]->Fill(internalCut, mcWeight);
-    (HSRA)[2]->Fill(internalCut, mcWeight*btagWeight*lepWeight*triggerWeight*pileUpWeight*JVTWgt);
-    internalCut++;
-  }
-  else {
-    return;
-  }
-
-  if (variables.m_CT > 100){
-    (HSRA)[0]->Fill(internalCut, 1);
-    (HSRA)[1]->Fill(internalCut, mcWeight);
-    (HSRA)[2]->Fill(internalCut, mcWeight*btagWeight*lepWeight*triggerWeight*pileUpWeight*JVTWgt);
-    internalCut++;
-  }
-  else {
-    return;
-  }
-
-  
-  if (variables.m_CT > 250){
+  if (variables.InvMass_Bij_minR > 80 && variables.InvMass_Bij_minR < 150){
     (HSRA)[0]->Fill(internalCut, 1);
     (HSRA)[1]->Fill(internalCut, mcWeight);
     (HSRA)[2]->Fill(internalCut, mcWeight*btagWeight*lepWeight*triggerWeight*pileUpWeight*JVTWgt);
@@ -517,8 +507,6 @@ void Cutflows::CRgammaCutflows( CalculateVariables variables, PreliminarySel reg
     return;
   }
 
-
-
   if (variables.minDelPhi>0.4){
     (HCRgamma)[0]->Fill(internalCut, 1);
     (HCRgamma)[1]->Fill(internalCut, mcWeight);
@@ -528,9 +516,6 @@ void Cutflows::CRgammaCutflows( CalculateVariables variables, PreliminarySel reg
   else {
     return;
   }
-
-
-
 
 
   if (variables.m_bb > 200){
@@ -562,10 +547,7 @@ void Cutflows::CRZCutflows( CalculateVariables variables, PreliminarySel region,
   int internalCut = 9;
 
 
-  if (variables.nLepton==2 && (variables.nMuon == 2 || variables.nElectron ==2) && variables.nBaselineLepton == 2){
-    //if (variables.nLepton==2 && (variables.nMuon == 2)){
-
-    lepWeight = variables.leptonSF;
+  if (variables.eTMiss > 250){
 
     (HCRZ)[0]->Fill(internalCut, 1);
     (HCRZ)[1]->Fill(internalCut, mcWeight);
@@ -576,7 +558,7 @@ void Cutflows::CRZCutflows( CalculateVariables variables, PreliminarySel region,
     return;
   }
 
-  if ((variables.nMuon == 2 && variables.pTmu1>27 ) || (variables.nElectron ==2 && variables.pTel1>27 )){
+  if (variables.nJets >= 4){
     (HCRZ)[0]->Fill(internalCut, 1);
     (HCRZ)[1]->Fill(internalCut, mcWeight);
     (HCRZ)[2]->Fill(internalCut, mcWeight*btagWeight*lepWeight*triggerWeight*pileUpWeight*JVTWgt);
@@ -588,9 +570,7 @@ void Cutflows::CRZCutflows( CalculateVariables variables, PreliminarySel region,
 
 
 
-  if (variables.elTriggerMatch || variables.muTriggerMatch){
-
-    //lepWeight = variables.leptonSF;
+  if (variables.nbJets >= 3){
 
     (HCRZ)[0]->Fill(internalCut, 1);
     (HCRZ)[1]->Fill(internalCut, mcWeight);
