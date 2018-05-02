@@ -186,7 +186,8 @@ class IObjectDef
   virtual double getJVTSF() = 0;
   virtual double getLeptonSF() = 0;
   virtual int getPrimVertex() = 0;
-
+  //  virtual double getMuonRecoSF() = 0;
+  //  virtual double getMuonTriggerSF() = 0;
   virtual bool elTriggerMatch() = 0;
   virtual bool muTriggerMatch() = 0;
   virtual bool taTriggerMatch() = 0;

@@ -62,7 +62,7 @@ CalculateVariables::CalculateVariables(IObjectDef *objects, bool isTruth, bool d
   nBaselineLepton = nBaselineMuon + nBaselineElectron;
   nPhoton = objects->getGoodPhotons()->size();
 
-  electronTrigSF = objects->getElectronTriggerSF();
+  
   eTMiss = objects->getMET()*0.001;
   eTMissPhi = objects->getMETPhi();
   // This is the ETMiss in the regions with the electron added to the MET
@@ -152,11 +152,14 @@ CalculateVariables::CalculateVariables(IObjectDef *objects, bool isTruth, bool d
   
   nNonBJets = objects->getNonBJets()->size();
   // Scale Factors
-
+  muonSF = objects->getMuonSF();
+  electronTrigSF = objects->getElectronTriggerSF();
   leptonSF = objects->getLeptonSF();
   bJetSF = objects->getBJetSF();
   JVTSF = objects->getJVTSF();
-
+  electronSF = objects->getElectronSF();
+  //muonTrigSF = objects->getMuonTriggerSF();
+  //muonRecoSF = objects->getMuonRecoSF();
   // trigger matching
 
   elTriggerMatch = objects->elTriggerMatch();
@@ -967,9 +970,6 @@ CalculateVariables::CalculateVariables(IObjectDef *objects, bool isTruth, bool d
 
   //do aplanarity/extra calculations here
 
-  // Razor Variables gives segfault on photon truth 
-  //  this->CalculateRazorVariables(objects);
-  //this->CalculateShapeVariables(objects);
   
   
   //
@@ -1074,20 +1074,91 @@ CalculateVariables::CalculateVariables(IObjectDef *objects, bool isTruth, bool d
     InvMass_Bij_minR1= (bivR1+bjvR1).M();
     JetAsymmR_min1=((*(objects->getBJets()))[inummR1]->pt()-(*(objects->getBJets()))[jnummR1]->pt())/((*(objects->getBJets()))[inummR1]->pt()+(*(objects->getBJets()))[jnummR1]->pt());
   }
-
-  /*
-  std::cout<<"minDR= "<<minDR<<std::endl;
-  std::cout<<"minDR no exclusion= "<<minDR1<<std::endl;
-  std::cout<<"Jet Asymmetry minDR= "<<JetAsymmR_min<<std::endl;
-  std::cout<<"Jet Asymmetry minDR without exclusion= "<<JetAsymmR_min1<<std::endl;
-  std::cout<<"Invariant mass minDR= "<<InvMass_Bij_minR<<std::endl;
-  std::cout<<"Invariant mass minDR without exclusion= "<<InvMass_Bij_minR1<<std::endl;
-  */ 
-
+ 
  //Min DR algorithm end 
   //
 
+  //SRB algorithms
+  
+  //SRB Algorithm Start
+      int SRB_id1=-99;
+      int SRB_id2=-99;
+      int SRB_id3=-99;
+      int SRB_id4=-99;
+      double SRB_minDR=99;
+      double SRB_minDR2=99;
+      double SRB_Hmbb=-1;
+  if(nbJets>=4)
+    {
+      for (int i=0; i<4; ++i)//Change to i<4 for 4 strongest b-jets
+	{
+	  for(int j=0; j<4; ++j)//Change to i<4 for 4 strongest b-jets
+	    {
+	      if(i!=j)
+		{
+		  double trialDEta=fabs( (*(objects->getBJets()))[i]->eta()  - (*(objects->getBJets()))[j]->eta());
+		  double trialDPhi=fabs(TVector2::Phi_mpi_pi( (*(objects->getBJets()))[i]->phi()  - (*(objects->getBJets()))[j]->phi()));
+		  double trialDR= std::sqrt((trialDEta*trialDEta)+(trialDPhi*trialDPhi));
+		  //		  std::cout<<"trialDR= "<<trialDR<<std::endl;
+		  if (trialDR<SRB_minDR)
+		    {
+		      SRB_minDR=trialDR;
+		      SRB_id1=i;
+		      SRB_id2=j;
+		    }
+		  // std::cout<<"SRB_minDR= "<<SRB_minDR<<std::endl;
+		}//i!=j
+	    }//Loop over b-jets	  
+	}//Loop over b-jets 
+      //      std::cout<<"id1="<<SRB_id1<<",id2= "<<SRB_id2<<std::endl;
+
+      for (int i=0; i<4; ++i)//Change to i<4 for 4 strongest b-jets
+	{
+	  for(int j=0; j<4; ++j)//Change to i<4 for 4 strongest b-jets
+	    {
+	      if(i!=j && i!=SRB_id1 && j!=SRB_id1 && i!=SRB_id2 && j!=SRB_id2 )
+		{
+		  double trialDEta=fabs( (*(objects->getBJets()))[i]->eta()  - (*(objects->getBJets()))[j]->eta());
+		  double trialDPhi=fabs(TVector2::Phi_mpi_pi( (*(objects->getBJets()))[i]->phi()  - (*(objects->getBJets()))[j]->phi()));
+		  double trialDR= std::sqrt((trialDEta*trialDEta)+(trialDPhi*trialDPhi));
+		  //		  std::cout<<"trialDR= "<<trialDR<<std::endl;
+		  if (trialDR<SRB_minDR2)
+		    {
+		      SRB_minDR2=trialDR;
+		      SRB_id3=i;
+		      SRB_id4=j;
+		    }
+
+		  //		  std::cout<<"SRB_minDR2= "<<SRB_minDR2<<std::endl;
+		}//i!=j
+	    }//Loop over b-jets	  
+	}//Loop over b-jets 
+      //std::cout<<"id3="<<SRB_id3<<", id4= "<<SRB_id4<<std::endl;
+      //std::cout<<"Out of SRB algorithm"<<std::endl;
+    }//nbJets>=4
+  
+  if (SRB_id1>-1 && SRB_id2>-1 && SRB_id3>-1 && SRB_id4>-1) 
+    {
+      TLorentzVector b1m = (*(objects->getBJets()))[SRB_id1]->p4()*0.001;
+      TLorentzVector b2m = (*(objects->getBJets()))[SRB_id2]->p4()*0.001;
+      double SRB_mbb1= (b2m+b1m).M();
+      TLorentzVector b3m = (*(objects->getBJets()))[SRB_id3]->p4()*0.001;
+      TLorentzVector b4m = (*(objects->getBJets()))[SRB_id4]->p4()*0.001;
+      double SRB_mbb2= (b3m+b4m).M();
+      SRB_Hmbb= (SRB_mbb1+SRB_mbb2)/2;
+    }
+
+  //SRB Algorithm End
+
+
+
+
+
+
  
+  //SRB algorithms end
+
+
 }
 
 void CalculateVariables::CalculatePhotonMET(IObjectDef *objects){

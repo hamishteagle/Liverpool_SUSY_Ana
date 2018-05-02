@@ -66,8 +66,13 @@ int main( int argc, char* argv[]) {
 	submitDir = "mc16_13TeV.390305.MGPy8EG_A14N23LO_BB_onestepN2hN1_900_530_400.deriv.DAOD_SUSY1.e5671_e5984_a875_r9364_r9315_p3404";
 	submitDir = "/hepstore/hteagle/SubmissionOutputs/"+submitDir;
 	std::cout << "The Submission Directory: " << submitDir << std::endl;
-    
-
+	
+	std::string PassWhile;
+	while (PassWhile != "y")
+	  {
+	    std::cout<<"Paused while passing while, enter 'y'"<<std::endl;
+	    std::cin>>PassWhile;
+	  }
 
       }
     // Set up the job for xAOD access:

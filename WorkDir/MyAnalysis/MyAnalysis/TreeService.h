@@ -304,6 +304,8 @@ class TreeService
   double oldMuonSF;
   double electronSF;
   double electronTriggerSF;
+  //  double muonRecoSF;
+  //  double muonTrigSF;
   double tauSF;
   double tauTriggerSF;
   double bJetSF;
@@ -372,6 +374,11 @@ class TreeService
   double InvMass_Bij_minR;
   double JetAsymmR_min1;
   double InvMass_Bij_minR1; 
+
+  double SRB_minDR;
+  double SRB_minDR2;
+  double SRB_Hmbb;
+
 
   int ttbar_W1_decay;
   int ttbar_tau1_decay;

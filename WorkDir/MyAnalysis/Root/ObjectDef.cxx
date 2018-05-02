@@ -506,12 +506,11 @@ void ObjectDef::FillBaselineElectrons(){
 
   bool leadingLepton = true;
   for (; el_itr != el_end; ++el_itr) {
-
     if (leadingLepton){
       if (!objTool->isData())
 	{
-	  electronSF = objTool->GetTotalElectronSF(*goodElectrons,true,true,false,"singleLepton");
-	  electronTriggerSF = objTool->GetTotalElectronSF(*goodElectrons,false,false,true,"singleLepton");
+	  electronSF = objTool->GetTotalElectronSF(*goodElectrons,true,true,false,true,"");
+	  electronTriggerSF = objTool->GetTotalElectronSF(*goodElectrons,false,false,true,false,"singleLepton");
 	}
     }
     
@@ -715,7 +714,7 @@ void ObjectDef::FillBaselineMuons(){
   xAOD::MuonContainer* NontriggerpassMuons  = new xAOD::MuonContainer(SG::VIEW_ELEMENTS);
   eventStore->record(NontriggerpassMuons,"NontriggerpassMuons"+systematic);
 
-  muonSF = 1;
+
   mu_itr = goodMuons->begin();
   mu_end = goodMuons->end();
   passMuonTriggerMatch = false;
@@ -731,7 +730,7 @@ void ObjectDef::FillBaselineMuons(){
       if ( objTool->treatAsYear() == 2015){
 	MuonTriggerSF = objTool->GetTotalMuonSF(*goodMuons,false,false,"HLT_mu20_iloose_L1MU15_OR_HLT_mu50");
       }      
-      else if ( objTool->treatAsYear() == 2016){
+      else {//These triggers are the same for 2016/17 may change for 2018
 	MuonTriggerSF = objTool->GetTotalMuonSF(*goodMuons,false,false,"HLT_mu26_ivarmedium_OR_HLT_mu50");
       }
       FirstRun = false;

@@ -60,6 +60,7 @@ bool SetUpFatJetTools(JetToolRunner *& tool, double jetradius, std::string input
 
   PseudoJetGetter* plcget = new PseudoJetGetter(("mylcget"+outputcontainer).c_str());
   plcget->setProperty("InputContainer", inputcontainer);
+  //  eventstore ->print will show what's retrievables in the store
   plcget->setProperty("OutputContainer", "Reclustered"+outputcontainer);
   plcget->setProperty("Label", "Tower");
   plcget->setProperty("SkipNegativeEnergy", true);
@@ -597,18 +598,18 @@ EL::StatusCode MyxAODAnalysis :: initialize ()
     infodef.affectsWeights = false;
     infodef.affectsType = ST::Unknown;
     systInfoList.push_back(infodef);
-  } else {
-      systInfoList = objTool->getSystInfoList();
-  
-  }
-  TTree *Temp;
-    
 
+  } 
+  else {
+    systInfoList = objTool->getSystInfoList();
+  }
+  
+  TTree *Temp;
+  
   for(const auto& sysInfo : systInfoList){
     const CP::SystematicSet& sys = sysInfo.systset;
     
     std::cout << "Systematic name: " + sys.name() << std::endl;
-    
     std::cout << "Systematic tree name: " + sys.name() << std::endl;
 
     int found_tau = (std::string(sys.name())).find("TAU");
@@ -617,6 +618,12 @@ EL::StatusCode MyxAODAnalysis :: initialize ()
       continue;
     }
  
+    int found_prw = (std::string(sys.name()).find("PRW"));
+    if(found_prw == std::string::npos){
+      std::cout<<"Not the correct syst. Skip"<<std::endl;
+      continue;
+    }
+    
     std::string treeName = "CollectionTree_"+std::string(sys.name());
     const char * cName = treeName.c_str();
     Temp = new TTree (cName, cName);
@@ -624,18 +631,10 @@ EL::StatusCode MyxAODAnalysis :: initialize ()
     TreeService* Tree_Service = new TreeService(Temp, out_TDir);
     m_treeServiceVector.push_back(Tree_Service);
     
-    int found_prw = (std::string(sys.name()).find("PRW"));
-    if(found_prw !=std::string::npos){
-      std::cout<<"Running with prw systematic. Skip"<<std::endl;
-      continue;
-    }
+    
     // Initialise the Jet reclustering tools here systematic by systematic
-    //SetUpFatJetTools(m_jetRecTool_kt12, 1.2, "goodJets"+std::string(sys.name()), "MyFatJetsKt12"+std::string(sys.name()));
-    //SetUpFatJetTools(m_jetRecTool_kt8, 0.8, "goodJets"+std::string(sys.name()), "MyFatJetsKt8"+std::string(sys.name()));
-    //Hack to skip fat jets 
-    SetUpFatJetTools(m_jetRecTool_kt12, 1.2, "goodJets", "MyFatJetsKt12"+std::string(sys.name()));
-    SetUpFatJetTools(m_jetRecTool_kt8, 0.8, "goodJets", "MyFatJetsKt8"+std::string(sys.name()));
-
+    SetUpFatJetTools(m_jetRecTool_kt12, 1.2, "goodJets"+std::string(sys.name()), "MyFatJetsKt12"+std::string(sys.name()));
+    SetUpFatJetTools(m_jetRecTool_kt8, 0.8, "goodJets"+std::string(sys.name()), "MyFatJetsKt8"+std::string(sys.name()));
   
   }	
 
@@ -740,9 +739,17 @@ EL::StatusCode MyxAODAnalysis :: execute ()
     
     int found_tau = (std::string(syst.name())).find("TAU");
     if (found_tau != std::string::npos ){
-      std::cout << "Running on a tau systematic. Skip" << std::endl;
+      //std::cout << "Running on a tau systematic. Skip" << std::endl;
       continue;
     }
+
+    int found_prw = (std::string(syst.name()).find("PRW"));
+    if(found_prw == std::string::npos){
+      //std::cout<<"Not the correct syst. Skip"<<std::endl;
+      continue;
+    }
+
+
 
     //std::cout << "Systematic being considered is " << std::string(syst.name()) << std::endl;
     const xAOD::EventInfo* eventInfo =0;
@@ -764,8 +771,12 @@ EL::StatusCode MyxAODAnalysis :: execute ()
     EventNumber = (eventInfo->eventNumber());
 
     xAOD::TStore* store = wk()->xaodStore();
-    
+
+
     double btagWgt = 1;
+    double electronWgt = 1;
+    double muonWgt = 1;
+    double electronTrigWgt;
     double lepWgt = 1;
     double trigWgt = 1;
     double puWgt = 1;
@@ -856,7 +867,7 @@ EL::StatusCode MyxAODAnalysis :: execute ()
       
       HSRA_noWgt->Fill(1,1);
       HSRA_mcWgt->Fill(1,mcWgt); 
-      HSRA_allWgt->Fill(1,mcWgt*btagWgt*lepWgt*trigWgt*puWgt);
+      HSRA_allWgt->Fill(1,mcWgt);//*btagWgt*lepWgt*trigWgt*puWgt);
       
       HSRB_noWgt->Fill(1,1);
       HSRB_mcWgt->Fill(1,mcWgt); 
@@ -940,7 +951,7 @@ EL::StatusCode MyxAODAnalysis :: execute ()
     if (isyst == 0){
       HSRA_noWgt->Fill(2,1);
       HSRA_mcWgt->Fill(2,mcWgt); 
-      HSRA_allWgt->Fill(2,mcWgt*btagWgt*lepWgt*trigWgt*puWgt);
+      HSRA_allWgt->Fill(2,mcWgt);//*btagWgt*lepWgt*trigWgt*puWgt);
       
       HSRB_noWgt->Fill(2,1);
       HSRB_mcWgt->Fill(2,mcWgt); 
@@ -994,7 +1005,7 @@ EL::StatusCode MyxAODAnalysis :: execute ()
       
       HSRA_noWgt->Fill(3,1);
       HSRA_mcWgt->Fill(3,mcWgt); 
-      HSRA_allWgt->Fill(3,mcWgt*btagWgt*lepWgt*trigWgt*puWgt);
+      HSRA_allWgt->Fill(3,mcWgt);//*btagWgt*lepWgt*trigWgt*puWgt);
       
       HSRB_noWgt->Fill(3,1);
       HSRB_mcWgt->Fill(3,mcWgt); 
@@ -1055,60 +1066,54 @@ EL::StatusCode MyxAODAnalysis :: execute ()
     else{
       
       if(year==2015){
-
 	if (!isData)
 	passedElTrigger=( (objTool->IsTrigPassed("HLT_e24_lhmedium_L1EM20VH || HLT_e60_lhmedium || HLT_e120_lhloose")));
-	
 	if(isData)
 	  {
 	    passedElTrigger=( (objTool->IsTrigPassed("HLT_e24_lhmedium_L1EM20VH || HLT_e60_lhmedium || HLT_e120_lhloose")));
 	  }
-	
 	passedMuTrigger=( (objTool->IsTrigPassed("HLT_mu20_iloose_L1MU15 || HLT_mu50 ")));
 	passedGammaTrigger=(objTool->IsTrigPassed("HLT_g120_loose"));
 	passedMETTrigger = objTool->IsMETTrigPassed("HLT_xe70"); // or we use HLT_xe70_mht  or HLT_xe70_tc_lcw 
       }
-      else if(year==2016){
-	
+      else{//These triggers are the same for 2016/17 may change for 2018
 	passedElTrigger=  ((objTool->IsTrigPassed("HLT_e26_lhtight_nod0_ivarloose || HLT_e60_lhmedium_nod0 || HLT_e140_lhloose_nod0")));
 	passedMuTrigger= ((objTool->IsTrigPassed("HLT_mu26_ivarmedium || HLT_mu50 ")));
 	passedGammaTrigger=(objTool->IsTrigPassed("HLT_g140_loose"));
-	
 	if(isData){
 	  passedMETTrigger = objTool->IsMETTrigPassed("HLT_xe110_mht_L1XE50"); 
 	}
 	else{
 	  passedMETTrigger = objTool->IsMETTrigPassed("HLT_xe100_mht_L1XE50"); 
 	}
-	}
+      }
       passedMETTrigger = objTool->IsMETTrigPassed(); 
       passedMultiJetTrigger = objTool->IsTrigPassed("HLT_6j45_0eta240");
       passedTauTrigger = objTool->IsTrigPassed("tau25_medium1_tracktwo");// this will never pass because it's not in the derivation
     }
-
+    
     if (passedElTrigger == 1 || passedMuTrigger == 1) passedLepTrigger = true;
     
     if (isyst == 0){
       if (passedMETTrigger){
 	HSRA_noWgt->Fill(4,1);
 	HSRA_mcWgt->Fill(4,mcWgt); 
-	HSRA_allWgt->Fill(4,mcWgt*btagWgt*lepWgt*trigWgt*puWgt);
+	HSRA_allWgt->Fill(4,mcWgt);//*btagWgt*lepWgt*trigWgt*puWgt);
+	
 	HSRB_noWgt->Fill(4,1);
 	HSRB_mcWgt->Fill(4,mcWgt); 
 	HSRB_allWgt->Fill(4,mcWgt*btagWgt*lepWgt*trigWgt*puWgt);
 	
+	HCRZ_noWgt->Fill(4,1);
+ 	HCRZ_mcWgt->Fill(4,mcWgt); 
+	HCRZ_allWgt->Fill(4,mcWgt*btagWgt*lepWgt*trigWgt*puWgt);
       }
 
       if (passedLepTrigger){
 	HCRgamma_noWgt->Fill(4,1);
 	HCRgamma_mcWgt->Fill(4,mcWgt); 
 	HCRgamma_allWgt->Fill(4,mcWgt*btagWgt*lepWgt*trigWgt*puWgt);
-      }
-      
-      if (passedLepTrigger){
-	HCRZ_noWgt->Fill(4,1);
-	HCRZ_mcWgt->Fill(4,mcWgt); 
-	HCRZ_allWgt->Fill(4,mcWgt*btagWgt*lepWgt*trigWgt*puWgt);
+
 	
 	HCRTemu_noWgt->Fill(4,1);
 	HCRTemu_mcWgt->Fill(4,mcWgt);
@@ -1125,11 +1130,8 @@ EL::StatusCode MyxAODAnalysis :: execute ()
 	HCRsT_noWgt->Fill(4,1);
 	HCRsT_mcWgt->Fill(4,mcWgt);
 	HCRsT_allWgt->Fill(4,mcWgt*btagWgt*lepWgt*trigWgt*puWgt);
-	
       }
     }
-
-
 
     if (m_objs->getPrimVertex() < 1){
       isyst++;
@@ -1138,14 +1140,19 @@ EL::StatusCode MyxAODAnalysis :: execute ()
     }
     
     if (isyst == 0){
-
       if (passedMETTrigger){
 	HSRA_noWgt->Fill(5,1);
 	HSRA_mcWgt->Fill(5,mcWgt); 
-	HSRA_allWgt->Fill(5,mcWgt*btagWgt*lepWgt*trigWgt*puWgt);
+	HSRA_allWgt->Fill(5,mcWgt);//*btagWgt*lepWgt*trigWgt*puWgt);
+
 	HSRB_noWgt->Fill(5,1);
 	HSRB_mcWgt->Fill(5,mcWgt); 
 	HSRB_allWgt->Fill(5,mcWgt*btagWgt*lepWgt*trigWgt*puWgt);
+
+	HCRZ_noWgt->Fill(5,1);
+	HCRZ_mcWgt->Fill(5,mcWgt); 
+	HCRZ_allWgt->Fill(5,mcWgt*btagWgt*lepWgt*trigWgt*puWgt);
+
       }
       if (passedMuTrigger || passedElTrigger){
 	HCRgamma_noWgt->Fill(5,1);
@@ -1155,9 +1162,6 @@ EL::StatusCode MyxAODAnalysis :: execute ()
 
 
       if(passedElTrigger || passedMuTrigger){
-	HCRZ_noWgt->Fill(5,1);
-	HCRZ_mcWgt->Fill(5,mcWgt); 
-	HCRZ_allWgt->Fill(5,mcWgt*btagWgt*lepWgt*trigWgt*puWgt);
 	
 	HCRTemu_noWgt->Fill(5,1);
 	HCRTemu_mcWgt->Fill(5,mcWgt);
@@ -1189,10 +1193,16 @@ EL::StatusCode MyxAODAnalysis :: execute ()
       if (passedMETTrigger){
 	HSRA_noWgt->Fill(6,1);
 	HSRA_mcWgt->Fill(6,mcWgt); 
-	HSRA_allWgt->Fill(6,mcWgt*btagWgt*lepWgt*trigWgt*puWgt);
+	HSRA_allWgt->Fill(6,mcWgt);//*btagWgt*lepWgt*trigWgt*puWgt);
+
 	HSRB_noWgt->Fill(6,1);
 	HSRB_mcWgt->Fill(6,mcWgt); 
 	HSRB_allWgt->Fill(6,mcWgt*btagWgt*lepWgt*trigWgt*puWgt);
+
+	HCRZ_noWgt->Fill(6,1);
+	HCRZ_mcWgt->Fill(6,mcWgt); 
+	HCRZ_allWgt->Fill(6,mcWgt*btagWgt*lepWgt*trigWgt*puWgt);
+
       }
       if (passedMuTrigger || passedElTrigger){
 	HCRgamma_noWgt->Fill(6,1);
@@ -1202,9 +1212,6 @@ EL::StatusCode MyxAODAnalysis :: execute ()
 
 
       if(passedElTrigger || passedMuTrigger){
-	HCRZ_noWgt->Fill(6,1);
-	HCRZ_mcWgt->Fill(6,mcWgt); 
-	HCRZ_allWgt->Fill(6,mcWgt*btagWgt*lepWgt*trigWgt*puWgt);
 	
 	HCRTemu_noWgt->Fill(6,1);
 	HCRTemu_mcWgt->Fill(6,mcWgt);
@@ -1237,10 +1244,16 @@ EL::StatusCode MyxAODAnalysis :: execute ()
       if (passedMETTrigger){
 	HSRA_noWgt->Fill(7,1);
 	HSRA_mcWgt->Fill(7,mcWgt); 
-	HSRA_allWgt->Fill(7,mcWgt*btagWgt*lepWgt*trigWgt*puWgt);
+	HSRA_allWgt->Fill(7,mcWgt);//*btagWgt*lepWgt*trigWgt*puWgt);
+
 	HSRB_noWgt->Fill(7,1);
 	HSRB_mcWgt->Fill(7,mcWgt); 
 	HSRB_allWgt->Fill(7,mcWgt*btagWgt*lepWgt*trigWgt*puWgt);
+
+	HCRZ_noWgt->Fill(7,1);
+	HCRZ_mcWgt->Fill(7,mcWgt); 
+	HCRZ_allWgt->Fill(7,mcWgt*btagWgt*lepWgt*trigWgt*puWgt);
+
       }
       if (passedMuTrigger || passedElTrigger){
 	HCRgamma_noWgt->Fill(7,1);
@@ -1250,9 +1263,6 @@ EL::StatusCode MyxAODAnalysis :: execute ()
       
 
       if(passedElTrigger || passedMuTrigger){
-	HCRZ_noWgt->Fill(7,1);
-	HCRZ_mcWgt->Fill(7,mcWgt); 
-	HCRZ_allWgt->Fill(7,mcWgt*btagWgt*lepWgt*trigWgt*puWgt);
 	
 	HCRTemu_noWgt->Fill(7,1);
 	HCRTemu_mcWgt->Fill(7,mcWgt);
@@ -1285,9 +1295,15 @@ EL::StatusCode MyxAODAnalysis :: execute ()
 	HSRA_noWgt->Fill(8,1);
 	HSRA_mcWgt->Fill(8,mcWgt); 
 	HSRA_allWgt->Fill(8,mcWgt*btagWgt*lepWgt*trigWgt*puWgt);
+
 	HSRB_noWgt->Fill(8,1);
 	HSRB_mcWgt->Fill(8,mcWgt); 
 	HSRB_allWgt->Fill(8,mcWgt*btagWgt*lepWgt*trigWgt*puWgt);
+
+	HCRZ_noWgt->Fill(8,1);
+	HCRZ_mcWgt->Fill(8,mcWgt); 
+	HCRZ_allWgt->Fill(8,mcWgt*btagWgt*lepWgt*trigWgt*puWgt);
+
       }
       if (passedMuTrigger || passedElTrigger){
 	HCRgamma_noWgt->Fill(8,1);
@@ -1296,9 +1312,6 @@ EL::StatusCode MyxAODAnalysis :: execute ()
       }
 
       if(passedElTrigger || passedMuTrigger){
-	HCRZ_noWgt->Fill(8,1);
-	HCRZ_mcWgt->Fill(8,mcWgt); 
-	HCRZ_allWgt->Fill(8,mcWgt*btagWgt*lepWgt*trigWgt*puWgt);
 	
 	HCRTemu_noWgt->Fill(8,1);
 	HCRTemu_mcWgt->Fill(8,mcWgt);
@@ -1450,13 +1463,13 @@ EL::StatusCode MyxAODAnalysis :: execute ()
   SRACutList.push_back("ETMiss > 250");
   SRACutList.push_back("njets >= 4");
   SRACutList.push_back("nbjets >= 3");
-  SRACutList.push_back("Signal veto");
-  SRACutList.push_back("Baseline veto");
-  SRACutList.push_back("JetMET dphi_4strong> 0.4");
-  SRACutList.push_back("pTb1>100");
-  SRACutList.push_back("maxDR_bb > 2.5");
-  SRACutList.push_back("maxminDR_bb < 2.5");
-  SRACutList.push_back("all_Meff > 1300");
+  SRACutList.push_back("nLepton ==1 (mcWgt)");
+  SRACutList.push_back("nLep == 1 (+bTagWgt)");
+  SRACutList.push_back("nLep == 1 (+electronWgt)");
+  SRACutList.push_back("nLep == 1 (+elecTrigWgt)");
+  SRACutList.push_back("nLep == 1 (+muonWgt)");
+  SRACutList.push_back("nLep == 1 (+JVT)");
+  SRACutList.push_back("nLep == 1 (+Pileup)");
   SRACutList.push_back("Stop0L_tauVeto");
   SRACutList.push_back("80 < maxminmbb <150");
   SRACutList.push_back("m_CT > 250");
@@ -1491,10 +1504,10 @@ EL::StatusCode MyxAODAnalysis :: execute ()
     {
 
     if (icut == 0){
-      std::cout << std::setw(25) <<std::left << icut+1 << std::setw(25)  << std::left << SRACutList[icut] << std::setw(25) << std::right << m_lumiScaled*HSRA_allWgt->GetBinContent(icut+1) << std::setw(25)<< std::right << std::setprecision(5) << m_lumiScaled*HSRA_allWgt->GetBinContent(icut+1)/(m_lumiScaled*HSRA_allWgt->GetBinContent(icut+1)) << std::setw(25) <<  std::right << m_lumiScaled*HSRA_allWgt->GetBinContent(icut+1)/(m_lumiScaled*HSRA_allWgt->GetBinContent(1))   <<std::endl;
+      std::cout << std::setw(25) <<std::left << icut+1 << std::setw(25)  << std::left << SRACutList[icut] << std::setw(25) << std::right << HSRA_allWgt->GetBinContent(icut+1) << std::setw(25)<< std::right << std::setprecision(5) << HSRA_allWgt->GetBinContent(icut+1)/(HSRA_allWgt->GetBinContent(icut+1)) << std::setw(25) <<  std::right << HSRA_allWgt->GetBinContent(icut+1)/(HSRA_allWgt->GetBinContent(1))   <<std::endl;
       }
       else{
-	std::cout << std::setw(25) <<std::left << icut+1 << std::setw(25)  << std::left << SRACutList[icut] << std::setw(25) << std::right << m_lumiScaled*HSRA_allWgt->GetBinContent(icut+1) << std::setw(25)<< std::right << std::setprecision(5) << m_lumiScaled*HSRA_allWgt->GetBinContent(icut+1)/(m_lumiScaled*HSRA_allWgt->GetBinContent(icut)) << std::setw(25) <<  std::right << m_lumiScaled*HSRA_allWgt->GetBinContent(icut+1)/(m_lumiScaled*HSRA_allWgt->GetBinContent(1))   <<std::endl;
+	std::cout << std::setw(25) <<std::left << icut+1 << std::setw(25)  << std::left << SRACutList[icut] << std::setw(25) << std::right << HSRA_allWgt->GetBinContent(icut+1) << std::setw(25)<< std::right << std::setprecision(5) << HSRA_allWgt->GetBinContent(icut+1)/(HSRA_allWgt->GetBinContent(icut)) << std::setw(25) <<  std::right << HSRA_allWgt->GetBinContent(icut+1)/(HSRA_allWgt->GetBinContent(1))   <<std::endl;
       }
   
     }  
@@ -1654,7 +1667,7 @@ EL::StatusCode MyxAODAnalysis :: execute ()
   CRZCutList.push_back("MET > 250");
   CRZCutList.push_back("nJets >= 4");
   CRZCutList.push_back("nBJets >= 3");
-  CRZCutList.push_back("76 < m_ll < 106");
+  CRZCutList.push_back("nLepton==1");
   CRZCutList.push_back("ETMiss_corr > 100");
   CRZCutList.push_back("njets = 2,3,4");
   CRZCutList.push_back("pTj1 > 50, pTj2 > 50");
@@ -1668,7 +1681,7 @@ EL::StatusCode MyxAODAnalysis :: execute ()
   CRZCutList.push_back("m_bb > 200");
   
 
-  bool doCRZCutflow = true;
+  bool doCRZCutflow = false;
   if (doCRZCutflow){
 
   std::cout << "Number of weighted events total:"  << PUSumOfWeights << std::endl;

@@ -303,7 +303,8 @@ TreeService::TreeService(TTree *outputTree, TDirectory *OutDir){
   tree->Branch("bJetSF", &bJetSF);
   tree->Branch("JVTSF", &JVTSF);
   tree->Branch("puWgt", &puWgt);
-
+  //tree->Branch("muonRecoSF", &muonRecoSF);
+  //tree->Branch("muonTriggerSF", &muonTriggerSF);
 
   // Triggers
   
@@ -355,7 +356,7 @@ TreeService::TreeService(TTree *outputTree, TDirectory *OutDir){
  tree->Branch("MUR1_MUF1_PDF261001", &MUR1_MUF1_PDF261001);	     
  tree->Branch("MUR1_MUF1_PDF261002", &MUR1_MUF1_PDF261002);        
 
-
+ //MaxMin variables
   tree->Branch("maxDR", &maxDR);		    
   tree->Branch("InvMass_Bij_maxDR", &InvMass_Bij_maxDR); 
   tree->Branch("Imbalance_maxDR", &Imbalance_maxDR);   
@@ -367,6 +368,12 @@ TreeService::TreeService(TTree *outputTree, TDirectory *OutDir){
   tree->Branch("JetAsymmR_min_noExcl", &JetAsymmR_min1);    
   tree->Branch("InvMass_Bij_minR_noExcl", &InvMass_Bij_minR1); 
   
+
+  //SRB algorithm variables
+  tree->Branch("SRB_minDR", &SRB_minDR);
+  tree->Branch("SRB_minDR2", &SRB_minDR2);
+  tree->Branch("SRB_Hmbb", &SRB_Hmbb);
+
   // Attempt at Vectors
   tree->Branch("jet_pT", &jet_pT);
   tree->Branch("jet_eta", &jet_eta);
@@ -428,7 +435,7 @@ TreeService::TreeService(TTree *outputTree, TDirectory *OutDir){
 
 void TreeService::fillTree(IObjectDef *objects ,PreliminarySel &region, CalculateVariables &variables, MCChecks MCTruthInfo, double mFinalWeight, double mInitialWeight, double puWeight, double SFmCTbbll, bool TrigMET, bool TrigMu, bool TrigEl, bool TrigGamma, bool Trig6j, double puSumWeights, double TRUTHMET, double TRUTHHT, bool CoreFlags, bool SCTFlag, double RNo, double RenormedMCWgt){
 
-  //std::cout << "Filling the Tree" << std::endl;
+  std::cout << "Filling the Tree" << std::endl;
   CutsRegion = region.region;
 
   coreFlags = CoreFlags;
@@ -732,7 +739,9 @@ void TreeService::fillTree(IObjectDef *objects ,PreliminarySel &region, Calculat
   // Scale Factors:
 
   muonSF = objects->getMuonSF();
-  oldMuonSF = objects->getOldMuonSF();
+  //  muonTrigSF = objects->getMuonTriggerSF();
+  //  muonRecoSF = objects->getMuonRecoSF();
+    oldMuonSF = objects->getOldMuonSF();
   electronSF = objects->getElectronSF();
   electronTriggerSF = objects->getElectronTriggerSF();
   tauSF = objects->getTauSF();
@@ -948,9 +957,9 @@ void TreeService::fillTree(IObjectDef *objects ,PreliminarySel &region, Calculat
 void TreeService::writeTree(){
 
   //  Output.cd() = variables. ;
-  //tree->Write();
+  tree->Write();
 
-  std::cout << "Tree name:" + std::string(tree->GetName()) << std::endl;
+  //std::cout << "Tree name:" + std::string(tree->GetName()) << std::endl;
 
 
 }

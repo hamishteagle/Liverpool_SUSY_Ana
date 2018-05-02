@@ -61,6 +61,8 @@ class ObjectDef: public virtual IObjectDef
   double getMET(){return MET;};
   double getMETPhi(){return METphi;};
   double getMuonSF(){return muonSF;};
+  //  double getMuonTriggerSF(){return MuonTriggerSF;};
+  //  double getMuonRecoSF(){return MuonRecoSF;};
   double getOldMuonSF(){return oldMuonSF;};
   double getElectronSF(){return electronSF;};
   double getElectronTriggerSF(){return electronTriggerSF;};
@@ -124,6 +126,8 @@ class ObjectDef: public virtual IObjectDef
   double photonSF;
   double bJetSF;
   double JVTSF;
+  //  double MuonRecoSF;
+  //  double MuonTriggerSF;
   int nVertex;
 
   JetToolRunner* fatjet_kt12_tool;

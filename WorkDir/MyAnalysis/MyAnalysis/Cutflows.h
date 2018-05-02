@@ -46,7 +46,9 @@ class Cutflows
   bool gammaTriggerPassed;
   double METFilt;
   double JVTWgt;
-
+  double electronWgt;
+  double muonWgt;
+  double electronTrigWgt;
 
 };
 

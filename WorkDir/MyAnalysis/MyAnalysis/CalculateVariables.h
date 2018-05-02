@@ -43,8 +43,10 @@ class CalculateVariables
   double leptonSF;
   double bJetSF;
   double JVTSF;
-
-    
+  double electronSF;
+  double muonSF;
+  //  double muonRecoSF;
+  //  double muonTrigSF;
   // adjusted ETMiss is for the regions with electrons to add to the MET
   
   double adjustedETMiss; //
@@ -354,6 +356,10 @@ class CalculateVariables
 
   double minDR;
   double minDR1;
+
+  double SRB_minDR;
+  double SRB_minDR2;
+  double SRB_Hmbb;
 
   double JetAsymmR_min;
   double InvMass_Bij_minR;
