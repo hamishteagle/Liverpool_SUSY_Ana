@@ -246,9 +246,9 @@ EL::StatusCode MyxAODAnalysis :: histInitialize ()
   HCRgamma_mcWgt = new TH1F("HCRgamma_mcWgt","HCRgamma_mcWgt", 50, 0.5, 50.5);
   HCRgamma_allWgt = new TH1F("HCRgamma_allWgt","HCRgamma_allWgt", 50, 0.5, 50.5);
 
-  HCRZ_noWgt = new TH1F("HCRZ_noWgt","HCRZ_noWgt", 50, 0.5, 50.5);
-  HCRZ_mcWgt = new TH1F("HCRZ_mcWgt","HCRZ_mcWgt", 50, 0.5, 50.5);
-  HCRZ_allWgt = new TH1F("HCRZ_allWgt","HCRZ_allWgt", 50, 0.5, 50.5);
+  HSRB2_noWgt = new TH1F("HSRB2_noWgt","HSRB2_noWgt", 50, 0.5, 50.5);
+  HSRB2_mcWgt = new TH1F("HSRB2_mcWgt","HSRB2_mcWgt", 50, 0.5, 50.5);
+  HSRB2_allWgt = new TH1F("HSRB2_allWgt","HSRB2_allWgt", 50, 0.5, 50.5);
   
   HCRTemu_noWgt = new TH1F("HCRTemu_noWgt","HCRTemu_noWgt", 50, 0.5, 50.5);
   HCRTemu_mcWgt = new TH1F("HCRTemu_mcWgt","HCRTemu_mcWgt", 50, 0.5, 50.5);
@@ -294,9 +294,9 @@ EL::StatusCode MyxAODAnalysis :: histInitialize ()
   HCRgamma_mcWgt->SetDirectory (wk()->getOutputFile("output"));
   HCRgamma_allWgt->SetDirectory (wk()->getOutputFile("output"));
 
-  HCRZ_noWgt->SetDirectory (wk()->getOutputFile("output"));
-  HCRZ_mcWgt->SetDirectory (wk()->getOutputFile("output"));
-  HCRZ_allWgt->SetDirectory (wk()->getOutputFile("output"));
+  HSRB2_noWgt->SetDirectory (wk()->getOutputFile("output"));
+  HSRB2_mcWgt->SetDirectory (wk()->getOutputFile("output"));
+  HSRB2_allWgt->SetDirectory (wk()->getOutputFile("output"));
   
   HCRTemu_noWgt->SetDirectory (wk()->getOutputFile("output"));
   HCRTemu_mcWgt->SetDirectory (wk()->getOutputFile("output"));
@@ -591,7 +591,6 @@ EL::StatusCode MyxAODAnalysis :: initialize ()
   //  objTool->msg().setLevel( MSG::VERBOSE);
 
   // loop over all systematics if we are running with systematics
-
   if(!doSyst) {
     ST::SystInfo infodef;
     infodef.affectsKinematics = false;
@@ -612,18 +611,15 @@ EL::StatusCode MyxAODAnalysis :: initialize ()
     std::cout << "Systematic name: " + sys.name() << std::endl;
     std::cout << "Systematic tree name: " + sys.name() << std::endl;
 
-    int found_tau = (std::string(sys.name())).find("TAU");
-    if (found_tau != std::string::npos ){
-      std::cout << "Running on a tau systematic. Skip" << std::endl;
-      continue;
-    }
- 
-    int found_prw = (std::string(sys.name()).find("PRW"));
-    if(found_prw == std::string::npos){
-      std::cout<<"Not the correct syst. Skip"<<std::endl;
-      continue;
-    }
-    
+
+    int found_MassRes_Top = (std::string(sys.name()).find("MassRes_Top__1up"));
+    if (doSyst)
+      {
+	if(found_MassRes_Top == std::string::npos){//The FatJetsTools can only be setup for one systematic at a time...Need to sort out this method of looping systematics
+	  std::cout<<"Not the correct syst. Skip"<<std::endl;
+	  continue;
+	}
+      }
     std::string treeName = "CollectionTree_"+std::string(sys.name());
     const char * cName = treeName.c_str();
     Temp = new TTree (cName, cName);
@@ -737,21 +733,11 @@ EL::StatusCode MyxAODAnalysis :: execute ()
       if(sysInfo.affectsKinematics || sysInfo.affectsWeights) isNominal = false;
     }
     
-    int found_tau = (std::string(syst.name())).find("TAU");
-    if (found_tau != std::string::npos ){
-      //std::cout << "Running on a tau systematic. Skip" << std::endl;
-      continue;
-    }
-
-    int found_prw = (std::string(syst.name()).find("PRW"));
-    if(found_prw == std::string::npos){
-      //std::cout<<"Not the correct syst. Skip"<<std::endl;
-      continue;
-    }
-
-
-
-    //std::cout << "Systematic being considered is " << std::string(syst.name()) << std::endl;
+    if (doSyst)
+      {
+	int found_MassRes_Top = (std::string(syst.name()).find("MassRes_Top__1up"));
+	if(found_MassRes_Top == std::string::npos) continue;//The FatJetsTools can only be setup for one systematic at a time...Need to sort out this method of looping systematics
+      }
     const xAOD::EventInfo* eventInfo =0;
     if (! m_event->retrieve(eventInfo, "EventInfo").isSuccess() ){
       Error("execute()","Failed to retrieve event info collection, exiting!!");
@@ -877,9 +863,9 @@ EL::StatusCode MyxAODAnalysis :: execute ()
       HCRgamma_mcWgt->Fill(1,mcWgt); 
       HCRgamma_allWgt->Fill(1,mcWgt*btagWgt*lepWgt*trigWgt*puWgt);
       
-      HCRZ_noWgt->Fill(1,1);
-      HCRZ_mcWgt->Fill(1,mcWgt); 
-      HCRZ_allWgt->Fill(1,mcWgt*btagWgt*lepWgt*trigWgt*puWgt);
+      HSRB2_noWgt->Fill(1,1);
+      HSRB2_mcWgt->Fill(1,mcWgt); 
+      HSRB2_allWgt->Fill(1,mcWgt*btagWgt*lepWgt*trigWgt*puWgt);
       
       HCRTemu_noWgt->Fill(1,1);
       HCRTemu_mcWgt->Fill(1,mcWgt);
@@ -961,9 +947,9 @@ EL::StatusCode MyxAODAnalysis :: execute ()
       HCRgamma_mcWgt->Fill(2,mcWgt); 
       HCRgamma_allWgt->Fill(2,mcWgt*btagWgt*lepWgt*trigWgt*puWgt);
       
-      HCRZ_noWgt->Fill(2,1);
-      HCRZ_mcWgt->Fill(2,mcWgt); 
-      HCRZ_allWgt->Fill(2,mcWgt*btagWgt*lepWgt*trigWgt*puWgt);
+      HSRB2_noWgt->Fill(2,1);
+      HSRB2_mcWgt->Fill(2,mcWgt); 
+      HSRB2_allWgt->Fill(2,mcWgt*btagWgt*lepWgt*trigWgt*puWgt);
       
       HCRTemu_noWgt->Fill(2,1);
       HCRTemu_mcWgt->Fill(2,mcWgt);
@@ -1015,9 +1001,9 @@ EL::StatusCode MyxAODAnalysis :: execute ()
       HCRgamma_mcWgt->Fill(3,mcWgt); 
       HCRgamma_allWgt->Fill(3,mcWgt*btagWgt*lepWgt*trigWgt*puWgt);
       
-      HCRZ_noWgt->Fill(3,1);
-      HCRZ_mcWgt->Fill(3,mcWgt); 
-      HCRZ_allWgt->Fill(3,mcWgt*btagWgt*lepWgt*trigWgt*puWgt);
+      HSRB2_noWgt->Fill(3,1);
+      HSRB2_mcWgt->Fill(3,mcWgt); 
+      HSRB2_allWgt->Fill(3,mcWgt*btagWgt*lepWgt*trigWgt*puWgt);
       
       HCRTemu_noWgt->Fill(3,1);
       HCRTemu_mcWgt->Fill(3,mcWgt);
@@ -1104,9 +1090,9 @@ EL::StatusCode MyxAODAnalysis :: execute ()
 	HSRB_mcWgt->Fill(4,mcWgt); 
 	HSRB_allWgt->Fill(4,mcWgt*btagWgt*lepWgt*trigWgt*puWgt);
 	
-	HCRZ_noWgt->Fill(4,1);
- 	HCRZ_mcWgt->Fill(4,mcWgt); 
-	HCRZ_allWgt->Fill(4,mcWgt*btagWgt*lepWgt*trigWgt*puWgt);
+	HSRB2_noWgt->Fill(4,1);
+ 	HSRB2_mcWgt->Fill(4,mcWgt); 
+	HSRB2_allWgt->Fill(4,mcWgt*btagWgt*lepWgt*trigWgt*puWgt);
       }
 
       if (passedLepTrigger){
@@ -1149,9 +1135,9 @@ EL::StatusCode MyxAODAnalysis :: execute ()
 	HSRB_mcWgt->Fill(5,mcWgt); 
 	HSRB_allWgt->Fill(5,mcWgt*btagWgt*lepWgt*trigWgt*puWgt);
 
-	HCRZ_noWgt->Fill(5,1);
-	HCRZ_mcWgt->Fill(5,mcWgt); 
-	HCRZ_allWgt->Fill(5,mcWgt*btagWgt*lepWgt*trigWgt*puWgt);
+	HSRB2_noWgt->Fill(5,1);
+	HSRB2_mcWgt->Fill(5,mcWgt); 
+	HSRB2_allWgt->Fill(5,mcWgt*btagWgt*lepWgt*trigWgt*puWgt);
 
       }
       if (passedMuTrigger || passedElTrigger){
@@ -1199,9 +1185,9 @@ EL::StatusCode MyxAODAnalysis :: execute ()
 	HSRB_mcWgt->Fill(6,mcWgt); 
 	HSRB_allWgt->Fill(6,mcWgt*btagWgt*lepWgt*trigWgt*puWgt);
 
-	HCRZ_noWgt->Fill(6,1);
-	HCRZ_mcWgt->Fill(6,mcWgt); 
-	HCRZ_allWgt->Fill(6,mcWgt*btagWgt*lepWgt*trigWgt*puWgt);
+	HSRB2_noWgt->Fill(6,1);
+	HSRB2_mcWgt->Fill(6,mcWgt); 
+	HSRB2_allWgt->Fill(6,mcWgt*btagWgt*lepWgt*trigWgt*puWgt);
 
       }
       if (passedMuTrigger || passedElTrigger){
@@ -1250,9 +1236,9 @@ EL::StatusCode MyxAODAnalysis :: execute ()
 	HSRB_mcWgt->Fill(7,mcWgt); 
 	HSRB_allWgt->Fill(7,mcWgt*btagWgt*lepWgt*trigWgt*puWgt);
 
-	HCRZ_noWgt->Fill(7,1);
-	HCRZ_mcWgt->Fill(7,mcWgt); 
-	HCRZ_allWgt->Fill(7,mcWgt*btagWgt*lepWgt*trigWgt*puWgt);
+	HSRB2_noWgt->Fill(7,1);
+	HSRB2_mcWgt->Fill(7,mcWgt); 
+	HSRB2_allWgt->Fill(7,mcWgt*btagWgt*lepWgt*trigWgt*puWgt);
 
       }
       if (passedMuTrigger || passedElTrigger){
@@ -1300,9 +1286,9 @@ EL::StatusCode MyxAODAnalysis :: execute ()
 	HSRB_mcWgt->Fill(8,mcWgt); 
 	HSRB_allWgt->Fill(8,mcWgt*btagWgt*lepWgt*trigWgt*puWgt);
 
-	HCRZ_noWgt->Fill(8,1);
-	HCRZ_mcWgt->Fill(8,mcWgt); 
-	HCRZ_allWgt->Fill(8,mcWgt*btagWgt*lepWgt*trigWgt*puWgt);
+	HSRB2_noWgt->Fill(8,1);
+	HSRB2_mcWgt->Fill(8,mcWgt); 
+	HSRB2_allWgt->Fill(8,mcWgt*btagWgt*lepWgt*trigWgt*puWgt);
 
       }
       if (passedMuTrigger || passedElTrigger){
@@ -1350,10 +1336,10 @@ EL::StatusCode MyxAODAnalysis :: execute ()
     CRgammaHists.push_back(HCRgamma_mcWgt);
     CRgammaHists.push_back(HCRgamma_allWgt);
     
-    std::vector<TH1F*> CRZHists;
-    CRZHists.push_back(HCRZ_noWgt);
-    CRZHists.push_back(HCRZ_mcWgt);
-    CRZHists.push_back(HCRZ_allWgt);
+    std::vector<TH1F*> SRB2Hists;
+    SRB2Hists.push_back(HSRB2_noWgt);
+    SRB2Hists.push_back(HSRB2_mcWgt);
+    SRB2Hists.push_back(HSRB2_allWgt);
     
     std::vector<TH1F*> CRTemuHists;
     CRTemuHists.push_back(HCRTemu_noWgt);
@@ -1396,7 +1382,7 @@ EL::StatusCode MyxAODAnalysis :: execute ()
     
     // Temp for debugging
     if (isyst == 0){
-      std::unique_ptr<Cutflows> m_cutflows (new Cutflows (*m_varCalc, *m_regions, SRAHists, SRBHists, CRZHists, CRTemuHists, CRT1LHists, CRWHists, CRsTHists, CRgammaHists, btagWgt, lepWgt, trigWgt, puWgt, mcWgt, EventNumber, passedMETTrigger, passedLepTrigger, passedGammaTrigger, truthfilt_MET));
+      std::unique_ptr<Cutflows> m_cutflows (new Cutflows (*m_varCalc, *m_regions, SRAHists, SRBHists, SRB2Hists, CRTemuHists, CRT1LHists, CRWHists, CRsTHists, CRgammaHists, btagWgt, lepWgt, trigWgt, puWgt, mcWgt, EventNumber, passedMETTrigger, passedLepTrigger, passedGammaTrigger, truthfilt_MET));
     }
     
     if ( m_fileType != "DAOD_TRUTH1"){
@@ -1514,6 +1500,73 @@ EL::StatusCode MyxAODAnalysis :: execute ()
 
   }
   
+
+  std::vector<std::string> SRBCutList; 
+  SRBCutList.push_back("NONE");
+  SRBCutList.push_back("GRL");
+  SRBCutList.push_back("LAr & Tile");
+  SRBCutList.push_back("MET Trigger");
+  SRBCutList.push_back("Primary Vertex >= 1");
+  SRBCutList.push_back("Jet/MET");
+  SRBCutList.push_back("Cosmic Muons");
+  SRBCutList.push_back("Muon Cleaning");
+  SRBCutList.push_back("ETMiss > 250");
+  SRBCutList.push_back("njets >= 4");
+  SRBCutList.push_back("nbjets >= 3");
+  SRBCutList.push_back("nLeptons == 0");
+  SRBCutList.push_back("nBaselineLep == 0");
+  SRBCutList.push_back("minDelPhi >0.4");
+  SRBCutList.push_back("pTb1>100");
+  SRBCutList.push_back("nbJets >= 4");
+  SRBCutList.push_back("SRB_minDR2<2");
+  SRBCutList.push_back("SRB_minDR<2");
+  SRBCutList.push_back("80<");
+  SRBCutList.push_back("NA");
+  SRBCutList.push_back("NA");
+  SRBCutList.push_back("NA");
+  SRBCutList.push_back("NA");
+
+  bool doSRBCutflow = true;
+  if (doSRBCutflow){
+
+  std::cout << "Number of weighted events total:"  << PUSumOfWeights << std::endl;
+  
+  std::cout << "SRB Selections:" << std::endl;
+  std::cout << "Raw Events" << std::endl;
+  std::cout << "Sum Of Weights = " << h_SumOfWeights->Integral() << std::endl;
+  std::cout << "Cut # " << std::setw(25) << "Cut Name " << std::setw(50) << "Events Passing Selection " << std::setw(25) << " Relative Efficiency" <<std::setw(25) <<" Absolute Efficiency  "  <<std::endl;
+  for(size_t icut=0; icut<=SRBCutList.size()-1; ++icut)
+    {
+      if (icut == 0){
+	std::cout << std::setw(25) <<std::left << icut+1 << std::setw(25)  << std::left << SRBCutList[icut] << std::setw(25) << std::right << HSRB_noWgt->GetBinContent(icut+1) << std::setw(25)<< std::right << std::setprecision(5) << HSRB_noWgt->GetBinContent(icut+1)/HSRB_noWgt->GetBinContent(icut+1) << std::setw(25) <<  std::right << HSRB_noWgt->GetBinContent(icut+1)/HSRB_noWgt->GetBinContent(1)   <<std::endl;
+      }
+      else{
+	std::cout << std::setw(25) <<std::left << icut+1 << std::setw(25)  << std::left << SRBCutList[icut] << std::setw(25) << std::right << HSRB_noWgt->GetBinContent(icut+1) << std::setw(25)<< std::right << std::setprecision(5) << HSRB_noWgt->GetBinContent(icut+1)/HSRB_noWgt->GetBinContent(icut) << std::setw(25) <<  std::right << HSRB_noWgt->GetBinContent(icut+1)/HSRB_noWgt->GetBinContent(1)   <<std::endl;
+      }
+    }  
+  
+  std::cout << "Scaled Events" << std::endl;
+  std::cout << "Cut # " << std::setw(25) << "Cut Name " << std::setw(50) << "Events Passing Selection " << std::setw(25) << " Relative Efficiency" <<std::setw(25) <<" Absolute Efficiency  "  <<std::endl;
+  for(size_t icut=0; icut<=SRBCutList.size()-1; ++icut)
+    {
+
+    if (icut == 0){
+      std::cout << std::setw(25) <<std::left << icut+1 << std::setw(25)  << std::left << SRBCutList[icut] << std::setw(25) << std::right << HSRB_allWgt->GetBinContent(icut+1) << std::setw(25)<< std::right << std::setprecision(5) << HSRB_allWgt->GetBinContent(icut+1)/(HSRB_allWgt->GetBinContent(icut+1)) << std::setw(25) <<  std::right << HSRB_allWgt->GetBinContent(icut+1)/(HSRB_allWgt->GetBinContent(1))   <<std::endl;
+      }
+      else{
+	std::cout << std::setw(25) <<std::left << icut+1 << std::setw(25)  << std::left << SRBCutList[icut] << std::setw(25) << std::right << HSRB_allWgt->GetBinContent(icut+1) << std::setw(25)<< std::right << std::setprecision(5) << HSRB_allWgt->GetBinContent(icut+1)/(HSRB_allWgt->GetBinContent(icut)) << std::setw(25) <<  std::right << HSRB_allWgt->GetBinContent(icut+1)/(HSRB_allWgt->GetBinContent(1))   <<std::endl;
+      }
+  
+    }  
+
+  }
+
+
+
+
+
+
+
   std::vector<std::string> CRT1LCutList; 
   CRT1LCutList.push_back("NONE");
   CRT1LCutList.push_back("GRL");
@@ -1655,61 +1708,66 @@ EL::StatusCode MyxAODAnalysis :: execute ()
   
 
 
-  std::vector<std::string> CRZCutList; 
-  CRZCutList.push_back("NONE");
-  CRZCutList.push_back("GRL");
-  CRZCutList.push_back("LAr & Tile");
-  CRZCutList.push_back("1L Trigger");
-  CRZCutList.push_back("Primary Vertex >= 1");
-  CRZCutList.push_back("Jet/MET");
-  CRZCutList.push_back("Cosmic Muons");
-  CRZCutList.push_back("Muon Cleaning");
-  CRZCutList.push_back("MET > 250");
-  CRZCutList.push_back("nJets >= 4");
-  CRZCutList.push_back("nBJets >= 3");
-  CRZCutList.push_back("nLepton==1");
-  CRZCutList.push_back("ETMiss_corr > 100");
-  CRZCutList.push_back("njets = 2,3,4");
-  CRZCutList.push_back("pTj1 > 50, pTj2 > 50");
-  CRZCutList.push_back("pTj4 < 50");
-  //CRZCutList.push_back("JetMET_adjs dphi> 0.4");
-  CRZCutList.push_back("MET/mEff_corr > 0.25");
-  CRZCutList.push_back("nbjets >= 3");
-  CRZCutList.push_back("leading b");
-  CRZCutList.push_back("secondary b");
-  CRZCutList.push_back("E_T^Miss (true) < 100");
-  CRZCutList.push_back("m_bb > 200");
+  std::vector<std::string> SRB2CutList; 
+  SRB2CutList.push_back("NONE");
+  SRB2CutList.push_back("GRL");
+  SRB2CutList.push_back("LAr & Tile");
+  SRB2CutList.push_back("1L Trigger");
+  SRB2CutList.push_back("Primary Vertex >= 1");
+  SRB2CutList.push_back("Jet/MET");
+  SRB2CutList.push_back("Cosmic Muons");
+  SRB2CutList.push_back("Muon Cleaning");
+  SRB2CutList.push_back("MET > 250");
+  SRB2CutList.push_back("nJets >= 4");
+  SRB2CutList.push_back("nBJets >= 3");
+  SRB2CutList.push_back("nLepton==1");
+  SRB2CutList.push_back("nLeptons == 0");
+  SRB2CutList.push_back("nBaselineLep == 0");
+  SRB2CutList.push_back("minDelPhi >0.4");
+  SRB2CutList.push_back("pTb1>100");
+  SRB2CutList.push_back("SRB_Higgsino_minDR2<2.5");
+  SRB2CutList.push_back("SRB_Higgsino_minDR<2");
+  SRB2CutList.push_back("80<SRB_Higgsino_Hmbb<150");
+  SRB2CutList.push_back("NA");
+  SRB2CutList.push_back("NA");
+  SRB2CutList.push_back("NA");
+  SRB2CutList.push_back("NA");
+  SRB2CutList.push_back("NA");
+
+
+
+
   
 
-  bool doCRZCutflow = false;
-  if (doCRZCutflow){
+  bool doSRB2Cutflow = true;
+  if (doSRB2Cutflow){
 
   std::cout << "Number of weighted events total:"  << PUSumOfWeights << std::endl;
   
-  std::cout << "CRZ Selections:" << std::endl;
+  std::cout << "SRB2 Selections:" << std::endl;
   std::cout << "Raw Events" << std::endl;
   std::cout << "Sum Of Weights = " << h_SumOfWeights->Integral() << std::endl;
   std::cout << "Cut # " << std::setw(25) << "Cut Name " << std::setw(50) << "Events Passing Selection " << std::setw(25) << " Relative Efficiency" <<std::setw(25) <<" Absolute Efficiency  "  <<std::endl;
-  for(size_t icut=0; icut<=CRZCutList.size()-1; ++icut)
+  for(size_t icut=0; icut<=SRB2CutList.size()-1; ++icut)
     {
       if (icut == 0){
-	std::cout << std::setw(25) <<std::left << icut+1 << std::setw(25)  << std::left << CRZCutList[icut] << std::setw(25) << std::right << HCRZ_noWgt->GetBinContent(icut+1) << std::setw(25)<< std::right << std::setprecision(5) << HCRZ_noWgt->GetBinContent(icut+1)/HCRZ_noWgt->GetBinContent(icut+1) << std::setw(25) <<  std::right << HCRZ_noWgt->GetBinContent(icut+1)/HCRZ_noWgt->GetBinContent(1)   <<std::endl;
+	std::cout << std::setw(25) <<std::left << icut+1 << std::setw(25)  << std::left << SRB2CutList[icut] << std::setw(25) << std::right << HSRB2_noWgt->GetBinContent(icut+1) << std::setw(25)<< std::right << std::setprecision(5) << HSRB2_noWgt->GetBinContent(icut+1)/HSRB2_noWgt->GetBinContent(icut+1) << std::setw(25) <<  std::right << HSRB2_noWgt->GetBinContent(icut+1)/HSRB2_noWgt->GetBinContent(1)   <<std::endl;
       }
       else{
-	std::cout << std::setw(25) <<std::left << icut+1 << std::setw(25)  << std::left << CRZCutList[icut] << std::setw(25) << std::right << HCRZ_noWgt->GetBinContent(icut+1) << std::setw(25)<< std::right << std::setprecision(5) << HCRZ_noWgt->GetBinContent(icut+1)/HCRZ_noWgt->GetBinContent(icut) << std::setw(25) <<  std::right << HCRZ_noWgt->GetBinContent(icut+1)/HCRZ_noWgt->GetBinContent(1)   <<std::endl;
+	std::cout << std::setw(25) <<std::left << icut+1 << std::setw(25)  << std::left << SRB2CutList[icut] << std::setw(25) << std::right << HSRB2_noWgt->GetBinContent(icut+1) << std::setw(25)<< std::right << std::setprecision(5) << HSRB2_noWgt->GetBinContent(icut+1)/HSRB2_noWgt->GetBinContent(icut) << std::setw(25) <<  std::right << HSRB2_noWgt->GetBinContent(icut+1)/HSRB2_noWgt->GetBinContent(1)   <<std::endl;
       }
     }  
   
   std::cout << "Scaled Events" << std::endl;
   std::cout << "Cut # " << std::setw(25) << "Cut Name " << std::setw(50) << "Events Passing Selection " << std::setw(25) << " Relative Efficiency" <<std::setw(25) <<" Absolute Efficiency  "  <<std::endl;
-  for(size_t icut=0; icut<=CRZCutList.size()-1; ++icut)
+  for(size_t icut=0; icut<=SRB2CutList.size()-1; ++icut)
     {
 
     if (icut == 0){
-      std::cout << std::setw(25) <<std::left << icut+1 << std::setw(25)  << std::left << CRZCutList[icut] << std::setw(25) << std::right << m_lumiScaled*HCRZ_allWgt->GetBinContent(icut+1) << std::setw(25)<< std::right << std::setprecision(5) << m_lumiScaled*HCRZ_allWgt->GetBinContent(icut+1)/(m_lumiScaled*HCRZ_allWgt->GetBinContent(icut+1)) << std::setw(25) <<  std::right << m_lumiScaled*HCRZ_allWgt->GetBinContent(icut+1)/(m_lumiScaled*HCRZ_allWgt->GetBinContent(1))   <<std::endl;
+      std::cout << std::setw(25) <<std::left << icut+1 << std::setw(25)  << std::left << SRB2CutList[icut] << std::setw(25) << std::right << HSRB2_allWgt->GetBinContent(icut+1) << std::setw(25)<< std::right << std::setprecision(5) << HSRB2_allWgt->GetBinContent(icut+1)/(HSRB2_allWgt->GetBinContent(icut+1)) << std::setw(25) <<  std::right << HSRB2_allWgt->GetBinContent(icut+1)/(HSRB2_allWgt->GetBinContent(1))   <<std::endl;
       }
       else{
-	std::cout << std::setw(25) <<std::left << icut+1 << std::setw(25)  << std::left << CRZCutList[icut] << std::setw(25) << std::right << m_lumiScaled*HCRZ_allWgt->GetBinContent(icut+1) << std::setw(25)<< std::right << std::setprecision(5) << m_lumiScaled*HCRZ_allWgt->GetBinContent(icut+1)/(m_lumiScaled*HCRZ_allWgt->GetBinContent(icut)) << std::setw(25) <<  std::right << m_lumiScaled*HCRZ_allWgt->GetBinContent(icut+1)/(m_lumiScaled*HCRZ_allWgt->GetBinContent(1))   <<std::endl;
+	std::cout << std::setw(25) <<std::left << icut+1 << std::setw(25)  << std::left << SRB2CutList[icut] << std::setw(25) << std::right << HSRB2_allWgt->GetBinContent(icut+1) << std::setw(25)<< std::right << std::setprecision(5) << HSRB2_allWgt->GetBinContent(icut+1)/(HSRB2_allWgt->GetBinContent(icut)) << std::setw(25) <<  std::right << HSRB2_allWgt->GetBinContent(icut+1)/(HSRB2_allWgt->GetBinContent(1))   <<std::endl;
       }
   
     }  

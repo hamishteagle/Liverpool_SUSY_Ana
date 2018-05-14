@@ -1,5 +1,3 @@
-
-
 // put the header for the full variable calculations here
 #ifndef CalculateVariables_h
 #define CalculateVariables_h
@@ -348,7 +346,7 @@ class CalculateVariables
 
 
   // Multi b specific
-
+  //MaxMin alg
   double maxDR;
   double InvMass_Bij_maxDR;
   double Imbalance_maxDR;
@@ -357,9 +355,16 @@ class CalculateVariables
   double minDR;
   double minDR1;
 
+  //SRB algs
   double SRB_minDR;
   double SRB_minDR2;
   double SRB_Hmbb;
+  
+  double SRB_Higgsino_minDR;
+  double SRB_Higgsino_maxDR;
+  double SRB_Higgsino_Hmbb;
+
+
 
   double JetAsymmR_min;
   double InvMass_Bij_minR;

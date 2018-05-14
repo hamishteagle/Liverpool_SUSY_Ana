@@ -162,9 +162,9 @@ public:
   TH1F *HCRgamma_mcWgt; //!
   TH1F *HCRgamma_allWgt; //!
 
-  TH1F *HCRZ_noWgt; //!
-  TH1F *HCRZ_mcWgt; //!
-  TH1F *HCRZ_allWgt; //!
+  TH1F *HSRB2_noWgt; //!
+  TH1F *HSRB2_mcWgt; //!
+  TH1F *HSRB2_allWgt; //!
   
   TH1F *HCRTemu_noWgt; //!
   TH1F *HCRTemu_mcWgt; //!

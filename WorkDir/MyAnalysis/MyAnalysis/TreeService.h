@@ -379,6 +379,9 @@ class TreeService
   double SRB_minDR2;
   double SRB_Hmbb;
 
+  double SRB_Higgsino_minDR;
+  double SRB_Higgsino_maxDR;
+  double SRB_Higgsino_Hmbb;
 
   int ttbar_W1_decay;
   int ttbar_tau1_decay;

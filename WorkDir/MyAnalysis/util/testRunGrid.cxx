@@ -13,11 +13,12 @@
 #include <SampleHandler/Sample.h>
 #include <SampleHandler/SampleGrid.h>
 #include <SampleHandler/SampleHandler.h>
+#include "testRun.h"
 
 #include <ctime>
 #include "MyAnalysis/MyxAODAnalysis.h"
 
-int main( int argc, char* argv[]) {
+int gridmain( int argc, char* argv[]) {
 
   // Take the submit directory from the input if provided:
   std::string submitDir = "";
@@ -32,7 +33,7 @@ int main( int argc, char* argv[]) {
 
   int Month = now->tm_mon;
   std::string CurrentDate = std::to_string(now->tm_mday)+Months[Month];
-  std::string fileType = "SUSY7";
+  std::string fileType = "SUSY1";
   
   std::string appPhotons = "_MultiB_";
   
@@ -154,11 +155,11 @@ int main( int argc, char* argv[]) {
   // Run the job using the griddriver:
   EL::PrunDriver driver;
   
-  driver.options()->setString("nc_outputSampleName", "user.janders."+CurrentDate+"_"+fileType+"v1.%in:name[2]%.%in:name[3]%");
+  driver.options()->setString("nc_outputSampleName", "user.hteagle."+CurrentDate+"_"+fileType+"v1.%in:name[2]%.%in:name[3]%");
   driver.options()->setString(EL::Job::optGridNFilesPerJob, "1");
   // Use submit if you want to see all of the info about the submitted jobs. Use submitOnly if you want to send the jobs then Monitor online with panda
-  //driver.submit( job, submitDir );
-  driver.submitOnly( job, submitDir );
+  driver.submit( job, submitDir );
+  //driver.submitOnly( job, submitDir );
   
   return 0;
 }

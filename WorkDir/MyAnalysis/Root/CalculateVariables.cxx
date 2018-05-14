@@ -1085,11 +1085,13 @@ CalculateVariables::CalculateVariables(IObjectDef *objects, bool isTruth, bool d
       int SRB_id2=-99;
       int SRB_id3=-99;
       int SRB_id4=-99;
-      double SRB_minDR=99;
-      double SRB_minDR2=99;
-      double SRB_Hmbb=-1;
+      SRB_minDR=99;
+      SRB_minDR2=99;
+      SRB_Hmbb=-1;
+
   if(nbJets>=4)
     {
+      std::cout<<"SRB original alg start"<<std::endl;
       for (int i=0; i<4; ++i)//Change to i<4 for 4 strongest b-jets
 	{
 	  for(int j=0; j<4; ++j)//Change to i<4 for 4 strongest b-jets
@@ -1099,18 +1101,18 @@ CalculateVariables::CalculateVariables(IObjectDef *objects, bool isTruth, bool d
 		  double trialDEta=fabs( (*(objects->getBJets()))[i]->eta()  - (*(objects->getBJets()))[j]->eta());
 		  double trialDPhi=fabs(TVector2::Phi_mpi_pi( (*(objects->getBJets()))[i]->phi()  - (*(objects->getBJets()))[j]->phi()));
 		  double trialDR= std::sqrt((trialDEta*trialDEta)+(trialDPhi*trialDPhi));
-		  //		  std::cout<<"trialDR= "<<trialDR<<std::endl;
+		  std::cout<<"trialDR "<<trialDR<<std::endl;
 		  if (trialDR<SRB_minDR)
 		    {
 		      SRB_minDR=trialDR;
 		      SRB_id1=i;
 		      SRB_id2=j;
 		    }
-		  // std::cout<<"SRB_minDR= "<<SRB_minDR<<std::endl;
+		  std::cout<<"SRB_minDR= "<<SRB_minDR<<std::endl;
 		}//i!=j
 	    }//Loop over b-jets	  
 	}//Loop over b-jets 
-      //      std::cout<<"id1="<<SRB_id1<<",id2= "<<SRB_id2<<std::endl;
+      std::cout<<"id1="<<SRB_id1<<",id2= "<<SRB_id2<<std::endl;
 
       for (int i=0; i<4; ++i)//Change to i<4 for 4 strongest b-jets
 	{
@@ -1121,7 +1123,7 @@ CalculateVariables::CalculateVariables(IObjectDef *objects, bool isTruth, bool d
 		  double trialDEta=fabs( (*(objects->getBJets()))[i]->eta()  - (*(objects->getBJets()))[j]->eta());
 		  double trialDPhi=fabs(TVector2::Phi_mpi_pi( (*(objects->getBJets()))[i]->phi()  - (*(objects->getBJets()))[j]->phi()));
 		  double trialDR= std::sqrt((trialDEta*trialDEta)+(trialDPhi*trialDPhi));
-		  //		  std::cout<<"trialDR= "<<trialDR<<std::endl;
+		  std::cout<<"trialDR2= "<<trialDR<<std::endl;
 		  if (trialDR<SRB_minDR2)
 		    {
 		      SRB_minDR2=trialDR;
@@ -1129,11 +1131,11 @@ CalculateVariables::CalculateVariables(IObjectDef *objects, bool isTruth, bool d
 		      SRB_id4=j;
 		    }
 
-		  //		  std::cout<<"SRB_minDR2= "<<SRB_minDR2<<std::endl;
+		  std::cout<<"SRB_minDR2= "<<SRB_minDR2<<std::endl;
 		}//i!=j
 	    }//Loop over b-jets	  
 	}//Loop over b-jets 
-      //std::cout<<"id3="<<SRB_id3<<", id4= "<<SRB_id4<<std::endl;
+      std::cout<<"id3="<<SRB_id3<<", id4= "<<SRB_id4<<std::endl;
       //std::cout<<"Out of SRB algorithm"<<std::endl;
     }//nbJets>=4
   
@@ -1146,15 +1148,75 @@ CalculateVariables::CalculateVariables(IObjectDef *objects, bool isTruth, bool d
       TLorentzVector b4m = (*(objects->getBJets()))[SRB_id4]->p4()*0.001;
       double SRB_mbb2= (b3m+b4m).M();
       SRB_Hmbb= (SRB_mbb1+SRB_mbb2)/2;
+      //std::cout<<"SRB alg 1 Hmbb = "<<SRB_Hmbb<<std::endl;
     }
 
   //SRB Algorithm End
 
+  //SRB Algorithm with Higgsino minimisation start
+      int SRB_Higgsino_id1=-99;
+      int SRB_Higgsino_id2=-99;
+      int SRB_Higgsino_id3=-99;
+      int SRB_Higgsino_id4=-99;
+      SRB_Higgsino_maxDR=99;
+      SRB_Higgsino_minDR=99;
+      SRB_Higgsino_Hmbb=-1;
+  if(nbJets>=4)
+    {
+      //std::cout<<"Begin SRB Higgsino alg"<<std::endl;
+      for (int i=0; i<nbJets; ++i)//Change to i<4 for 4 strongest b-jets
+	{
+	  for(int j=0; j<nbJets; ++j)//Change to i<4 for 4 strongest b-jets
+	    {
+	      if(i!=j)
+		{
+		  double trialDEta1=fabs( (*(objects->getBJets()))[i]->eta()  - (*(objects->getBJets()))[j]->eta());
+		  double trialDPhi1=fabs(TVector2::Phi_mpi_pi( (*(objects->getBJets()))[i]->phi()  - (*(objects->getBJets()))[j]->phi()));
+		  double trialDR1= std::sqrt((trialDEta1*trialDEta1)+(trialDPhi1*trialDPhi1));
+		  for (int i2=0; i2<nbJets; ++i2)//Change to i<4 for 4 strongest b-jets
+		    {
+		      for(int j2=0; j2<nbJets; ++j2)//Change to i<4 for 4 strongest b-jets
+			{
+			  if(i2!=j2 && i2!=i && j2!=j && i2!=j && j2!=i )
+			    {
+			      double trialDEta=fabs( (*(objects->getBJets()))[i2]->eta()  - (*(objects->getBJets()))[j2]->eta());
+			      double trialDPhi=fabs(TVector2::Phi_mpi_pi( (*(objects->getBJets()))[i2]->phi()  - (*(objects->getBJets()))[j2]->phi()));
+			      double trialDR2= std::sqrt((trialDEta*trialDEta)+(trialDPhi*trialDPhi));
+			      if (std::max(trialDR1,trialDR2)<SRB_Higgsino_maxDR)
+				{
+				  SRB_Higgsino_maxDR=std::max(trialDR1,trialDR2);
+				  //std::cout<<"SRB_Higgino_maxDR= "<<SRB_Higgsino_maxDR<<std::endl;
+				  SRB_Higgsino_minDR=std::min(trialDR1,trialDR2);
+				  //std::cout<<"SRB_Higgino_minDR= "<<SRB_Higgsino_minDR<<std::endl;
+				  SRB_Higgsino_id1=i;
+				  SRB_Higgsino_id2=j;
+				  SRB_Higgsino_id3=i2;
+				  SRB_Higgsino_id4=j2;
+				  //std::cout<<" Higgsino b-jet id's = "<<SRB_Higgsino_id1<<", "<<SRB_Higgsino_id2<<", "<<SRB_Higgsino_id3<<", "<<SRB_Higgsino_id4<<std::endl;				  
+				}
+			    }//i!=j
+			}//Loop over b-jets	  
+		    }//Loop over b-jets 
+		}//i!=j
+	    }//Loop over b-jets	  
+	}//Loop over b-jets 
+    }//Nbjets>=4
+  //SRB Algorithm with Higgsino minimisation start
+  if (SRB_Higgsino_id1>-1 && SRB_Higgsino_id2>-1 && SRB_Higgsino_id3>-1 && SRB_Higgsino_id4>-1) 
+    {
+      TLorentzVector b1m = (*(objects->getBJets()))[SRB_Higgsino_id1]->p4()*0.001;
+      TLorentzVector b2m = (*(objects->getBJets()))[SRB_Higgsino_id2]->p4()*0.001;
+      double SRB_Higgsino_mbb1= (b2m+b1m).M();
 
-
-
-
-
+      TLorentzVector b3m = (*(objects->getBJets()))[SRB_Higgsino_id3]->p4()*0.001;
+      TLorentzVector b4m = (*(objects->getBJets()))[SRB_Higgsino_id4]->p4()*0.001;
+      double SRB_Higgsino_mbb2= (b3m+b4m).M();
+      
+      SRB_Higgsino_Hmbb= (SRB_Higgsino_mbb1+SRB_Higgsino_mbb2)/2;
+      //std::cout<<"Average mass of bb pairs, SRB Higgsino; "<<SRB_Higgsino_Hmbb<<std::endl;
+      //std::cout<<"SRB_Higgsino_maxDR = "<<SRB_Higgsino_maxDR<<std::endl;
+      //std::cout<<"SRB_Higgsino_minDR = "<<SRB_Higgsino_minDR<<std::endl;
+    }
  
   //SRB algorithms end
 

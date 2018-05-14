@@ -1,0 +1,10 @@
+#ifndef testRun_h
+#define testRun_h
+
+class testRun{
+  
+ public:
+  int gridmain(int argc, char* argv[]);
+
+};
+#endif

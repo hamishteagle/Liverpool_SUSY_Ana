@@ -374,6 +374,10 @@ TreeService::TreeService(TTree *outputTree, TDirectory *OutDir){
   tree->Branch("SRB_minDR2", &SRB_minDR2);
   tree->Branch("SRB_Hmbb", &SRB_Hmbb);
 
+  tree->Branch("SRB_Higgsino_minDR", &SRB_Higgsino_minDR);
+  tree->Branch("SRB_Higgsino_maxDR", &SRB_Higgsino_maxDR);
+  tree->Branch("SRB_Higgsino_Hmbb", &SRB_Higgsino_Hmbb);
+
   // Attempt at Vectors
   tree->Branch("jet_pT", &jet_pT);
   tree->Branch("jet_eta", &jet_eta);
@@ -435,7 +439,7 @@ TreeService::TreeService(TTree *outputTree, TDirectory *OutDir){
 
 void TreeService::fillTree(IObjectDef *objects ,PreliminarySel &region, CalculateVariables &variables, MCChecks MCTruthInfo, double mFinalWeight, double mInitialWeight, double puWeight, double SFmCTbbll, bool TrigMET, bool TrigMu, bool TrigEl, bool TrigGamma, bool Trig6j, double puSumWeights, double TRUTHMET, double TRUTHHT, bool CoreFlags, bool SCTFlag, double RNo, double RenormedMCWgt){
 
-  std::cout << "Filling the Tree" << std::endl;
+  //  std::cout << "Filling the Tree" << std::endl;
   CutsRegion = region.region;
 
   coreFlags = CoreFlags;
@@ -780,7 +784,8 @@ void TreeService::fillTree(IObjectDef *objects ,PreliminarySel &region, Calculat
   all_Meff = variables.all_Meff;
   nextrajets50 = variables.nextrajets50;
   amT2 = variables.amT2;
-
+  
+  //MaxMin 
   maxDR = variables.maxDR;
   InvMass_Bij_maxDR = variables.InvMass_Bij_maxDR;
   Imbalance_maxDR = variables.Imbalance_maxDR;
@@ -791,7 +796,15 @@ void TreeService::fillTree(IObjectDef *objects ,PreliminarySel &region, Calculat
   InvMass_Bij_minR = variables.InvMass_Bij_minR;
   JetAsymmR_min1 = variables.JetAsymmR_min1;
   InvMass_Bij_minR1 = variables.InvMass_Bij_minR1; 
- 
+  
+  //SRB algs
+  SRB_minDR2 = variables.SRB_minDR2;
+  SRB_minDR = variables.SRB_minDR;
+  SRB_Hmbb = variables.SRB_Hmbb;
+
+  SRB_Higgsino_maxDR = variables.SRB_Higgsino_maxDR;
+  SRB_Higgsino_minDR = variables.SRB_Higgsino_minDR;
+  SRB_Higgsino_Hmbb = variables.SRB_Higgsino_Hmbb;
 
   jet_pT.clear();
   jet_eta.clear();

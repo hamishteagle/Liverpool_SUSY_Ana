@@ -9,7 +9,7 @@ SUSYTools
 
 
 atlas_add_root_dictionary(MyAnalysisLib MyAnalysisLibCintDict
-			ROOT_HEADERS MyAnalysis/MyxAODAnalysis.h Root/LinkDef.h
+			ROOT_HEADERS MyAnalysis/MyxAODAnalysis.h Root/LinkDef.h 
 			EXTERNAL_PACKAGES ROOT
 )
 
