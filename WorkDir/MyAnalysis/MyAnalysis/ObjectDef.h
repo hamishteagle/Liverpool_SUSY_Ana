@@ -99,6 +99,7 @@ class ObjectDef: public virtual IObjectDef
   xAOD::MuonContainer* baselineMuons;  
   xAOD::PhotonContainer* baselinePhotons;  
   xAOD::JetContainer* goodJets;
+  xAOD::JetContainer* goodJets_fatColl;
   xAOD::JetContainer* FatJets_kt8;
   xAOD::JetContainer* FatJets_kt12;
   xAOD::JetContainer* goodAntiKt4TruthJets;

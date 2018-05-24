@@ -1091,7 +1091,7 @@ CalculateVariables::CalculateVariables(IObjectDef *objects, bool isTruth, bool d
 
   if(nbJets>=4)
     {
-      std::cout<<"SRB original alg start"<<std::endl;
+      //std::cout<<"SRB original alg start"<<std::endl;
       for (int i=0; i<4; ++i)//Change to i<4 for 4 strongest b-jets
 	{
 	  for(int j=0; j<4; ++j)//Change to i<4 for 4 strongest b-jets
@@ -1101,18 +1101,18 @@ CalculateVariables::CalculateVariables(IObjectDef *objects, bool isTruth, bool d
 		  double trialDEta=fabs( (*(objects->getBJets()))[i]->eta()  - (*(objects->getBJets()))[j]->eta());
 		  double trialDPhi=fabs(TVector2::Phi_mpi_pi( (*(objects->getBJets()))[i]->phi()  - (*(objects->getBJets()))[j]->phi()));
 		  double trialDR= std::sqrt((trialDEta*trialDEta)+(trialDPhi*trialDPhi));
-		  std::cout<<"trialDR "<<trialDR<<std::endl;
+		  //std::cout<<"trialDR "<<trialDR<<std::endl;
 		  if (trialDR<SRB_minDR)
 		    {
 		      SRB_minDR=trialDR;
 		      SRB_id1=i;
 		      SRB_id2=j;
 		    }
-		  std::cout<<"SRB_minDR= "<<SRB_minDR<<std::endl;
+		  //std::cout<<"SRB_minDR= "<<SRB_minDR<<std::endl;
 		}//i!=j
 	    }//Loop over b-jets	  
 	}//Loop over b-jets 
-      std::cout<<"id1="<<SRB_id1<<",id2= "<<SRB_id2<<std::endl;
+      //std::cout<<"id1="<<SRB_id1<<",id2= "<<SRB_id2<<std::endl;
 
       for (int i=0; i<4; ++i)//Change to i<4 for 4 strongest b-jets
 	{
@@ -1123,7 +1123,7 @@ CalculateVariables::CalculateVariables(IObjectDef *objects, bool isTruth, bool d
 		  double trialDEta=fabs( (*(objects->getBJets()))[i]->eta()  - (*(objects->getBJets()))[j]->eta());
 		  double trialDPhi=fabs(TVector2::Phi_mpi_pi( (*(objects->getBJets()))[i]->phi()  - (*(objects->getBJets()))[j]->phi()));
 		  double trialDR= std::sqrt((trialDEta*trialDEta)+(trialDPhi*trialDPhi));
-		  std::cout<<"trialDR2= "<<trialDR<<std::endl;
+		  //std::cout<<"trialDR2= "<<trialDR<<std::endl;
 		  if (trialDR<SRB_minDR2)
 		    {
 		      SRB_minDR2=trialDR;
@@ -1131,11 +1131,11 @@ CalculateVariables::CalculateVariables(IObjectDef *objects, bool isTruth, bool d
 		      SRB_id4=j;
 		    }
 
-		  std::cout<<"SRB_minDR2= "<<SRB_minDR2<<std::endl;
+		  //std::cout<<"SRB_minDR2= "<<SRB_minDR2<<std::endl;
 		}//i!=j
 	    }//Loop over b-jets	  
 	}//Loop over b-jets 
-      std::cout<<"id3="<<SRB_id3<<", id4= "<<SRB_id4<<std::endl;
+      //std::cout<<"id3="<<SRB_id3<<", id4= "<<SRB_id4<<std::endl;
       //std::cout<<"Out of SRB algorithm"<<std::endl;
     }//nbJets>=4
   

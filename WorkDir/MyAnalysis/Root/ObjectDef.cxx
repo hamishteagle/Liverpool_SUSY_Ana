@@ -33,6 +33,7 @@ ObjectDef::ObjectDef(xAOD::TEvent* event, ST::SUSYObjDef_xAOD* SUSYTool, xAOD::T
   baselineMuons = new xAOD::MuonContainer(SG::VIEW_ELEMENTS);
   baselinePhotons = new xAOD::PhotonContainer(SG::VIEW_ELEMENTS);
   goodJets = new xAOD::JetContainer(SG::VIEW_ELEMENTS);
+  goodJets_fatColl = new xAOD::JetContainer(SG::VIEW_ELEMENTS);
   FatJets_kt8 = new xAOD::JetContainer(SG::VIEW_ELEMENTS);
   FatJets_kt12 = new xAOD::JetContainer(SG::VIEW_ELEMENTS);
   goodAntiKt4TruthJets = new xAOD::JetContainer(SG::VIEW_ELEMENTS);
@@ -46,9 +47,10 @@ ObjectDef::ObjectDef(xAOD::TEvent* event, ST::SUSYObjDef_xAOD* SUSYTool, xAOD::T
   METmuons  = new xAOD::MuonContainer(SG::VIEW_ELEMENTS);
   //m_goodJets_recl = new xAOD::IParticleContainer(SG::VIEW_ELEMENTS);  
 
-  FatJets_kt8 = 0;
-  FatJets_kt12 = 0;
-  
+  //FatJets_kt8 = 0;
+  //FatJets_kt12 = 0;
+  //goodJets_fatColl =0;
+
   eventStore->record(baselineElectronsBeforeOR,"baselineElectronsBeforeOR"+systematic);
   eventStore->record(signalElectronsBeforeOR,"signalElectronsBeforeOR"+systematic);
   eventStore->record(baselineTausBeforeOR,"baselineTausBeforeOR"+systematic);
@@ -66,6 +68,7 @@ ObjectDef::ObjectDef(xAOD::TEvent* event, ST::SUSYObjDef_xAOD* SUSYTool, xAOD::T
   eventStore->record(baselineMuons,"baselineMuons"+systematic);
   eventStore->record(baselinePhotons,"baselinePhotons"+systematic);
   eventStore->record(goodJets,"goodJets"+systematic);
+  eventStore->record(goodJets,"goodJets_fatColl");
   eventStore->record(FatJets_kt8,"fatJets_kt8"+systematic);
   eventStore->record(FatJets_kt12,"fatJets_kt12"+systematic);
   eventStore->record(goodAntiKt4TruthJets,"goodAntiKt4TruthJets"+systematic);

@@ -60,30 +60,18 @@ bool SetUpFatJetTools(JetToolRunner *& tool, double jetradius, std::string input
 
   PseudoJetGetter* plcget = new PseudoJetGetter(("mylcget"+outputcontainer).c_str());
   plcget->setProperty("InputContainer", inputcontainer);
-  //  eventstore ->print will show what's retrievables in the store
   plcget->setProperty("OutputContainer", "Reclustered"+outputcontainer);
   plcget->setProperty("Label", "Tower");
   plcget->setProperty("SkipNegativeEnergy", true);
   plcget->setProperty("GhostScale", 0.0);
-  //  Info( APP_NAME,"finished properties PseudoJetGetter %s",outputcontainer.c_str());
-  //asg::ToolStore::put(plcget);
+
   ToolHandle<IPseudoJetGetter> hlcget(plcget);
   hgets.push_back(hlcget);
-  //if ( asg::ToolStore::get("lcget") == 0 ) {
-  //  Error( APP_NAME,"Failed to retrieved lcget");
-  //  return false;
-  // }
 
-  //  Info("Setup PseudoJetGetter");
 
   JetFromPseudojet* pbuild = new JetFromPseudojet(("myjetbuild"+outputcontainer).c_str());
   ToolHandle<IJetFromPseudojet> hbuild(pbuild);
-  /*  NameList jetbuildatts;
-  jetbuildatts.push_back("ActiveArea");
-  jetbuildatts.push_back("ActiveAreaFourVector");
-  pbuild->setProperty("Attributes", jetbuildatts);*/
   
-  //asg::ToolStore::put(pbuild);
   pbuild->initialize();
   
   JetFinder* pfind = new JetFinder(("myjetfind"+outputcontainer).c_str());
@@ -97,8 +85,7 @@ bool SetUpFatJetTools(JetToolRunner *& tool, double jetradius, std::string input
   //asg::ToolStore::put(pfind);
   pfind->initialize();
   
-  //  Info("Setup JetFinder");
-  //  std::cout<<"Setup JetFinder"<<std::endl;
+
 
   JetRecTool* pjrf = new JetRecTool(("myjrfind"+outputcontainer).c_str());
   pjrf->setProperty("OutputContainer", outputcontainer);
@@ -115,7 +102,6 @@ bool SetUpFatJetTools(JetToolRunner *& tool, double jetradius, std::string input
   tool->initialize();
   tool->print();
 
-  //  Info("done.....");
 
   return true;
 }
@@ -611,15 +597,6 @@ EL::StatusCode MyxAODAnalysis :: initialize ()
     std::cout << "Systematic name: " + sys.name() << std::endl;
     std::cout << "Systematic tree name: " + sys.name() << std::endl;
 
-
-    int found_MassRes_Top = (std::string(sys.name()).find("MassRes_Top__1up"));
-    if (doSyst)
-      {
-	if(found_MassRes_Top == std::string::npos){//The FatJetsTools can only be setup for one systematic at a time...Need to sort out this method of looping systematics
-	  std::cout<<"Not the correct syst. Skip"<<std::endl;
-	  continue;
-	}
-      }
     std::string treeName = "CollectionTree_"+std::string(sys.name());
     const char * cName = treeName.c_str();
     Temp = new TTree (cName, cName);
@@ -629,8 +606,8 @@ EL::StatusCode MyxAODAnalysis :: initialize ()
     
     
     // Initialise the Jet reclustering tools here systematic by systematic
-    SetUpFatJetTools(m_jetRecTool_kt12, 1.2, "goodJets"+std::string(sys.name()), "MyFatJetsKt12"+std::string(sys.name()));
-    SetUpFatJetTools(m_jetRecTool_kt8, 0.8, "goodJets"+std::string(sys.name()), "MyFatJetsKt8"+std::string(sys.name()));
+    SetUpFatJetTools(m_jetRecTool_kt12, 1.2, "goodJets_fatColl", "MyFatJetsKt12"+std::string(sys.name()));
+    SetUpFatJetTools(m_jetRecTool_kt8, 0.8, "goodJets_fatColl", "MyFatJetsKt8"+std::string(sys.name()));
   
   }	
 
