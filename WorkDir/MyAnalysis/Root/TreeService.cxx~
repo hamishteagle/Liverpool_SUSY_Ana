@@ -23,7 +23,7 @@ TreeService::TreeService(TTree *outputTree, TDirectory *OutDir){
   tree->Branch("mcEventWeight", &mcEventWeight);
   tree->Branch("RenormedMcEventWeight", &RenormedMcEventWeight);
 
-  tree->Branch("weightsVector", &weightsVector);
+  tree->Branch("weightsVector" &weightsVector);
 
   tree->Branch("xSect", &xSect);
   tree->Branch("sampleSFmCTbbll",&sampleSFmCTbbll);

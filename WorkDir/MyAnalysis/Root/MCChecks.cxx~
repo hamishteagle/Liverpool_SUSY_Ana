@@ -59,7 +59,7 @@ MCChecks::MCChecks(){
 
   TruthTau.clear();
 
-  variationweights.push_back(0);
+  variationweights = 0;
 
 }
 

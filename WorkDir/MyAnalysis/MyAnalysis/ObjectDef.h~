@@ -11,11 +11,12 @@ class ObjectDef: public virtual IObjectDef
 
  public:
   //ObjectDef with Fat jets (fails on pseudoJetGetter)
-  //  ObjectDef(xAOD::TEvent* event, ST::SUSYObjDef_xAOD* SUSYTool, xAOD::TStore* store, double mcChannelNumber, double eventN, double mcEventWgt, double crosssect, std::string systName, bool doPhotons, JetToolRunner* Tool_FatJets_kt12, JetToolRunner* Tool_FatJets_kt8, asg::AnaToolHandle<IMETSignificance> Tool_METSig);
-
-  ObjectDef(xAOD::TEvent* event, ST::SUSYObjDef_xAOD* SUSYTool, xAOD::TStore* store, double mcChannelNumber, double eventN, double mcEventWgt, double crosssect, std::string systName, bool doPhotons,  asg::AnaToolHandle<IMETSignificance> Tool_METSig);
+  ObjectDef(xAOD::TEvent* event, ST::SUSYObjDef_xAOD* SUSYTool, xAOD::TStore* store, double mcChannelNumber, double eventN, double mcEventWgt, double crosssect, std::string systName, bool doPhotons, asg::AnaToolHandle<IMETSignificance> Tool_METSig);
 
   ~ObjectDef(){};
+
+  JetToolRunner* fatjet_kt12_tool;
+  JetToolRunner* fatjet_kt8_tool;
 
   // Function to set all of the objects using SUSYTools
   void FillPreORMuons();
@@ -38,13 +39,15 @@ class ObjectDef: public virtual IObjectDef
   void FillFatJets_kt12();
   void SetPrimVertex();
 
+  bool SetUpFatJetTools(JetToolRunner *& tool, double jetradius, std::string inputcontainer, std::string outputcontainer);
+
 
   
   // Getters
   xAOD::JetContainer* getBadJets(){return badJets;};
   xAOD::JetContainer* getGoodJets(){return goodJets;};
-  //xAOD::JetContainer* getFatJets_kt8(){return FatJets_kt8;};
-  //xAOD::JetContainer* getFatJets_kt12(){return FatJets_kt12;};
+  xAOD::JetContainer* getFatJets_kt8(){return FatJets_kt8;};
+  xAOD::JetContainer* getFatJets_kt12(){return FatJets_kt12;};
   xAOD::JetContainer* getBJets(){return BJets;};
   xAOD::JetContainer* getNonBJets(){return nonBJets;};
   xAOD::ElectronContainer* getBaselineElectrons(){return baselineElectrons;};
@@ -63,6 +66,8 @@ class ObjectDef: public virtual IObjectDef
   double getMET(){return MET;};
   double getMETPhi(){return METphi;};
   double getMuonSF(){return muonSF;};
+  //  double getMuonTriggerSF(){return MuonTriggerSF;};
+  //  double getMuonRecoSF(){return MuonRecoSF;};
   double getOldMuonSF(){return oldMuonSF;};
   double getElectronSF(){return electronSF;};
   double getElectronTriggerSF(){return electronTriggerSF;};
@@ -99,8 +104,9 @@ class ObjectDef: public virtual IObjectDef
   xAOD::MuonContainer* baselineMuons;  
   xAOD::PhotonContainer* baselinePhotons;  
   xAOD::JetContainer* goodJets;
-  //  xAOD::JetContainer* FatJets_kt8;
-  //xAOD::JetContainer* FatJets_kt12;
+  xAOD::JetContainer* goodJets_fatColl;
+  xAOD::JetContainer* FatJets_kt8;
+  xAOD::JetContainer* FatJets_kt12;
   xAOD::JetContainer* goodAntiKt4TruthJets;
   xAOD::JetContainer* goodAntiKt3TruthJets;
   xAOD::ElectronContainer* goodElectrons;
@@ -126,6 +132,8 @@ class ObjectDef: public virtual IObjectDef
   double photonSF;
   double bJetSF;
   double JVTSF;
+  //  double MuonRecoSF;
+  //  double MuonTriggerSF;
   int nVertex;
 
   JetToolRunner* fatjet_kt12_tool;

@@ -864,8 +864,8 @@ void ObjectDef::FillFatJets_kt8(){
   fatjet_kt8_tool->execute();
   //std::cout << goodJets_fatColl->size() << std::endl;
   currentEvent->retrieve( FatJets_kt8,"MyFatJetsKt8"+systematic );
-  //if (!currentEvent->retrieve( FatJets_kt8,"MyFatJetsKt8"+systematic ).isSuccess()) std::cout << "Something went wrong here" << std::endl;
-  //if (currentEvent->retrieve( FatJets_kt8,"MyFatJetsKt8"+systematic ).isSuccess()) std::cout << "FatJets container retrieved" << std::endl;
+  if (!currentEvent->retrieve( FatJets_kt8,"MyFatJetsKt8"+systematic ).isSuccess()) std::cout << "Something went wrong here" << std::endl;
+  if (currentEvent->retrieve( FatJets_kt8,"MyFatJetsKt8"+systematic ).isSuccess()) std::cout << "FatJets container retrieved" << std::endl;
   
   
 }
@@ -876,8 +876,8 @@ void ObjectDef::FillFatJets_kt12(){
   fatjet_kt12_tool->execute();
   //std::cout << goodJets_fatColl->size() << std::endl;
   currentEvent->retrieve( FatJets_kt12,"MyFatJetsKt12"+systematic );
-  //if (!currentEvent->retrieve( FatJets_kt12,"MyFatJetsKt12"+systematic ).isSuccess()) std::cout << "Something went wrong here" << std::endl;
-  //if (currentEvent->retrieve( FatJets_kt12,"MyFatJetsKt12"+systematic ).isSuccess()) << "FatJets container retrieved" << std::endl;
+  if (!currentEvent->retrieve( FatJets_kt12,"MyFatJetsKt12"+systematic ).isSuccess()) std::cout << "Something went wrong here" << std::endl;
+  if (currentEvent->retrieve( FatJets_kt12,"MyFatJetsKt12"+systematic ).isSuccess()) << "FatJets container retrieved" << std::endl;
 
 }
 

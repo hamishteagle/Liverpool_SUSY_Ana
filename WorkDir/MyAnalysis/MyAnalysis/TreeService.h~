@@ -43,9 +43,6 @@ class TreeService
   unsigned long long eventNumber;
   double mcEventWeight;
   double RenormedMcEventWeight;
-
-  std::vector<float> weightsVector;
-
   double xSect;
   double sampleSFmCTbbll;
   double puWgt;

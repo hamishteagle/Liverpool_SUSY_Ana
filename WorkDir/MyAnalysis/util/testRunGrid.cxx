@@ -26,8 +26,8 @@ int gridmain( int argc, char* argv[]) {
   std::vector<std::string> Months = {"Jan","Feb","Mar","Apr","May","June","July","Aug","Sept","Oct","Nov","Dec"};
   std::time_t t = time(0);   // get time now                                                                                                                                                                     
 
-  bool RunningWithSyst;
-  bool RunningWithPhotons;
+  bool RunningWithSyst = false;
+  bool RunningWithPhotons = false;
      
   struct tm * now = localtime( & t );
 
@@ -92,11 +92,16 @@ int gridmain( int argc, char* argv[]) {
 	fileType = "DATA16";
       }
       
+      int found_data17 = inputFile.find("data17");
+      if (found_data17 != std::string::npos){
+	fileType = "DATA17";
+      }
+      
       
       submitDir = CurrentDate+"_v1_"+fileType+appPhotons+"/";
       
       // creates a directory in scratch for the job
-      std::string CreateDir = "/scratch/hteagle/mulitB/GridSubmissions/"+submitDir;
+      std::string CreateDir = "/scratch/hteagle/multiB/GridSubmissions/"+submitDir;
       std::cout << "output Directory is: " << CreateDir << std::endl;
 
       if (submitDir == "true"){
@@ -119,18 +124,16 @@ int gridmain( int argc, char* argv[]) {
   SH::SampleHandler sh;
   
   // Grid Running from a shell script with a given input file
-  SH::scanDQ2 (sh, inputFile);
+  SH::scanRucio (sh, inputFile);
   
   // Can run on a specific grid file by setting it here:
-  //SH::scanDQ2(sh, "mc14_13TeV.110401.PowhegPythia_P2012_ttbar_nonallhad.merge.AOD.e2931_s1982_s2008_r5787_r5853/");
+  //SH::scanRucio(sh, "mc16_13TeV.410470.PhPy8EG_A14_ttbar_hdamp258p75_nonallhad.deriv.DAOD_SUSY1.e6337_e5984_s3126_r10201_r10210_p3401/");
   
   
   sh.print();
   
   sh.setMetaString ("nc_tree", "CollectionTree");
   
-  
-  double nEventsTotal = 0;
   
   sh.print();
   

@@ -29,7 +29,7 @@ int main( int argc, char* argv[]) {
   bool RunningWithSyst;
   bool RunningWithPhotons;
   
-  /*  std::string gridoption = "";
+    std::string gridoption = "";
   
   while (gridoption == "")//Option to run on the grid calls the testRunGrid.cxx script
     {					      
@@ -40,7 +40,7 @@ int main( int argc, char* argv[]) {
 	  gridmain(argc, argv);
 	  return 0;
 	}
-	}*/
+    }
 
   submitDir = "/hepstore/hteagle/SubmissionOutputs/";  
   inputDir = "/hepstore/hteagle/recoSamples/";
@@ -108,7 +108,7 @@ int main( int argc, char* argv[]) {
     inputFile = inputDir+inputFile;
 
     SH::DiskListLocal list (inputFile);
-    SH::scanFiles (sh, list); // specifying one 
+    SH::scanFiles(sh, list); // specifying one 
 
     sh.setMetaString ("nc_tree", "CollectionTree");
 

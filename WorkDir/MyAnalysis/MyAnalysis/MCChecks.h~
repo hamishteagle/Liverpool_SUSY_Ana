@@ -18,7 +18,6 @@ class MCChecks
  public:
   MCChecks();
   
-  bool RetrieveWeights(xAOD::TEvent* event);
   bool SherpaWOR(xAOD::TEvent* event, double ptThreshold);
   bool VariableForDuplicates(xAOD::TEvent* event);
   bool DiBosonOR(xAOD::TEvent* event);

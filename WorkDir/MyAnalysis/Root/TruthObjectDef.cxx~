@@ -898,7 +898,7 @@ void TruthObjectDef::FillFatJets_kt12(){
 
 }
 
-bool TruthObjectDef::SetUpFatJetTools(JetToolRunner *& tool, double jetradius, std::string inputcontainer, std::string outputcontainer){
+bool ObjectDef::SetUpFatJetTools(JetToolRunner *& tool, double jetradius, std::string inputcontainer, std::string outputcontainer){
 
   
   //double jetradius = 0.8; 

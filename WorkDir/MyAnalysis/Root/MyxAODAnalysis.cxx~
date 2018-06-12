@@ -837,8 +837,6 @@ EL::StatusCode MyxAODAnalysis :: execute ()
 	checkMC->SherpaUncertaintyWeights(m_event); 
 	//std::cout << "Got Sherpa weights" << std::endl;
 	
-      } else {
-       checkMC->RetrieveWeights(m_event);
       }
     
     }
