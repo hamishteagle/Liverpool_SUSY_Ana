@@ -158,30 +158,10 @@ public:
   TH1F *HSRB_mcWgt; //!
   TH1F *HSRB_allWgt; //!
 
-  TH1F *HCRgamma_noWgt; //!
-  TH1F *HCRgamma_mcWgt; //!
-  TH1F *HCRgamma_allWgt; //!
-
   TH1F *HSRC_noWgt; //!
   TH1F *HSRC_mcWgt; //!
   TH1F *HSRC_allWgt; //!
-  
-  TH1F *HCRTemu_noWgt; //!
-  TH1F *HCRTemu_mcWgt; //!
-  TH1F *HCRTemu_allWgt; //!
- 
-  TH1F *HCRT1L_noWgt; //!
-  TH1F *HCRT1L_mcWgt; //!
-  TH1F *HCRT1L_allWgt; //!
-  
-  TH1F *HCRW_noWgt; //!
-  TH1F *HCRW_mcWgt; //!
-  TH1F *HCRW_allWgt; //!
-  
-  TH1F *HCRsT_noWgt; //!
-  TH1F *HCRsT_mcWgt; //!
-  TH1F *HCRsT_allWgt; //!
-  
+
   TH1F *HTruthMETFilt; //!
   TH1F *HTruthHTFilt; //!
   TH1F *HSumOfPileUp; //!
