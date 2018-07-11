@@ -162,9 +162,9 @@ public:
   TH1F *HCRgamma_mcWgt; //!
   TH1F *HCRgamma_allWgt; //!
 
-  TH1F *HSRB2_noWgt; //!
-  TH1F *HSRB2_mcWgt; //!
-  TH1F *HSRB2_allWgt; //!
+  TH1F *HSRC_noWgt; //!
+  TH1F *HSRC_mcWgt; //!
+  TH1F *HSRC_allWgt; //!
   
   TH1F *HCRTemu_noWgt; //!
   TH1F *HCRTemu_mcWgt; //!
@@ -187,7 +187,6 @@ public:
   TH1F *HSumOfPileUp; //!
 
 
-
   bool doSyst;
   bool doPhotons;
   bool RunningLocally;
@@ -202,7 +201,6 @@ public:
   int mcChannel; //!
 
   std::vector<TreeService*> m_treeServiceVector; //!
-
   double m_PUSumOfWeights; //!
   double m_finalSumOfWeights; //!
   double m_initialSumOfWeights; //!

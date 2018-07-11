@@ -814,7 +814,7 @@ void ObjectDef::FillGoodJets(){
 	
 	flavour = -1;
 	(*jet_itr)->getAttribute("TruthLabelID",flavour);
-	if ( (*jet_itr)->auxdata< char >("bjet")==1 )
+	if ( (*jet_itr)->auxdata< char >("bjet")==1 && (fabs((*jet_itr)->eta() < 2.5)))
 	  {
 	    BJets->push_back( *jet_itr);
 	  }

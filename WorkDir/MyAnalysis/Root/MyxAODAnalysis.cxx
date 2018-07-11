@@ -17,6 +17,7 @@
 #include <exception>
 
 #include <string.h>
+#include <fstream>
 #include <TTreeFormula.h>
 #include "xAODEventInfo/EventInfo.h"
 #include "MyAnalysis/TruthObjectDef.h"
@@ -107,7 +108,7 @@ EL::StatusCode MyxAODAnalysis :: histInitialize ()
   isSignal = 0;
   is25ns = true; 
   std::cout << "The File Name is: " << m_fileName << std::endl;
-
+  
 
   gErrorIgnoreLevel = kFatal;  
   
@@ -119,6 +120,7 @@ EL::StatusCode MyxAODAnalysis :: histInitialize ()
   // This will find generic SUSY signals
   int foundSignal = m_fileName.find("MGPy8EG_A14N");
   int foundttNNSignal = m_fileName.find("TT_directTT");
+
   if (foundData != std::string::npos){
     isData = 1;
     std::cout << "Running on a data sample" << std::endl;
@@ -163,6 +165,7 @@ EL::StatusCode MyxAODAnalysis :: histInitialize ()
   HSRA_mcWgt = new TH1F("HSRA_mcWgt","HSRA_mcWgt", 50, 0.5, 50.5);
   HSRA_allWgt = new TH1F("HSRA_allWgt","HSRA_allWgt", 50, 0.5, 50.5);
 
+
   HSRB_noWgt = new TH1F("HSRB_noWgt","HSRB_noWgt", 50, 0.5, 50.5);
   HSRB_mcWgt = new TH1F("HSRB_mcWgt","HSRB_mcWgt", 50, 0.5, 50.5);
   HSRB_allWgt = new TH1F("HSRB_allWgt","HSRB_allWgt", 50, 0.5, 50.5);
@@ -171,9 +174,9 @@ EL::StatusCode MyxAODAnalysis :: histInitialize ()
   HCRgamma_mcWgt = new TH1F("HCRgamma_mcWgt","HCRgamma_mcWgt", 50, 0.5, 50.5);
   HCRgamma_allWgt = new TH1F("HCRgamma_allWgt","HCRgamma_allWgt", 50, 0.5, 50.5);
 
-  HSRB2_noWgt = new TH1F("HSRB2_noWgt","HSRB2_noWgt", 50, 0.5, 50.5);
-  HSRB2_mcWgt = new TH1F("HSRB2_mcWgt","HSRB2_mcWgt", 50, 0.5, 50.5);
-  HSRB2_allWgt = new TH1F("HSRB2_allWgt","HSRB2_allWgt", 50, 0.5, 50.5);
+  HSRC_noWgt = new TH1F("HSRC_noWgt","HSRC_noWgt", 50, 0.5, 50.5);
+  HSRC_mcWgt = new TH1F("HSRC_mcWgt","HSRC_mcWgt", 50, 0.5, 50.5);
+  HSRC_allWgt = new TH1F("HSRC_allWgt","HSRC_allWgt", 50, 0.5, 50.5);
   
   HCRTemu_noWgt = new TH1F("HCRTemu_noWgt","HCRTemu_noWgt", 50, 0.5, 50.5);
   HCRTemu_mcWgt = new TH1F("HCRTemu_mcWgt","HCRTemu_mcWgt", 50, 0.5, 50.5);
@@ -219,9 +222,9 @@ EL::StatusCode MyxAODAnalysis :: histInitialize ()
   HCRgamma_mcWgt->SetDirectory (wk()->getOutputFile("output"));
   HCRgamma_allWgt->SetDirectory (wk()->getOutputFile("output"));
 
-  HSRB2_noWgt->SetDirectory (wk()->getOutputFile("output"));
-  HSRB2_mcWgt->SetDirectory (wk()->getOutputFile("output"));
-  HSRB2_allWgt->SetDirectory (wk()->getOutputFile("output"));
+  HSRC_noWgt->SetDirectory (wk()->getOutputFile("output"));
+  HSRC_mcWgt->SetDirectory (wk()->getOutputFile("output"));
+  HSRC_allWgt->SetDirectory (wk()->getOutputFile("output"));
   
   HCRTemu_noWgt->SetDirectory (wk()->getOutputFile("output"));
   HCRTemu_mcWgt->SetDirectory (wk()->getOutputFile("output"));
@@ -242,6 +245,8 @@ EL::StatusCode MyxAODAnalysis :: histInitialize ()
   HTruthMETFilt->SetDirectory (wk()->getOutputFile("output"));
   HTruthHTFilt->SetDirectory (wk()->getOutputFile("output"));
   HSumOfPileUp->SetDirectory (wk()->getOutputFile("output"));
+
+
 
 
   return EL::StatusCode::SUCCESS;
@@ -265,7 +270,6 @@ EL::StatusCode MyxAODAnalysis :: fileExecute ()
   double nEventsProcessed  = 0;
   double sumOfWeights        = 0;
   double sumOfWeightsSquared = 0;
-  
   if(m_isDerivation && m_fileType != "DAOD_TRUTH1" && isData == false){
     
     std::cout << "This file is a derivation" << std::endl;
@@ -614,6 +618,7 @@ EL::StatusCode MyxAODAnalysis :: execute ()
   isyst = 0;
 
 
+
   
 
   for (const auto& sysInfo : systInfoList){
@@ -764,7 +769,7 @@ EL::StatusCode MyxAODAnalysis :: execute ()
       HSRA_mcWgt->Fill(1,mcWgt); 
       HSRA_allWgt->Fill(1,mcWgt);//*btagWgt*lepWgt*trigWgt*puWgt);
       
-      HSRB_noWgt->Fill(1,1);
+      HSRB_noWgt->Fill(1,0.46754945);//Change back to 1
       HSRB_mcWgt->Fill(1,mcWgt); 
       HSRB_allWgt->Fill(1,mcWgt*btagWgt*lepWgt*trigWgt*puWgt);
       
@@ -772,9 +777,9 @@ EL::StatusCode MyxAODAnalysis :: execute ()
       HCRgamma_mcWgt->Fill(1,mcWgt); 
       HCRgamma_allWgt->Fill(1,mcWgt*btagWgt*lepWgt*trigWgt*puWgt);
       
-      HSRB2_noWgt->Fill(1,1);
-      HSRB2_mcWgt->Fill(1,mcWgt); 
-      HSRB2_allWgt->Fill(1,mcWgt*btagWgt*lepWgt*trigWgt*puWgt);
+      HSRC_noWgt->Fill(1,1);
+      HSRC_mcWgt->Fill(1,mcWgt); 
+      HSRC_allWgt->Fill(1,mcWgt*btagWgt*lepWgt*trigWgt*puWgt);
       
       HCRTemu_noWgt->Fill(1,1);
       HCRTemu_mcWgt->Fill(1,mcWgt);
@@ -850,17 +855,17 @@ EL::StatusCode MyxAODAnalysis :: execute ()
       HSRA_mcWgt->Fill(2,mcWgt); 
       HSRA_allWgt->Fill(2,mcWgt);//*btagWgt*lepWgt*trigWgt*puWgt);
       
-      HSRB_noWgt->Fill(2,1);
+      HSRB_noWgt->Fill(2,0.46754945);//Change back to 1 
       HSRB_mcWgt->Fill(2,mcWgt); 
-      HSRB_allWgt->Fill(2,mcWgt*btagWgt*lepWgt*trigWgt*puWgt);
+      HSRB_allWgt->Fill(2,1);
       
       HCRgamma_noWgt->Fill(2,1);
       HCRgamma_mcWgt->Fill(2,mcWgt); 
       HCRgamma_allWgt->Fill(2,mcWgt*btagWgt*lepWgt*trigWgt*puWgt);
       
-      HSRB2_noWgt->Fill(2,1);
-      HSRB2_mcWgt->Fill(2,mcWgt); 
-      HSRB2_allWgt->Fill(2,mcWgt*btagWgt*lepWgt*trigWgt*puWgt);
+      HSRC_noWgt->Fill(2,1);
+      HSRC_mcWgt->Fill(2,mcWgt); 
+      HSRC_allWgt->Fill(2,mcWgt*btagWgt*lepWgt*trigWgt*puWgt);
       
       HCRTemu_noWgt->Fill(2,1);
       HCRTemu_mcWgt->Fill(2,mcWgt);
@@ -904,17 +909,17 @@ EL::StatusCode MyxAODAnalysis :: execute ()
       HSRA_mcWgt->Fill(3,mcWgt); 
       HSRA_allWgt->Fill(3,mcWgt);//*btagWgt*lepWgt*trigWgt*puWgt);
       
-      HSRB_noWgt->Fill(3,1);
+      HSRB_noWgt->Fill(3,0.46754945);//Change back to 1 
       HSRB_mcWgt->Fill(3,mcWgt); 
-      HSRB_allWgt->Fill(3,mcWgt*btagWgt*lepWgt*trigWgt*puWgt);
+      HSRB_allWgt->Fill(3,1);
       
       HCRgamma_noWgt->Fill(3,1);
       HCRgamma_mcWgt->Fill(3,mcWgt); 
       HCRgamma_allWgt->Fill(3,mcWgt*btagWgt*lepWgt*trigWgt*puWgt);
       
-      HSRB2_noWgt->Fill(3,1);
-      HSRB2_mcWgt->Fill(3,mcWgt); 
-      HSRB2_allWgt->Fill(3,mcWgt*btagWgt*lepWgt*trigWgt*puWgt);
+      HSRC_noWgt->Fill(3,1);
+      HSRC_mcWgt->Fill(3,mcWgt); 
+      HSRC_allWgt->Fill(3,mcWgt*btagWgt*lepWgt*trigWgt*puWgt);
       
       HCRTemu_noWgt->Fill(3,1);
       HCRTemu_mcWgt->Fill(3,mcWgt);
@@ -997,13 +1002,13 @@ EL::StatusCode MyxAODAnalysis :: execute ()
 	HSRA_mcWgt->Fill(4,mcWgt); 
 	HSRA_allWgt->Fill(4,mcWgt);//*btagWgt*lepWgt*trigWgt*puWgt);
 	
-	HSRB_noWgt->Fill(4,1);
+	HSRB_noWgt->Fill(4,0.46754945);//Change back to 1 
 	HSRB_mcWgt->Fill(4,mcWgt); 
-	HSRB_allWgt->Fill(4,mcWgt*btagWgt*lepWgt*trigWgt*puWgt);
+	HSRB_allWgt->Fill(4,1);
 	
-	HSRB2_noWgt->Fill(4,1);
- 	HSRB2_mcWgt->Fill(4,mcWgt); 
-	HSRB2_allWgt->Fill(4,mcWgt*btagWgt*lepWgt*trigWgt*puWgt);
+	HSRC_noWgt->Fill(4,1);
+ 	HSRC_mcWgt->Fill(4,mcWgt); 
+	HSRC_allWgt->Fill(4,mcWgt*btagWgt*lepWgt*trigWgt*puWgt);
       }
 
       if (passedLepTrigger){
@@ -1042,13 +1047,13 @@ EL::StatusCode MyxAODAnalysis :: execute ()
 	HSRA_mcWgt->Fill(5,mcWgt); 
 	HSRA_allWgt->Fill(5,mcWgt);//*btagWgt*lepWgt*trigWgt*puWgt);
 
-	HSRB_noWgt->Fill(5,1);
+	HSRB_noWgt->Fill(5,0.46754945);//Change back to 1 
 	HSRB_mcWgt->Fill(5,mcWgt); 
-	HSRB_allWgt->Fill(5,mcWgt*btagWgt*lepWgt*trigWgt*puWgt);
+	HSRB_allWgt->Fill(5,1);
 
-	HSRB2_noWgt->Fill(5,1);
-	HSRB2_mcWgt->Fill(5,mcWgt); 
-	HSRB2_allWgt->Fill(5,mcWgt*btagWgt*lepWgt*trigWgt*puWgt);
+	HSRC_noWgt->Fill(5,1);
+	HSRC_mcWgt->Fill(5,mcWgt); 
+	HSRC_allWgt->Fill(5,mcWgt*btagWgt*lepWgt*trigWgt*puWgt);
 
       }
       if (passedMuTrigger || passedElTrigger){
@@ -1088,17 +1093,17 @@ EL::StatusCode MyxAODAnalysis :: execute ()
     if (isyst == 0){
       
       if (passedMETTrigger){
-	HSRA_noWgt->Fill(6,1);
+	HSRA_noWgt->Fill(6, 1);
 	HSRA_mcWgt->Fill(6,mcWgt); 
 	HSRA_allWgt->Fill(6,mcWgt);//*btagWgt*lepWgt*trigWgt*puWgt);
 
-	HSRB_noWgt->Fill(6,1);
+	HSRB_noWgt->Fill(6,0.46754945);//Change back to 1 
 	HSRB_mcWgt->Fill(6,mcWgt); 
-	HSRB_allWgt->Fill(6,mcWgt*btagWgt*lepWgt*trigWgt*puWgt);
+	HSRB_allWgt->Fill(6,1);
 
-	HSRB2_noWgt->Fill(6,1);
-	HSRB2_mcWgt->Fill(6,mcWgt); 
-	HSRB2_allWgt->Fill(6,mcWgt*btagWgt*lepWgt*trigWgt*puWgt);
+	HSRC_noWgt->Fill(6,1);
+	HSRC_mcWgt->Fill(6,mcWgt); 
+	HSRC_allWgt->Fill(6,mcWgt*btagWgt*lepWgt*trigWgt*puWgt);
 
       }
       if (passedMuTrigger || passedElTrigger){
@@ -1139,17 +1144,17 @@ EL::StatusCode MyxAODAnalysis :: execute ()
     if (isyst == 0){
       
       if (passedMETTrigger){
-	HSRA_noWgt->Fill(7,1);
+	HSRA_noWgt->Fill(7, 1);
 	HSRA_mcWgt->Fill(7,mcWgt); 
 	HSRA_allWgt->Fill(7,mcWgt);//*btagWgt*lepWgt*trigWgt*puWgt);
 
-	HSRB_noWgt->Fill(7,1);
+	HSRB_noWgt->Fill(7,0.46754945);//Change back to 1 
 	HSRB_mcWgt->Fill(7,mcWgt); 
-	HSRB_allWgt->Fill(7,mcWgt*btagWgt*lepWgt*trigWgt*puWgt);
+	HSRB_allWgt->Fill(7,1);
 
-	HSRB2_noWgt->Fill(7,1);
-	HSRB2_mcWgt->Fill(7,mcWgt); 
-	HSRB2_allWgt->Fill(7,mcWgt*btagWgt*lepWgt*trigWgt*puWgt);
+	HSRC_noWgt->Fill(7,1);
+	HSRC_mcWgt->Fill(7,mcWgt); 
+	HSRC_allWgt->Fill(7,mcWgt*btagWgt*lepWgt*trigWgt*puWgt);
 
       }
       if (passedMuTrigger || passedElTrigger){
@@ -1189,17 +1194,17 @@ EL::StatusCode MyxAODAnalysis :: execute ()
 
     if (isyst == 0){
       if (passedMETTrigger){
-	HSRA_noWgt->Fill(8,1);
+	HSRA_noWgt->Fill(8, 1);
 	HSRA_mcWgt->Fill(8,mcWgt); 
 	HSRA_allWgt->Fill(8,mcWgt*btagWgt*lepWgt*trigWgt*puWgt);
 
-	HSRB_noWgt->Fill(8,1);
+	HSRB_noWgt->Fill(8,0.46754945);//Change back to 1 
 	HSRB_mcWgt->Fill(8,mcWgt); 
-	HSRB_allWgt->Fill(8,mcWgt*btagWgt*lepWgt*trigWgt*puWgt);
+	HSRB_allWgt->Fill(8,1);
 
-	HSRB2_noWgt->Fill(8,1);
-	HSRB2_mcWgt->Fill(8,mcWgt); 
-	HSRB2_allWgt->Fill(8,mcWgt*btagWgt*lepWgt*trigWgt*puWgt);
+	HSRC_noWgt->Fill(8,1);
+	HSRC_mcWgt->Fill(8,mcWgt); 
+	HSRC_allWgt->Fill(8,mcWgt*btagWgt*lepWgt*trigWgt*puWgt);
 
       }
       if (passedMuTrigger || passedElTrigger){
@@ -1237,6 +1242,7 @@ EL::StatusCode MyxAODAnalysis :: execute ()
     SRAHists.push_back(HSRA_mcWgt);
     SRAHists.push_back(HSRA_allWgt);
 
+
     std::vector<TH1F*> SRBHists;
     SRBHists.push_back(HSRB_noWgt);
     SRBHists.push_back(HSRB_mcWgt);
@@ -1247,10 +1253,10 @@ EL::StatusCode MyxAODAnalysis :: execute ()
     CRgammaHists.push_back(HCRgamma_mcWgt);
     CRgammaHists.push_back(HCRgamma_allWgt);
     
-    std::vector<TH1F*> SRB2Hists;
-    SRB2Hists.push_back(HSRB2_noWgt);
-    SRB2Hists.push_back(HSRB2_mcWgt);
-    SRB2Hists.push_back(HSRB2_allWgt);
+    std::vector<TH1F*> SRCHists;
+    SRCHists.push_back(HSRC_noWgt);
+    SRCHists.push_back(HSRC_mcWgt);
+    SRCHists.push_back(HSRC_allWgt);
     
     std::vector<TH1F*> CRTemuHists;
     CRTemuHists.push_back(HCRTemu_noWgt);
@@ -1291,9 +1297,11 @@ EL::StatusCode MyxAODAnalysis :: execute ()
       lepWgt = 1;
     }
     
+   
+
     // Temp for debugging
     if (isyst == 0){
-      std::unique_ptr<Cutflows> m_cutflows (new Cutflows (*m_varCalc, *m_regions, SRAHists, SRBHists, SRB2Hists, CRTemuHists, CRT1LHists, CRWHists, CRsTHists, CRgammaHists, btagWgt, lepWgt, trigWgt, puWgt, mcWgt, EventNumber, passedMETTrigger, passedLepTrigger, passedGammaTrigger, truthfilt_MET));
+      std::unique_ptr<Cutflows> m_cutflows (new Cutflows (*m_varCalc, *m_regions, SRAHists, SRBHists, SRCHists, CRTemuHists, CRT1LHists, CRWHists, CRsTHists, CRgammaHists, btagWgt, lepWgt, trigWgt, puWgt, mcWgt, EventNumber, passedMETTrigger, passedLepTrigger, passedGammaTrigger, truthfilt_MET));
     }
     
     if ( m_fileType != "DAOD_TRUTH1"){
@@ -1316,6 +1324,9 @@ EL::StatusCode MyxAODAnalysis :: execute ()
   
   }
   
+
+
+
   std::cout << "Tree service vector size:" << m_treeServiceVector.size() << std::endl;  
 
   //  std::cout<<"Finished Event loop succesfully"<<std::endl;
@@ -1350,6 +1361,9 @@ EL::StatusCode MyxAODAnalysis :: execute ()
 
   const char* APP_NAME = "MyxAODAnalysis";
 
+
+
+
   
   // Do SRA Cuts here
   
@@ -1363,23 +1377,23 @@ EL::StatusCode MyxAODAnalysis :: execute ()
   SRACutList.push_back("Cosmic Muons");
   SRACutList.push_back("Muon Cleaning");
   SRACutList.push_back("ETMiss > 250");
-  SRACutList.push_back("njets >= 4");
-  SRACutList.push_back("nbjets >= 3");
-  SRACutList.push_back("nLepton ==1 (mcWgt)");
-  SRACutList.push_back("nLep == 1 (+bTagWgt)");
-  SRACutList.push_back("nLep == 1 (+electronWgt)");
-  SRACutList.push_back("nLep == 1 (+elecTrigWgt)");
-  SRACutList.push_back("nLep == 1 (+muonWgt)");
-  SRACutList.push_back("nLep == 1 (+JVT)");
-  SRACutList.push_back("nLep == 1 (+Pileup)");
-  SRACutList.push_back("Stop0L_tauVeto");
-  SRACutList.push_back("80 < maxminmbb <150");
-  SRACutList.push_back("m_CT > 250");
-  SRACutList.push_back("m_CT > 350");
+  SRACutList.push_back("nBaselineLepton ==0");
+  SRACutList.push_back("njets >=6");
+  SRACutList.push_back("nbjets >= 4");  
+  SRACutList.push_back("minDPhi(j4-MET)>0.4"); 
+  SRACutList.push_back("tau veto");
+  SRACutList.push_back("maxDR>2.5");
+  SRACutList.push_back("minDR>2.5");
+  SRACutList.push_back("hcand>80");
+  SRACutList.push_back("pTb1>200");
+  SRACutList.push_back("meff>1000");
+  SRACutList.push_back("meff>1000<1200");
+  SRACutList.push_back("meff>1200<1500");
+  SRACutList.push_back("meff>1500");
   SRACutList.push_back("m_CT > 450");
   
 
-  m_lumiScaled = 1;
+  //m_lumiScaled = 1;
 
   bool doSRACutflow = true;
   if (doSRACutflow){
@@ -1426,17 +1440,17 @@ EL::StatusCode MyxAODAnalysis :: execute ()
   SRBCutList.push_back("Jet/MET");
   SRBCutList.push_back("Cosmic Muons");
   SRBCutList.push_back("Muon Cleaning");
-  SRBCutList.push_back("ETMiss > 250");
+  SRBCutList.push_back("ETMiss > 300");
+  SRBCutList.push_back("nBaselineLep == 0");
   SRBCutList.push_back("njets >= 4");
   SRBCutList.push_back("nbjets >= 3");
-  SRBCutList.push_back("nLeptons == 0");
-  SRBCutList.push_back("nBaselineLep == 0");
-  SRBCutList.push_back("minDelPhi >0.4");
-  SRBCutList.push_back("pTb1>100");
-  SRBCutList.push_back("nbJets >= 4");
-  SRBCutList.push_back("SRB_minDR2<2");
-  SRBCutList.push_back("SRB_minDR<2");
-  SRBCutList.push_back("80<");
+  SRBCutList.push_back(">50<140");
+  SRBCutList.push_back("non b-tagged leading jet");
+  SRBCutList.push_back("pTj1>300");
+  SRBCutList.push_back("meff>1000");
+  SRBCutList.push_back("tau veto");
+  SRBCutList.push_back("minDelPhi(j1_4-MET) >0.4");
+  SRBCutList.push_back("DelPhi(j1-MET)");
   SRBCutList.push_back("NA");
   SRBCutList.push_back("NA");
   SRBCutList.push_back("NA");
@@ -1624,66 +1638,64 @@ EL::StatusCode MyxAODAnalysis :: execute ()
   
 
 
-  std::vector<std::string> SRB2CutList; 
-  SRB2CutList.push_back("NONE");
-  SRB2CutList.push_back("GRL");
-  SRB2CutList.push_back("LAr & Tile");
-  SRB2CutList.push_back("1L Trigger");
-  SRB2CutList.push_back("Primary Vertex >= 1");
-  SRB2CutList.push_back("Jet/MET");
-  SRB2CutList.push_back("Cosmic Muons");
-  SRB2CutList.push_back("Muon Cleaning");
-  SRB2CutList.push_back("MET > 250");
-  SRB2CutList.push_back("nJets >= 4");
-  SRB2CutList.push_back("nBJets >= 3");
-  SRB2CutList.push_back("nLepton==1");
-  SRB2CutList.push_back("nLeptons == 0");
-  SRB2CutList.push_back("nBaselineLep == 0");
-  SRB2CutList.push_back("minDelPhi >0.4");
-  SRB2CutList.push_back("pTb1>100");
-  SRB2CutList.push_back("SRB_Higgsino_minDR2<2.5");
-  SRB2CutList.push_back("SRB_Higgsino_minDR<2");
-  SRB2CutList.push_back("80<SRB_Higgsino_Hmbb<150");
-  SRB2CutList.push_back("NA");
-  SRB2CutList.push_back("NA");
-  SRB2CutList.push_back("NA");
-  SRB2CutList.push_back("NA");
-  SRB2CutList.push_back("NA");
-
-
+  std::vector<std::string> SRCCutList; 
+  SRCCutList.push_back("NONE");
+  SRCCutList.push_back("GRL");
+  SRCCutList.push_back("LAr & Tile");
+  SRCCutList.push_back("MET trigger");
+  SRCCutList.push_back("Primary Vertex >= 1");
+  SRCCutList.push_back("Jet/MET");
+  SRCCutList.push_back("Cosmic Muons");
+  SRCCutList.push_back("Muon Cleaning");
+  SRCCutList.push_back("MET > 250");
+  SRCCutList.push_back("nBJets >= 3");
+  SRCCutList.push_back("nJets >= 4");
+  SRCCutList.push_back("nBaselineLep == 0");
+  SRCCutList.push_back("minDelPhi >0.4");
+  SRCCutList.push_back("metsig>25");
+  SRCCutList.push_back("metsig>27");
+  SRCCutList.push_back("metsig>30");
+  SRCCutList.push_back("metsig>32");
+  SRCCutList.push_back("NA");
+  SRCCutList.push_back("NA");
+  SRCCutList.push_back("NA");
+  SRCCutList.push_back("NA");
+  SRCCutList.push_back("NA");
+  SRCCutList.push_back("NA");
+  SRCCutList.push_back("NA");
 
 
   
 
-  bool doSRB2Cutflow = true;
-  if (doSRB2Cutflow){
+  bool doSRCCutflow = true;
+  if (doSRCCutflow){
 
   std::cout << "Number of weighted events total:"  << PUSumOfWeights << std::endl;
   
-  std::cout << "SRB2 Selections:" << std::endl;
+  std::cout << "SRC Selections:" << std::endl;
   std::cout << "Raw Events" << std::endl;
   std::cout << "Sum Of Weights = " << h_SumOfWeights->Integral() << std::endl;
   std::cout << "Cut # " << std::setw(25) << "Cut Name " << std::setw(50) << "Events Passing Selection " << std::setw(25) << " Relative Efficiency" <<std::setw(25) <<" Absolute Efficiency  "  <<std::endl;
-  for(size_t icut=0; icut<=SRB2CutList.size()-1; ++icut)
+  for(size_t icut=0; icut<=SRCCutList.size()-1; ++icut)
     {
       if (icut == 0){
-	std::cout << std::setw(25) <<std::left << icut+1 << std::setw(25)  << std::left << SRB2CutList[icut] << std::setw(25) << std::right << HSRB2_noWgt->GetBinContent(icut+1) << std::setw(25)<< std::right << std::setprecision(5) << HSRB2_noWgt->GetBinContent(icut+1)/HSRB2_noWgt->GetBinContent(icut+1) << std::setw(25) <<  std::right << HSRB2_noWgt->GetBinContent(icut+1)/HSRB2_noWgt->GetBinContent(1)   <<std::endl;
+	std::cout << std::setw(25) <<std::left << icut+1 << std::setw(25)  << std::left << SRCCutList[icut] << std::setw(25) << std::right << HSRC_noWgt->GetBinContent(icut+1) << std::setw(25)<< std::right << std::setprecision(5) << HSRC_noWgt->GetBinContent(icut+1)/HSRC_noWgt->GetBinContent(icut+1) << std::setw(25) <<  std::right << HSRC_noWgt->GetBinContent(icut+1)/HSRC_noWgt->GetBinContent(1)   <<std::endl;
       }
       else{
-	std::cout << std::setw(25) <<std::left << icut+1 << std::setw(25)  << std::left << SRB2CutList[icut] << std::setw(25) << std::right << HSRB2_noWgt->GetBinContent(icut+1) << std::setw(25)<< std::right << std::setprecision(5) << HSRB2_noWgt->GetBinContent(icut+1)/HSRB2_noWgt->GetBinContent(icut) << std::setw(25) <<  std::right << HSRB2_noWgt->GetBinContent(icut+1)/HSRB2_noWgt->GetBinContent(1)   <<std::endl;
+	std::cout << std::setw(25) <<std::left << icut+1 << std::setw(25)  << std::left << SRCCutList[icut] << std::setw(25) << std::right << HSRC_noWgt->GetBinContent(icut+1) << std::setw(25)<< std::right << std::setprecision(5) << HSRC_noWgt->GetBinContent(icut+1)/HSRC_noWgt->GetBinContent(icut) << std::setw(25) <<  std::right << HSRC_noWgt->GetBinContent(icut+1)/HSRC_noWgt->GetBinContent(1)   <<std::endl;
       }
     }  
   
   std::cout << "Scaled Events" << std::endl;
   std::cout << "Cut # " << std::setw(25) << "Cut Name " << std::setw(50) << "Events Passing Selection " << std::setw(25) << " Relative Efficiency" <<std::setw(25) <<" Absolute Efficiency  "  <<std::endl;
-  for(size_t icut=0; icut<=SRB2CutList.size()-1; ++icut)
+  for(size_t icut=0; icut<=SRCCutList.size()-1; ++icut)
     {
 
     if (icut == 0){
-      std::cout << std::setw(25) <<std::left << icut+1 << std::setw(25)  << std::left << SRB2CutList[icut] << std::setw(25) << std::right << HSRB2_allWgt->GetBinContent(icut+1) << std::setw(25)<< std::right << std::setprecision(5) << HSRB2_allWgt->GetBinContent(icut+1)/(HSRB2_allWgt->GetBinContent(icut+1)) << std::setw(25) <<  std::right << HSRB2_allWgt->GetBinContent(icut+1)/(HSRB2_allWgt->GetBinContent(1))   <<std::endl;
+      std::cout << std::setw(25) <<std::left << icut+1 << std::setw(25)  << std::left << SRCCutList[icut] << std::setw(25) << std::right << HSRC_allWgt->GetBinContent(icut+1) << std::setw(25)<< std::right << std::setprecision(5) << HSRC_allWgt->GetBinContent(icut+1)/(HSRC_allWgt->GetBinContent(icut+1)) << std::setw(25) <<  std::right << HSRC_allWgt->GetBinContent(icut+1)/(HSRC_allWgt->GetBinContent(1))   <<std::endl;
       }
       else{
-	std::cout << std::setw(25) <<std::left << icut+1 << std::setw(25)  << std::left << SRB2CutList[icut] << std::setw(25) << std::right << HSRB2_allWgt->GetBinContent(icut+1) << std::setw(25)<< std::right << std::setprecision(5) << HSRB2_allWgt->GetBinContent(icut+1)/(HSRB2_allWgt->GetBinContent(icut)) << std::setw(25) <<  std::right << HSRB2_allWgt->GetBinContent(icut+1)/(HSRB2_allWgt->GetBinContent(1))   <<std::endl;
+	std::cout << std::setw(25) <<std::left << icut+1 << std::setw(25)  << std::left << SRCCutList[icut] << std::setw(25) << std::right << HSRC_allWgt->GetBinContent(icut+1) << std::setw(25)<< std::right << std::setprecision(5) << HSRC_allWgt->GetBinContent(icut+1)/(HSRC_allWgt->GetBinContent(icut)) << std::setw(25) <<  std::right << HSRC_allWgt->GetBinContent(icut+1)/(HSRC_allWgt->GetBinContent(1))   <<std::endl;
       }
   
     }  

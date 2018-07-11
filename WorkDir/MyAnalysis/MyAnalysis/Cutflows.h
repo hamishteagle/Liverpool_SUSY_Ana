@@ -22,12 +22,12 @@ class Cutflows
 
 
   Cutflows(CalculateVariables &variables, PreliminarySel &region,
-	   std::vector<TH1F*> &HSRA,std::vector<TH1F*> &HSRB, std::vector<TH1F*> &HSRB2, std::vector<TH1F*> &HCRTemu, std::vector<TH1F*> &HCRT1L, std::vector<TH1F*> &HCRW, std::vector<TH1F*> &HCRsT, std::vector<TH1F*> &HCRgamma , double bWeight, double leptWeight, double trigWeight, double puWeight, double mcWgt, double evtNo, bool METTrig, bool LepTrig, bool GamTrig, double TruthMET);
+	   std::vector<TH1F*> &HSRA,std::vector<TH1F*> &HSRB, std::vector<TH1F*> &HSRC, std::vector<TH1F*> &HCRTemu, std::vector<TH1F*> &HCRT1L, std::vector<TH1F*> &HCRW, std::vector<TH1F*> &HCRsT, std::vector<TH1F*> &HCRgamma , double bWeight, double leptWeight, double trigWeight, double puWeight, double mcWgt, double evtNo, bool METTrig, bool LepTrig, bool GamTrig, double TruthMET);
   
   
   void SRACutflows( CalculateVariables variables, PreliminarySel region, std::vector<TH1F*> HSRA, double btagWeight, double lepWeight, double triggerWeight, double pileUpWeight, double mcWeight, double evtNo, bool TrigPass, double JVTWgt);
   void SRBCutflows( CalculateVariables variables, PreliminarySel region, std::vector<TH1F*> HSRB, double btagWeight, double lepWeight, double triggerWeight, double pileUpWeight, double mcWeight, double evtNo, bool TrigPass, double JVTWgt);
-  void SRB2Cutflows( CalculateVariables variables, PreliminarySel region, std::vector<TH1F*> HSRB2, double btagWeight, double lepWeight, double triggerWeight, double pileUpWeight, double mcWeight, double evtNo , bool TrigPass, double JVTWgt);
+  void SRCCutflows( CalculateVariables variables, PreliminarySel region, std::vector<TH1F*> HSRC, double btagWeight, double lepWeight, double triggerWeight, double pileUpWeight, double mcWeight, double evtNo , bool TrigPass, double JVTWgt);
   void CRTemuCutflows( CalculateVariables variables, PreliminarySel region, std::vector<TH1F*> HCRTemu, double btagWeight, double lepWeight, double triggerWeight, double pileUpWeight, double mcWeight, double evtNo, bool TrigPass, double JVTWgt);
   void CRT1LCutflows( CalculateVariables variables, PreliminarySel region, std::vector<TH1F*> HCRT1L, double btagWeight, double lepWeight, double triggerWeight, double pileUpWeight, double mcWeight, double evtNo, bool TrigPass, double METFilt, double JVTWgt);
   void CRWCutflows( CalculateVariables variables, PreliminarySel region, std::vector<TH1F*> HCRW, double btagWeight, double lepWeight, double triggerWeight, double pileUpWeight, double mcWeight, double evtNo, bool TrigPass, double JVTWgt);
