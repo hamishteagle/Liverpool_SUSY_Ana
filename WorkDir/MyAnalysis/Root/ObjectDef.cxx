@@ -103,7 +103,6 @@ ObjectDef::ObjectDef(xAOD::TEvent* event, ST::SUSYObjDef_xAOD* SUSYTool, xAOD::T
   this->OverlapRemoval(); //This now includes photons and taus
   
   this->FillMET();
-  //this->OverlapRemoval();
     
   this->FillBaselineElectrons();
   this->FillBaselineTaus();
@@ -802,9 +801,7 @@ void ObjectDef::FillGoodJets(){
 	badJets->push_back( *jet_itr);
       }
     
-    else if( (*jet_itr)->auxdata< char >("baseline")==1  &&
-	     (*jet_itr)->auxdata< char >("signal")==1 
-	     && (*jet_itr)->auxdata< char >("passOR")==1 ) 
+    else if( (*jet_itr)->auxdata< char >("baseline")==1  && (*jet_itr)->auxdata< char >("signal")==1 && (*jet_itr)->auxdata< char >("passOR")==1) 
            
       {
 	

@@ -97,10 +97,10 @@ int main( int argc, char* argv[]) {
     //inputFile = "/hepstore/hteagle/recoSamples/ttbar/mc16_13TeV.410470.PhPy8EG_A14_ttbar_hdamp258p75_nonallhad.deriv.DAOD_SUSY1.e6337_e5984_s3126_r10201_r10210_p3401";
     // Change me here
     //inputFile = "signal/mc16_13TeV.390305.MGPy8EG_A14N23LO_BB_onestepN2hN1_900_530_400.deriv.DAOD_SUSY1.e5671_e5984_a875_r9364_r9315_p3404";
-    inputFile = "signal/mc16_13TeV.390251.MGPy8EG_A14N23LO_BB_onestepN2hN1_500_380_250.deriv.DAOD_SUSY1.e5671_e5984_a875_r9364_r9315_p3404";    
-
-    //inputFile = "signal/mc16_13TeV.390285.MGPy8EG_A14N23LO_BB_onestepN2hN1_700_680_550.deriv.DAOD_SUSY1.e5671_e5984_a875_r10201_r10210_p3404";
+    //inputFile = "signal/mc16_13TeV.390251.MGPy8EG_A14N23LO_BB_onestepN2hN1_500_380_250.deriv.DAOD_SUSY1.e5671_e5984_a875_r9364_r9315_p3404";    
     //inputFile = "signal/mc16_13TeV.390219.MGPy8EG_A14N23LO_BB_onestepN2hN1_800_795_60.deriv.DAOD_SUSY1.e5671_e5984_a875_r9364_r9315_p3404";
+    //inputFile = "signal/mc16_13TeV.390285.MGPy8EG_A14N23LO_BB_onestepN2hN1_700_680_550.deriv.DAOD_SUSY1.e5671_e5984_a875_r10201_r10210_p3404";
+    inputFile = "signal/mc16_13TeV.390285.MGPy8EG_A14N23LO_BB_onestepN2hN1_700_680_550.deriv.DAOD_SUSY1.e5671_e5984_a875_r9364_r9315_p3404";
     
     submitDir = submitDir+inputFile;
     

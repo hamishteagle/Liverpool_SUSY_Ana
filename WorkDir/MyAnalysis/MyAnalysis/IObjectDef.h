@@ -159,6 +159,7 @@ class IObjectDef
 
   virtual xAOD::JetContainer* getBadJets() = 0;
   virtual xAOD::JetContainer* getGoodJets() = 0;
+  virtual xAOD::JetContainer* getGoodJets_beforeOR() =0;
   virtual xAOD::JetContainer* getFatJets_kt8() = 0;
   virtual xAOD::JetContainer* getFatJets_kt12() = 0;
   virtual xAOD::JetContainer* getBJets() = 0;
@@ -169,6 +170,7 @@ class IObjectDef
   virtual xAOD::IParticleContainer* getGoodMuons() = 0;
   virtual xAOD::IParticleContainer* getGoodPhotons() = 0;
   virtual xAOD::IParticleContainer* getBadMuons() = 0;
+  virtual xAOD::IParticleContainer* getCosmicMuons() = 0;
   virtual xAOD::IParticleContainer* getGoodElectrons() = 0;
   virtual xAOD::IParticleContainer* getGoodTaus() = 0;
   virtual std::vector<double> getMETSignificance() = 0;

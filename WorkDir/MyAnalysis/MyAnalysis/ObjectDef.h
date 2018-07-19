@@ -46,6 +46,7 @@ class ObjectDef: public virtual IObjectDef
   // Getters
   xAOD::JetContainer* getBadJets(){return badJets;};
   xAOD::JetContainer* getGoodJets(){return goodJets;};
+  xAOD::JetContainer* getGoodJets_beforeOR(){return goodJetsBeforeOR;};
   xAOD::JetContainer* getFatJets_kt8(){return FatJets_kt8;};
   xAOD::JetContainer* getFatJets_kt12(){return FatJets_kt12;};
   xAOD::JetContainer* getBJets(){return BJets;};
@@ -55,6 +56,7 @@ class ObjectDef: public virtual IObjectDef
   xAOD::MuonContainer* getBaselineMuons(){return baselineMuons;};
   xAOD::MuonContainer* getGoodMuons(){return goodMuons;};
   xAOD::MuonContainer* getBadMuons(){return badMuons;};
+  xAOD::MuonContainer* getCosmicMuons(){return cosmicMuons;};
   xAOD::TauJetContainer* getBaselineTaus(){return baselineTaus;};
   xAOD::TauJetContainer* getGoodTaus(){return goodTaus;};
   xAOD::PhotonContainer* getBaselinePhotons(){return baselinePhotons;};

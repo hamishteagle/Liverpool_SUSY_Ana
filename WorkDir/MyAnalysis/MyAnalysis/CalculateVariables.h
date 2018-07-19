@@ -52,6 +52,7 @@ class CalculateVariables
   double PhotonETMiss; //
   double PhotonETMissPhi; //
   int nJets; //
+  int nJets_beforeOR; //
   int nbJets; //
   int nNonBJets; //
 
@@ -156,6 +157,10 @@ class CalculateVariables
   double pTj2; //
   double pTj3; //
   double pTj4; //
+  double pTj5; //
+  double pTj6; //
+  double pTj7; //
+  double pTj8; //
   double etaj1; //
   double etaj2; //
   double etaj3; //

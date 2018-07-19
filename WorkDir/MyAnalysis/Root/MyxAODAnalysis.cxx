@@ -344,31 +344,25 @@ EL::StatusCode MyxAODAnalysis :: initialize ()
   std::string fullGRLFilePath = PathResolverFindCalibFile("MyAnalysis/MyAnalysis/data16_13TeV.periodAllYear_DetStatus-v89-pro21-01_DQDefects-00-02-04_PHYS_StandardGRL_All_Good_25ns.xml");
   std::string fullGRLFilePath1 = PathResolverFindCalibFile("MyAnalysis/MyAnalysis/data17_13TeV.periodAllYear_DetStatus-v97-pro21-13_Unknown_PHYS_StandardGRL_All_Good_25ns_Triggerno17e33prim.xml");                                      
   std::string fullGRLFilePath2 = PathResolverFindCalibFile("MyAnalysis/MyAnalysis/LastGRL.xml");
-  
-
-
-
-
   std::vector<std::string> vecStringGRL;
+  
   vecStringGRL.push_back(fullGRLFilePath);
   vecStringGRL.push_back(fullGRLFilePath1);
   vecStringGRL.push_back(fullGRLFilePath2);
 
   CHECK(m_grl->setProperty( "GoodRunsListVec", vecStringGRL));
   CHECK(m_grl->setProperty("PassThrough", false));
+  
   if (!m_grl->initialize().isSuccess()){
     Error("initialize()", "Failed to properly initialise the GRL. Exiting.");
     return EL::StatusCode::FAILURE;
   }
-
-
- 
   std::cout << "Passed GRL init" << std::endl;
 
 
+  //Assigning the lumicalc files
   std::vector<std::string> lumicalcFiles;
-  std::vector<std::string> confFiles;
-  
+
   //Getting the run number of the file to determine MC16a vs MC16c
   const xAOD::EventInfo* eventInfo_init =0;
   if (! m_event->retrieve(eventInfo_init, "EventInfo").isSuccess() ){
@@ -376,7 +370,7 @@ EL::StatusCode MyxAODAnalysis :: initialize ()
   }
   
   int periodNumber = eventInfo_init->runNumber();
-  std::cout<<"Run Number; "<<periodNumber<<std::endl;
+  std::cout<<"MC production period  Number; "<<periodNumber<<std::endl;
   bool isMC16a = (periodNumber == 284500);
   bool isMC16c = (periodNumber == 300000);
   
@@ -385,17 +379,18 @@ EL::StatusCode MyxAODAnalysis :: initialize ()
   bool isMC15b = false;
   bool isMC15c = false;
 
+  std::cout << "which MC is this: A, B, C, 16a, 16c" << isMC15a << isMC15b << isMC15c << isMC16a <<isMC16c<<std::endl;
   if(isMC16a)
     {
       lumicalcFiles.push_back(PathResolverFindCalibFile("MyAnalysis/MyAnalysis/PileUp/PHYS_StandardGRL_All_Good_25ns_276262-284484_OflLumi-13TeV-008.root"));
       lumicalcFiles.push_back(PathResolverFindCalibFile("MyAnalysis/MyAnalysis/PileUp/PHYS_StandardGRL_All_Good_25ns_297730-311481_OflLumi-13TeV-009.root"));
     }
   if(isMC16c){lumicalcFiles.push_back(PathResolverFindCalibFile("MyAnalysis/MyAnalysis/PileUp/physics_25ns_Triggerno17e33prim.lumicalc.OflLumi-13TeV-001.root"));}
-  
-    
   std::cout << "Passed Lumi Calc Files" << std::endl;  
+
     
-  std::cout << "which MC is this: A, B, C, 16a, 16c" << isMC15a << isMC15b << isMC15c << isMC16a <<isMC16c<<std::endl;
+  //Assigining the config files for MC15
+  std::vector<std::string> confFiles;
   if (isMC15b){
     confFiles.push_back(PathResolverFindCalibFile("MyAnalysis/MyAnalysis/signals_mc15b_merged.root"));
     confFiles.push_back(PathResolverFindCalibFile("MyAnalysis/MyAnalysis/merged_prw_mc15b.root"));
@@ -404,9 +399,7 @@ EL::StatusCode MyxAODAnalysis :: initialize ()
     confFiles.push_back(PathResolverFindCalibFile("MyAnalysis/MyAnalysis/merged_prw.root"));
   }  
   else if (isMC15c){
-
     if (!isSignal){
-
       std::cout << "Adding the latest" << std::endl;
       confFiles.push_back(PathResolverFindCalibFile("MyAnalysis/MyAnalysis/mc15c_v2_defaults.NotRecommended.prw.root"));
     }
@@ -443,7 +436,7 @@ EL::StatusCode MyxAODAnalysis :: initialize ()
   ST::ISUSYObjDef_xAODTool::DataSource datasource = (isData ? ST::ISUSYObjDef_xAODTool::Data : (isAtlfast ? ST::ISUSYObjDef_xAODTool::AtlfastII : ST::ISUSYObjDef_xAODTool::FullSim));  
 
   ANA_CHECK(objTool->setProperty("DataSource",datasource) ) ;
-  ANA_CHECK( objTool->setProperty("ConfigFile", PathResolverFindCalibFile("MyAnalysis/MyAnalysis//sbottom_multib_rel21.conf")));
+  ANA_CHECK( objTool->setProperty("ConfigFile", PathResolverFindCalibFile("MyAnalysis/MyAnalysis//Sbottom_multiB_21.2.31.conf")));
   ANA_CHECK(objTool->setBoolProperty("UseBtagging", true));
   //CHECK( objTool->setProperty("ShowerType", (int)m_showerType) );
 
@@ -455,9 +448,6 @@ EL::StatusCode MyxAODAnalysis :: initialize ()
     //CHECK(objTool->setProperty("PRWConfigFiles", confFiles));//Option for manually setting the config files
   }
   
-
-  //objTool->msg().setLevel(MSG::FATAL);
-  //objTool->msg().setLevel(MSG::VERBOSE);
   
   // Actually skip the full initialisation of SUSYTools if we're running on a TRUTH file
   if (m_fileType != "DAOD_TRUTH1"){
@@ -490,8 +480,8 @@ EL::StatusCode MyxAODAnalysis :: initialize ()
     systInfoList = objTool->getSystInfoList();
   }
   
+  //Initialise output trees using TreeService for each systematic (nominal if not running)
   TTree *Temp;
-  
   for(const auto& sysInfo : systInfoList){
     const CP::SystematicSet& sys = sysInfo.systset;
     
@@ -530,13 +520,9 @@ EL::StatusCode MyxAODAnalysis :: initialize ()
 
   
   Info("initialize()","number of events = %lli", m_event->getEntries()); 
-  
-
-
   m_totalEvents = m_event->getEntries();
   
-  
-  
+  //Write all of the trees
   for (int m = 0; m < (m_treeServiceVector.size()); m++){
     m_treeServiceVector[m]->writeTree();
   }
@@ -544,9 +530,6 @@ EL::StatusCode MyxAODAnalysis :: initialize ()
 
 
   
-
-
-
  
   return EL::StatusCode::SUCCESS;
 }
@@ -555,7 +538,7 @@ EL::StatusCode MyxAODAnalysis :: initialize ()
 EL::StatusCode MyxAODAnalysis :: execute ()
 {
   // Here you do everything that needs to be done on every single
-  // events, e.g. read input variables, apply cuts, and fill
+  // event, e.g. read input variables, apply cuts, and fill
   // histograms and trees.  This is where most of your actual analysis
   // code will go.
 
@@ -563,16 +546,13 @@ EL::StatusCode MyxAODAnalysis :: execute ()
   //std::cout << "In analysis execute" << std::endl;
   
   //if (m_eventCounter >= 10){return EL::StatusCode::SUCCESS;}
-  if ( (m_eventCounter % 10000) == 0 ) Info("execute()","Event Number = %i", m_eventCounter);
+  if ( (m_eventCounter % 1000) == 0 ) Info("execute()","Event Number = %i", m_eventCounter);
   //if ( (m_eventCounter % 100) == 0 ) Info("execute()","Event Number = %i", m_eventCounter);
   m_eventCounter++;
 
-  //std::cout << "Event number: " << m_eventCounter << std::endl;
   
   bool isNominal = true;
 
-  // Event Info
-  // ----------
   isyst = 0;
 
 
@@ -585,7 +565,6 @@ EL::StatusCode MyxAODAnalysis :: execute ()
     int year = 0;    
     if (m_fileType != "DAOD_TRUTH1"){
       objTool->ApplyPRWTool();
-      //      std::cout<<"Applied the PRW Tool"<<std::endl;
       year = objTool->treatAsYear(); 
     }
 
@@ -596,20 +575,14 @@ EL::StatusCode MyxAODAnalysis :: execute ()
 	exit(-2);
       }
       
-      
       if (objTool->applySystematicVariation(syst) != CP::SystematicCode::Ok){
 	std::cout << "Cannot configure SUSYTools for systematic " + syst.name() << std::endl;
       } else {
-	//std::cout << "Variation  configured..." + syst.name() << std::endl;
+	std::cout << "Variation  configured..." + syst.name() << std::endl;
       }
       if(sysInfo.affectsKinematics || sysInfo.affectsWeights) isNominal = false;
     }
     
-   // if (doSyst)
-     // {
-	//int found_MassRes_Top = (std::string(syst.name()).find("MassRes_Top__1up"));
-	//if(found_MassRes_Top == std::string::npos) continue;//The FatJetsTools can only be setup for one systematic at a time...Need to sort out this method of looping systematics
-     // }
     const xAOD::EventInfo* eventInfo =0;
     if (! m_event->retrieve(eventInfo, "EventInfo").isSuccess() ){
       Error("execute()","Failed to retrieve event info collection, exiting!!");
@@ -617,15 +590,10 @@ EL::StatusCode MyxAODAnalysis :: execute ()
       continue;
     }
 
-
-  
-    
   
   
     m_lumiBlockNumber = eventInfo->lumiBlock();
     m_runNumber = eventInfo->runNumber();
-
-
     EventNumber = (eventInfo->eventNumber());
 
     xAOD::TStore* store = wk()->xaodStore();
@@ -711,10 +679,10 @@ EL::StatusCode MyxAODAnalysis :: execute ()
     //std::cout << "Filled the objects" << std::endl;
 
     if (m_fileType == "DAOD_TRUTH1"){
-      m_objs  = new TruthObjectDef (m_event, objTool, store, mcChannel, EventNumber, mcWgt, xsecteff, syst.name(), doPhotons,  m_metSignif); //, m_jetRecTool_kt12, m_jetRecTool_kt8
+      m_objs  = new TruthObjectDef (m_event, objTool, store, mcChannel, EventNumber, mcWgt, xsecteff, syst.name(), doPhotons,  m_metSignif);
     }
     else{
-      m_objs  = new ObjectDef (m_event, objTool, store, mcChannel, EventNumber, mcWgt, xsecteff, syst.name(), doPhotons, m_metSignif); //, m_jetRecTool_kt12, m_jetRecTool_kt8
+      m_objs  = new ObjectDef (m_event, objTool, store, mcChannel, EventNumber, mcWgt, xsecteff, syst.name(), doPhotons, m_metSignif); 
     }
     
     
@@ -780,12 +748,10 @@ EL::StatusCode MyxAODAnalysis :: execute ()
       int foundSherpa221 = m_fileName.find("Sherpa_221");
       if (foundSherpa221 != std::string::npos){
 	checkMC->SherpaUncertaintyWeights(m_event); 
-	//std::cout << "Got Sherpa weights" << std::endl;
-	
-      } else {
+      }
+      else {
        checkMC->RetrieveWeights(m_event);
       }
-    
     }
     
     // Passes Cleaning Selection
@@ -806,21 +772,27 @@ EL::StatusCode MyxAODAnalysis :: execute ()
     }
 
 
-    bool coreFlags = false;
-    bool sctFlag = false;
-
+    bool coreFlag = true;
+    bool sctFlag = true;
+    bool LArTileFlag=true;
     if (!isMC){
       if ((eventInfo->errorState(xAOD::EventInfo::SCT) == xAOD::EventInfo::Error )){
-	sctFlag = true;
+	sctFlag = false;
+	//isyst++;
+	//continue;
       }
       if (eventInfo->isEventFlagBitSet(xAOD::EventInfo::Core,18)){
-	coreFlags = true;
+	coreFlag = false;
+	//isyst++;
+	//continue;
       }
-      if ( (eventInfo->errorState(xAOD::EventInfo::LAr)==xAOD::EventInfo::Error) || (eventInfo->errorState(xAOD::EventInfo::Tile) == xAOD::EventInfo::Error) || coreFlags || sctFlag){
-	isyst++;
-	continue;
+      if ((eventInfo->errorState(xAOD::EventInfo::LAr)==xAOD::EventInfo::Error) || (eventInfo->errorState(xAOD::EventInfo::Tile) == xAOD::EventInfo::Error)){
+	LArTileFlag=false;
+	//isyst++;
+	//continue;
       }
     }
+
     // Event Passes LAr, TileError and CoreFlags.     
     if (isyst == 0){
       
@@ -828,7 +800,7 @@ EL::StatusCode MyxAODAnalysis :: execute ()
       HSRA_mcWgt->Fill(3,mcWgt); 
       HSRA_allWgt->Fill(3,mcWgt);//*btagWgt*lepWgt*trigWgt*puWgt);
       
-      HSRB_noWgt->Fill(3,0.46754945);//Change back to 1 
+      HSRB_noWgt->Fill(3,1);
       HSRB_mcWgt->Fill(3,mcWgt); 
       HSRB_allWgt->Fill(3,1);
       
@@ -839,6 +811,8 @@ EL::StatusCode MyxAODAnalysis :: execute ()
     }
     
     double nBadJet = m_objs->getBadJets()->size();
+    //Not doing cosmic muons for now
+    //double nCosmicMu = m_objs->getCosmicMuons()->size();
     double nCosmicMu = 0;
     double nBadMu = m_objs->getBadMuons()->size();
     
@@ -851,7 +825,7 @@ EL::StatusCode MyxAODAnalysis :: execute ()
     bool passedLepTrigger = false;
     bool passedMultiJetTrigger = false;
     bool passedTauTrigger = false;
-
+  
     //std::cout << "In analysis execute, before the trigger" << std::endl;
 
     
@@ -865,8 +839,8 @@ EL::StatusCode MyxAODAnalysis :: execute ()
 
     }
 
+    //Trigger menus by year
     else{
-      
       if(year==2015){
 	if (!isData)
 	passedElTrigger=( (objTool->IsTrigPassed("HLT_e24_lhmedium_L1EM20VH || HLT_e60_lhmedium || HLT_e120_lhloose")));
@@ -876,7 +850,7 @@ EL::StatusCode MyxAODAnalysis :: execute ()
 	  }
 	passedMuTrigger=( (objTool->IsTrigPassed("HLT_mu20_iloose_L1MU15 || HLT_mu50 ")));
 	passedGammaTrigger=(objTool->IsTrigPassed("HLT_g120_loose"));
-	passedMETTrigger = objTool->IsMETTrigPassed("HLT_xe70"); // or we use HLT_xe70_mht  or HLT_xe70_tc_lcw 
+	passedMETTrigger = objTool->IsMETTrigPassed("HLT_xe70_mht"); // or we use HLT_xe70  or HLT_xe70_tc_lcw 
       }
       else{//These triggers are the same for 2016/17 may change for 2018
 	passedElTrigger=  ((objTool->IsTrigPassed("HLT_e26_lhtight_nod0_ivarloose || HLT_e60_lhmedium_nod0 || HLT_e140_lhloose_nod0")));
@@ -889,13 +863,10 @@ EL::StatusCode MyxAODAnalysis :: execute ()
 	  passedMETTrigger = objTool->IsMETTrigPassed("HLT_xe100_mht_L1XE50"); 
 	}
       }
-      passedMETTrigger = objTool->IsMETTrigPassed(); 
-      passedMultiJetTrigger = objTool->IsTrigPassed("HLT_6j45_0eta240");
-      passedTauTrigger = objTool->IsTrigPassed("tau25_medium1_tracktwo");// this will never pass because it's not in the derivation
     }
     
     if (passedElTrigger == 1 || passedMuTrigger == 1) passedLepTrigger = true;
-    
+
     if (isyst == 0){
       if (passedMETTrigger){
 	HSRA_noWgt->Fill(4,1);
@@ -912,13 +883,14 @@ EL::StatusCode MyxAODAnalysis :: execute ()
       }
 
     }
-
+    bool passedPrimVertex=true;
     if (m_objs->getPrimVertex() < 1){
-      isyst++;
-      continue;
+      passedPrimVertex=false;
+      //isyst++;
+      //continue;
       //return EL::StatusCode::SUCCESS;
     }
-    
+  
     if (isyst == 0){
       if (passedMETTrigger){
 	HSRA_noWgt->Fill(5,1);
@@ -936,10 +908,11 @@ EL::StatusCode MyxAODAnalysis :: execute ()
       }
     }
 
-    
+    bool passedJetClean=true;
     if (nBadJet > 0){
-      isyst++;
-      continue;
+      passedJetClean=false;
+      //isyst++;
+      //continue;
       //return EL::StatusCode::SUCCESS;
     }
     
@@ -962,10 +935,11 @@ EL::StatusCode MyxAODAnalysis :: execute ()
     }
     
     
-    
+    bool passedCosmicMu=true;
     if (nCosmicMu > 0){
-      isyst++;
-      continue;
+      passedCosmicMu=false;
+      //isyst++;
+      //continue;
       //return EL::StatusCode::SUCCESS;
     }
     
@@ -987,10 +961,11 @@ EL::StatusCode MyxAODAnalysis :: execute ()
       }
     }
 
-
+    bool passedMuonClean=true;
     if (nBadMu > 0){
-      isyst++;
-      continue;
+      passedMuonClean=false;
+      //isyst++;
+      //continue;
       //return EL::StatusCode::SUCCESS;
     }
     
@@ -1012,9 +987,14 @@ EL::StatusCode MyxAODAnalysis :: execute ()
       }
     }
     
+    //All cleaning cuts before trigger
+    bool passedCleaningCuts=false; 
+    if(coreFlag && sctFlag && LArTileFlag && passedPrimVertex && passedJetClean && passedCosmicMu && passedMuonClean){
+      passedCleaningCuts=true; 
+    }
+
 
   // call the cutflow class now
-
     std::vector<TH1F*> SRAHists;
     SRAHists.push_back(HSRA_noWgt);
     SRAHists.push_back(HSRA_mcWgt);
@@ -1059,19 +1039,14 @@ EL::StatusCode MyxAODAnalysis :: execute ()
     }
     
     if ( m_fileType != "DAOD_TRUTH1"){
-      
       if (m_regions->interestingRegion || RunningLocally){
-       //for (int i = 0; i < m_treeServiceVector.size(); ++i) {
-	(m_treeServiceVector[isyst])->fillTree(m_objs, *m_regions, *m_varCalc, *checkMC,m_finalSumOfWeights, m_initialSumOfWeights, puWgt, SFmctbbll, passedMETTrigger, passedMuTrigger, passedElTrigger, passedGammaTrigger, passedMultiJetTrigger, PUSumOfWeights, truthfilt_MET, truthfilt_HT, coreFlags, sctFlag, m_runNumber, renormedMcWgt);
+	(m_treeServiceVector[isyst])->fillTree(m_objs, *m_regions, *m_varCalc, *checkMC,m_finalSumOfWeights, m_initialSumOfWeights, puWgt, SFmctbbll, passedMETTrigger, passedMuTrigger, passedElTrigger, passedGammaTrigger, passedMultiJetTrigger, PUSumOfWeights, truthfilt_MET, truthfilt_HT, coreFlag, sctFlag, LArTileFlag, passedPrimVertex, passedJetClean, passedCosmicMu, passedMuonClean, m_runNumber, renormedMcWgt);
        }
-      //}
     }
+
     // not running on reco. fill everything for TRUTH
     else{
-      
-       //for (int i = 0; i < m_treeServiceVector.size(); ++i) {
-      (m_treeServiceVector[isyst])->fillTree(m_objs, *m_regions, *m_varCalc, *checkMC,m_finalSumOfWeights, m_initialSumOfWeights, puWgt, SFmctbbll, passedMETTrigger, passedMuTrigger, passedElTrigger, passedGammaTrigger, passedMultiJetTrigger, PUSumOfWeights, truthfilt_MET, truthfilt_HT , coreFlags, sctFlag, m_runNumber, renormedMcWgt);
-    //}
+      (m_treeServiceVector[isyst])->fillTree(m_objs, *m_regions, *m_varCalc, *checkMC,m_finalSumOfWeights, m_initialSumOfWeights, puWgt, SFmctbbll, passedMETTrigger, passedMuTrigger, passedElTrigger, passedGammaTrigger, passedMultiJetTrigger, PUSumOfWeights, truthfilt_MET, truthfilt_HT , coreFlag, sctFlag, LArTileFlag, passedPrimVertex, passedJetClean, passedCosmicMu, passedMuonClean, m_runNumber, renormedMcWgt);
    }
       
     isyst++;

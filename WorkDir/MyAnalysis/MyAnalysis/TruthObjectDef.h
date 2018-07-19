@@ -47,6 +47,7 @@ class TruthObjectDef: public virtual IObjectDef
   // Getters
   xAOD::JetContainer* getBadJets(){return badJets;};
   xAOD::JetContainer* getGoodJets(){return goodJets;};
+  xAOD::JetContainer* getGoodJets_beforeOR(){return goodJets;};
   xAOD::JetContainer* getFatJets_kt8(){return FatJets_kt12;};
   xAOD::JetContainer* getFatJets_kt12(){return FatJets_kt12;};
   xAOD::JetContainer* getBJets(){return BJets;};
@@ -57,6 +58,7 @@ class TruthObjectDef: public virtual IObjectDef
   xAOD::TruthParticleContainer* getBaselinePhotons(){return baselinePhotons;};
   xAOD::TruthParticleContainer* getGoodMuons(){return goodMuons;};
   xAOD::TruthParticleContainer* getBadMuons(){return badMuons;};
+  xAOD::TruthParticleContainer* getCosmicMuons(){return cosmicMuons;};
   xAOD::TruthParticleContainer* getGoodPhotons(){return goodPhotons;};
   xAOD::TruthParticleContainer* getGoodElectrons(){return goodElectrons;};
   xAOD::TruthParticleContainer* getGoodTaus(){return goodTaus;};

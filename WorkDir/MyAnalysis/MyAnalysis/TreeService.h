@@ -22,7 +22,7 @@ class TreeService
  public:
   TreeService(TTree *outputTree, TDirectory *OutDir);
 
-  void fillTree(IObjectDef *objects, PreliminarySel &region, CalculateVariables &variables, MCChecks MCTruthInfo , double mFinalWeight, double mInitialWeight, double puWeight, double SFmCTbbll, bool TrigMET, bool TrigMu, bool TrigEl, bool TrigGamma, bool Trig6j, double puSumWeights, double TRUTHMET, double TRUTHHT ,bool CoreFlags, bool SCTFlag, double RNo, double RenormedMCWgt);
+  void fillTree(IObjectDef *objects, PreliminarySel &region, CalculateVariables &variables, MCChecks MCTruthInfo , double mFinalWeight, double mInitialWeight, double puWeight, double SFmCTbbll, bool TrigMET, bool TrigMu, bool TrigEl, bool TrigGamma, bool Trig6j, double puSumWeights, double TRUTHMET, double TRUTHHT ,bool CoreFlags, bool SCTFlag, bool LArTileFlag, bool passedPrimVertex, bool passedJetClean, bool passedCosmicMu, bool passedMuonClean, double RNo, double RenormedMCWgt);
   
   void writeTree();
 
@@ -33,8 +33,6 @@ class TreeService
 
   TTree *tree;
 
-  bool coreFlags;
-  bool sctFlag;
 
   // General Variables
 
@@ -52,6 +50,28 @@ class TreeService
   bool leadingbs;
   bool primaryb;
   bool secondaryb;
+  
+  //Initial event cleaning
+  bool coreFlag;
+  bool sctFlag;
+  bool LArTileFlag;
+  bool passedPrimVertex;
+
+  //Object cleaning cuts
+  bool passedJetClean;
+  bool passedCosmicMu;
+  bool passedMuonClean;
+
+  //Triggers
+  bool passedMETTrigger;
+  bool passedMuTrigger;
+  bool passedElTrigger;
+  bool passedGammaTrigger;
+
+  bool elTriggerMatch;
+  bool phTriggerMatch;
+  bool muTriggerMatch;
+
 
   double pileUpSumOfWeights;
   double truthFilterMET;
@@ -171,6 +191,12 @@ class TreeService
   double pTj2;
   double pTj3;
   double pTj4;
+  double pTj5;
+  double pTj6;
+  double pTj7;
+  double pTj8;
+
+
   double etaj1;
   double etaj2;
   double etaj3;
@@ -240,6 +266,7 @@ class TreeService
   double phitj2;
 
   int nJets;
+  int nJets_beforeOR;
   int nBJets;
   int nLeptons;
   int nBaselineLeptons;
@@ -316,14 +343,6 @@ class TreeService
   double photonSF;
 
 
-  bool passedMETTrigger;
-  bool passedMuTrigger;
-  bool passedElTrigger;
-  bool passedGammaTrigger;
-
-  bool elTriggerMatch;
-  bool phTriggerMatch;
-  bool muTriggerMatch;
 
 
   double b1m;

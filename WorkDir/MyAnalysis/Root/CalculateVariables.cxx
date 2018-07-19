@@ -72,6 +72,7 @@ CalculateVariables::CalculateVariables(IObjectDef *objects, bool isTruth, bool d
   PhotonETMissPhi = eTMissPhi;
 
   nJets = objects->getGoodJets()->size();
+  nJets_beforeOR = objects->getGoodJets_beforeOR()->size();
   nbJets = objects->getBJets()->size();
 
   njet20 = 0;
@@ -196,6 +197,10 @@ CalculateVariables::CalculateVariables(IObjectDef *objects, bool isTruth, bool d
   pTj2 = -99;
   pTj3 = -99;
   pTj4 = -99;
+  pTj5 = -99;
+  pTj6 = -99;
+  pTj7 = -99;
+  pTj8 = -99;
   etaj1 = -99;
   etaj2 = -99;
   etaj3 = -99;
@@ -442,6 +447,10 @@ CalculateVariables::CalculateVariables(IObjectDef *objects, bool isTruth, bool d
 	  h_T = h_T + pTj4;
 	  
 	}
+	if(nJets>=5) pTj5 =(*(objects->getGoodJets()))[4]->pt()*0.001;
+	if(nJets>=6) pTj6 =(*(objects->getGoodJets()))[5]->pt()*0.001;
+	if(nJets>=7) pTj7 =(*(objects->getGoodJets()))[6]->pt()*0.001;
+	if(nJets>=8) pTj8 =(*(objects->getGoodJets()))[7]->pt()*0.001;
       }
     }
   }

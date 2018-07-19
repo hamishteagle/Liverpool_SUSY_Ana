@@ -13,21 +13,44 @@ TreeService::TreeService(TTree *outputTree, TDirectory *OutDir){
   tree->SetDirectory(OutDir);
   //gDirectory->cd(OutDir.c_str());
 
-  tree->Branch("Region", &CutsRegion);
-  tree->Branch("coreFlags", &coreFlags);
-  tree->Branch("sctFlag", &sctFlag);
-
   tree->Branch("mcID", &mcID);
   tree->Branch("RunNumber", &RunNumber);
   tree->Branch("eventNumber", &eventNumber);
   tree->Branch("mcEventWeight", &mcEventWeight);
   tree->Branch("RenormedMcEventWeight", &RenormedMcEventWeight);
-
   tree->Branch("weightsVector", &weightsVector);
-
   tree->Branch("xSect", &xSect);
   tree->Branch("sampleSFmCTbbll",&sampleSFmCTbbll);
   tree->Branch("pileUpSumOfWeights",&pileUpSumOfWeights);
+
+
+
+  //Initial event cleaning
+  tree->Branch("Region", &CutsRegion);
+  tree->Branch("coreFlag", &coreFlag);
+  tree->Branch("sctFlag", &sctFlag);
+  tree->Branch("LArTileFlag",&LArTileFlag);
+  tree->Branch("passedPrimVertex", &passedPrimVertex);
+  
+  //Object cleaning cuts
+  tree->Branch("passedJetClean", &passedJetClean);
+  tree->Branch("passedCosmicMu", &passedCosmicMu);
+  tree->Branch("passedMuonClean", &passedMuonClean);
+
+  // Triggers
+  tree->Branch("passedMETTrigger", &passedMETTrigger);
+  tree->Branch("passedMuTrigger", &passedMuTrigger);
+  tree->Branch("passedElTrigger", &passedElTrigger);
+  tree->Branch("passedGammaTrigger", &passedGammaTrigger);
+  
+
+  
+  //Trigger matching
+  tree->Branch("elTriggerMatch", &elTriggerMatch);
+  tree->Branch("muTriggerMatch", &muTriggerMatch);
+  tree->Branch("phTriggerMatch", &phTriggerMatch);
+  
+
 
   tree->Branch("pTZBoson",&pTZBoson);
   tree->Branch("duplicateVar",&duplicateVar);
@@ -193,6 +216,11 @@ TreeService::TreeService(TTree *outputTree, TDirectory *OutDir){
   tree->Branch("pTj2",&pTj2);
   tree->Branch("pTj3",&pTj3);
   tree->Branch("pTj4",&pTj4);
+  tree->Branch("pTj5",&pTj5);
+  tree->Branch("pTj6",&pTj6);
+  tree->Branch("pTj7",&pTj7);
+  tree->Branch("pTj8",&pTj8);
+
   tree->Branch("etaj1",&etaj1);
   tree->Branch("etaj2",&etaj2);
   tree->Branch("etaj3",&etaj3);
@@ -243,6 +271,7 @@ TreeService::TreeService(TTree *outputTree, TDirectory *OutDir){
   tree->Branch("phib4",&phib4);
 
   tree->Branch("nJets",&nJets);
+  tree->Branch("nJets_beforeOR",&nJets_beforeOR);
   tree->Branch("nBJets",&nBJets);
   tree->Branch("nLeptons",&nLeptons);
   tree->Branch("nBaselineLeptons",&nBaselineLeptons);
@@ -308,17 +337,6 @@ TreeService::TreeService(TTree *outputTree, TDirectory *OutDir){
   //tree->Branch("muonRecoSF", &muonRecoSF);
   //tree->Branch("muonTriggerSF", &muonTriggerSF);
 
-  // Triggers
-  
-
-
-  tree->Branch("passedMETTrigger", &passedMETTrigger);
-  tree->Branch("passedMuTrigger", &passedMuTrigger);
-  tree->Branch("passedElTrigger", &passedElTrigger);
-  tree->Branch("passedGammaTrigger", &passedGammaTrigger);
-  tree->Branch("elTriggerMatch", &elTriggerMatch);
-  tree->Branch("muTriggerMatch", &muTriggerMatch);
-  tree->Branch("phTriggerMatch", &phTriggerMatch);
 
 
   //btagging
@@ -439,13 +457,19 @@ TreeService::TreeService(TTree *outputTree, TDirectory *OutDir){
 }
 
 
-void TreeService::fillTree(IObjectDef *objects ,PreliminarySel &region, CalculateVariables &variables, MCChecks MCTruthInfo, double mFinalWeight, double mInitialWeight, double puWeight, double SFmCTbbll, bool TrigMET, bool TrigMu, bool TrigEl, bool TrigGamma, bool Trig6j, double puSumWeights, double TRUTHMET, double TRUTHHT, bool CoreFlags, bool SCTFlag, double RNo, double RenormedMCWgt){
+void TreeService::fillTree(IObjectDef *objects ,PreliminarySel &region, CalculateVariables &variables, MCChecks MCTruthInfo, double mFinalWeight, double mInitialWeight, double puWeight, double SFmCTbbll, bool TrigMET, bool TrigMu, bool TrigEl, bool TrigGamma, bool Trig6j, double puSumWeights, double TRUTHMET, double TRUTHHT, bool CoreFlags, bool SCTFlag,bool LArTileFlags, bool passedPrimVertexes, bool passedJetCleans, bool passedCosmicMus, bool passedMuonCleans, double RNo,  double RenormedMCWgt){
 
   //  std::cout << "Filling the Tree" << std::endl;
   CutsRegion = region.region;
 
-  coreFlags = CoreFlags;
+  coreFlag = CoreFlags;
   sctFlag = SCTFlag;
+  LArTileFlag =LArTileFlags;
+  passedPrimVertex=passedPrimVertexes;
+  passedJetClean=passedJetCleans;
+  passedCosmicMu=passedCosmicMus;
+  passedMuonClean=passedMuonCleans;
+  
   
   m_finalWeightSum = mFinalWeight;
   m_intialWeightSum = mInitialWeight;
@@ -554,6 +578,11 @@ void TreeService::fillTree(IObjectDef *objects ,PreliminarySel &region, Calculat
   pTj3 = variables.pTj3;
   pTj4 = variables.pTj4;
 
+  pTj5 = variables.pTj5;
+  pTj6 = variables.pTj6;
+  pTj7 = variables.pTj7;
+  pTj8 = variables.pTj8;
+
 
   njet20 = variables.njet20;
   njet30 = variables.njet30;
@@ -619,6 +648,7 @@ void TreeService::fillTree(IObjectDef *objects ,PreliminarySel &region, Calculat
 
 
   nJets = variables.nJets;
+  nJets_beforeOR = variables.nJets_beforeOR;
   nBJets = variables.nbJets;
   nLeptons = variables.nLepton;
   nBaselineLeptons = variables.nBaselineLepton;
