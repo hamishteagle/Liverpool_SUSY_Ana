@@ -124,7 +124,7 @@ class IObjectDef
 
  public:
   
-  IObjectDef(xAOD::TEvent* event, ST::SUSYObjDef_xAOD* SUSYTool, xAOD::TStore* store, double mcChannelNumber, double eventN, double mcEventWgt, double crossSect, std::string systName, bool doPhotons){
+  IObjectDef(xAOD::TEvent* event, ST::SUSYObjDef_xAOD* SUSYTool, xAOD::TStore* store, double mcChannelNumber, double eventN, double mcEventWgt, double m_lumiScaled, std::string systName, bool doPhotons){
     
     
     currentEvent = event;
@@ -133,7 +133,7 @@ class IObjectDef
     mcID = mcChannelNumber;
     eventNumber = eventN;
     mcEventWeight = mcEventWgt;
-    xSect = crossSect;
+    lumiScaled = m_lumiScaled;
     systematic = systName;
     doPhotonOR = doPhotons;
   };
@@ -206,7 +206,7 @@ class IObjectDef
   
   // useful variables for debugging purposes
   double mcID;
-  double xSect;
+  double lumiScaled;
   double eventNumber;
   double mcEventWeight;
   bool doPhotonOR;

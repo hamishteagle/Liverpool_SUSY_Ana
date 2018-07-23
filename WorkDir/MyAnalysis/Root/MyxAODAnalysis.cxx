@@ -25,6 +25,7 @@
 #include "MyAnalysis/AddPileUp.h"
 #include "MyAnalysis/PreliminarySel.h"
 #include "MyAnalysis/CalculateVariables.h"
+#include "MyAnalysis/MapVariables.h"
 #include "MyAnalysis/TreeService.h"
 #include "MyAnalysis/MCChecks.h"
 #include "MyAnalysis/Cutflows.h"
@@ -256,7 +257,7 @@ EL::StatusCode MyxAODAnalysis :: fileExecute ()
     // Now, let's actually find the right one that contains all the needed info...
     const xAOD::CutBookkeeper* allEventsCBK=0;
     const xAOD::CutBookkeeper* DxAODEventsCBK=0;
-    std::string derivationName = "DAOD_SUSY1"; //need to replace by appropriate name
+    std::string derivationName = "DAOD_SUSY7"; //need to replace by appropriate name
     const xAOD::CutBookkeeper* all = 0; int maxCycle=-1; //need to find the max cycle where input stream is StreamAOD and the name is AllExecutedEvents
 
     for ( auto cbk :  *completeCBC ) {
@@ -607,7 +608,7 @@ EL::StatusCode MyxAODAnalysis :: execute ()
     double trigWgt = 1;
     double puWgt = 1;
     double JVTWgt = 1;
-    
+
     // Data MC Check
     
     
@@ -620,19 +621,27 @@ EL::StatusCode MyxAODAnalysis :: execute ()
     if(eventInfo->eventType( xAOD::EventInfo::IS_SIMULATION) ){
       isMC = true; // lets us do things correctly later
     }
+
     
     mcChannel = 0;
-    double xsecteff = 1;
+
     double mcWgt = 1;
     double truthfilt_MET = 0;
     double truthfilt_HT = 0;
     double renormedMcWgt = 1;
+    double xsecteff = -1;    
+    double filtereff = -1;
     // Will fix this when the PMGTools cross section stuff is available
-    m_lumiScaled = 1;
     
     
     if (isMC){
       mcChannel = eventInfo->mcChannelNumber();
+      //getting metdata from the Map (MapVariables.cxx) using the text file in format as MGPy8EG_A14N23LO_BB_onestepN2hN1.txt
+      if(isSignal){
+	std::shared_ptr<MapVariables> m_mappedVars( new MapVariables ("MyAnalysis/data/MyAnalysis/MGPy8EG_A14N23LO_BB_onestepN2hN1.txt"));
+	xsecteff = m_mappedVars->getCrossSection(mcChannel);
+	filtereff= m_mappedVars->getFilterEff(mcChannel);
+      }
     
       mcWgt = eventInfo->mcEventWeight();
       renormedMcWgt = mcWgt;
@@ -644,7 +653,8 @@ EL::StatusCode MyxAODAnalysis :: execute ()
 	puWgt = objTool->GetPileupWeight();
       }
     }
-    m_lumiScaled = (10*1000*xsecteff)/m_finalSumOfWeights;
+    //lumiScaled gives scaling to 1ifb
+    m_lumiScaled = (1000*xsecteff*filtereff)/m_finalSumOfWeights;
     HSumOfPileUp->Fill(1,puWgt);
     
       
@@ -679,10 +689,10 @@ EL::StatusCode MyxAODAnalysis :: execute ()
     //std::cout << "Filled the objects" << std::endl;
 
     if (m_fileType == "DAOD_TRUTH1"){
-      m_objs  = new TruthObjectDef (m_event, objTool, store, mcChannel, EventNumber, mcWgt, xsecteff, syst.name(), doPhotons,  m_metSignif);
+      m_objs  = new TruthObjectDef (m_event, objTool, store, mcChannel, EventNumber, mcWgt, m_lumiScaled, syst.name(), doPhotons,  m_metSignif);
     }
     else{
-      m_objs  = new ObjectDef (m_event, objTool, store, mcChannel, EventNumber, mcWgt, xsecteff, syst.name(), doPhotons, m_metSignif); 
+      m_objs  = new ObjectDef (m_event, objTool, store, mcChannel, EventNumber, mcWgt, m_lumiScaled, syst.name(), doPhotons, m_metSignif); 
     }
     
     
@@ -1122,7 +1132,7 @@ EL::StatusCode MyxAODAnalysis :: execute ()
   SRACutList.push_back("m_CT > 450");
   
 
-  //m_lumiScaled = 1;
+
 
   bool doSRACutflow = true;
   if (doSRACutflow){

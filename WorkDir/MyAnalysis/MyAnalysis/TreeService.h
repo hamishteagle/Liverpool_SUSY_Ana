@@ -8,6 +8,7 @@
 #include "IObjectDef.h"
 #include "PreliminarySel.h"
 #include "CalculateVariables.h"
+#include "MapVariables.h"
 #include "MCChecks.h"
 #include "TTree.h"
 #include "TFile.h"
@@ -44,7 +45,7 @@ class TreeService
 
   std::vector<float> weightsVector;
 
-  double xSect;
+  double lumiScaled;
   double sampleSFmCTbbll;
   double puWgt;
   bool leadingbs;

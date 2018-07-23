@@ -7,7 +7,7 @@ bool ptSorter( const xAOD::IParticle* j1, const xAOD::IParticle* j2 ) {
 }
 
 //ObjectDef with FatJets (Crashes on PseudoJetGetter when running on systematics)
-ObjectDef::ObjectDef(xAOD::TEvent* event, ST::SUSYObjDef_xAOD* SUSYTool, xAOD::TStore* store, double mcChannelNumber, double eventN, double mcEventWgt, double crossSect, std::string systName, bool doPhotons, asg::AnaToolHandle<IMETSignificance> Tool_METSig):IObjectDef(event, SUSYTool, store, mcChannelNumber, eventN, mcEventWgt, crossSect, systName, doPhotons) //JetToolRunner* Tool_FatJets_kt12, JetToolRunner* Tool_FatJets_kt8, 
+ObjectDef::ObjectDef(xAOD::TEvent* event, ST::SUSYObjDef_xAOD* SUSYTool, xAOD::TStore* store, double mcChannelNumber, double eventN, double mcEventWgt, double m_lumiScaled, std::string systName, bool doPhotons, asg::AnaToolHandle<IMETSignificance> Tool_METSig):IObjectDef(event, SUSYTool, store, mcChannelNumber, eventN, mcEventWgt, m_lumiScaled, systName, doPhotons) //JetToolRunner* Tool_FatJets_kt12, JetToolRunner* Tool_FatJets_kt8, 
 {
 
   //fatjet_kt12_tool = Tool_FatJets_kt12;

@@ -41,7 +41,7 @@ int main( int argc, char* argv[]) {
 
 
   submitDir = "/hepstore/hteagle/SubmissionOutputs/";  
-  inputDir = "/hepstore/hteagle/recoSamples/";
+  inputDir = "/hepstore/hteagle/Sbot_multiB/recoSamples/";
 
   if( argc > 1 ) 
       {

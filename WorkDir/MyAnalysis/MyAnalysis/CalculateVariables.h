@@ -36,6 +36,7 @@ class CalculateVariables
   int nBaselineTau; //
   int nBaselineLepton; //
   bool Stop0L_tauVeto; //
+
   // scale factors
   double electronTrigSF;
   double leptonSF;
@@ -46,6 +47,7 @@ class CalculateVariables
   //  double muonRecoSF;
   //  double muonTrigSF;
   // adjusted ETMiss is for the regions with electrons to add to the MET
+  
   
   double adjustedETMiss; //
   double adjustedETMissPhi; //

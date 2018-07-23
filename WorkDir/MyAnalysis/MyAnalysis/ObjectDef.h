@@ -11,7 +11,7 @@ class ObjectDef: public virtual IObjectDef
 
  public:
   //ObjectDef with Fat jets (fails on pseudoJetGetter)
-  ObjectDef(xAOD::TEvent* event, ST::SUSYObjDef_xAOD* SUSYTool, xAOD::TStore* store, double mcChannelNumber, double eventN, double mcEventWgt, double crosssect, std::string systName, bool doPhotons, asg::AnaToolHandle<IMETSignificance> Tool_METSig);
+  ObjectDef(xAOD::TEvent* event, ST::SUSYObjDef_xAOD* SUSYTool, xAOD::TStore* store, double mcChannelNumber, double eventN, double mcEventWgt, double m_lumiScaled, std::string systName, bool doPhotons, asg::AnaToolHandle<IMETSignificance> Tool_METSig);
 
   ~ObjectDef(){};
 
