@@ -653,9 +653,6 @@ EL::StatusCode MyxAODAnalysis :: execute ()
 	{
 	  xsecteff = m_mappedVars->getCrossSection(mcChannel);
 	  filtereff= m_mappedVars->getFilterEff(mcChannel);
-	  std::cout<<"CrossSection ="<<xsecteff<<std::endl;      	  
-	  double blah;
-	  std::cin>>blah;
 	}
       else {//does mcID exist in Bkg map?
 	checkMap = m_mappedBkgVars->find(mcChannel);
@@ -663,9 +660,6 @@ EL::StatusCode MyxAODAnalysis :: execute ()
 	{
 	  xsecteff = m_mappedBkgVars->getCrossSection(mcChannel);
 	  filtereff= m_mappedBkgVars->getFilterEff(mcChannel);
-	  std::cout<<"BKG CrossSection ="<<xsecteff<<std::endl;      	  
-	  double blah;
-	  std::cin>>blah;
 	}
 	else {
 	  std::cout<<"ERROR: mcID does not exist in Map"<<std::endl;
