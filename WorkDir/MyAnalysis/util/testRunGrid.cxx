@@ -45,7 +45,7 @@ int gridmain( int argc, char* argv[]) {
 
       if (argc > 2){
 	if ( (std::string(argv[2]) == "1") || (std::string(argv[2]) == "true") || (std::string(argv[2]) == "True")  ) {
-	  RunningWithSyst = true;
+	  RunningWithSyst = false;//false hardcodes to no systematics change back to true for variable
 	}
 	else{
 	  RunningWithSyst = false;

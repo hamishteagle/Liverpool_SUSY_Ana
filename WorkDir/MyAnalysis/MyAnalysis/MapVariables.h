@@ -11,7 +11,7 @@ class MapVariables
   double getFilterEff(int datasetID);
   double getKFactor(int datasetID);
   double getRelUncert(int datasetID);
-  
+  bool find(int datasetID);
   
  public:
   std::map <int, double> xSecMap;

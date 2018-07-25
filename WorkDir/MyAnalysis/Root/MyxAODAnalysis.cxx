@@ -121,10 +121,15 @@ EL::StatusCode MyxAODAnalysis :: histInitialize ()
   // This will find generic SUSY signals
   int foundSignal = m_fileName.find("MGPy8EG_A14N");
   int foundttNNSignal = m_fileName.find("TT_directTT");
+  std::string period= "period";
+  int foundDataPeriod =m_fileName.find(period);
 
   if (foundData != std::string::npos){
     isData = 1;
     std::cout << "Running on a data sample" << std::endl;
+    if(foundDataPeriod != std::string::npos){
+      std::cout<<"Data period =="<<m_fileName.at(foundDataPeriod+period.length())<<std::endl;
+    }
   }
   else if (foundAtlfast != std::string::npos){
     isAtlfast= 1;
@@ -151,7 +156,7 @@ EL::StatusCode MyxAODAnalysis :: histInitialize ()
     doSyst = false; // Never run Systematics on a Truth Sample
   }
   else{
-    m_fileType = "DAOD_SUSY1";    
+    m_fileType = "DAOD_SUSY7";    
   }
 
 
@@ -564,6 +569,7 @@ EL::StatusCode MyxAODAnalysis :: execute ()
     const CP::SystematicSet& syst = sysInfo.systset;
     
     int year = 0;    
+    int runNumber = 0;
     if (m_fileType != "DAOD_TRUTH1"){
       objTool->ApplyPRWTool();
       year = objTool->treatAsYear(); 
@@ -635,24 +641,51 @@ EL::StatusCode MyxAODAnalysis :: execute ()
     
     
     if (isMC){
+
+
       mcChannel = eventInfo->mcChannelNumber();
       //getting metdata from the Map (MapVariables.cxx) using the text file in format as MGPy8EG_A14N23LO_BB_onestepN2hN1.txt
-      if(isSignal){
-	std::shared_ptr<MapVariables> m_mappedVars( new MapVariables ("MyAnalysis/data/MyAnalysis/MGPy8EG_A14N23LO_BB_onestepN2hN1.txt"));
-	xsecteff = m_mappedVars->getCrossSection(mcChannel);
-	filtereff= m_mappedVars->getFilterEff(mcChannel);
+      std::shared_ptr<MapVariables> m_mappedVars( new MapVariables ("MyAnalysis/data/MyAnalysis/MGPy8EG_A14N23LO_BB_onestepN2hN1.txt"));
+      std::shared_ptr<MapVariables> m_mappedBkgVars( new MapVariables ("MyAnalysis/data/MyAnalysis/susy_crossSections_13TeV.txt"));
+      //does this mcID exist in signal map? 
+      bool checkMap = m_mappedVars->find(mcChannel);
+      if (checkMap) 
+	{
+	  xsecteff = m_mappedVars->getCrossSection(mcChannel);
+	  filtereff= m_mappedVars->getFilterEff(mcChannel);
+	  std::cout<<"CrossSection ="<<xsecteff<<std::endl;      	  
+	  double blah;
+	  std::cin>>blah;
+	}
+      else {//does mcID exist in Bkg map?
+	checkMap = m_mappedBkgVars->find(mcChannel);
+	if (checkMap)                                                                                
+	{
+	  xsecteff = m_mappedBkgVars->getCrossSection(mcChannel);
+	  filtereff= m_mappedBkgVars->getFilterEff(mcChannel);
+	  std::cout<<"BKG CrossSection ="<<xsecteff<<std::endl;      	  
+	  double blah;
+	  std::cin>>blah;
+	}
+	else {
+	  std::cout<<"ERROR: mcID does not exist in Map"<<std::endl;
+	  return EL::StatusCode::FAILURE;
+	}
       }
-    
       mcWgt = eventInfo->mcEventWeight();
       renormedMcWgt = mcWgt;
       if (std::abs(renormedMcWgt) >= 100){
 	renormedMcWgt = 1;
       }
-      
       if (m_fileType != "DAOD_TRUTH1"){ 
 	puWgt = objTool->GetPileupWeight();
       }
     }
+    else {//Not MC
+      xsecteff=1;
+      filtereff=1;
+    }
+
     //lumiScaled gives scaling to 1ifb
     m_lumiScaled = (1000*xsecteff*filtereff)/m_finalSumOfWeights;
     HSumOfPileUp->Fill(1,puWgt);
@@ -858,11 +891,11 @@ EL::StatusCode MyxAODAnalysis :: execute ()
 	  {
 	    passedElTrigger=( (objTool->IsTrigPassed("HLT_e24_lhmedium_L1EM20VH || HLT_e60_lhmedium || HLT_e120_lhloose")));
 	  }
-	passedMuTrigger=( (objTool->IsTrigPassed("HLT_mu20_iloose_L1MU15 || HLT_mu50 ")));
+	passedMuTrigger=( (objTool->IsTrigPassed("HLT_mu26_iloose_L1MU15 || HLT_mu50 ")));
 	passedGammaTrigger=(objTool->IsTrigPassed("HLT_g120_loose"));
 	passedMETTrigger = objTool->IsMETTrigPassed("HLT_xe70_mht"); // or we use HLT_xe70  or HLT_xe70_tc_lcw 
       }
-      else{//These triggers are the same for 2016/17 may change for 2018
+      else if (year==2016){
 	passedElTrigger=  ((objTool->IsTrigPassed("HLT_e26_lhtight_nod0_ivarloose || HLT_e60_lhmedium_nod0 || HLT_e140_lhloose_nod0")));
 	passedMuTrigger= ((objTool->IsTrigPassed("HLT_mu26_ivarmedium || HLT_mu50 ")));
 	passedGammaTrigger=(objTool->IsTrigPassed("HLT_g140_loose"));
