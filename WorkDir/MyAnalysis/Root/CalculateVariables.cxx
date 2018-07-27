@@ -76,6 +76,7 @@ CalculateVariables::CalculateVariables(IObjectDef *objects, bool isTruth, bool d
   nbJets = objects->getBJets()->size();
 
   njet20 = 0;
+  njet25 = 0;
   njet30 = 0;
   njet35 = 0;
   njet50 = 0;
@@ -85,6 +86,9 @@ CalculateVariables::CalculateVariables(IObjectDef *objects, bool isTruth, bool d
   
   for (int iJet = 0; iJet < nJets; iJet++){
     TLorentzVector tempJet = (*objects->getGoodJets())[iJet]->p4()*0.001;
+    if (tempJet.Pt() > 25){
+      njet25++;
+    }
     if (tempJet.Pt() > 30){
       njet30++;
     }
@@ -1391,6 +1395,8 @@ void CalculateVariables::CalculateTwoLepVariables(IObjectDef *objects, TLorentzV
       phil1 = l2v.Phi();
     }
 
+    
+    m_T = sqrt(2*(pTl1*eTMiss*(1 - cos(fabs(TVector2::Phi_mpi_pi( (phil1  - eTMissPhi)))))));
     TVector2 tempMET = *(objects->getMETvector());
     TVector2 tempEl ((*(objects->getGoodElectrons()))[0]->p4().Px(), (*(objects->getGoodElectrons()))[0]->p4().Py());
     TVector2 moreTemp = tempMET+tempEl;
@@ -1415,8 +1421,7 @@ void CalculateVariables::CalculateTwoLepVariables(IObjectDef *objects, TLorentzV
     etal2 = l2v.Eta();
     phil2 = l2v.Phi();
     
-    
-    
+    m_T = sqrt(2*(pTl1*eTMiss*(1 - cos(fabs(TVector2::Phi_mpi_pi( (phil1  - eTMissPhi)))))));
     TVector2 tempMET = *(objects->getMETvector());
     TVector2 tempEl1 ((*(objects->getBaselineElectrons()))[0]->p4().Px(), (*(objects->getBaselineElectrons()))[0]->p4().Py());
     TVector2 tempEl2 ((*(objects->getBaselineElectrons()))[1]->p4().Px(), (*(objects->getBaselineElectrons()))[1]->p4().Py());
@@ -1444,6 +1449,7 @@ void CalculateVariables::CalculateTwoLepVariables(IObjectDef *objects, TLorentzV
     etal2 = l2v.Eta();
     phil2 = l2v.Phi();
 
+    m_T = sqrt(2*(pTl1*eTMiss*(1 - cos(fabs(TVector2::Phi_mpi_pi( (phil1  - eTMissPhi)))))));
     TVector2 tempMET = *(objects->getMETvector());
     TVector2 tempEl1 ((*(objects->getBaselineMuons()))[0]->p4().Px(), (*(objects->getBaselineMuons()))[0]->p4().Py());
     TVector2 tempEl2 ((*(objects->getBaselineMuons()))[1]->p4().Px(), (*(objects->getBaselineMuons()))[1]->p4().Py());

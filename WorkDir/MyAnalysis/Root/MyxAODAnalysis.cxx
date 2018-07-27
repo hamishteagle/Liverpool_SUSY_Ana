@@ -644,6 +644,7 @@ EL::StatusCode MyxAODAnalysis :: execute ()
 
 
       mcChannel = eventInfo->mcChannelNumber();
+      std::cout << "Looking for xsec for " << mcChannel << std::endl;
       //getting metdata from the Map (MapVariables.cxx) using the text file in format as MGPy8EG_A14N23LO_BB_onestepN2hN1.txt
       std::shared_ptr<MapVariables> m_mappedVars( new MapVariables (PathResolverFindCalibFile("MyAnalysis/MyAnalysis/MGPy8EG_A14N23LO_BB_onestepN2hN1.txt")));
       std::shared_ptr<MapVariables> m_mappedBkgVars( new MapVariables (PathResolverFindCalibFile("MyAnalysis/MyAnalysis/susy_crossSections_13TeV.txt")));
@@ -663,6 +664,8 @@ EL::StatusCode MyxAODAnalysis :: execute ()
 	}
 	else {
 	  std::cout<<"ERROR: mcID does not exist in Map"<<std::endl;
+          xsecteff = 1.;
+          filtereff = 1.;
 	  return EL::StatusCode::FAILURE;
 	}
       }
@@ -901,6 +904,15 @@ EL::StatusCode MyxAODAnalysis :: execute ()
 	}
       }
     }
+
+    //NEW TRIGGER IMPLEMENTATION
+    std::vector<std::string> triggers = {"2e12_lhloose_L12EM10VH","HLT_2e15_lhvloose_nod0_L12EM13VH","HLT_2e17_lhvloose_nod0","HLT_e17_lhloose_mu14","HLT_e17_lhloose_nod0_mu14","HLT_mu22_mu8noL1","HLT_mu20_mu8noL1","HLT_mu18_mu8noL1","HLT_e24_lhmedium_L1EM20VH","HLT_e24_lhmedium_nod0_L1EM20VH","HLT_e24_lhtight_nod0_ivarloose","HLT_e26_lhtight_nod0_ivarloose","HLT_e60_lhmedium","HLT_e60_lhmedium_nod0","HLT_e120_lhloose","HLT_e140_lhloose_nod0","HLT_mu20_iloose_L1MU15","HLT_mu24_ivarloose","HLT_mu24_ivarloose_L1MU15","HLT_mu24_ivarmedium","HLT_mu26_ivarmedium","HLT_mu50","HLT_xe70_mht","HLT_xe70_tc_lcw","HLT_xe80_tc_lcw_L1XE50","HLT_xe90_mht_L1XE50","HLT_xe100_mht_L1XE50","HLT_xe110_mht_L1XE50"}; 
+    //std::vector< std::pair<std::string, int> > passedTriggers;
+    std::vector<int> passedTriggers;
+    for (auto x: triggers) {
+     int trigDecision = objTool->IsTrigPassed(x);
+     passedTriggers.push_back(trigDecision);
+    }
     
     if (passedElTrigger == 1 || passedMuTrigger == 1) passedLepTrigger = true;
 
@@ -1077,13 +1089,13 @@ EL::StatusCode MyxAODAnalysis :: execute ()
     
     if ( m_fileType != "DAOD_TRUTH1"){
       if (m_regions->interestingRegion || RunningLocally){
-	(m_treeServiceVector[isyst])->fillTree(m_objs, *m_regions, *m_varCalc, *checkMC,m_finalSumOfWeights, m_initialSumOfWeights, puWgt, SFmctbbll, passedMETTrigger, passedMuTrigger, passedElTrigger, passedGammaTrigger, passedMultiJetTrigger, PUSumOfWeights, truthfilt_MET, truthfilt_HT, coreFlag, sctFlag, LArTileFlag, passedPrimVertex, passedJetClean, passedCosmicMu, passedMuonClean, m_runNumber, renormedMcWgt);
+	(m_treeServiceVector[isyst])->fillTree(m_objs, *m_regions, *m_varCalc, *checkMC,m_finalSumOfWeights, m_initialSumOfWeights, puWgt, SFmctbbll, passedMETTrigger, passedMuTrigger, passedElTrigger, passedGammaTrigger, passedMultiJetTrigger, passedTriggers, PUSumOfWeights, truthfilt_MET, truthfilt_HT, coreFlag, sctFlag, LArTileFlag, passedPrimVertex, passedJetClean, passedCosmicMu, passedMuonClean, m_runNumber, renormedMcWgt);
        }
     }
 
     // not running on reco. fill everything for TRUTH
     else{
-      (m_treeServiceVector[isyst])->fillTree(m_objs, *m_regions, *m_varCalc, *checkMC,m_finalSumOfWeights, m_initialSumOfWeights, puWgt, SFmctbbll, passedMETTrigger, passedMuTrigger, passedElTrigger, passedGammaTrigger, passedMultiJetTrigger, PUSumOfWeights, truthfilt_MET, truthfilt_HT , coreFlag, sctFlag, LArTileFlag, passedPrimVertex, passedJetClean, passedCosmicMu, passedMuonClean, m_runNumber, renormedMcWgt);
+      (m_treeServiceVector[isyst])->fillTree(m_objs, *m_regions, *m_varCalc, *checkMC,m_finalSumOfWeights, m_initialSumOfWeights, puWgt, SFmctbbll, passedMETTrigger, passedMuTrigger, passedElTrigger, passedGammaTrigger, passedMultiJetTrigger, passedTriggers, PUSumOfWeights, truthfilt_MET, truthfilt_HT , coreFlag, sctFlag, LArTileFlag, passedPrimVertex, passedJetClean, passedCosmicMu, passedMuonClean, m_runNumber, renormedMcWgt);
    }
       
     isyst++;
