@@ -23,7 +23,7 @@ class TreeService
  public:
   TreeService(TTree *outputTree, TDirectory *OutDir);
 
-  void fillTree(IObjectDef *objects, PreliminarySel &region, CalculateVariables &variables, MCChecks MCTruthInfo , double mFinalWeight, double mInitialWeight, double puWeight, double SFmCTbbll, bool TrigMET, bool TrigMu, bool TrigEl, bool TrigGamma, bool Trig6j, double puSumWeights, double TRUTHMET, double TRUTHHT ,bool CoreFlags, bool SCTFlag, bool LArTileFlag, bool passedPrimVertex, bool passedJetClean, bool passedCosmicMu, bool passedMuonClean, double RNo, double RenormedMCWgt);
+  void fillTree(IObjectDef *objects, PreliminarySel &region, CalculateVariables &variables, MCChecks MCTruthInfo , double mFinalWeight, double mInitialWeight, double puWeight, double SFmCTbbll, bool TrigMET, bool TrigMu, bool TrigEl, bool TrigGamma, bool Trig6j, std::vector<int> triggers, double puSumWeights, double TRUTHMET, double TRUTHHT ,bool CoreFlags, bool SCTFlag, bool LArTileFlag, bool passedPrimVertex, bool passedJetClean, bool passedCosmicMu, bool passedMuonClean, double RNo, double RenormedMCWgt);
   
   void writeTree();
 
@@ -64,6 +64,8 @@ class TreeService
   bool passedMuonClean;
 
   //Triggers
+
+  std::vector<int> triggerDecisions;
   bool passedMETTrigger;
   bool passedMuTrigger;
   bool passedElTrigger;

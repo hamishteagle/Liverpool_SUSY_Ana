@@ -451,13 +451,14 @@ TreeService::TreeService(TTree *outputTree, TDirectory *OutDir){
 
   tree->Branch("multiJetTriggerPlateau", &multiJetTriggerPlateau);
   tree->Branch("multiJetTriggerPassed", &multiJetTriggerPassed);
+  tree->Branch("triggerDecisions", &triggerDecisions);
 
 
 
 }
 
 
-void TreeService::fillTree(IObjectDef *objects ,PreliminarySel &region, CalculateVariables &variables, MCChecks MCTruthInfo, double mFinalWeight, double mInitialWeight, double puWeight, double SFmCTbbll, bool TrigMET, bool TrigMu, bool TrigEl, bool TrigGamma, bool Trig6j, double puSumWeights, double TRUTHMET, double TRUTHHT, bool CoreFlags, bool SCTFlag,bool LArTileFlags, bool passedPrimVertexes, bool passedJetCleans, bool passedCosmicMus, bool passedMuonCleans, double RNo,  double RenormedMCWgt){
+void TreeService::fillTree(IObjectDef *objects ,PreliminarySel &region, CalculateVariables &variables, MCChecks MCTruthInfo, double mFinalWeight, double mInitialWeight, double puWeight, double SFmCTbbll, bool TrigMET, bool TrigMu, bool TrigEl, bool TrigGamma, bool Trig6j, std::vector<int> triggers, double puSumWeights, double TRUTHMET, double TRUTHHT, bool CoreFlags, bool SCTFlag,bool LArTileFlags, bool passedPrimVertexes, bool passedJetCleans, bool passedCosmicMus, bool passedMuonCleans, double RNo,  double RenormedMCWgt){
 
   //  std::cout << "Filling the Tree" << std::endl;
   CutsRegion = region.region;
@@ -469,7 +470,7 @@ void TreeService::fillTree(IObjectDef *objects ,PreliminarySel &region, Calculat
   passedJetClean=passedJetCleans;
   passedCosmicMu=passedCosmicMus;
   passedMuonClean=passedMuonCleans;
-  
+  triggerDecisions = triggers;
   
   m_finalWeightSum = mFinalWeight;
   m_intialWeightSum = mInitialWeight;
