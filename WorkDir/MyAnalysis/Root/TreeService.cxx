@@ -85,6 +85,7 @@ TreeService::TreeService(TTree *outputTree, TDirectory *OutDir){
   tree->Branch("mEff3j", &mEff3j);
 
   tree->Branch("njet20" ,&njet20);
+  tree->Branch("njet25" ,&njet25);
   tree->Branch("njet30", &njet30);
   tree->Branch("njet35", &njet35);
   tree->Branch("njet50", &njet50);
@@ -586,6 +587,7 @@ void TreeService::fillTree(IObjectDef *objects ,PreliminarySel &region, Calculat
 
 
   njet20 = variables.njet20;
+  njet25 = variables.njet25;
   njet30 = variables.njet30;
   njet35 = variables.njet35;
   njet50 = variables.njet50;

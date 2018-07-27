@@ -40,8 +40,8 @@ int main( int argc, char* argv[]) {
       }
 
 
-  submitDir = "/hepstore/hteagle/SubmissionOutputs/";  
-  inputDir = "/hepstore/hteagle/Sbot_multiB/recoSamples/";
+  submitDir = "/hepstore/msullivan/SubmissionOutputs/";  
+  inputDir = "/hepstore/msullivan/Release21_Tuples/";
 
   if( argc > 1 ) 
       {
@@ -98,7 +98,8 @@ int main( int argc, char* argv[]) {
     // Change me here
     //inputFile = "signal/mc16_13TeV.390285.MGPy8EG_A14N23LO_BB_onestepN2hN1_700_680_550.deriv.DAOD_SUSY1.e5671_e5984_a875_r9364_r9315_p3404";
     //inputFile = "data15_13TeV.periodD.physics_Main.PhysCont.DAOD_SUSY1.grp15_v01_p3372";
-    inputFile = "temp/mc16_13TeV.363355.Sherpa_221_NNPDF30NNLO_ZqqZvv.deriv.DAOD_SUSY1.e5525_s3126_r9364_r9315_p3401/";
+    //inputFile = "temp/mc16_13TeV.363355.Sherpa_221_NNPDF30NNLO_ZqqZvv.deriv.DAOD_SUSY1.e5525_s3126_r9364_r9315_p3401/";
+    inputFile = "mc16_13TeV/";
     submitDir = submitDir+inputFile;
     
     inputFile = inputDir+inputFile;

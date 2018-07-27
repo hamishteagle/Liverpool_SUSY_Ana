@@ -100,6 +100,7 @@ class TreeService
   double mbLmin;
 
   int njet20;
+  int njet25;
   int njet30;
   int njet35;
   int njet50;

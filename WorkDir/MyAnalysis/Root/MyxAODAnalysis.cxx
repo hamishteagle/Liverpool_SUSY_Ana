@@ -644,6 +644,7 @@ EL::StatusCode MyxAODAnalysis :: execute ()
 
 
       mcChannel = eventInfo->mcChannelNumber();
+      std::cout << "Looking for xsec for " << mcChannel << std::endl;
       //getting metdata from the Map (MapVariables.cxx) using the text file in format as MGPy8EG_A14N23LO_BB_onestepN2hN1.txt
       std::shared_ptr<MapVariables> m_mappedVars( new MapVariables ("MyAnalysis/data/MyAnalysis/MGPy8EG_A14N23LO_BB_onestepN2hN1.txt"));
       std::shared_ptr<MapVariables> m_mappedBkgVars( new MapVariables ("MyAnalysis/data/MyAnalysis/susy_crossSections_13TeV.txt"));
