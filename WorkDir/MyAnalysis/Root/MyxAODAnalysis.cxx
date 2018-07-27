@@ -471,7 +471,7 @@ EL::StatusCode MyxAODAnalysis :: initialize ()
   
   
   // Set verbosity if required
-  //  objTool->msg().setLevel( MSG::VERBOSE);
+   objTool->msg().setLevel( MSG::ERROR);
 
   // loop over all systematics if we are running with systematics
   if(!doSyst) {
@@ -491,8 +491,8 @@ EL::StatusCode MyxAODAnalysis :: initialize ()
   for(const auto& sysInfo : systInfoList){
     const CP::SystematicSet& sys = sysInfo.systset;
     
-    std::cout << "Systematic name: " + sys.name() << std::endl;
-    std::cout << "Systematic tree name: " + sys.name() << std::endl;
+    //std::cout << "Systematic name: " + sys.name() << std::endl;
+    //std::cout << "Systematic tree name: " + sys.name() << std::endl;
 
     std::string treeName = "CollectionTree_"+std::string(sys.name());
     const char * cName = treeName.c_str();
@@ -533,7 +533,7 @@ EL::StatusCode MyxAODAnalysis :: initialize ()
     m_treeServiceVector[m]->writeTree();
   }
 
-
+  
 
   
  
@@ -585,7 +585,7 @@ EL::StatusCode MyxAODAnalysis :: execute ()
       if (objTool->applySystematicVariation(syst) != CP::SystematicCode::Ok){
 	std::cout << "Cannot configure SUSYTools for systematic " + syst.name() << std::endl;
       } else {
-	std::cout << "Variation  configured..." + syst.name() << std::endl;
+	//std::cout << "Variation  configured..." + syst.name() << std::endl;
       }
       if(sysInfo.affectsKinematics || sysInfo.affectsWeights) isNominal = false;
     }
@@ -645,8 +645,8 @@ EL::StatusCode MyxAODAnalysis :: execute ()
 
       mcChannel = eventInfo->mcChannelNumber();
       //getting metdata from the Map (MapVariables.cxx) using the text file in format as MGPy8EG_A14N23LO_BB_onestepN2hN1.txt
-      std::shared_ptr<MapVariables> m_mappedVars( new MapVariables ("MyAnalysis/data/MyAnalysis/MGPy8EG_A14N23LO_BB_onestepN2hN1.txt"));
-      std::shared_ptr<MapVariables> m_mappedBkgVars( new MapVariables ("MyAnalysis/data/MyAnalysis/susy_crossSections_13TeV.txt"));
+      std::shared_ptr<MapVariables> m_mappedVars( new MapVariables (PathResolverFindCalibFile("MyAnalysis/MyAnalysis/MGPy8EG_A14N23LO_BB_onestepN2hN1.txt")));
+      std::shared_ptr<MapVariables> m_mappedBkgVars( new MapVariables (PathResolverFindCalibFile("MyAnalysis/MyAnalysis/susy_crossSections_13TeV.txt")));
       //does this mcID exist in signal map? 
       bool checkMap = m_mappedVars->find(mcChannel);
       if (checkMap) 
@@ -1088,12 +1088,57 @@ EL::StatusCode MyxAODAnalysis :: execute ()
       
     isyst++;
   
+    //Removing the FatJetTool that we have initialised for this event
+    std::string FatJets8ToolName = "MyFatJetsKt8"+syst.name();
+    std::string FatJets12ToolName = "MyFatJetsKt12"+syst.name();
+    std::string FatJetsTool8 ="m_jetRecTool_kt8_"+syst.name(); 
+    std::string FatJetsTool12 ="m_jetRecTool_kt12_"+syst.name(); 
+
+
+    std::string plcGet8 = "mylcget"+FatJets8ToolName;
+    std::string plcGet12 = "mylcget"+FatJets12ToolName;
+    std::string pbuild8 = "myjetbuild"+FatJets8ToolName;
+    std::string pbuild12 = "myjetbuild"+FatJets12ToolName;
+    std::string pfind8 = "myjetfind"+FatJets8ToolName;
+    std::string pfind12 = "myjetfind"+FatJets12ToolName;
+    std::string pjrfind8 = "myjrfind"+FatJets8ToolName;
+    std::string pjrfind12 = "myjrfind"+FatJets12ToolName;
+    std::string prunner8 = "jetrunner"+FatJets8ToolName;
+    std::string prunner12 = "jetrunner"+FatJets12ToolName;
+    std::string pjrfind_retriever8 = pjrfind8+"_retriever";
+    std::string pjrfind_retriever12 = pjrfind12+"_retriever";
+    
+
+
+    asg::ToolStore::remove(plcGet8);
+    asg::ToolStore::remove(plcGet12);
+    //std::cout<<"Removed the tool plcget "<<std::endl;
+    asg::ToolStore::remove(pbuild8);
+    asg::ToolStore::remove(pbuild12);
+    //std::cout<<"Removed the tool pbuild "<<std::endl;
+    asg::ToolStore::remove(pfind8);
+    asg::ToolStore::remove(pfind12);
+    //std::cout<<"Removed the tool pfind "<<std::endl;
+    asg::ToolStore::remove(pjrfind8);
+    asg::ToolStore::remove(pjrfind12);
+    //std::cout<<"Removed the tool pjrfind "<<std::endl;
+    asg::ToolStore::remove(pjrfind_retriever8);
+    asg::ToolStore::remove(pjrfind_retriever12);
+    //std::cout<<"Removed the tool pjrfind "<<std::endl;
+    asg::ToolStore::remove(prunner8);
+    asg::ToolStore::remove(prunner12);
+    //std::cout<<"Removed the tool prunner "<<std::endl;
+    asg::ToolStore::remove(FatJetsTool8);
+    asg::ToolStore::remove(FatJetsTool12);
+    //std::cout<<"Removed the fatJets tools "<<std::endl;
+    
+
   }
   
 
 
 
-  std::cout << "Tree service vector size:" << m_treeServiceVector.size() << std::endl;  
+  //std::cout << "Tree service vector size:" << m_treeServiceVector.size() << std::endl;  
 
   //  std::cout<<"Finished Event loop succesfully"<<std::endl;
   

@@ -913,9 +913,8 @@ void TreeService::fillTree(IObjectDef *objects ,PreliminarySel &region, Calculat
       jet_bWgt.push_back(MV2c10wgt);
     }
   
-  std::cout<<"before using any of the fatJet stuff"<<std::endl;
+  
   int maxFatJet8 = objects->getFatJets_kt8()->size();
-  std::cout<<"Size of the fatJets8 vector; "<<maxFatJet8<<std::endl;
   for (int iJet = 0; iJet < maxFatJet8; iJet++){
     fatJet8_pT.push_back(0.001*(*(objects->getFatJets_kt8()))[iJet]->pt());
     fatJet8_eta.push_back((*(objects->getFatJets_kt8()))[iJet]->eta());

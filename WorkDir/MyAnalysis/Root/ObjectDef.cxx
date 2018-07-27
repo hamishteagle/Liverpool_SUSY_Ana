@@ -15,7 +15,7 @@ ObjectDef::ObjectDef(xAOD::TEvent* event, ST::SUSYObjDef_xAOD* SUSYTool, xAOD::T
 
   METSig_tool = Tool_METSig; 
   
-  std::cout << "Object tool initialised for " << systName << " systematic " << std::endl;
+  //std::cout << "Object tool initialised for " << systName << " systematic " << std::endl;
 
   baselineElectronsBeforeOR = new xAOD::ElectronContainer(SG::VIEW_ELEMENTS);
   signalElectronsBeforeOR = new xAOD::ElectronContainer(SG::VIEW_ELEMENTS);
@@ -857,7 +857,7 @@ void ObjectDef::SetPrimVertex(){
 }
 
 void ObjectDef::FillFatJets_kt8(){
-
+  fatjet_kt8_tool->msg().setLevel( MSG::ERROR);
   fatjet_kt8_tool->execute();
   //std::cout << goodJets_fatColl->size() << std::endl;
   currentEvent->retrieve( FatJets_kt8,"MyFatJetsKt8"+systematic );
@@ -869,7 +869,7 @@ void ObjectDef::FillFatJets_kt8(){
 
 
 void ObjectDef::FillFatJets_kt12(){
-
+  fatjet_kt12_tool->msg().setLevel( MSG::ERROR);
   fatjet_kt12_tool->execute();
   //std::cout << goodJets_fatColl->size() << std::endl;
   currentEvent->retrieve( FatJets_kt12,"MyFatJetsKt12"+systematic );
@@ -892,6 +892,7 @@ bool ObjectDef::SetUpFatJetTools(JetToolRunner *& tool, double jetradius, std::s
   ToolHandleArray<IJetExecuteTool> hrecs;
 
   PseudoJetGetter* plcget = new PseudoJetGetter(("mylcget"+outputcontainer).c_str());
+  plcget->msg().setLevel( MSG::ERROR);
   plcget->setProperty("InputContainer", inputcontainer);
   plcget->setProperty("OutputContainer", "Reclustered"+outputcontainer);
   plcget->setProperty("Label", "Tower");
@@ -904,10 +905,11 @@ bool ObjectDef::SetUpFatJetTools(JetToolRunner *& tool, double jetradius, std::s
 
   JetFromPseudojet* pbuild = new JetFromPseudojet(("myjetbuild"+outputcontainer).c_str());
   ToolHandle<IJetFromPseudojet> hbuild(pbuild);
-  
+  pbuild->msg().setLevel( MSG::ERROR);
   pbuild->initialize();
   
   JetFinder* pfind = new JetFinder(("myjetfind"+outputcontainer).c_str());
+  pfind->msg().setLevel( MSG::ERROR);
   pfind->setProperty("JetAlgorithm", "AntiKt");
   pfind->setProperty("JetRadius", jetradius);
   pfind->setProperty("PtMin", 15000.0);
@@ -915,12 +917,14 @@ bool ObjectDef::SetUpFatJetTools(JetToolRunner *& tool, double jetradius, std::s
   pfind->setProperty("RandomOption", 1);
   pfind->setProperty("JetBuilder", hbuild);
   ToolHandle<IJetFinder> hfind(pfind);
+  
   //asg::ToolStore::put(pfind);
   pfind->initialize();
   
 
 
   JetRecTool* pjrf = new JetRecTool(("myjrfind"+outputcontainer).c_str());
+  pjrf->msg().setLevel( MSG::ERROR);
   pjrf->setProperty("OutputContainer", outputcontainer);
   pjrf->setProperty("PseudoJetGetters", hgets);
   pjrf->setProperty("JetFinder", hfind);
@@ -930,6 +934,7 @@ bool ObjectDef::SetUpFatJetTools(JetToolRunner *& tool, double jetradius, std::s
 
  
   tool = new JetToolRunner(("jetrunner"+outputcontainer).c_str());
+  tool->msg().setLevel( MSG::ERROR);
   tool->setProperty("Tools", hrecs);
   //  Info("Initialising JetReclusteringTool(s)");
   tool->initialize();

@@ -25,7 +25,6 @@ MapVariables::MapVariables (std::string mapVarFile) {
 	 istream_iterator<double>(),
 	 back_inserter(mapValues));
     //    cout<<"mapValues= "<<mapValues[0]<<","<<mapValues[1]<<","<<mapValues[2]<<","<<endl;    
-    
 
     xSecMap[mapValues[0]] = mapValues[1];
     kFacMap[mapValues[0]] = mapValues[2];
@@ -61,3 +60,6 @@ bool MapVariables::find(int datasetID){
   if (it != xSecMap.end()) return true;
   else return false;
 }
+  
+
+

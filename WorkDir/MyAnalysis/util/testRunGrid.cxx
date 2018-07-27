@@ -155,6 +155,7 @@ int gridmain( int argc, char* argv[]) {
   alg->doSyst = RunningWithSyst;
   alg->doPhotons = RunningWithPhotons;
   alg->RunningLocally = false;
+  alg->setMsgLevel(MSG::ERROR);
   // Run the job using the griddriver:
   EL::PrunDriver driver;
   
