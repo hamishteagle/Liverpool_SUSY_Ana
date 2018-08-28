@@ -10,7 +10,6 @@ class ObjectDef: public virtual IObjectDef
 {
 
  public:
-  //ObjectDef with Fat jets (fails on pseudoJetGetter)
   ObjectDef(xAOD::TEvent* event, ST::SUSYObjDef_xAOD* SUSYTool, xAOD::TStore* store, double mcChannelNumber, double eventN, double mcEventWgt, double m_lumiScaled, std::string systName, bool doPhotons, asg::AnaToolHandle<IMETSignificance> Tool_METSig);
 
   ~ObjectDef(){};
@@ -40,8 +39,9 @@ class ObjectDef: public virtual IObjectDef
   void SetPrimVertex();
 
   bool SetUpFatJetTools(JetToolRunner *& tool, double jetradius, std::string inputcontainer, std::string outputcontainer);
-
-
+  bool removeFatJetTools(std::string systName);
+  void process_mem_usage(double & vm_usage, double &resident_set);
+  int  CheckMem();
   
   // Getters
   xAOD::JetContainer* getBadJets(){return badJets;};
@@ -138,8 +138,6 @@ class ObjectDef: public virtual IObjectDef
   //  double MuonTriggerSF;
   int nVertex;
 
-  //JetToolRunner* fatjet_kt12_tool;
-  //JetToolRunner* fatjet_kt8_tool;
 
   asg::AnaToolHandle<IMETSignificance> METSig_tool; 
 

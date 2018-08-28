@@ -29,7 +29,7 @@ int main( int argc, char* argv[]) {
   bool RunningWithSyst;
   bool RunningWithPhotons;
   
-  std::string gridoption = "y";//Option for running on the grid
+  std::string gridoption = "n";//Option for running on the grid
   
 
     if (gridoption == "y")
@@ -75,13 +75,11 @@ int main( int argc, char* argv[]) {
 	else{
 	  RunningWithPhotons = false;
 	}
-	
+	RunningWithSyst=true;
 	std::cout << "Running with Syst = " << RunningWithSyst << std::endl;
 	std::cout << "Running with Photons = " << RunningWithPhotons << std::endl;
-	submitDir=submitDir+"NoSyst/";
 	std::cout << "The Submission Directory: " << submitDir << std::endl;
       }
-  else submitDir=submitDir+"Syst/";
     // Set up the job for xAOD access:
     xAOD::Init().ignore();
     // Construct the samples to run on:
@@ -99,11 +97,10 @@ int main( int argc, char* argv[]) {
     //inputFile = "signal/mc16_13TeV.390285.MGPy8EG_A14N23LO_BB_onestepN2hN1_700_680_550.deriv.DAOD_SUSY1.e5671_e5984_a875_r9364_r9315_p3404";
     //inputFile = "data15_13TeV.periodD.physics_Main.PhysCont.DAOD_SUSY1.grp15_v01_p3372";
     //inputFile = "temp/mc16_13TeV.363355.Sherpa_221_NNPDF30NNLO_ZqqZvv.deriv.DAOD_SUSY1.e5525_s3126_r9364_r9315_p3401/";
-    //inputFile = "Sbot_multiB/recoSamples/signal/mc16_13TeV.390219.MGPy8EG_A14N23LO_BB_onestepN2hN1_800_795_60.deriv.DAOD_SUSY1.e5671_e5984_a875_r9364_r9315_p3404/";
-    inputFile = "Wh/recoSamples/mc16_13TeV.410470.PhPy8EG_A14_ttbar_hdamp258p75_nonallhad.deriv.DAOD_SUSY1.e6337_e5984_s3126_r9364_r9315_p3401/";
-    // inputFile = "Wh/recoSamples/mc15_13TeV.392667.MadGraphPythia8EvtGen_A14N23LO_C1N2_Wh_hall_475p0_0p0_lep.merge.DAOD_SUSY5.e4585_a766_a821_r7676_p2949/";
+    inputFile = "Sbot_multiB/recoSamples/signal/mc16_13TeV.390219.MGPy8EG_A14N23LO_BB_onestepN2hN1_800_795_60.deriv.DAOD_SUSY1.e5671_e5984_a875_r9364_r9315_p3404/";
+    //inputFile = "Wh/recoSamples/mc16_13TeV.410470.PhPy8EG_A14_ttbar_hdamp258p75_nonallhad.deriv.DAOD_SUSY1.e6337_e5984_s3126_r9364_r9315_p3401/";
+    // inputFile = "trialFiles/mc16_13TeV.364151.Sherpa_221_NNPDF30NNLO_Znunu_MAXHTPTV280_500_CVetoBVeto.deriv.DAOD_SUSY1.e5308_s3126_r9364_r9315_p3401/";
 
-    inputFile = "mc16_13TeV/";
     submitDir = submitDir+inputFile;
     
     inputFile = inputDir+inputFile;

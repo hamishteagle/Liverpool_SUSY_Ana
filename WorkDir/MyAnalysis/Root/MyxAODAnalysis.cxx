@@ -364,17 +364,58 @@ EL::StatusCode MyxAODAnalysis :: initialize ()
     return EL::StatusCode::FAILURE;
   }
   std::cout << "Passed GRL init" << std::endl;
-
-
   //Assigning the lumicalc files
   std::vector<std::string> lumicalcFiles;
 
-  //Getting the run number of the file to determine MC16a vs MC16c
+
   const xAOD::EventInfo* eventInfo_init =0;
   if (! m_event->retrieve(eventInfo_init, "EventInfo").isSuccess() ){
     Error("execute()","Failed to retrieve event info collection, exiting!!");
   }
-  
+
+    bool isMC = false;	
+  if(eventInfo_init->eventType( xAOD::EventInfo::IS_SIMULATION) ){
+    isMC = true; 
+  }
+
+  double xsecteff = -1;    
+  double filtereff = -1;
+  if(isMC){
+    mcChannel = eventInfo_init->mcChannelNumber();
+    //std::cout << "Looking for xsec for " << mcChannel << std::endl;
+    //getting metdata from the Map (MapVariables.cxx) using the text file in format as MGPy8EG_A14N23LO_BB_onestepN2hN1.txt
+    std::unique_ptr<MapVariables> m_mappedVars (new MapVariables (PathResolverFindCalibFile("MyAnalysis/MyAnalysis/MGPy8EG_A14N23LO_BB_onestepN2hN1.txt")));
+    std::unique_ptr<MapVariables> m_mappedBkgVars (new MapVariables (PathResolverFindCalibFile("MyAnalysis/MyAnalysis/susy_crossSections_13TeV.txt")));
+    bool checkxSecMap = m_mappedVars->finder(mcChannel,m_mappedVars->xSecMap);
+    bool checkfilterMap = m_mappedVars->finder(mcChannel,m_mappedVars->filterEffMap);
+    if (checkxSecMap && checkfilterMap){ //does this mcID exist in signal map? 
+      xsecteff = m_mappedVars->xSecMap[mcChannel];
+      filtereff= m_mappedVars->filterEffMap[mcChannel];
+    }
+    else {
+      checkxSecMap = m_mappedBkgVars->finder(mcChannel, m_mappedBkgVars->xSecMap);
+      checkfilterMap = m_mappedBkgVars->finder(mcChannel, m_mappedBkgVars->filterEffMap);
+      if (checkxSecMap && checkfilterMap){//does mcID exist in Bkg map?
+	xsecteff = m_mappedBkgVars->xSecMap[mcChannel];
+	filtereff= m_mappedBkgVars->filterEffMap[mcChannel];
+      }
+      else {
+	std::cout<<"ERROR: mcID does not exist in Map"<<std::endl;
+	xsecteff = 1.;
+	filtereff = 1.;
+	return EL::StatusCode::FAILURE;
+      }
+    }
+  }
+  else {//Not MC
+    xsecteff=1;
+    filtereff=1;
+    }
+  //lumiScaled gives scaling to 1ifb
+  std::cout<<"Got a cross section of; "<<xsecteff<<std::endl;
+  m_lumiScaled = (1000*xsecteff*filtereff)/m_finalSumOfWeights;
+
+  //Getting the run number of the file to determine MC16a vs MC16c
   int periodNumber = eventInfo_init->runNumber();
   std::cout<<"MC production period  Number; "<<periodNumber<<std::endl;
   bool isMC16a = (periodNumber == 284500);
@@ -500,7 +541,6 @@ EL::StatusCode MyxAODAnalysis :: initialize ()
     TDirectory *out_TDir = (TDirectory*) wk()->getOutputFile ("output");
     TreeService* Tree_Service = new TreeService(Temp, out_TDir);
     m_treeServiceVector.push_back(Tree_Service);
-  
   }	
 
   
@@ -531,6 +571,7 @@ EL::StatusCode MyxAODAnalysis :: initialize ()
   //Write all of the trees
   for (int m = 0; m < (m_treeServiceVector.size()); m++){
     m_treeServiceVector[m]->writeTree();
+    //std::cout<<"Wrote tree; "<<m_treeServiceVector[m]<<std::endl;	
   }
 
   
@@ -543,13 +584,14 @@ EL::StatusCode MyxAODAnalysis :: initialize ()
 
 EL::StatusCode MyxAODAnalysis :: execute ()
 {
+  
   // Here you do everything that needs to be done on every single
   // event, e.g. read input variables, apply cuts, and fill
   // histograms and trees.  This is where most of your actual analysis
   // code will go.
 
   const char* APP_NAME = "MyxAODAnalysis";
-  //std::cout << "In analysis execute" << std::endl;
+  //  std::cout << "In analysis execute" << std::endl;
   
   //if (m_eventCounter >= 10){return EL::StatusCode::SUCCESS;}
   if ( (m_eventCounter % 1000) == 0 ) Info("execute()","Event Number = %i", m_eventCounter);
@@ -560,14 +602,11 @@ EL::StatusCode MyxAODAnalysis :: execute ()
   bool isNominal = true;
 
   isyst = 0;
-
-
-
   
 
   for (const auto& sysInfo : systInfoList){
     const CP::SystematicSet& syst = sysInfo.systset;
-    
+
     int year = 0;    
     int runNumber = 0;
     if (m_fileType != "DAOD_TRUTH1"){
@@ -589,570 +628,519 @@ EL::StatusCode MyxAODAnalysis :: execute ()
       }
       if(sysInfo.affectsKinematics || sysInfo.affectsWeights) isNominal = false;
     }
-    
-    const xAOD::EventInfo* eventInfo =0;
-    if (! m_event->retrieve(eventInfo, "EventInfo").isSuccess() ){
-      Error("execute()","Failed to retrieve event info collection, exiting!!");
-      isyst++;
-      continue;
-    }
 
+	
+	const xAOD::EventInfo* eventInfo =0;
+	if (! m_event->retrieve(eventInfo, "EventInfo").isSuccess() ){
+	  Error("execute()","Failed to retrieve event info collection, exiting!!");
+	  isyst++;
+	  continue;
+	}
   
+	m_lumiBlockNumber = eventInfo->lumiBlock();
+	m_runNumber = eventInfo->runNumber();
+	EventNumber = (eventInfo->eventNumber());
+	
+	xAOD::TStore* store = wk()->xaodStore();
+	
+	
+	double btagWgt = 1;
+	double electronWgt = 1;
+	double muonWgt = 1;
+	double electronTrigWgt;
+	double lepWgt = 1;
+	double trigWgt = 1;
+	double puWgt = 1;
+	double JVTWgt = 1;
+	double weight = 1;
+	double truth_pTW = 0;
+	
+	bool isMC = false;	
+	if(eventInfo->eventType( xAOD::EventInfo::IS_SIMULATION) ){
+	  isMC = true; // lets us do things correctly later
+	}
+	
+	mcChannel = 0;
+	
+	double mcWgt = 1;
+	double truthfilt_MET = 0;
+	double truthfilt_HT = 0;
+	double renormedMcWgt = 1;
+	// Will fix this when the PMGTools cross section stuff is available
+	
+
+	if (isMC){
+	  mcChannel = eventInfo->mcChannelNumber();    
+	  mcWgt = eventInfo->mcEventWeight();
+	  renormedMcWgt = mcWgt;
+	  if (std::abs(renormedMcWgt) >= 100){
+	    renormedMcWgt = 1;
+	  }
+	  if (m_fileType != "DAOD_TRUTH1"){ 
+	    puWgt = objTool->GetPileupWeight();
+	  }
+	}
+	HSumOfPileUp->Fill(1,puWgt);
+	
   
-    m_lumiBlockNumber = eventInfo->lumiBlock();
-    m_runNumber = eventInfo->runNumber();
-    EventNumber = (eventInfo->eventNumber());
-
-    xAOD::TStore* store = wk()->xaodStore();
-
-
-    double btagWgt = 1;
-    double electronWgt = 1;
-    double muonWgt = 1;
-    double electronTrigWgt;
-    double lepWgt = 1;
-    double trigWgt = 1;
-    double puWgt = 1;
-    double JVTWgt = 1;
-
-    // Data MC Check
-    
-    
-    bool isMC = false;
-    double weight = 1;
-    
-    double truth_pTW = 0;
-    
-    
-    if(eventInfo->eventType( xAOD::EventInfo::IS_SIMULATION) ){
-      isMC = true; // lets us do things correctly later
-    }
-
-    
-    mcChannel = 0;
-
-    double mcWgt = 1;
-    double truthfilt_MET = 0;
-    double truthfilt_HT = 0;
-    double renormedMcWgt = 1;
-    double xsecteff = -1;    
-    double filtereff = -1;
-    // Will fix this when the PMGTools cross section stuff is available
-    
-    
-    if (isMC){
-
-
-      mcChannel = eventInfo->mcChannelNumber();
-      std::cout << "Looking for xsec for " << mcChannel << std::endl;
-      //getting metdata from the Map (MapVariables.cxx) using the text file in format as MGPy8EG_A14N23LO_BB_onestepN2hN1.txt
-      std::shared_ptr<MapVariables> m_mappedVars( new MapVariables (PathResolverFindCalibFile("MyAnalysis/MyAnalysis/MGPy8EG_A14N23LO_BB_onestepN2hN1.txt")));
-      std::shared_ptr<MapVariables> m_mappedBkgVars( new MapVariables (PathResolverFindCalibFile("MyAnalysis/MyAnalysis/susy_crossSections_13TeV.txt")));
-      //does this mcID exist in signal map? 
-      bool checkMap = m_mappedVars->find(mcChannel);
-      if (checkMap) 
-	{
-	  xsecteff = m_mappedVars->getCrossSection(mcChannel);
-	  filtereff= m_mappedVars->getFilterEff(mcChannel);
-	}
-      else {//does mcID exist in Bkg map?
-	checkMap = m_mappedBkgVars->find(mcChannel);
-	if (checkMap)                                                                                
-	{
-	  xsecteff = m_mappedBkgVars->getCrossSection(mcChannel);
-	  filtereff= m_mappedBkgVars->getFilterEff(mcChannel);
-	}
-	else {
-	  std::cout<<"ERROR: mcID does not exist in Map"<<std::endl;
-          xsecteff = 1.;
-          filtereff = 1.;
-	  return EL::StatusCode::FAILURE;
-	}
-      }
-      mcWgt = eventInfo->mcEventWeight();
-      renormedMcWgt = mcWgt;
-      if (std::abs(renormedMcWgt) >= 100){
-	renormedMcWgt = 1;
-      }
-      if (m_fileType != "DAOD_TRUTH1"){ 
-	puWgt = objTool->GetPileupWeight();
-      }
-    }
-    else {//Not MC
-      xsecteff=1;
-      filtereff=1;
-    }
-
-    //lumiScaled gives scaling to 1ifb
-    m_lumiScaled = (1000*xsecteff*filtereff)/m_finalSumOfWeights;
-    HSumOfPileUp->Fill(1,puWgt);
-    
-      
-    // This can get all of the PDF info etc if it's required at any point
-    //const xAOD::TruthEventContainer* truthE = 0;
-    //m_event->retrieve(truthE, "TruthEvents" );
-      
-      // Print their properties, using the tools:
-      //for(const auto& evt : *truthE) {
-      //	float x1, x2, pdf1, pdf2, scalePDF, Q;
-      //int id1, id2;
-      //	evt->pdfInfoParameter(id1, xAOD::TruthEvent::PDGID1);
-      //evt->pdfInfoParameter(id2, xAOD::TruthEvent::PDGID2);
-      //evt->pdfInfoParameter(x1, xAOD::TruthEvent::X1);
-      //evt->pdfInfoParameter(x2, xAOD::TruthEvent::X2);
-      //evt->pdfInfoParameter(pdf1, xAOD::TruthEvent::PDFID1);
-      //evt->pdfInfoParameter(pdf2, xAOD::TruthEvent::PDFID2);
-      //evt->pdfInfoParameter(scalePDF, xAOD::TruthEvent::SCALE);
+	// This can get all of the PDF info etc if it's required at any point
+	//const xAOD::TruthEventContainer* truthE = 0;
+	//m_event->retrieve(truthE, "TruthEvents" );
+	
+	// Print their properties, using the tools:
+	//for(const auto& evt : *truthE) {
+	//	float x1, x2, pdf1, pdf2, scalePDF, Q;
+	//int id1, id2;
+	//	evt->pdfInfoParameter(id1, xAOD::TruthEvent::PDGID1);
+	//evt->pdfInfoParameter(id2, xAOD::TruthEvent::PDGID2);
+	//evt->pdfInfoParameter(x1, xAOD::TruthEvent::X1);
+	//evt->pdfInfoParameter(x2, xAOD::TruthEvent::X2);
+	//evt->pdfInfoParameter(pdf1, xAOD::TruthEvent::PDFID1);
+	//evt->pdfInfoParameter(pdf2, xAOD::TruthEvent::PDFID2);
+	//evt->pdfInfoParameter(scalePDF, xAOD::TruthEvent::SCALE);
 	//evt->pdfInfoParameter(Q, xAOD::TruthEvent::Q);
 	//Info( APP_NAME, "PDF INFO: id1/id2: %d/%d x1/x2: %g/%g  pdf1/pdf2: %g/%g  scalePDF: %g",
-      //    id1, id2, x1, x2, pdf1, pdf2, scalePDF
-      //      );
-      //}
-   
-     
-    
+	//    id1, id2, x1, x2, pdf1, pdf2, scalePDF
+	//      );
+	//}
+	
+	
+	
+	
   
-    
-    // initialise the object definitions class
-    IObjectDef* m_objs;
-    
-    //std::cout << "Filled the objects" << std::endl;
-
-    if (m_fileType == "DAOD_TRUTH1"){
-      m_objs  = new TruthObjectDef (m_event, objTool, store, mcChannel, EventNumber, mcWgt, m_lumiScaled, syst.name(), doPhotons,  m_metSignif);
-    }
-    else{
-      m_objs  = new ObjectDef (m_event, objTool, store, mcChannel, EventNumber, mcWgt, m_lumiScaled, syst.name(), doPhotons, m_metSignif); 
-    }
-    
-    
-    if (isyst == 0){
-      noWeightHist->Fill(1,1);
-      sherpaWeightHist->Fill(1,mcWgt);
-      renormedSherpaWeightHist->Fill(1,renormedMcWgt);
-      
-      HSRA_noWgt->Fill(1,1);
-      HSRA_mcWgt->Fill(1,mcWgt); 
-      HSRA_allWgt->Fill(1,mcWgt);//*btagWgt*lepWgt*trigWgt*puWgt);
-      
-      HSRB_noWgt->Fill(1,0.46754945);//Change back to 1
-      HSRB_mcWgt->Fill(1,mcWgt); 
-      HSRB_allWgt->Fill(1,mcWgt*btagWgt*lepWgt*trigWgt*puWgt);
-      
-      HSRC_noWgt->Fill(1,1);
-      HSRC_mcWgt->Fill(1,mcWgt); 
-      HSRC_allWgt->Fill(1,mcWgt*btagWgt*lepWgt*trigWgt*puWgt);
-      
-
-      
-    }
-    
-    // Initialise the class which sorts out the MC checks (if required)
-    std::unique_ptr<MCChecks> checkMC (new MCChecks ());
-    
-    if (!isMC){
-      
-      if(!(m_grl->passRunLB(*eventInfo))){
-	continue;
-      }
-    }
-    
-    // get the truth MET info for OR removals between ttbar/single top samples
-    if (mcChannel == 410000 || mcChannel == 410013 || mcChannel == 410014 || mcChannel == 407012 || mcChannel == 407322 || mcChannel == 407009 || mcChannel == 407010 || mcChannel == 407011 || mcChannel == 407018 || mcChannel == 407019 || mcChannel == 407120 || mcChannel == 407021){
-    truthfilt_MET = 0.001*eventInfo->auxdata< float >("GenFiltMET");
-    truthfilt_HT = 0.001*eventInfo->auxdata< float>("GenFiltHT");
-    HTruthMETFilt->Fill(truthfilt_MET);
-    HTruthHTFilt->Fill(truthfilt_HT);
-    checkMC->ttbar_decay(m_event);
-    }
-    
-      
-    bool isTruthFile = false;
-    if (m_fileType == "DAOD_TRUTH1"){
-      isTruthFile = true;
-    
-    }
-
-    
-    if (isMC){
-      int foundSherpa = m_fileName.find("Sherpa");
-
-      checkMC->HeavyFlavourFilter_countJets(m_event, true); 
-      checkMC->TruthTaus(m_event); 
-     
-      if (isTruthFile && foundSherpa != std::string::npos){
-	checkMC->ZpT(m_event); 
-	checkMC->SherpaZpT(m_event);
-      } 
-      
-      int foundSherpa221 = m_fileName.find("Sherpa_221");
-      if (foundSherpa221 != std::string::npos){
-	checkMC->SherpaUncertaintyWeights(m_event); 
-      }
-      else {
-       checkMC->RetrieveWeights(m_event);
-      }
-    }
-    
-    // Passes Cleaning Selection
-  
-    if (isyst == 0){
-      HSRA_noWgt->Fill(2,1);
-      HSRA_mcWgt->Fill(2,mcWgt); 
-      HSRA_allWgt->Fill(2,mcWgt);//*btagWgt*lepWgt*trigWgt*puWgt);
-      
-      HSRB_noWgt->Fill(2,0.46754945);//Change back to 1 
-      HSRB_mcWgt->Fill(2,mcWgt); 
-      HSRB_allWgt->Fill(2,1);
-      
-      HSRC_noWgt->Fill(2,1);
-      HSRC_mcWgt->Fill(2,mcWgt); 
-      HSRC_allWgt->Fill(2,mcWgt*btagWgt*lepWgt*trigWgt*puWgt);
-      
-    }
-
-
-    bool coreFlag = true;
-    bool sctFlag = true;
-    bool LArTileFlag=true;
-    if (!isMC){
-      if ((eventInfo->errorState(xAOD::EventInfo::SCT) == xAOD::EventInfo::Error )){
-	sctFlag = false;
-	//isyst++;
-	//continue;
-      }
-      if (eventInfo->isEventFlagBitSet(xAOD::EventInfo::Core,18)){
-	coreFlag = false;
-	//isyst++;
-	//continue;
-      }
-      if ((eventInfo->errorState(xAOD::EventInfo::LAr)==xAOD::EventInfo::Error) || (eventInfo->errorState(xAOD::EventInfo::Tile) == xAOD::EventInfo::Error)){
-	LArTileFlag=false;
-	//isyst++;
-	//continue;
-      }
-    }
-
-    // Event Passes LAr, TileError and CoreFlags.     
-    if (isyst == 0){
-      
-      HSRA_noWgt->Fill(3,1);
-      HSRA_mcWgt->Fill(3,mcWgt); 
-      HSRA_allWgt->Fill(3,mcWgt);//*btagWgt*lepWgt*trigWgt*puWgt);
-      
-      HSRB_noWgt->Fill(3,1);
-      HSRB_mcWgt->Fill(3,mcWgt); 
-      HSRB_allWgt->Fill(3,1);
-      
-      HSRC_noWgt->Fill(3,1);
-      HSRC_mcWgt->Fill(3,mcWgt); 
-      HSRC_allWgt->Fill(3,mcWgt*btagWgt*lepWgt*trigWgt*puWgt);
-      
-    }
-    
-    double nBadJet = m_objs->getBadJets()->size();
-    //Not doing cosmic muons for now
-    //double nCosmicMu = m_objs->getCosmicMuons()->size();
-    double nCosmicMu = 0;
-    double nBadMu = m_objs->getBadMuons()->size();
-    
-    // Put the trigger here:
-    
-    bool passedMETTrigger = false;
-    bool passedMuTrigger = false;
-    bool passedElTrigger = false;
-    bool passedGammaTrigger = false;
-    bool passedLepTrigger = false;
-    bool passedMultiJetTrigger = false;
-    bool passedTauTrigger = false;
-  
-    //std::cout << "In analysis execute, before the trigger" << std::endl;
-
-    
-    if (m_fileType == "DAOD_TRUTH1"){
-      passedMETTrigger = true;
-      passedMuTrigger = true;
-      passedElTrigger = true;
-      passedGammaTrigger = true;
-      passedMultiJetTrigger = true;
-      passedTauTrigger = true;
-
-    }
-
-    //Trigger menus by year
-    else{
-      if(year==2015){
-	if (!isData)
-	passedElTrigger=( (objTool->IsTrigPassed("HLT_e24_lhmedium_L1EM20VH || HLT_e60_lhmedium || HLT_e120_lhloose")));
-	if(isData)
-	  {
-	    passedElTrigger=( (objTool->IsTrigPassed("HLT_e24_lhmedium_L1EM20VH || HLT_e60_lhmedium || HLT_e120_lhloose")));
-	  }
-	passedMuTrigger=( (objTool->IsTrigPassed("HLT_mu26_iloose_L1MU15 || HLT_mu50 ")));
-	passedGammaTrigger=(objTool->IsTrigPassed("HLT_g120_loose"));
-	passedMETTrigger = objTool->IsMETTrigPassed("HLT_xe70_mht"); // or we use HLT_xe70  or HLT_xe70_tc_lcw 
-      }
-      else if (year==2016){
-	passedElTrigger=  ((objTool->IsTrigPassed("HLT_e26_lhtight_nod0_ivarloose || HLT_e60_lhmedium_nod0 || HLT_e140_lhloose_nod0")));
-	passedMuTrigger= ((objTool->IsTrigPassed("HLT_mu26_ivarmedium || HLT_mu50 ")));
-	passedGammaTrigger=(objTool->IsTrigPassed("HLT_g140_loose"));
-	if(isData){
-	  passedMETTrigger = objTool->IsMETTrigPassed("HLT_xe110_mht_L1XE50"); 
+	// initialise the object definitions class
+	IObjectDef* m_objs;
+	
+	if (m_fileType == "DAOD_TRUTH1"){
+	  m_objs = new TruthObjectDef (m_event, objTool, store, mcChannel, EventNumber, mcWgt, m_lumiScaled, syst.name(), doPhotons,  m_metSignif);
 	}
 	else{
-	  passedMETTrigger = objTool->IsMETTrigPassed("HLT_xe100_mht_L1XE50"); 
+	  m_objs = new ObjectDef (m_event, objTool, store, mcChannel, EventNumber, mcWgt, m_lumiScaled, syst.name(), doPhotons, m_metSignif); 
 	}
-      }
-    }
 
-    //NEW TRIGGER IMPLEMENTATION
-    std::vector<std::string> triggers = {"2e12_lhloose_L12EM10VH","HLT_2e15_lhvloose_nod0_L12EM13VH","HLT_2e17_lhvloose_nod0","HLT_e17_lhloose_mu14","HLT_e17_lhloose_nod0_mu14","HLT_mu22_mu8noL1","HLT_mu20_mu8noL1","HLT_mu18_mu8noL1","HLT_e24_lhmedium_L1EM20VH","HLT_e24_lhmedium_nod0_L1EM20VH","HLT_e24_lhtight_nod0_ivarloose","HLT_e26_lhtight_nod0_ivarloose","HLT_e60_lhmedium","HLT_e60_lhmedium_nod0","HLT_e120_lhloose","HLT_e140_lhloose_nod0","HLT_mu20_iloose_L1MU15","HLT_mu24_ivarloose","HLT_mu24_ivarloose_L1MU15","HLT_mu24_ivarmedium","HLT_mu26_ivarmedium","HLT_mu50","HLT_xe70_mht","HLT_xe70_tc_lcw","HLT_xe80_tc_lcw_L1XE50","HLT_xe90_mht_L1XE50","HLT_xe100_mht_L1XE50","HLT_xe110_mht_L1XE50"}; 
-    //std::vector< std::pair<std::string, int> > passedTriggers;
-    std::vector<int> passedTriggers;
-    for (auto x: triggers) {
-     int trigDecision = objTool->IsTrigPassed(x);
-     passedTriggers.push_back(trigDecision);
-    }
-    
-    if (passedElTrigger == 1 || passedMuTrigger == 1) passedLepTrigger = true;
-
-    if (isyst == 0){
-      if (passedMETTrigger){
-	HSRA_noWgt->Fill(4,1);
-	HSRA_mcWgt->Fill(4,mcWgt); 
-	HSRA_allWgt->Fill(4,mcWgt);//*btagWgt*lepWgt*trigWgt*puWgt);
+	if (isyst == 0){
+	  noWeightHist->Fill(1,1);
+	  sherpaWeightHist->Fill(1,mcWgt);
+	  renormedSherpaWeightHist->Fill(1,renormedMcWgt);
+	  
+	  HSRA_noWgt->Fill(1,1);
+	  HSRA_mcWgt->Fill(1,mcWgt); 
+	  HSRA_allWgt->Fill(1,mcWgt);//*btagWgt*lepWgt*trigWgt*puWgt);
+	  
+	  HSRB_noWgt->Fill(1,0.46754945);//Change back to 1
+	  HSRB_mcWgt->Fill(1,mcWgt); 
+	  HSRB_allWgt->Fill(1,mcWgt*btagWgt*lepWgt*trigWgt*puWgt);
+	  
+	  HSRC_noWgt->Fill(1,1);
+	  HSRC_mcWgt->Fill(1,mcWgt); 
+	  HSRC_allWgt->Fill(1,mcWgt*btagWgt*lepWgt*trigWgt*puWgt);
+	}
 	
-	HSRB_noWgt->Fill(4,0.46754945);//Change back to 1 
-	HSRB_mcWgt->Fill(4,mcWgt); 
-	HSRB_allWgt->Fill(4,1);
+
+	  
+	  
+
+	// Initialise the class which sorts out the MC checks (if required)
+	std::unique_ptr<MCChecks> checkMC (new MCChecks ());
+
+	if (!isMC){
+	  if(!(m_grl->passRunLB(*eventInfo))){
+	    std::cout<<"Failed on good run lists"<<std::endl;
+	    if(!m_objs->removeFatJetTools(syst.name()))std::cout<<"Failed to remove FatJet tools"<<std::endl;
+	    delete m_objs;
+	    checkMC.reset();
+	    continue;
+	  }
+	}
+  
+	// get the truth MET info for OR removals between ttbar/single top samples
+	if (mcChannel == 410000 || mcChannel == 410013 || mcChannel == 410014 || mcChannel == 407012 || mcChannel == 407322 || mcChannel == 407009 || mcChannel == 407010 || mcChannel == 407011 || mcChannel == 407018 || mcChannel == 407019 || mcChannel == 407120 || mcChannel == 407021){
+	  truthfilt_MET = 0.001*eventInfo->auxdata< float >("GenFiltMET");
+	  truthfilt_HT = 0.001*eventInfo->auxdata< float>("GenFiltHT");
+	  HTruthMETFilt->Fill(truthfilt_MET);
+	  HTruthHTFilt->Fill(truthfilt_HT);
+	  checkMC->ttbar_decay(m_event);
+	}
 	
-	HSRC_noWgt->Fill(4,1);
- 	HSRC_mcWgt->Fill(4,mcWgt); 
-	HSRC_allWgt->Fill(4,mcWgt*btagWgt*lepWgt*trigWgt*puWgt);
-      }
+	
+	bool isTruthFile = false;
+	if (m_fileType == "DAOD_TRUTH1"){
+	  isTruthFile = true;
+	}
+	
+	
+	if (isMC){
+	  int foundSherpa = m_fileName.find("Sherpa");
+	  
+	  checkMC->HeavyFlavourFilter_countJets(m_event, true); 
+	  checkMC->TruthTaus(m_event); 
+	  
+	  if (isTruthFile && foundSherpa != std::string::npos){
+	    checkMC->ZpT(m_event); 
+	    checkMC->SherpaZpT(m_event);
+	  } 
+	  
+	  int foundSherpa221 = m_fileName.find("Sherpa_221");
+	  if (foundSherpa221 != std::string::npos){
+	    checkMC->SherpaUncertaintyWeights(m_event); 
+	  }
+	  else {
+	    checkMC->RetrieveWeights(m_event);
+	  }
+	}
+	
+	// Passes Cleaning Selection
+	if (isyst == 0){
+	  HSRA_noWgt->Fill(2,1);
+	  HSRA_mcWgt->Fill(2,mcWgt); 
+	  HSRA_allWgt->Fill(2,mcWgt);//*btagWgt*lepWgt*trigWgt*puWgt);
+	  
+	  HSRB_noWgt->Fill(2,0.46754945);//Change back to 1 
+	  HSRB_mcWgt->Fill(2,mcWgt); 
+	  HSRB_allWgt->Fill(2,1);
+	  
+	  HSRC_noWgt->Fill(2,1);
+	  HSRC_mcWgt->Fill(2,mcWgt); 
+	  HSRC_allWgt->Fill(2,mcWgt*btagWgt*lepWgt*trigWgt*puWgt);
+	  
+	}
+	
+	bool coreFlag = true;
+	bool sctFlag = true;
+	bool LArTileFlag=true;
+	if (!isMC){
+	  if ((eventInfo->errorState(xAOD::EventInfo::SCT) == xAOD::EventInfo::Error )){
+	    sctFlag = false;
+	    isyst++;
+	    std::cout<<"Failed on SCT"<<std::endl;
+	    if(!m_objs->removeFatJetTools(syst.name()))std::cout<<"Failed to remove FatJet tools"<<std::endl;
+	    delete m_objs;
+	    checkMC.reset();
+	    continue;
+	  }
+	  if (eventInfo->isEventFlagBitSet(xAOD::EventInfo::Core,18)){
+	    coreFlag = false;
+	    isyst++;
+	    std::cout<<"Failed on core"<<std::endl;
+	    if(!m_objs->removeFatJetTools(syst.name()))std::cout<<"Failed to remove FatJet tools"<<std::endl;
+	    delete m_objs;
+	    checkMC.reset();
+	    continue;
+	  }
+	  if ((eventInfo->errorState(xAOD::EventInfo::LAr)==xAOD::EventInfo::Error) || (eventInfo->errorState(xAOD::EventInfo::Tile) == xAOD::EventInfo::Error)){
+	    LArTileFlag=false;
+	    isyst++;
+	    std::cout<<"Failed on LAR tiles"<<std::endl;
+	    if(!m_objs->removeFatJetTools(syst.name()))std::cout<<"Failed to remove FatJet tools"<<std::endl;
+	    delete m_objs;
+	    checkMC.reset();
+	    continue;
+	  }
+	}
 
-    }
-    bool passedPrimVertex=true;
-    if (m_objs->getPrimVertex() < 1){
-      passedPrimVertex=false;
-      //isyst++;
-      //continue;
-      //return EL::StatusCode::SUCCESS;
-    }
+	
+
+	// Event Passes LAr, TileError and CoreFlags.     
+	if (isyst == 0){
+	  
+	  HSRA_noWgt->Fill(3,1);
+	  HSRA_mcWgt->Fill(3,mcWgt); 
+	  HSRA_allWgt->Fill(3,mcWgt);//*btagWgt*lepWgt*trigWgt*puWgt);
+	  
+	  HSRB_noWgt->Fill(3,1);
+	  HSRB_mcWgt->Fill(3,mcWgt); 
+	  HSRB_allWgt->Fill(3,1);
+	  
+	  HSRC_noWgt->Fill(3,1);
+	  HSRC_mcWgt->Fill(3,mcWgt); 
+	  HSRC_allWgt->Fill(3,mcWgt*btagWgt*lepWgt*trigWgt*puWgt);
+	  
+	}
+
+	double nBadJet = m_objs->getBadJets()->size();
+
+	//Not doing cosmic muons for now
+	//double nCosmicMu = m_objs->getCosmicMuons()->size();
+	double nCosmicMu = 0;
+	double nBadMu = m_objs->getBadMuons()->size();
+	
+	// Put the trigger here:
+	
+	bool passedMETTrigger = false;
+	bool passedMuTrigger = false;
+	bool passedElTrigger = false;
+	bool passedGammaTrigger = false;
+	bool passedLepTrigger = false;
+	bool passedMultiJetTrigger = false;
+	bool passedTauTrigger = false;
+	
+		
+
+	if (m_fileType == "DAOD_TRUTH1"){
+	  passedMETTrigger = true;
+	  passedMuTrigger = true;
+	  passedElTrigger = true;
+	  passedGammaTrigger = true;
+	  passedMultiJetTrigger = true;
+	  passedTauTrigger = true;
+	  
+	}
+
+	//Trigger menus by year
+	else{
+	  if(year==2015){
+	    if (!isData)
+	      passedElTrigger=( (objTool->IsTrigPassed("HLT_e24_lhmedium_L1EM20VH || HLT_e60_lhmedium || HLT_e120_lhloose")));
+	    if(isData)
+	      {
+		passedElTrigger=( (objTool->IsTrigPassed("HLT_e24_lhmedium_L1EM20VH || HLT_e60_lhmedium || HLT_e120_lhloose")));
+	      }
+	    passedMuTrigger=( (objTool->IsTrigPassed("HLT_mu26_iloose_L1MU15 || HLT_mu50 ")));
+	    passedGammaTrigger=(objTool->IsTrigPassed("HLT_g120_loose"));
+	    passedMETTrigger = objTool->IsMETTrigPassed("HLT_xe70_mht"); // or we use HLT_xe70  or HLT_xe70_tc_lcw 
+	  }
+	  else if (year==2016){
+	    passedElTrigger=  ((objTool->IsTrigPassed("HLT_e26_lhtight_nod0_ivarloose || HLT_e60_lhmedium_nod0 || HLT_e140_lhloose_nod0")));
+	    passedMuTrigger= ((objTool->IsTrigPassed("HLT_mu26_ivarmedium || HLT_mu50 ")));
+	    passedGammaTrigger=(objTool->IsTrigPassed("HLT_g140_loose"));
+	    if(isData){
+	      passedMETTrigger = objTool->IsMETTrigPassed("HLT_xe110_mht_L1XE50"); 
+	    }
+	    else{
+	      passedMETTrigger = objTool->IsMETTrigPassed("HLT_xe100_mht_L1XE50"); 
+	    }
+	  }
+	}
+	//	std::cout<<"MemCheck 4;"<<std::endl;      
+	//	m_objs->CheckMem();
+	//NEW TRIGGER IMPLEMENTATION
+	std::vector<std::string> triggers = {"2e12_lhloose_L12EM10VH","HLT_2e15_lhvloose_nod0_L12EM13VH","HLT_2e17_lhvloose_nod0","HLT_e17_lhloose_mu14","HLT_e17_lhloose_nod0_mu14","HLT_mu22_mu8noL1","HLT_mu20_mu8noL1","HLT_mu18_mu8noL1","HLT_e24_lhmedium_L1EM20VH","HLT_e24_lhmedium_nod0_L1EM20VH","HLT_e24_lhtight_nod0_ivarloose","HLT_e26_lhtight_nod0_ivarloose","HLT_e60_lhmedium","HLT_e60_lhmedium_nod0","HLT_e120_lhloose","HLT_e140_lhloose_nod0","HLT_mu20_iloose_L1MU15","HLT_mu24_ivarloose","HLT_mu24_ivarloose_L1MU15","HLT_mu24_ivarmedium","HLT_mu26_ivarmedium","HLT_mu50","HLT_xe70_mht","HLT_xe70_tc_lcw","HLT_xe80_tc_lcw_L1XE50","HLT_xe90_mht_L1XE50","HLT_xe100_mht_L1XE50","HLT_xe110_mht_L1XE50"}; 
+	std::vector<int> passedTriggers;
+	for (auto x: triggers) {
+	  int trigDecision = objTool->IsTrigPassed(x);
+	  passedTriggers.push_back(trigDecision);
+  	}
+	
+
+	if (passedElTrigger == 1 || passedMuTrigger == 1) passedLepTrigger = true;
+	
+	if (isyst == 0){
+	  if (passedMETTrigger){
+	    HSRA_noWgt->Fill(4,1);
+	    HSRA_mcWgt->Fill(4,mcWgt); 
+	    HSRA_allWgt->Fill(4,mcWgt);//*btagWgt*lepWgt*trigWgt*puWgt);
+	    
+	    HSRB_noWgt->Fill(4,0.46754945);//Change back to 1 
+	    HSRB_mcWgt->Fill(4,mcWgt); 
+	    HSRB_allWgt->Fill(4,1);
+	    
+	    HSRC_noWgt->Fill(4,1);
+	    HSRC_mcWgt->Fill(4,mcWgt); 
+	    HSRC_allWgt->Fill(4,mcWgt*btagWgt*lepWgt*trigWgt*puWgt);
+	  }
+	  
+	}
+	bool passedPrimVertex=true;
+	if (m_objs->getPrimVertex() < 1){
+	  passedPrimVertex=false;
+	  isyst++;
+	  std::cout<<"Failed on single primary vertex"<<std::endl;
+	  if(!m_objs->removeFatJetTools(syst.name()))std::cout<<"Failed to remove FatJet tools"<<std::endl;
+	  delete m_objs;
+	  checkMC.reset();
+	  continue;
+	  //return EL::StatusCode::SUCCESS;
+	}
   
-    if (isyst == 0){
-      if (passedMETTrigger){
-	HSRA_noWgt->Fill(5,1);
-	HSRA_mcWgt->Fill(5,mcWgt); 
-	HSRA_allWgt->Fill(5,mcWgt);//*btagWgt*lepWgt*trigWgt*puWgt);
-
-	HSRB_noWgt->Fill(5,0.46754945);//Change back to 1 
-	HSRB_mcWgt->Fill(5,mcWgt); 
-	HSRB_allWgt->Fill(5,1);
-
-	HSRC_noWgt->Fill(5,1);
-	HSRC_mcWgt->Fill(5,mcWgt); 
-	HSRC_allWgt->Fill(5,mcWgt*btagWgt*lepWgt*trigWgt*puWgt);
-
-      }
-    }
-
-    bool passedJetClean=true;
-    if (nBadJet > 0){
-      passedJetClean=false;
-      //isyst++;
-      //continue;
-      //return EL::StatusCode::SUCCESS;
-    }
-    
-    if (isyst == 0){
-      
-      if (passedMETTrigger){
-	HSRA_noWgt->Fill(6, 1);
-	HSRA_mcWgt->Fill(6,mcWgt); 
-	HSRA_allWgt->Fill(6,mcWgt);//*btagWgt*lepWgt*trigWgt*puWgt);
-
-	HSRB_noWgt->Fill(6,0.46754945);//Change back to 1 
-	HSRB_mcWgt->Fill(6,mcWgt); 
-	HSRB_allWgt->Fill(6,1);
-
-	HSRC_noWgt->Fill(6,1);
-	HSRC_mcWgt->Fill(6,mcWgt); 
-	HSRC_allWgt->Fill(6,mcWgt*btagWgt*lepWgt*trigWgt*puWgt);
-
-      }
-    }
-    
-    
-    bool passedCosmicMu=true;
-    if (nCosmicMu > 0){
-      passedCosmicMu=false;
-      //isyst++;
-      //continue;
-      //return EL::StatusCode::SUCCESS;
-    }
-    
-    if (isyst == 0){
-      
-      if (passedMETTrigger){
-	HSRA_noWgt->Fill(7, 1);
-	HSRA_mcWgt->Fill(7,mcWgt); 
-	HSRA_allWgt->Fill(7,mcWgt);//*btagWgt*lepWgt*trigWgt*puWgt);
-
-	HSRB_noWgt->Fill(7,0.46754945);//Change back to 1 
-	HSRB_mcWgt->Fill(7,mcWgt); 
-	HSRB_allWgt->Fill(7,1);
-
-	HSRC_noWgt->Fill(7,1);
-	HSRC_mcWgt->Fill(7,mcWgt); 
-	HSRC_allWgt->Fill(7,mcWgt*btagWgt*lepWgt*trigWgt*puWgt);
-
-      }
-    }
-
-    bool passedMuonClean=true;
-    if (nBadMu > 0){
-      passedMuonClean=false;
-      //isyst++;
-      //continue;
-      //return EL::StatusCode::SUCCESS;
-    }
-    
-
-    if (isyst == 0){
-      if (passedMETTrigger){
-	HSRA_noWgt->Fill(8, 1);
-	HSRA_mcWgt->Fill(8,mcWgt); 
-	HSRA_allWgt->Fill(8,mcWgt*btagWgt*lepWgt*trigWgt*puWgt);
-
-	HSRB_noWgt->Fill(8,0.46754945);//Change back to 1 
-	HSRB_mcWgt->Fill(8,mcWgt); 
-	HSRB_allWgt->Fill(8,1);
-
-	HSRC_noWgt->Fill(8,1);
-	HSRC_mcWgt->Fill(8,mcWgt); 
-	HSRC_allWgt->Fill(8,mcWgt*btagWgt*lepWgt*trigWgt*puWgt);
-
-      }
-    }
-    
-    //All cleaning cuts before trigger
-    bool passedCleaningCuts=false; 
-    if(coreFlag && sctFlag && LArTileFlag && passedPrimVertex && passedJetClean && passedCosmicMu && passedMuonClean){
-      passedCleaningCuts=true; 
-    }
-
-
-  // call the cutflow class now
-    std::vector<TH1F*> SRAHists;
-    SRAHists.push_back(HSRA_noWgt);
-    SRAHists.push_back(HSRA_mcWgt);
-    SRAHists.push_back(HSRA_allWgt);
-
-
-    std::vector<TH1F*> SRBHists;
-    SRBHists.push_back(HSRB_noWgt);
-    SRBHists.push_back(HSRB_mcWgt);
-    SRBHists.push_back(HSRB_allWgt);
-
-    
-    std::vector<TH1F*> SRCHists;
-    SRCHists.push_back(HSRC_noWgt);
-    SRCHists.push_back(HSRC_mcWgt);
-    SRCHists.push_back(HSRC_allWgt);
-    
-
-    std::shared_ptr<CalculateVariables> m_varCalc(new CalculateVariables ( m_objs, isTruthFile, doPhotons));
-    
-    std::unique_ptr<PreliminarySel> m_regions(new PreliminarySel (*m_varCalc));
-
-
-
-    double SFmctbbll = 1;
-    
-    if (!isData && m_fileType != "DAOD_TRUTH1" ) {
-      PUSumOfWeights = objTool->GetSumOfWeights(mcChannel); 
-      lepWgt = m_varCalc->leptonSF;
-      
-    }
-    else{
-      PUSumOfWeights = 0;
-      lepWgt = 1;
-    }
-    
-   
-
-    // Temp for debugging
-    if (isyst == 0){
-      std::unique_ptr<Cutflows> m_cutflows (new Cutflows (*m_varCalc, *m_regions, SRAHists, SRBHists, SRCHists, btagWgt, lepWgt, trigWgt, puWgt, mcWgt, EventNumber, passedMETTrigger, passedLepTrigger, passedGammaTrigger, truthfilt_MET));
-    }
-    
-    if ( m_fileType != "DAOD_TRUTH1"){
-      if (m_regions->interestingRegion || RunningLocally){
-	(m_treeServiceVector[isyst])->fillTree(m_objs, *m_regions, *m_varCalc, *checkMC,m_finalSumOfWeights, m_initialSumOfWeights, puWgt, SFmctbbll, passedMETTrigger, passedMuTrigger, passedElTrigger, passedGammaTrigger, passedMultiJetTrigger, passedTriggers, PUSumOfWeights, truthfilt_MET, truthfilt_HT, coreFlag, sctFlag, LArTileFlag, passedPrimVertex, passedJetClean, passedCosmicMu, passedMuonClean, m_runNumber, renormedMcWgt);
-       }
-    }
-
-    // not running on reco. fill everything for TRUTH
-    else{
-      (m_treeServiceVector[isyst])->fillTree(m_objs, *m_regions, *m_varCalc, *checkMC,m_finalSumOfWeights, m_initialSumOfWeights, puWgt, SFmctbbll, passedMETTrigger, passedMuTrigger, passedElTrigger, passedGammaTrigger, passedMultiJetTrigger, passedTriggers, PUSumOfWeights, truthfilt_MET, truthfilt_HT , coreFlag, sctFlag, LArTileFlag, passedPrimVertex, passedJetClean, passedCosmicMu, passedMuonClean, m_runNumber, renormedMcWgt);
-   }
-      
-    isyst++;
+	if (isyst == 0){
+	  if (passedMETTrigger){
+	    HSRA_noWgt->Fill(5,1);
+	    HSRA_mcWgt->Fill(5,mcWgt); 
+	    HSRA_allWgt->Fill(5,mcWgt);//*btagWgt*lepWgt*trigWgt*puWgt);
+	    
+	    HSRB_noWgt->Fill(5,0.46754945);//Change back to 1 
+	    HSRB_mcWgt->Fill(5,mcWgt); 
+	    HSRB_allWgt->Fill(5,1);
+	    
+	    HSRC_noWgt->Fill(5,1);
+	    HSRC_mcWgt->Fill(5,mcWgt); 
+	    HSRC_allWgt->Fill(5,mcWgt*btagWgt*lepWgt*trigWgt*puWgt);
+	    
+	  }
+	}
+	bool passedJetClean=true;
+	if (nBadJet > 0){
+	  passedJetClean=false;
+	  isyst++;
+	  std::cout<<"Failed on Jet cleaning"<<std::endl;
+	  if(!m_objs->removeFatJetTools(syst.name()))std::cout<<"Failed to remove FatJet tools"<<std::endl;
+	  delete m_objs;
+	  continue;
+	}
+  	
+	if (isyst == 0){
+	  
+	  if (passedMETTrigger){
+	    HSRA_noWgt->Fill(6, 1);
+	    HSRA_mcWgt->Fill(6,mcWgt); 
+	    HSRA_allWgt->Fill(6,mcWgt);//*btagWgt*lepWgt*trigWgt*puWgt);
+	    
+	    HSRB_noWgt->Fill(6,0.46754945);//Change back to 1 
+	    HSRB_mcWgt->Fill(6,mcWgt); 
+	    HSRB_allWgt->Fill(6,1);
+	    
+	    HSRC_noWgt->Fill(6,1);
+	    HSRC_mcWgt->Fill(6,mcWgt); 
+	    HSRC_allWgt->Fill(6,mcWgt*btagWgt*lepWgt*trigWgt*puWgt);
+	    
+	  }
+	}
+	
+	bool passedCosmicMu=true;
+	if (nCosmicMu > 0){
+	  passedCosmicMu=false;
+	  isyst++;
+	  std::cout<<"Failed on cosmic muons"<<std::endl;
+	  if(!m_objs->removeFatJetTools(syst.name()))std::cout<<"Failed to remove FatJet tools"<<std::endl;
+	  delete m_objs;
+	  checkMC.reset();
+	  continue;
+	}
   
-    //Removing the FatJetTool that we have initialised for this event
-    std::string FatJets8ToolName = "MyFatJetsKt8"+syst.name();
-    std::string FatJets12ToolName = "MyFatJetsKt12"+syst.name();
-    std::string FatJetsTool8 ="m_jetRecTool_kt8_"+syst.name(); 
-    std::string FatJetsTool12 ="m_jetRecTool_kt12_"+syst.name(); 
+	if (isyst == 0){
+	  
+	  if (passedMETTrigger){
+	    HSRA_noWgt->Fill(7, 1);
+	    HSRA_mcWgt->Fill(7,mcWgt); 
+	    HSRA_allWgt->Fill(7,mcWgt);//*btagWgt*lepWgt*trigWgt*puWgt);
+	    
+	    HSRB_noWgt->Fill(7,0.46754945);//Change back to 1 
+	    HSRB_mcWgt->Fill(7,mcWgt); 
+	    HSRB_allWgt->Fill(7,1);
+	    
+	    HSRC_noWgt->Fill(7,1);
+	    HSRC_mcWgt->Fill(7,mcWgt); 
+	    HSRC_allWgt->Fill(7,mcWgt*btagWgt*lepWgt*trigWgt*puWgt);
+	    
+	  }
+	}
+	bool passedMuonClean=true;
+	if (nBadMu > 0){
+	  passedMuonClean=false;
+	  isyst++;
+	  std::cout<<"Failed on bad muons"<<std::endl;
+	  if(!m_objs->removeFatJetTools(syst.name()))std::cout<<"Failed to remove FatJet tools"<<std::endl;
+	  delete m_objs;
+	  checkMC.reset();
+	  continue;
+	}
+	
+	
+	if (isyst == 0){
+	  if (passedMETTrigger){
+	    HSRA_noWgt->Fill(8, 1);
+	    HSRA_mcWgt->Fill(8,mcWgt); 
+	    HSRA_allWgt->Fill(8,mcWgt*btagWgt*lepWgt*trigWgt*puWgt);
+	    
+	    HSRB_noWgt->Fill(8,0.46754945);//Change back to 1 
+	    HSRB_mcWgt->Fill(8,mcWgt); 
+	    HSRB_allWgt->Fill(8,1);
+	    
+	    HSRC_noWgt->Fill(8,1);
+	    HSRC_mcWgt->Fill(8,mcWgt); 
+	    HSRC_allWgt->Fill(8,mcWgt*btagWgt*lepWgt*trigWgt*puWgt);
+	    
+	  }
+	}
+	
+	//All cleaning cuts before trigger
+	bool passedCleaningCuts=false; 
+	if(coreFlag && sctFlag && LArTileFlag && passedPrimVertex && passedJetClean && passedCosmicMu && passedMuonClean){
+	  passedCleaningCuts=true; 
+	}
+	
+	
+	// call the cutflow class now
+	std::vector<TH1F*> SRAHists;
+	SRAHists.push_back(HSRA_noWgt);
+	SRAHists.push_back(HSRA_mcWgt);
+	SRAHists.push_back(HSRA_allWgt);
+	
+	
+	std::vector<TH1F*> SRBHists;
+	SRBHists.push_back(HSRB_noWgt);
+	SRBHists.push_back(HSRB_mcWgt);
+	SRBHists.push_back(HSRB_allWgt);
+	
+	
+	std::vector<TH1F*> SRCHists;
+	SRCHists.push_back(HSRC_noWgt);
+	SRCHists.push_back(HSRC_mcWgt);
+	SRCHists.push_back(HSRC_allWgt);
 
 
-    std::string plcGet8 = "mylcget"+FatJets8ToolName;
-    std::string plcGet12 = "mylcget"+FatJets12ToolName;
-    std::string pbuild8 = "myjetbuild"+FatJets8ToolName;
-    std::string pbuild12 = "myjetbuild"+FatJets12ToolName;
-    std::string pfind8 = "myjetfind"+FatJets8ToolName;
-    std::string pfind12 = "myjetfind"+FatJets12ToolName;
-    std::string pjrfind8 = "myjrfind"+FatJets8ToolName;
-    std::string pjrfind12 = "myjrfind"+FatJets12ToolName;
-    std::string prunner8 = "jetrunner"+FatJets8ToolName;
-    std::string prunner12 = "jetrunner"+FatJets12ToolName;
-    std::string pjrfind_retriever8 = pjrfind8+"_retriever";
-    std::string pjrfind_retriever12 = pjrfind12+"_retriever";
-    
+	//	std::cout<<"MemCheck 5;"<<std::endl;      
+	//	m_objs->CheckMem();
+	
+	std::unique_ptr<CalculateVariables> m_varCalc(new CalculateVariables ( m_objs, isTruthFile, doPhotons));
+	std::unique_ptr<PreliminarySel> m_regions(new PreliminarySel (*m_varCalc));
+	
+	//	std::cout<<"MemCheck 6;"<<std::endl;      
+	//	m_objs->CheckMem();
+	
+	
+	double SFmctbbll = 1;
+	
+	if (!isData && m_fileType != "DAOD_TRUTH1" ) {
+	  PUSumOfWeights = objTool->GetSumOfWeights(mcChannel); 
+	  lepWgt = m_varCalc->leptonSF;
+	  
+	}
+	else{
+	  PUSumOfWeights = 0;
+	  lepWgt = 1;
+	}
 
+	//trimming for >1 lepton && >2 jets && cleaning cuts
+	if((m_objs->getGoodJets()->size()<2 || (m_objs->getGoodElectrons()->size()<1 && m_objs->getGoodMuons()->size()<1))){
+	  isyst++;
+	  //std::cout<<"Failed at trimming"<<std::endl;
+	  if(!m_objs->removeFatJetTools(syst.name()))std::cout<<"Failed to remove FatJet tools"<<std::endl;
+	  delete m_objs;
+	  checkMC.reset();
+	  m_varCalc.reset();
+	  m_regions.reset();
+	  continue;
+	}
+	
+		if (isyst == 0){
+	  std::unique_ptr<Cutflows> m_cutflows (new Cutflows (*m_varCalc, *m_regions, SRAHists, SRBHists, SRCHists, btagWgt, lepWgt, trigWgt, puWgt, mcWgt, EventNumber, passedMETTrigger, passedLepTrigger, passedGammaTrigger, truthfilt_MET));
+	}
 
-    asg::ToolStore::remove(plcGet8);
-    asg::ToolStore::remove(plcGet12);
-    //std::cout<<"Removed the tool plcget "<<std::endl;
-    asg::ToolStore::remove(pbuild8);
-    asg::ToolStore::remove(pbuild12);
-    //std::cout<<"Removed the tool pbuild "<<std::endl;
-    asg::ToolStore::remove(pfind8);
-    asg::ToolStore::remove(pfind12);
-    //std::cout<<"Removed the tool pfind "<<std::endl;
-    asg::ToolStore::remove(pjrfind8);
-    asg::ToolStore::remove(pjrfind12);
-    //std::cout<<"Removed the tool pjrfind "<<std::endl;
-    asg::ToolStore::remove(pjrfind_retriever8);
-    asg::ToolStore::remove(pjrfind_retriever12);
-    //std::cout<<"Removed the tool pjrfind "<<std::endl;
-    asg::ToolStore::remove(prunner8);
-    asg::ToolStore::remove(prunner12);
-    //std::cout<<"Removed the tool prunner "<<std::endl;
-    asg::ToolStore::remove(FatJetsTool8);
-    asg::ToolStore::remove(FatJetsTool12);
-    //std::cout<<"Removed the fatJets tools "<<std::endl;
-    
+	
+	if ( m_fileType != "DAOD_TRUTH1"){
+	  (m_treeServiceVector[isyst])->fillTree(m_objs, *m_regions, *m_varCalc, *checkMC,m_finalSumOfWeights, m_initialSumOfWeights, puWgt, SFmctbbll, passedMETTrigger, passedMuTrigger, passedElTrigger, passedGammaTrigger, passedMultiJetTrigger, passedTriggers, PUSumOfWeights, truthfilt_MET, truthfilt_HT, coreFlag, sctFlag, LArTileFlag, passedPrimVertex, passedJetClean, passedCosmicMu, passedMuonClean, m_runNumber, renormedMcWgt, year );
+	  }
+	// not running on reco. fill everything for TRUTH
+	else{
+	  (m_treeServiceVector[isyst])->fillTree(m_objs, *m_regions, *m_varCalc, *checkMC,m_finalSumOfWeights, m_initialSumOfWeights, puWgt, SFmctbbll, passedMETTrigger, passedMuTrigger, passedElTrigger, passedGammaTrigger, passedMultiJetTrigger, passedTriggers, PUSumOfWeights, truthfilt_MET, truthfilt_HT , coreFlag, sctFlag, LArTileFlag, passedPrimVertex, passedJetClean, passedCosmicMu, passedMuonClean, m_runNumber, renormedMcWgt, year);
+	}
+	
+	isyst++;
+	
 
+	if (!m_objs->removeFatJetTools(syst.name())){std::cout<<"Failed to remove FatJet tools"<<std::endl;}
+	delete m_objs;
+	checkMC.reset();
+	m_varCalc.reset();
+	m_regions.reset();
   }
-  
 
 
 
   //std::cout << "Tree service vector size:" << m_treeServiceVector.size() << std::endl;  
 
-  //  std::cout<<"Finished Event loop succesfully"<<std::endl;
+  //std::cout<<"Finished Event loop succesfully"<<std::endl;
   
   return EL::StatusCode::SUCCESS;
 }

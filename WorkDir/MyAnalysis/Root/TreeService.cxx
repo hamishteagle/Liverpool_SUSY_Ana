@@ -22,7 +22,7 @@ TreeService::TreeService(TTree *outputTree, TDirectory *OutDir){
   tree->Branch("lumiWgt", &lumiScaled);
   tree->Branch("sampleSFmCTbbll",&sampleSFmCTbbll);
   tree->Branch("pileUpSumOfWeights",&pileUpSumOfWeights);
-
+  tree->Branch("year",&year);
 
 
   //Initial event cleaning
@@ -459,7 +459,7 @@ TreeService::TreeService(TTree *outputTree, TDirectory *OutDir){
 }
 
 
-void TreeService::fillTree(IObjectDef *objects ,PreliminarySel &region, CalculateVariables &variables, MCChecks MCTruthInfo, double mFinalWeight, double mInitialWeight, double puWeight, double SFmCTbbll, bool TrigMET, bool TrigMu, bool TrigEl, bool TrigGamma, bool Trig6j, std::vector<int> triggers, double puSumWeights, double TRUTHMET, double TRUTHHT, bool CoreFlags, bool SCTFlag,bool LArTileFlags, bool passedPrimVertexes, bool passedJetCleans, bool passedCosmicMus, bool passedMuonCleans, double RNo,  double RenormedMCWgt){
+void TreeService::fillTree(IObjectDef *objects ,PreliminarySel &region, CalculateVariables &variables, MCChecks MCTruthInfo, double mFinalWeight, double mInitialWeight, double puWeight, double SFmCTbbll, bool TrigMET, bool TrigMu, bool TrigEl, bool TrigGamma, bool Trig6j, std::vector<int> triggers, double puSumWeights, double TRUTHMET, double TRUTHHT, bool CoreFlags, bool SCTFlag,bool LArTileFlags, bool passedPrimVertexes, bool passedJetCleans, bool passedCosmicMus, bool passedMuonCleans, double RNo,  double RenormedMCWgt, int MCyear){
 
   //  std::cout << "Filling the Tree" << std::endl;
   CutsRegion = region.region;
@@ -472,7 +472,7 @@ void TreeService::fillTree(IObjectDef *objects ,PreliminarySel &region, Calculat
   passedCosmicMu=passedCosmicMus;
   passedMuonClean=passedMuonCleans;
   triggerDecisions = triggers;
-  
+  year = MCyear;
   m_finalWeightSum = mFinalWeight;
   m_intialWeightSum = mInitialWeight;
 

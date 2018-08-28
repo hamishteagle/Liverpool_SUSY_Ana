@@ -156,6 +156,9 @@ class IObjectDef
   virtual void FillFatJets_kt8() = 0;
   virtual void FillFatJets_kt12() = 0;
   virtual void SetPrimVertex() = 0;
+  virtual bool removeFatJetTools(std::string systName) =0;
+  virtual int CheckMem() = 0;
+  virtual void process_mem_usage(double &vm_usage, double & resident_set) = 0;
 
   virtual xAOD::JetContainer* getBadJets() = 0;
   virtual xAOD::JetContainer* getGoodJets() = 0;

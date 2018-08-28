@@ -13,7 +13,6 @@
 
 MapVariables::MapVariables (std::string mapVarFile) {
 
-  
   vector<double> mapValues ={0};
   ifstream file;
   file.open(mapVarFile);
@@ -24,7 +23,6 @@ MapVariables::MapVariables (std::string mapVarFile) {
     copy(istream_iterator<double>(iss),
 	 istream_iterator<double>(),
 	 back_inserter(mapValues));
-    //    cout<<"mapValues= "<<mapValues[0]<<","<<mapValues[1]<<","<<mapValues[2]<<","<<endl;    
 
     xSecMap[mapValues[0]] = mapValues[1];
     kFacMap[mapValues[0]] = mapValues[2];
@@ -33,33 +31,18 @@ MapVariables::MapVariables (std::string mapVarFile) {
     mapValues.clear();
   }
 }
-  
-  //Functions to return the attributes of each DSID
-double  MapVariables::getCrossSection(int datasetID){
-  //cout<<xSecMap[datasetID]<<endl;
-    return xSecMap[datasetID];
-  }
-  
-double  MapVariables::getFilterEff(int datasetID){
-  // cout<<filterEffMap[datasetID]<<endl;
-    return filterEffMap[datasetID];
-  }
-  
-double  MapVariables::getKFactor(int datasetID){
-  //cout<<kFacMap[datasetID]<<endl;
-    return kFacMap[datasetID];
-  }
-double  MapVariables::getRelUncert(int datasetID){
-  // cout<<relUncertMap[datasetID]<<endl;
-    return relUncertMap[datasetID];
-  }
-  
-bool MapVariables::find(int datasetID){
+
+bool MapVariables::finder(int &datasetID, map<int,double>&map){
   std::map<int, double>::iterator it; 
-  it = xSecMap.find(datasetID);
-  if (it != xSecMap.end()) return true;
+  it = map.find(datasetID);
+  if (it != map.end()) return true;
   else return false;
 }
-  
 
+void MapVariables::clearMap(){
+  xSecMap.clear();
+  filterEffMap.clear();
+  kFacMap.clear();
+  relUncertMap.clear();
+}
 

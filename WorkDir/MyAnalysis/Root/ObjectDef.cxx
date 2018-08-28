@@ -9,13 +9,9 @@ bool ptSorter( const xAOD::IParticle* j1, const xAOD::IParticle* j2 ) {
 //ObjectDef with FatJets (Crashes on PseudoJetGetter when running on systematics)
 ObjectDef::ObjectDef(xAOD::TEvent* event, ST::SUSYObjDef_xAOD* SUSYTool, xAOD::TStore* store, double mcChannelNumber, double eventN, double mcEventWgt, double m_lumiScaled, std::string systName, bool doPhotons, asg::AnaToolHandle<IMETSignificance> Tool_METSig):IObjectDef(event, SUSYTool, store, mcChannelNumber, eventN, mcEventWgt, m_lumiScaled, systName, doPhotons) //JetToolRunner* Tool_FatJets_kt12, JetToolRunner* Tool_FatJets_kt8, 
 {
-
-  //fatjet_kt12_tool = Tool_FatJets_kt12;
-  //fatjet_kt8_tool = Tool_FatJets_kt8;
-
+  
   METSig_tool = Tool_METSig; 
   
-  //std::cout << "Object tool initialised for " << systName << " systematic " << std::endl;
 
   baselineElectronsBeforeOR = new xAOD::ElectronContainer(SG::VIEW_ELEMENTS);
   signalElectronsBeforeOR = new xAOD::ElectronContainer(SG::VIEW_ELEMENTS);
@@ -46,12 +42,7 @@ ObjectDef::ObjectDef(xAOD::TEvent* event, ST::SUSYObjDef_xAOD* SUSYTool, xAOD::T
   BJets = new xAOD::JetContainer(SG::VIEW_ELEMENTS);
   nonBJets = new xAOD::JetContainer(SG::VIEW_ELEMENTS);
   METmuons  = new xAOD::MuonContainer(SG::VIEW_ELEMENTS);
-  //m_goodJets_recl = new xAOD::IParticleContainer(SG::VIEW_ELEMENTS);  
-
-  //FatJets_kt8 = 0;
-  //FatJets_kt12 = 0;
-  //goodJets_fatColl =0;
-
+  
   eventStore->record(baselineElectronsBeforeOR,"baselineElectronsBeforeOR"+systematic);
   eventStore->record(signalElectronsBeforeOR,"signalElectronsBeforeOR"+systematic);
   eventStore->record(baselineTausBeforeOR,"baselineTausBeforeOR"+systematic);
@@ -86,7 +77,7 @@ ObjectDef::ObjectDef(xAOD::TEvent* event, ST::SUSYObjDef_xAOD* SUSYTool, xAOD::T
 
   fatjet_kt12_tool = new JetToolRunner("m_jetRecTool_kt12_"+systematic);
   fatjet_kt8_tool = new JetToolRunner("m_jetRecTool_kt8_"+systematic);
- 
+
   this->SetUpFatJetTools(fatjet_kt12_tool, 1.2, "goodJets"+systematic, "MyFatJetsKt12"+systematic);
   this->SetUpFatJetTools(fatjet_kt8_tool, 0.8, "goodJets"+systematic, "MyFatJetsKt8"+systematic);
 
@@ -97,7 +88,7 @@ ObjectDef::ObjectDef(xAOD::TEvent* event, ST::SUSYObjDef_xAOD* SUSYTool, xAOD::T
   this->FillPreORTaus();
   this->FillPreORJets();
   this->FillPreORPhotons();
-
+  
   //this->FillOldMET(); This was the MET calculation without adding the photon to it
   //this->OldOverlapRemoval(); //This was the OR calculation without adding photons
   this->OverlapRemoval(); //This now includes photons and taus
@@ -111,7 +102,7 @@ ObjectDef::ObjectDef(xAOD::TEvent* event, ST::SUSYObjDef_xAOD* SUSYTool, xAOD::T
   this->FillFatJets_kt8();
   this->FillFatJets_kt12();
   //this->FillBaselinePhotons();
-  
+    
 }
 
 
@@ -916,9 +907,8 @@ bool ObjectDef::SetUpFatJetTools(JetToolRunner *& tool, double jetradius, std::s
   pfind->setProperty("GhostArea", 0.00);
   pfind->setProperty("RandomOption", 1);
   pfind->setProperty("JetBuilder", hbuild);
+
   ToolHandle<IJetFinder> hfind(pfind);
-  
-  //asg::ToolStore::put(pfind);
   pfind->initialize();
   
 
@@ -944,3 +934,79 @@ bool ObjectDef::SetUpFatJetTools(JetToolRunner *& tool, double jetradius, std::s
   return true;
 }
 
+bool ObjectDef::removeFatJetTools(std::string systName){
+
+    //Removing the FatJetTool that we have initialised for this event (to avoid replication)
+
+    std::string FatJets8ToolName = "MyFatJetsKt8"+systName;
+    std::string FatJets12ToolName = "MyFatJetsKt12"+systName;
+    std::string FatJetsTool8 ="m_jetRecTool_kt8_"+systName; 
+    std::string FatJetsTool12 ="m_jetRecTool_kt12_"+systName; 
+    std::string plcGet8 = "mylcget"+FatJets8ToolName;
+    std::string plcGet12 = "mylcget"+FatJets12ToolName;
+    std::string pbuild8 = "myjetbuild"+FatJets8ToolName;
+    std::string pbuild12 = "myjetbuild"+FatJets12ToolName;
+    std::string pfind8 = "myjetfind"+FatJets8ToolName;
+    std::string pfind12 = "myjetfind"+FatJets12ToolName;
+    std::string pjrfind8 = "myjrfind"+FatJets8ToolName;
+    std::string pjrfind12 = "myjrfind"+FatJets12ToolName;
+    std::string prunner8 = "jetrunner"+FatJets8ToolName;
+    std::string prunner12 = "jetrunner"+FatJets12ToolName;
+    std::string pjrfind_retriever8 = pjrfind8+"_retriever";
+    std::string pjrfind_retriever12 = pjrfind12+"_retriever";
+    
+    asg::ToolStore::remove(plcGet8);
+    asg::ToolStore::remove(plcGet12);
+    //std::cout<<"Removed the tool in a continue loop  plcget "<<std::endl;
+    asg::ToolStore::remove(pbuild8);
+    asg::ToolStore::remove(pbuild12);
+    //std::cout<<"Removed the tool in a continue loop  pbuild "<<std::endl;
+    asg::ToolStore::remove(pfind8);
+    asg::ToolStore::remove(pfind12);
+    //std::cout<<"Removed the tool in a continue loop  pfind "<<std::endl;
+    asg::ToolStore::remove(pjrfind8);
+    asg::ToolStore::remove(pjrfind12);
+    //std::cout<<"Removed the tool in a continue loop  pjrfind "<<std::endl;
+    asg::ToolStore::remove(pjrfind_retriever8);
+    asg::ToolStore::remove(pjrfind_retriever12);
+    //std::cout<<"Removed the tool in a continue loop  pjrfind "<<std::endl;
+    asg::ToolStore::remove(prunner8);
+    asg::ToolStore::remove(prunner12);
+    //std::cout<<"Removed the tool in a continue loop  prunner "<<std::endl;
+    asg::ToolStore::remove(FatJetsTool8);
+    asg::ToolStore::remove(FatJetsTool12);
+    //std::cout<<"Removed the fatJets tools "<<std::endl;
+    return true;
+}
+//Memory usage checking 
+void ObjectDef::process_mem_usage(double& vm_usage, double& resident_set)
+{
+  vm_usage     = 0.0;
+  resident_set = 0.0;
+
+  // the two fields we want
+  unsigned long vsize;
+  long rss;
+  {
+    std::string ignore;
+    std::ifstream ifs("/proc/self/stat", std::ios_base::in);
+    ifs >> ignore >> ignore >> ignore >> ignore >> ignore >> ignore >> ignore >> ignore >> ignore >> ignore
+	>> ignore >> ignore >> ignore >> ignore >> ignore >> ignore >> ignore >> ignore >> ignore >> ignore
+	>> ignore >> ignore >> vsize >> rss;
+  }
+
+  long page_size_kb = sysconf(_SC_PAGE_SIZE) / 1024; // in case x86-64 is configured to use 2MB pages
+  vm_usage = vsize / 1024.0;
+  resident_set = rss * page_size_kb;
+}
+
+int ObjectDef::CheckMem()
+{
+  using std::cout;
+  using std::endl;
+
+  double vm, rss;
+  process_mem_usage(vm, rss);
+  cout << "VM: " << vm << "; RSS: " << rss << endl;
+  return 1;
+}

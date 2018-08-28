@@ -42,7 +42,9 @@ class TruthObjectDef: public virtual IObjectDef
   void SetPrimVertex();
 
   bool SetUpFatJetTools(JetToolRunner *& tool, double jetradius, std::string inputcontainer, std::string outputcontainer);
-  
+  bool removeFatJetTools(std::string systName);
+  void process_mem_usage(double &vm_usage, double &resident_set);
+  int CheckMem();
   
   // Getters
   xAOD::JetContainer* getBadJets(){return badJets;};

@@ -959,3 +959,83 @@ bool TruthObjectDef::SetUpFatJetTools(JetToolRunner *& tool, double jetradius, s
   return true;
 }
 
+bool TruthObjectDef::removeFatJetTools(std::string systName){
+
+    //Removing the FatJetTool that we have initialised for this event (to avoid replication)
+
+    std::string FatJets8ToolName = "MyFatJetsKt8"+systName;
+    std::cout<<"FatJets8ToolName = "<<FatJets8ToolName<<std::endl;
+    std::string FatJets12ToolName = "MyFatJetsKt12"+systName;
+    std::cout<<"FatJets12ToolName = "<<FatJets12ToolName<<std::endl;
+    std::string FatJetsTool8 ="m_jetRecTool_kt8_"+systName; 
+    std::cout<<"FatJetsTool8 = "<<FatJetsTool8<<std::endl;
+    std::string FatJetsTool12 ="m_jetRecTool_kt12_"+systName; 
+    std::cout<<"FatJetsTool12 = "<<FatJetsTool12<<std::endl;
+    std::string plcGet8 = "mylcget"+FatJets8ToolName;
+    std::string plcGet12 = "mylcget"+FatJets12ToolName;
+    std::string pbuild8 = "myjetbuild"+FatJets8ToolName;
+    std::string pbuild12 = "myjetbuild"+FatJets12ToolName;
+    std::string pfind8 = "myjetfind"+FatJets8ToolName;
+    std::string pfind12 = "myjetfind"+FatJets12ToolName;
+    std::string pjrfind8 = "myjrfind"+FatJets8ToolName;
+    std::string pjrfind12 = "myjrfind"+FatJets12ToolName;
+    std::string prunner8 = "jetrunner"+FatJets8ToolName;
+    std::string prunner12 = "jetrunner"+FatJets12ToolName;
+    std::string pjrfind_retriever8 = pjrfind8+"_retriever";
+    std::string pjrfind_retriever12 = pjrfind12+"_retriever";
+    
+    asg::ToolStore::remove(plcGet8);
+    asg::ToolStore::remove(plcGet12);
+    std::cout<<"Removed the tool plcget "<<std::endl;
+    asg::ToolStore::remove(pbuild8);
+    asg::ToolStore::remove(pbuild12);
+    std::cout<<"Removed the tool pbuild "<<std::endl;
+    asg::ToolStore::remove(pfind8);
+    asg::ToolStore::remove(pfind12);
+    std::cout<<"Removed the tool pfind "<<std::endl;
+    asg::ToolStore::remove(pjrfind8);
+    asg::ToolStore::remove(pjrfind12);
+    std::cout<<"Removed the tool pjrfind "<<std::endl;
+    asg::ToolStore::remove(pjrfind_retriever8);
+    asg::ToolStore::remove(pjrfind_retriever12);
+    std::cout<<"Removed the tool pjrfind "<<std::endl;
+    asg::ToolStore::remove(prunner8);
+    asg::ToolStore::remove(prunner12);
+    std::cout<<"Removed the tool prunner "<<std::endl;
+    asg::ToolStore::remove(FatJetsTool8);
+    asg::ToolStore::remove(FatJetsTool12);
+    std::cout<<"Removed the fatJets tools "<<std::endl;
+    return true;
+}
+//Memory usage checking 
+void TruthObjectDef::process_mem_usage(double& vm_usage, double& resident_set)
+{
+  vm_usage     = 0.0;
+  resident_set = 0.0;
+
+  // the two fields we want
+  unsigned long vsize;
+  long rss;
+  {
+    std::string ignore;
+    std::ifstream ifs("/proc/self/stat", std::ios_base::in);
+    ifs >> ignore >> ignore >> ignore >> ignore >> ignore >> ignore >> ignore >> ignore >> ignore >> ignore
+	>> ignore >> ignore >> ignore >> ignore >> ignore >> ignore >> ignore >> ignore >> ignore >> ignore
+	>> ignore >> ignore >> vsize >> rss;
+  }
+
+  long page_size_kb = sysconf(_SC_PAGE_SIZE) / 1024; // in case x86-64 is configured to use 2MB pages
+  vm_usage = vsize / 1024.0;
+  resident_set = rss * page_size_kb;
+}
+
+int TruthObjectDef::CheckMem()
+{
+  using std::cout;
+  using std::endl;
+
+  double vm, rss;
+  process_mem_usage(vm, rss);
+  cout << "VM: " << vm << "; RSS: " << rss << endl;
+  return 1;
+}

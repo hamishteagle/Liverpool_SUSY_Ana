@@ -45,7 +45,7 @@ int gridmain( int argc, char* argv[]) {
 
       if (argc > 2){
 	if ( (std::string(argv[2]) == "1") || (std::string(argv[2]) == "true") || (std::string(argv[2]) == "True")  ) {
-	  RunningWithSyst = false;//false hardcodes to no systematics change back to true for variable
+	  RunningWithSyst = true;
 	}
 	else{
 	  RunningWithSyst = false;
@@ -69,6 +69,7 @@ int gridmain( int argc, char* argv[]) {
 	RunningWithPhotons = false;
       }
       
+      RunningWithSyst = true; //Hardcode for systematics 
       std::cout << "Running with Syst = " << RunningWithSyst << std::endl;
       std::cout << "Running with Photons = " << RunningWithPhotons << std::endl;
 
@@ -98,7 +99,7 @@ int gridmain( int argc, char* argv[]) {
       }
       
       
-      submitDir = CurrentDate+"_v1_"+fileType+appPhotons+"/";
+      submitDir = CurrentDate+"_v1_"+fileType+appPhotons;
       
       // creates a directory in scratch for the job
       std::string CreateDir = "/scratch/hteagle/multiB/GridSubmissions/"+submitDir;
@@ -160,10 +161,10 @@ int gridmain( int argc, char* argv[]) {
   EL::PrunDriver driver;
   
   driver.options()->setString("nc_outputSampleName", "user.hteagle."+CurrentDate+"_"+fileType+"v1.%in:name[2]%.%in:name[3]%");
-  driver.options()->setString(EL::Job::optGridNFilesPerJob, "1");
+  driver.options()->setString(EL::Job::optGridNFilesPerJob, "10");
   // Use submit if you want to see all of the info about the submitted jobs. Use submitOnly if you want to send the jobs then Monitor online with panda
-  driver.submit( job, submitDir );
-  //driver.submitOnly( job, submitDir );
+  //driver.submit( job, submitDir );
+  driver.submitOnly( job, submitDir );
   
   return 0;
 }

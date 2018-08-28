@@ -81,3 +81,6 @@ atlas_add_executable( testRun util/testRunHamish.cxx util/testRunGrid.cxx ${test
 
 # Install files from the package:
 atlas_install_joboptions( share/*.py )
+
+Include(CTest)
+add_test(TestMyAnalysis testRun)
