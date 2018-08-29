@@ -159,31 +159,12 @@ EL::StatusCode MyxAODAnalysis :: histInitialize ()
     m_fileType = "DAOD_SUSY7";    
   }
 
-
+  HSumOfPileUp = new TH1F("HSumOfPileUp","HSumOfPileUp",1, 0.5, 1.5);
   noWeightHist = new TH1F("h_noWeights","h_noWeightHist",1 , 0.5, 1.5);
   sherpaWeightHist = new TH1F("h_sherpaWeights","h_sherpaWeightHist",1 , 0.5, 1.5);
   renormedSherpaWeightHist = new TH1F("h_RenormedSherpaWeights","h_RenormedSherpaWeightHist",1 , 0.5, 1.5);
   h_SumOfWeights = new TH1D("h_SumOfWeights","h_SumOfWeights",1 , 0.5, 1.5);
   h_SumOfWeightsSquared = new TH1D("h_SumOfWeightsSquared","h_SumOfWeightsSquared",1 , 0.5, 1.5);
-
-
-  HSRA_noWgt = new TH1F("HSRA_noWgt","HSRA_noWgt", 50, 0.5, 50.5);
-  HSRA_mcWgt = new TH1F("HSRA_mcWgt","HSRA_mcWgt", 50, 0.5, 50.5);
-  HSRA_allWgt = new TH1F("HSRA_allWgt","HSRA_allWgt", 50, 0.5, 50.5);
-
-  HSRB_noWgt = new TH1F("HSRB_noWgt","HSRB_noWgt", 50, 0.5, 50.5);
-  HSRB_mcWgt = new TH1F("HSRB_mcWgt","HSRB_mcWgt", 50, 0.5, 50.5);
-  HSRB_allWgt = new TH1F("HSRB_allWgt","HSRB_allWgt", 50, 0.5, 50.5);
-
-  HSRC_noWgt = new TH1F("HSRC_noWgt","HSRC_noWgt", 50, 0.5, 50.5);
-  HSRC_mcWgt = new TH1F("HSRC_mcWgt","HSRC_mcWgt", 50, 0.5, 50.5);
-  HSRC_allWgt = new TH1F("HSRC_allWgt","HSRC_allWgt", 50, 0.5, 50.5);
-  
-
-  HTruthMETFilt = new TH1F("HTruthMETFilt","HTruthMETFilt", 50, 0,1000);
-  HTruthHTFilt = new TH1F("HTruthHTFilt","HTruthHTFilt", 50, 0,1000);
-  HSumOfPileUp = new TH1F("HSumOfPileUp","HSumOfPileUp", 1, 0.5,1.5);
-
 
 
   noWeightHist->SetDirectory (wk()->getOutputFile("output"));
@@ -192,23 +173,6 @@ EL::StatusCode MyxAODAnalysis :: histInitialize ()
   h_SumOfWeightsSquared->SetDirectory (wk()->getOutputFile("output"));
   renormedSherpaWeightHist->SetDirectory (wk()->getOutputFile("output"));
 
-  // Make the Histos for the full cutflows here then:
-  
-  HSRA_noWgt->SetDirectory (wk()->getOutputFile("output"));
-  HSRA_mcWgt->SetDirectory (wk()->getOutputFile("output"));
-  HSRA_allWgt->SetDirectory (wk()->getOutputFile("output"));
-
-  HSRB_noWgt->SetDirectory (wk()->getOutputFile("output"));
-  HSRB_mcWgt->SetDirectory (wk()->getOutputFile("output"));
-  HSRB_allWgt->SetDirectory (wk()->getOutputFile("output"));
-
-  HSRC_noWgt->SetDirectory (wk()->getOutputFile("output"));
-  HSRC_mcWgt->SetDirectory (wk()->getOutputFile("output"));
-  HSRC_allWgt->SetDirectory (wk()->getOutputFile("output"));
-  
-  HTruthMETFilt->SetDirectory (wk()->getOutputFile("output"));
-  HTruthHTFilt->SetDirectory (wk()->getOutputFile("output"));
-  HSumOfPileUp->SetDirectory (wk()->getOutputFile("output"));
 
 
 
@@ -591,7 +555,7 @@ EL::StatusCode MyxAODAnalysis :: execute ()
   // code will go.
 
   const char* APP_NAME = "MyxAODAnalysis";
-  //  std::cout << "In analysis execute" << std::endl;
+
   
   //if (m_eventCounter >= 10){return EL::StatusCode::SUCCESS;}
   if ( (m_eventCounter % 1000) == 0 ) Info("execute()","Event Number = %i", m_eventCounter);
@@ -630,84 +594,82 @@ EL::StatusCode MyxAODAnalysis :: execute ()
     }
 
 	
-	const xAOD::EventInfo* eventInfo =0;
-	if (! m_event->retrieve(eventInfo, "EventInfo").isSuccess() ){
-	  Error("execute()","Failed to retrieve event info collection, exiting!!");
-	  isyst++;
-	  continue;
-	}
-  
-	m_lumiBlockNumber = eventInfo->lumiBlock();
-	m_runNumber = eventInfo->runNumber();
-	EventNumber = (eventInfo->eventNumber());
+    const xAOD::EventInfo* eventInfo =0;
+    if (! m_event->retrieve(eventInfo, "EventInfo").isSuccess() ){
+      Error("execute()","Failed to retrieve event info collection, exiting!!");
+      isyst++;
+      continue;
+    }
+    
+    m_lumiBlockNumber = eventInfo->lumiBlock();
+    m_runNumber = eventInfo->runNumber();
+    EventNumber = (eventInfo->eventNumber());
+    
+    xAOD::TStore* store = wk()->xaodStore();
+    
 	
-	xAOD::TStore* store = wk()->xaodStore();
-	
-	
-	double btagWgt = 1;
-	double electronWgt = 1;
-	double muonWgt = 1;
-	double electronTrigWgt;
-	double lepWgt = 1;
-	double trigWgt = 1;
-	double puWgt = 1;
-	double JVTWgt = 1;
-	double weight = 1;
-	double truth_pTW = 0;
-	
-	bool isMC = false;	
-	if(eventInfo->eventType( xAOD::EventInfo::IS_SIMULATION) ){
-	  isMC = true; // lets us do things correctly later
-	}
-	
-	mcChannel = 0;
-	
-	double mcWgt = 1;
-	double truthfilt_MET = 0;
-	double truthfilt_HT = 0;
-	double renormedMcWgt = 1;
+    double btagWgt = 1;
+    double electronWgt = 1;
+    double muonWgt = 1;
+    double electronTrigWgt;
+    double lepWgt = 1;
+    double trigWgt = 1;
+    double puWgt = 1;
+    double JVTWgt = 1;
+    double weight = 1;
+    double truth_pTW = 0;
+    
+    bool isMC = false;	
+    if(eventInfo->eventType( xAOD::EventInfo::IS_SIMULATION) ){
+      isMC = true; // lets us do things correctly later
+      std::cout<<"This is MC"<<std::endl;
+    }
+    
+    mcChannel = 0;
+    
+    double mcWgt = 1;
+    double truthfilt_MET = 0;
+    double truthfilt_HT = 0;
+    double renormedMcWgt = 1;
 	// Will fix this when the PMGTools cross section stuff is available
+    
+    if (isMC){
+      mcChannel = eventInfo->mcChannelNumber();    
+      mcWgt = eventInfo->mcEventWeight();
+      renormedMcWgt = mcWgt;
+      if (std::abs(renormedMcWgt) >= 100){
+	renormedMcWgt = 1;
+      }
+      if (m_fileType != "DAOD_TRUTH1"){ 
+	puWgt = objTool->GetPileupWeight();
+      }
+    }
+    HSumOfPileUp->Fill(1,puWgt);
 	
-
-	if (isMC){
-	  mcChannel = eventInfo->mcChannelNumber();    
-	  mcWgt = eventInfo->mcEventWeight();
-	  renormedMcWgt = mcWgt;
-	  if (std::abs(renormedMcWgt) >= 100){
-	    renormedMcWgt = 1;
-	  }
-	  if (m_fileType != "DAOD_TRUTH1"){ 
-	    puWgt = objTool->GetPileupWeight();
-	  }
-	}
-	HSumOfPileUp->Fill(1,puWgt);
-	
-  
-	// This can get all of the PDF info etc if it's required at any point
-	//const xAOD::TruthEventContainer* truthE = 0;
-	//m_event->retrieve(truthE, "TruthEvents" );
-	
-	// Print their properties, using the tools:
-	//for(const auto& evt : *truthE) {
-	//	float x1, x2, pdf1, pdf2, scalePDF, Q;
-	//int id1, id2;
-	//	evt->pdfInfoParameter(id1, xAOD::TruthEvent::PDGID1);
-	//evt->pdfInfoParameter(id2, xAOD::TruthEvent::PDGID2);
-	//evt->pdfInfoParameter(x1, xAOD::TruthEvent::X1);
-	//evt->pdfInfoParameter(x2, xAOD::TruthEvent::X2);
-	//evt->pdfInfoParameter(pdf1, xAOD::TruthEvent::PDFID1);
-	//evt->pdfInfoParameter(pdf2, xAOD::TruthEvent::PDFID2);
-	//evt->pdfInfoParameter(scalePDF, xAOD::TruthEvent::SCALE);
-	//evt->pdfInfoParameter(Q, xAOD::TruthEvent::Q);
-	//Info( APP_NAME, "PDF INFO: id1/id2: %d/%d x1/x2: %g/%g  pdf1/pdf2: %g/%g  scalePDF: %g",
-	//    id1, id2, x1, x2, pdf1, pdf2, scalePDF
-	//      );
-	//}
-	
-	
+    // This can get all of the PDF info etc if it's required at any point
+    //const xAOD::TruthEventContainer* truthE = 0;
+    //m_event->retrieve(truthE, "TruthEvents" );
+    
+    // Print their properties, using the tools:
+    //for(const auto& evt : *truthE) {
+    //	float x1, x2, pdf1, pdf2, scalePDF, Q;
+    //int id1, id2;
+    //	evt->pdfInfoParameter(id1, xAOD::TruthEvent::PDGID1);
+    //evt->pdfInfoParameter(id2, xAOD::TruthEvent::PDGID2);
+    //evt->pdfInfoParameter(x1, xAOD::TruthEvent::X1);
+    //evt->pdfInfoParameter(x2, xAOD::TruthEvent::X2);
+    //evt->pdfInfoParameter(pdf1, xAOD::TruthEvent::PDFID1);
+    //evt->pdfInfoParameter(pdf2, xAOD::TruthEvent::PDFID2);
+    //evt->pdfInfoParameter(scalePDF, xAOD::TruthEvent::SCALE);
+    //evt->pdfInfoParameter(Q, xAOD::TruthEvent::Q);
+    //Info( APP_NAME, "PDF INFO: id1/id2: %d/%d x1/x2: %g/%g  pdf1/pdf2: %g/%g  scalePDF: %g",
+    //    id1, id2, x1, x2, pdf1, pdf2, scalePDF
+    //      );
+    //}
+    
+    
 	
 	
-  
 	// initialise the object definitions class
 	IObjectDef* m_objs;
 	
@@ -718,28 +680,6 @@ EL::StatusCode MyxAODAnalysis :: execute ()
 	  m_objs = new ObjectDef (m_event, objTool, store, mcChannel, EventNumber, mcWgt, m_lumiScaled, syst.name(), doPhotons, m_metSignif); 
 	}
 
-	if (isyst == 0){
-	  noWeightHist->Fill(1,1);
-	  sherpaWeightHist->Fill(1,mcWgt);
-	  renormedSherpaWeightHist->Fill(1,renormedMcWgt);
-	  
-	  HSRA_noWgt->Fill(1,1);
-	  HSRA_mcWgt->Fill(1,mcWgt); 
-	  HSRA_allWgt->Fill(1,mcWgt);//*btagWgt*lepWgt*trigWgt*puWgt);
-	  
-	  HSRB_noWgt->Fill(1,0.46754945);//Change back to 1
-	  HSRB_mcWgt->Fill(1,mcWgt); 
-	  HSRB_allWgt->Fill(1,mcWgt*btagWgt*lepWgt*trigWgt*puWgt);
-	  
-	  HSRC_noWgt->Fill(1,1);
-	  HSRC_mcWgt->Fill(1,mcWgt); 
-	  HSRC_allWgt->Fill(1,mcWgt*btagWgt*lepWgt*trigWgt*puWgt);
-	}
-	
-
-	  
-	  
-
 	// Initialise the class which sorts out the MC checks (if required)
 	std::unique_ptr<MCChecks> checkMC (new MCChecks ());
 
@@ -748,11 +688,11 @@ EL::StatusCode MyxAODAnalysis :: execute ()
 	    std::cout<<"Failed on good run lists"<<std::endl;
 	    if(!m_objs->removeFatJetTools(syst.name()))std::cout<<"Failed to remove FatJet tools"<<std::endl;
 	    delete m_objs;
+	    std::cout<<"In reset checkMC"<<std::endl;
 	    checkMC.reset();
 	    continue;
 	  }
 	}
-  
 	// get the truth MET info for OR removals between ttbar/single top samples
 	if (mcChannel == 410000 || mcChannel == 410013 || mcChannel == 410014 || mcChannel == 407012 || mcChannel == 407322 || mcChannel == 407009 || mcChannel == 407010 || mcChannel == 407011 || mcChannel == 407018 || mcChannel == 407019 || mcChannel == 407120 || mcChannel == 407021){
 	  truthfilt_MET = 0.001*eventInfo->auxdata< float >("GenFiltMET");
@@ -789,21 +729,7 @@ EL::StatusCode MyxAODAnalysis :: execute ()
 	  }
 	}
 	
-	// Passes Cleaning Selection
-	if (isyst == 0){
-	  HSRA_noWgt->Fill(2,1);
-	  HSRA_mcWgt->Fill(2,mcWgt); 
-	  HSRA_allWgt->Fill(2,mcWgt);//*btagWgt*lepWgt*trigWgt*puWgt);
-	  
-	  HSRB_noWgt->Fill(2,0.46754945);//Change back to 1 
-	  HSRB_mcWgt->Fill(2,mcWgt); 
-	  HSRB_allWgt->Fill(2,1);
-	  
-	  HSRC_noWgt->Fill(2,1);
-	  HSRC_mcWgt->Fill(2,mcWgt); 
-	  HSRC_allWgt->Fill(2,mcWgt*btagWgt*lepWgt*trigWgt*puWgt);
-	  
-	}
+
 	
 	bool coreFlag = true;
 	bool sctFlag = true;
@@ -836,25 +762,6 @@ EL::StatusCode MyxAODAnalysis :: execute ()
 	    checkMC.reset();
 	    continue;
 	  }
-	}
-
-	
-
-	// Event Passes LAr, TileError and CoreFlags.     
-	if (isyst == 0){
-	  
-	  HSRA_noWgt->Fill(3,1);
-	  HSRA_mcWgt->Fill(3,mcWgt); 
-	  HSRA_allWgt->Fill(3,mcWgt);//*btagWgt*lepWgt*trigWgt*puWgt);
-	  
-	  HSRB_noWgt->Fill(3,1);
-	  HSRB_mcWgt->Fill(3,mcWgt); 
-	  HSRB_allWgt->Fill(3,1);
-	  
-	  HSRC_noWgt->Fill(3,1);
-	  HSRC_mcWgt->Fill(3,mcWgt); 
-	  HSRC_allWgt->Fill(3,mcWgt*btagWgt*lepWgt*trigWgt*puWgt);
-	  
 	}
 
 	double nBadJet = m_objs->getBadJets()->size();
@@ -924,22 +831,6 @@ EL::StatusCode MyxAODAnalysis :: execute ()
 
 	if (passedElTrigger == 1 || passedMuTrigger == 1) passedLepTrigger = true;
 	
-	if (isyst == 0){
-	  if (passedMETTrigger){
-	    HSRA_noWgt->Fill(4,1);
-	    HSRA_mcWgt->Fill(4,mcWgt); 
-	    HSRA_allWgt->Fill(4,mcWgt);//*btagWgt*lepWgt*trigWgt*puWgt);
-	    
-	    HSRB_noWgt->Fill(4,0.46754945);//Change back to 1 
-	    HSRB_mcWgt->Fill(4,mcWgt); 
-	    HSRB_allWgt->Fill(4,1);
-	    
-	    HSRC_noWgt->Fill(4,1);
-	    HSRC_mcWgt->Fill(4,mcWgt); 
-	    HSRC_allWgt->Fill(4,mcWgt*btagWgt*lepWgt*trigWgt*puWgt);
-	  }
-	  
-	}
 	bool passedPrimVertex=true;
 	if (m_objs->getPrimVertex() < 1){
 	  passedPrimVertex=false;
@@ -952,22 +843,6 @@ EL::StatusCode MyxAODAnalysis :: execute ()
 	  //return EL::StatusCode::SUCCESS;
 	}
   
-	if (isyst == 0){
-	  if (passedMETTrigger){
-	    HSRA_noWgt->Fill(5,1);
-	    HSRA_mcWgt->Fill(5,mcWgt); 
-	    HSRA_allWgt->Fill(5,mcWgt);//*btagWgt*lepWgt*trigWgt*puWgt);
-	    
-	    HSRB_noWgt->Fill(5,0.46754945);//Change back to 1 
-	    HSRB_mcWgt->Fill(5,mcWgt); 
-	    HSRB_allWgt->Fill(5,1);
-	    
-	    HSRC_noWgt->Fill(5,1);
-	    HSRC_mcWgt->Fill(5,mcWgt); 
-	    HSRC_allWgt->Fill(5,mcWgt*btagWgt*lepWgt*trigWgt*puWgt);
-	    
-	  }
-	}
 	bool passedJetClean=true;
 	if (nBadJet > 0){
 	  passedJetClean=false;
@@ -976,24 +851,6 @@ EL::StatusCode MyxAODAnalysis :: execute ()
 	  if(!m_objs->removeFatJetTools(syst.name()))std::cout<<"Failed to remove FatJet tools"<<std::endl;
 	  delete m_objs;
 	  continue;
-	}
-  	
-	if (isyst == 0){
-	  
-	  if (passedMETTrigger){
-	    HSRA_noWgt->Fill(6, 1);
-	    HSRA_mcWgt->Fill(6,mcWgt); 
-	    HSRA_allWgt->Fill(6,mcWgt);//*btagWgt*lepWgt*trigWgt*puWgt);
-	    
-	    HSRB_noWgt->Fill(6,0.46754945);//Change back to 1 
-	    HSRB_mcWgt->Fill(6,mcWgt); 
-	    HSRB_allWgt->Fill(6,1);
-	    
-	    HSRC_noWgt->Fill(6,1);
-	    HSRC_mcWgt->Fill(6,mcWgt); 
-	    HSRC_allWgt->Fill(6,mcWgt*btagWgt*lepWgt*trigWgt*puWgt);
-	    
-	  }
 	}
 	
 	bool passedCosmicMu=true;
@@ -1007,24 +864,7 @@ EL::StatusCode MyxAODAnalysis :: execute ()
 	  continue;
 	}
   
-	if (isyst == 0){
-	  
-	  if (passedMETTrigger){
-	    HSRA_noWgt->Fill(7, 1);
-	    HSRA_mcWgt->Fill(7,mcWgt); 
-	    HSRA_allWgt->Fill(7,mcWgt);//*btagWgt*lepWgt*trigWgt*puWgt);
-	    
-	    HSRB_noWgt->Fill(7,0.46754945);//Change back to 1 
-	    HSRB_mcWgt->Fill(7,mcWgt); 
-	    HSRB_allWgt->Fill(7,1);
-	    
-	    HSRC_noWgt->Fill(7,1);
-	    HSRC_mcWgt->Fill(7,mcWgt); 
-	    HSRC_allWgt->Fill(7,mcWgt*btagWgt*lepWgt*trigWgt*puWgt);
-	    
-	  }
-	}
-	bool passedMuonClean=true;
+  	bool passedMuonClean=true;
 	if (nBadMu > 0){
 	  passedMuonClean=false;
 	  isyst++;
@@ -1036,23 +876,6 @@ EL::StatusCode MyxAODAnalysis :: execute ()
 	}
 	
 	
-	if (isyst == 0){
-	  if (passedMETTrigger){
-	    HSRA_noWgt->Fill(8, 1);
-	    HSRA_mcWgt->Fill(8,mcWgt); 
-	    HSRA_allWgt->Fill(8,mcWgt*btagWgt*lepWgt*trigWgt*puWgt);
-	    
-	    HSRB_noWgt->Fill(8,0.46754945);//Change back to 1 
-	    HSRB_mcWgt->Fill(8,mcWgt); 
-	    HSRB_allWgt->Fill(8,1);
-	    
-	    HSRC_noWgt->Fill(8,1);
-	    HSRC_mcWgt->Fill(8,mcWgt); 
-	    HSRC_allWgt->Fill(8,mcWgt*btagWgt*lepWgt*trigWgt*puWgt);
-	    
-	  }
-	}
-	
 	//All cleaning cuts before trigger
 	bool passedCleaningCuts=false; 
 	if(coreFlag && sctFlag && LArTileFlag && passedPrimVertex && passedJetClean && passedCosmicMu && passedMuonClean){
@@ -1060,23 +883,6 @@ EL::StatusCode MyxAODAnalysis :: execute ()
 	}
 	
 	
-	// call the cutflow class now
-	std::vector<TH1F*> SRAHists;
-	SRAHists.push_back(HSRA_noWgt);
-	SRAHists.push_back(HSRA_mcWgt);
-	SRAHists.push_back(HSRA_allWgt);
-	
-	
-	std::vector<TH1F*> SRBHists;
-	SRBHists.push_back(HSRB_noWgt);
-	SRBHists.push_back(HSRB_mcWgt);
-	SRBHists.push_back(HSRB_allWgt);
-	
-	
-	std::vector<TH1F*> SRCHists;
-	SRCHists.push_back(HSRC_noWgt);
-	SRCHists.push_back(HSRC_mcWgt);
-	SRCHists.push_back(HSRC_allWgt);
 
 
 	//	std::cout<<"MemCheck 5;"<<std::endl;      
@@ -1113,14 +919,12 @@ EL::StatusCode MyxAODAnalysis :: execute ()
 	  continue;
 	}
 	
-		if (isyst == 0){
-	  std::unique_ptr<Cutflows> m_cutflows (new Cutflows (*m_varCalc, *m_regions, SRAHists, SRBHists, SRCHists, btagWgt, lepWgt, trigWgt, puWgt, mcWgt, EventNumber, passedMETTrigger, passedLepTrigger, passedGammaTrigger, truthfilt_MET));
-	}
-
 	
 	if ( m_fileType != "DAOD_TRUTH1"){
-	  (m_treeServiceVector[isyst])->fillTree(m_objs, *m_regions, *m_varCalc, *checkMC,m_finalSumOfWeights, m_initialSumOfWeights, puWgt, SFmctbbll, passedMETTrigger, passedMuTrigger, passedElTrigger, passedGammaTrigger, passedMultiJetTrigger, passedTriggers, PUSumOfWeights, truthfilt_MET, truthfilt_HT, coreFlag, sctFlag, LArTileFlag, passedPrimVertex, passedJetClean, passedCosmicMu, passedMuonClean, m_runNumber, renormedMcWgt, year );
+	  if (m_regions->interestingRegion || RunningLocally){
+	    (m_treeServiceVector[isyst])->fillTree(m_objs, *m_regions, *m_varCalc, *checkMC,m_finalSumOfWeights, m_initialSumOfWeights, puWgt, SFmctbbll, passedMETTrigger, passedMuTrigger, passedElTrigger, passedGammaTrigger, passedMultiJetTrigger, passedTriggers, PUSumOfWeights, truthfilt_MET, truthfilt_HT, coreFlag, sctFlag, LArTileFlag, passedPrimVertex, passedJetClean, passedCosmicMu, passedMuonClean, m_runNumber, renormedMcWgt, year );
 	  }
+	}
 	// not running on reco. fill everything for TRUTH
 	else{
 	  (m_treeServiceVector[isyst])->fillTree(m_objs, *m_regions, *m_varCalc, *checkMC,m_finalSumOfWeights, m_initialSumOfWeights, puWgt, SFmctbbll, passedMETTrigger, passedMuTrigger, passedElTrigger, passedGammaTrigger, passedMultiJetTrigger, passedTriggers, PUSumOfWeights, truthfilt_MET, truthfilt_HT , coreFlag, sctFlag, LArTileFlag, passedPrimVertex, passedJetClean, passedCosmicMu, passedMuonClean, m_runNumber, renormedMcWgt, year);
@@ -1171,202 +975,6 @@ EL::StatusCode MyxAODAnalysis :: execute ()
 
 
   const char* APP_NAME = "MyxAODAnalysis";
-
-
-
-
-  
-  // Do SRA Cuts here
-  
-  std::vector<std::string> SRACutList; 
-  SRACutList.push_back("NONE");
-  SRACutList.push_back("GRL");
-  SRACutList.push_back("LAr & Tile");
-  SRACutList.push_back("MET Trigger");
-  SRACutList.push_back("Primary Vertex >= 1");
-  SRACutList.push_back("Jet/MET");
-  SRACutList.push_back("Cosmic Muons");
-  SRACutList.push_back("Muon Cleaning");
-  SRACutList.push_back("ETMiss > 250");
-  SRACutList.push_back("nBaselineLepton ==0");
-  SRACutList.push_back("njets >=6");
-  SRACutList.push_back("nbjets >= 4");  
-  SRACutList.push_back("minDPhi(j4-MET)>0.4"); 
-  SRACutList.push_back("tau veto");
-  SRACutList.push_back("maxDR>2.5");
-  SRACutList.push_back("minDR>2.5");
-  SRACutList.push_back("hcand>80");
-  SRACutList.push_back("pTb1>200");
-  SRACutList.push_back("meff>1000");
-  SRACutList.push_back("meff>1000<1200");
-  SRACutList.push_back("meff>1200<1500");
-  SRACutList.push_back("meff>1500");
-  SRACutList.push_back("m_CT > 450");
-  
-
-
-
-  bool doSRACutflow = true;
-  if (doSRACutflow){
-
-  std::cout << "Number of weighted events total:"  << PUSumOfWeights << std::endl;
-  
-  std::cout << "SRA Selections:" << std::endl;
-  std::cout << "Raw Events" << std::endl;
-  std::cout << "Sum Of Weights = " << h_SumOfWeights->Integral() << std::endl;
-  std::cout << "Cut # " << std::setw(25) << "Cut Name " << std::setw(50) << "Events Passing Selection " << std::setw(25) << " Relative Efficiency" <<std::setw(25) <<" Absolute Efficiency  "  <<std::endl;
-  for(size_t icut=0; icut<=SRACutList.size()-1; ++icut)
-    {
-      if (icut == 0){
-	std::cout << std::setw(25) <<std::left << icut+1 << std::setw(25)  << std::left << SRACutList[icut] << std::setw(25) << std::right << HSRA_noWgt->GetBinContent(icut+1) << std::setw(25)<< std::right << std::setprecision(5) << HSRA_noWgt->GetBinContent(icut+1)/HSRA_noWgt->GetBinContent(icut+1) << std::setw(25) <<  std::right << HSRA_noWgt->GetBinContent(icut+1)/HSRA_noWgt->GetBinContent(1)   <<std::endl;
-      }
-      else{
-	std::cout << std::setw(25) <<std::left << icut+1 << std::setw(25)  << std::left << SRACutList[icut] << std::setw(25) << std::right << HSRA_noWgt->GetBinContent(icut+1) << std::setw(25)<< std::right << std::setprecision(5) << HSRA_noWgt->GetBinContent(icut+1)/HSRA_noWgt->GetBinContent(icut) << std::setw(25) <<  std::right << HSRA_noWgt->GetBinContent(icut+1)/HSRA_noWgt->GetBinContent(1)   <<std::endl;
-      }
-    }  
-  
-  std::cout << "Scaled Events" << std::endl;
-  std::cout << "Cut # " << std::setw(25) << "Cut Name " << std::setw(50) << "Events Passing Selection " << std::setw(25) << " Relative Efficiency" <<std::setw(25) <<" Absolute Efficiency  "  <<std::endl;
-  for(size_t icut=0; icut<=SRACutList.size()-1; ++icut)
-    {
-
-    if (icut == 0){
-      std::cout << std::setw(25) <<std::left << icut+1 << std::setw(25)  << std::left << SRACutList[icut] << std::setw(25) << std::right << HSRA_allWgt->GetBinContent(icut+1) << std::setw(25)<< std::right << std::setprecision(5) << HSRA_allWgt->GetBinContent(icut+1)/(HSRA_allWgt->GetBinContent(icut+1)) << std::setw(25) <<  std::right << HSRA_allWgt->GetBinContent(icut+1)/(HSRA_allWgt->GetBinContent(1))   <<std::endl;
-      }
-      else{
-	std::cout << std::setw(25) <<std::left << icut+1 << std::setw(25)  << std::left << SRACutList[icut] << std::setw(25) << std::right << HSRA_allWgt->GetBinContent(icut+1) << std::setw(25)<< std::right << std::setprecision(5) << HSRA_allWgt->GetBinContent(icut+1)/(HSRA_allWgt->GetBinContent(icut)) << std::setw(25) <<  std::right << HSRA_allWgt->GetBinContent(icut+1)/(HSRA_allWgt->GetBinContent(1))   <<std::endl;
-      }
-  
-    }  
-
-  }
-  
-
-  std::vector<std::string> SRBCutList; 
-  SRBCutList.push_back("NONE");
-  SRBCutList.push_back("GRL");
-  SRBCutList.push_back("LAr & Tile");
-  SRBCutList.push_back("MET Trigger");
-  SRBCutList.push_back("Primary Vertex >= 1");
-  SRBCutList.push_back("Jet/MET");
-  SRBCutList.push_back("Cosmic Muons");
-  SRBCutList.push_back("Muon Cleaning");
-  SRBCutList.push_back("ETMiss > 300");
-  SRBCutList.push_back("nBaselineLep == 0");
-  SRBCutList.push_back("njets >= 4");
-  SRBCutList.push_back("nbjets >= 3");
-  SRBCutList.push_back(">50<140");
-  SRBCutList.push_back("non b-tagged leading jet");
-  SRBCutList.push_back("pTj1>300");
-  SRBCutList.push_back("meff>1000");
-  SRBCutList.push_back("tau veto");
-  SRBCutList.push_back("minDelPhi(j1_4-MET) >0.4");
-  SRBCutList.push_back("DelPhi(j1-MET)");
-  SRBCutList.push_back("NA");
-  SRBCutList.push_back("NA");
-  SRBCutList.push_back("NA");
-  SRBCutList.push_back("NA");
-
-  bool doSRBCutflow = true;
-  if (doSRBCutflow){
-
-  std::cout << "Number of weighted events total:"  << PUSumOfWeights << std::endl;
-  
-  std::cout << "SRB Selections:" << std::endl;
-  std::cout << "Raw Events" << std::endl;
-  std::cout << "Sum Of Weights = " << h_SumOfWeights->Integral() << std::endl;
-  std::cout << "Cut # " << std::setw(25) << "Cut Name " << std::setw(50) << "Events Passing Selection " << std::setw(25) << " Relative Efficiency" <<std::setw(25) <<" Absolute Efficiency  "  <<std::endl;
-  for(size_t icut=0; icut<=SRBCutList.size()-1; ++icut)
-    {
-      if (icut == 0){
-	std::cout << std::setw(25) <<std::left << icut+1 << std::setw(25)  << std::left << SRBCutList[icut] << std::setw(25) << std::right << HSRB_noWgt->GetBinContent(icut+1) << std::setw(25)<< std::right << std::setprecision(5) << HSRB_noWgt->GetBinContent(icut+1)/HSRB_noWgt->GetBinContent(icut+1) << std::setw(25) <<  std::right << HSRB_noWgt->GetBinContent(icut+1)/HSRB_noWgt->GetBinContent(1)   <<std::endl;
-      }
-      else{
-	std::cout << std::setw(25) <<std::left << icut+1 << std::setw(25)  << std::left << SRBCutList[icut] << std::setw(25) << std::right << HSRB_noWgt->GetBinContent(icut+1) << std::setw(25)<< std::right << std::setprecision(5) << HSRB_noWgt->GetBinContent(icut+1)/HSRB_noWgt->GetBinContent(icut) << std::setw(25) <<  std::right << HSRB_noWgt->GetBinContent(icut+1)/HSRB_noWgt->GetBinContent(1)   <<std::endl;
-      }
-    }  
-  
-  std::cout << "Scaled Events" << std::endl;
-  std::cout << "Cut # " << std::setw(25) << "Cut Name " << std::setw(50) << "Events Passing Selection " << std::setw(25) << " Relative Efficiency" <<std::setw(25) <<" Absolute Efficiency  "  <<std::endl;
-  for(size_t icut=0; icut<=SRBCutList.size()-1; ++icut)
-    {
-
-    if (icut == 0){
-      std::cout << std::setw(25) <<std::left << icut+1 << std::setw(25)  << std::left << SRBCutList[icut] << std::setw(25) << std::right << HSRB_allWgt->GetBinContent(icut+1) << std::setw(25)<< std::right << std::setprecision(5) << HSRB_allWgt->GetBinContent(icut+1)/(HSRB_allWgt->GetBinContent(icut+1)) << std::setw(25) <<  std::right << HSRB_allWgt->GetBinContent(icut+1)/(HSRB_allWgt->GetBinContent(1))   <<std::endl;
-      }
-      else{
-	std::cout << std::setw(25) <<std::left << icut+1 << std::setw(25)  << std::left << SRBCutList[icut] << std::setw(25) << std::right << HSRB_allWgt->GetBinContent(icut+1) << std::setw(25)<< std::right << std::setprecision(5) << HSRB_allWgt->GetBinContent(icut+1)/(HSRB_allWgt->GetBinContent(icut)) << std::setw(25) <<  std::right << HSRB_allWgt->GetBinContent(icut+1)/(HSRB_allWgt->GetBinContent(1))   <<std::endl;
-      }
-  
-    }  
-
-  }
-
-
-  std::vector<std::string> SRCCutList; 
-  SRCCutList.push_back("NONE");
-  SRCCutList.push_back("GRL");
-  SRCCutList.push_back("LAr & Tile");
-  SRCCutList.push_back("MET trigger");
-  SRCCutList.push_back("Primary Vertex >= 1");
-  SRCCutList.push_back("Jet/MET");
-  SRCCutList.push_back("Cosmic Muons");
-  SRCCutList.push_back("Muon Cleaning");
-  SRCCutList.push_back("MET > 250");
-  SRCCutList.push_back("nBJets >= 3");
-  SRCCutList.push_back("nJets >= 4");
-  SRCCutList.push_back("nBaselineLep == 0");
-  SRCCutList.push_back("minDelPhi >0.4");
-  SRCCutList.push_back("metsig>25");
-  SRCCutList.push_back("metsig>27");
-  SRCCutList.push_back("metsig>30");
-  SRCCutList.push_back("metsig>32");
-  SRCCutList.push_back("NA");
-  SRCCutList.push_back("NA");
-  SRCCutList.push_back("NA");
-  SRCCutList.push_back("NA");
-  SRCCutList.push_back("NA");
-  SRCCutList.push_back("NA");
-  SRCCutList.push_back("NA");
-
-
-  
-
-  bool doSRCCutflow = true;
-  if (doSRCCutflow){
-
-  std::cout << "Number of weighted events total:"  << PUSumOfWeights << std::endl;
-  
-  std::cout << "SRC Selections:" << std::endl;
-  std::cout << "Raw Events" << std::endl;
-  std::cout << "Sum Of Weights = " << h_SumOfWeights->Integral() << std::endl;
-  std::cout << "Cut # " << std::setw(25) << "Cut Name " << std::setw(50) << "Events Passing Selection " << std::setw(25) << " Relative Efficiency" <<std::setw(25) <<" Absolute Efficiency  "  <<std::endl;
-  for(size_t icut=0; icut<=SRCCutList.size()-1; ++icut)
-    {
-      if (icut == 0){
-	std::cout << std::setw(25) <<std::left << icut+1 << std::setw(25)  << std::left << SRCCutList[icut] << std::setw(25) << std::right << HSRC_noWgt->GetBinContent(icut+1) << std::setw(25)<< std::right << std::setprecision(5) << HSRC_noWgt->GetBinContent(icut+1)/HSRC_noWgt->GetBinContent(icut+1) << std::setw(25) <<  std::right << HSRC_noWgt->GetBinContent(icut+1)/HSRC_noWgt->GetBinContent(1)   <<std::endl;
-      }
-      else{
-	std::cout << std::setw(25) <<std::left << icut+1 << std::setw(25)  << std::left << SRCCutList[icut] << std::setw(25) << std::right << HSRC_noWgt->GetBinContent(icut+1) << std::setw(25)<< std::right << std::setprecision(5) << HSRC_noWgt->GetBinContent(icut+1)/HSRC_noWgt->GetBinContent(icut) << std::setw(25) <<  std::right << HSRC_noWgt->GetBinContent(icut+1)/HSRC_noWgt->GetBinContent(1)   <<std::endl;
-      }
-    }  
-  
-  std::cout << "Scaled Events" << std::endl;
-  std::cout << "Cut # " << std::setw(25) << "Cut Name " << std::setw(50) << "Events Passing Selection " << std::setw(25) << " Relative Efficiency" <<std::setw(25) <<" Absolute Efficiency  "  <<std::endl;
-  for(size_t icut=0; icut<=SRCCutList.size()-1; ++icut)
-    {
-    if (icut == 0){
-      std::cout << std::setw(25) <<std::left << icut+1 << std::setw(25)  << std::left << SRCCutList[icut] << std::setw(25) << std::right << HSRC_allWgt->GetBinContent(icut+1) << std::setw(25)<< std::right << std::setprecision(5) << HSRC_allWgt->GetBinContent(icut+1)/(HSRC_allWgt->GetBinContent(icut+1)) << std::setw(25) <<  std::right << HSRC_allWgt->GetBinContent(icut+1)/(HSRC_allWgt->GetBinContent(1))   <<std::endl;
-      }
-      else{
-	std::cout << std::setw(25) <<std::left << icut+1 << std::setw(25)  << std::left << SRCCutList[icut] << std::setw(25) << std::right << HSRC_allWgt->GetBinContent(icut+1) << std::setw(25)<< std::right << std::setprecision(5) << HSRC_allWgt->GetBinContent(icut+1)/(HSRC_allWgt->GetBinContent(icut)) << std::setw(25) <<  std::right << HSRC_allWgt->GetBinContent(icut+1)/(HSRC_allWgt->GetBinContent(1))   <<std::endl;
-      }
-  
-    }  
-
-  }
-  
-
 
 
   std::cout << "Sum of Pile up = " << HSumOfPileUp->GetBinContent(1) << std::endl;
