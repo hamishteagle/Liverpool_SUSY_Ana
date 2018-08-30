@@ -102,7 +102,7 @@ int main( int argc, char* argv[]) {
     // inputFile = "trialFiles/mc16_13TeV.364151.Sherpa_221_NNPDF30NNLO_Znunu_MAXHTPTV280_500_CVetoBVeto.deriv.DAOD_SUSY1.e5308_s3126_r9364_r9315_p3401/";
 
     submitDir = submitDir+inputFile;
-    
+    std::cout<<"The output file directory is; "<<submitDir<<std::endl;
     inputFile = inputDir+inputFile;
 
     SH::DiskListLocal list (inputFile);
