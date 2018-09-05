@@ -38,7 +38,7 @@ class ObjectDef: public virtual IObjectDef
   void FillFatJets_kt12();
   void SetPrimVertex();
 
-  bool SetUpFatJetTools(JetToolRunner *& tool, double jetradius, std::string inputcontainer, std::string outputcontainer);
+  bool SetUpFatJetTools(JetToolRunner *&tool, double jetradius, std::string inputcontainer, std::string outputcontainer);
   bool removeFatJetTools(std::string systName);
   void process_mem_usage(double & vm_usage, double &resident_set);
   int  CheckMem();

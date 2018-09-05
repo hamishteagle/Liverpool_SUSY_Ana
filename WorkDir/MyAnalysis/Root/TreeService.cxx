@@ -22,7 +22,7 @@ TreeService::TreeService(TTree *outputTree, TDirectory *OutDir){
   tree->Branch("lumiWgt", &lumiScaled);
   tree->Branch("sampleSFmCTbbll",&sampleSFmCTbbll);
   tree->Branch("pileUpSumOfWeights",&pileUpSumOfWeights);
-  tree->Branch("year",&year);
+  //  tree->Branch("year",&year);
 
 
   //Initial event cleaning
@@ -432,17 +432,17 @@ TreeService::TreeService(TTree *outputTree, TDirectory *OutDir){
 
 
 
-  tree->Branch("fatJet8_pT", &fatJet8_pT);
-  tree->Branch("fatJet8_eta", &fatJet8_eta);
-  tree->Branch("fatJet8_phi", &fatJet8_phi);
-  tree->Branch("fatJet8_E", &fatJet8_E);
-  tree->Branch("fatJet8_M", &fatJet8_M);
+  //tree->Branch("fatJet8_pT", &fatJet8_pT);
+  //tree->Branch("fatJet8_eta", &fatJet8_eta);
+  //tree->Branch("fatJet8_phi", &fatJet8_phi);
+  //tree->Branch("fatJet8_E", &fatJet8_E);
+  //tree->Branch("fatJet8_M", &fatJet8_M);
 
-  tree->Branch("fatJet12_pT", &fatJet12_pT);
-  tree->Branch("fatJet12_eta", &fatJet12_eta);
-  tree->Branch("fatJet12_phi", &fatJet12_phi);
-  tree->Branch("fatJet12_E", &fatJet12_E);
-  tree->Branch("fatJet12_M", &fatJet12_M);
+  //tree->Branch("fatJet12_pT", &fatJet12_pT);
+  //tree->Branch("fatJet12_eta", &fatJet12_eta);
+  //tree->Branch("fatJet12_phi", &fatJet12_phi);
+  //tree->Branch("fatJet12_E", &fatJet12_E);
+  //tree->Branch("fatJet12_M", &fatJet12_M);
 
 
   tree->Branch("metsig_SumET", &metsig_SumET);
@@ -459,7 +459,7 @@ TreeService::TreeService(TTree *outputTree, TDirectory *OutDir){
 }
 
 
-void TreeService::fillTree(IObjectDef *objects ,PreliminarySel &region, CalculateVariables &variables, MCChecks MCTruthInfo, double mFinalWeight, double mInitialWeight, double puWeight, double SFmCTbbll, bool TrigMET, bool TrigMu, bool TrigEl, bool TrigGamma, bool Trig6j, std::vector<int> triggers, double puSumWeights, double TRUTHMET, double TRUTHHT, bool CoreFlags, bool SCTFlag,bool LArTileFlags, bool passedPrimVertexes, bool passedJetCleans, bool passedCosmicMus, bool passedMuonCleans, double RNo,  double RenormedMCWgt, int MCyear){
+void TreeService::fillTree(IObjectDef *objects ,PreliminarySel &region, CalculateVariables &variables, MCChecks MCTruthInfo, double mFinalWeight, double mInitialWeight, double puWeight, double SFmCTbbll, bool TrigMET, bool TrigMu, bool TrigEl, bool TrigGamma, bool Trig6j, std::vector<int> triggers, double puSumWeights, double TRUTHMET, double TRUTHHT, bool CoreFlags, bool SCTFlag,bool LArTileFlags, bool passedPrimVertexes, bool passedJetCleans, bool passedCosmicMus, bool passedMuonCleans, double RNo,  double RenormedMCWgt){
 
   //  std::cout << "Filling the Tree" << std::endl;
   CutsRegion = region.region;
@@ -472,7 +472,7 @@ void TreeService::fillTree(IObjectDef *objects ,PreliminarySel &region, Calculat
   passedCosmicMu=passedCosmicMus;
   passedMuonClean=passedMuonCleans;
   triggerDecisions = triggers;
-  year = MCyear;
+  //year = MCyear;
   m_finalWeightSum = mFinalWeight;
   m_intialWeightSum = mInitialWeight;
 
@@ -870,17 +870,17 @@ void TreeService::fillTree(IObjectDef *objects ,PreliminarySel &region, Calculat
   tau_SmallestDR.clear();   
   tau_associatedTrue.clear();   
 
-  fatJet8_pT.clear();
-  fatJet8_eta.clear();
-  fatJet8_phi.clear();
-  fatJet8_E.clear();
-  fatJet8_M.clear();
+  // fatJet8_pT.clear();
+  // fatJet8_eta.clear();
+  // fatJet8_phi.clear();
+  // fatJet8_E.clear();
+  // fatJet8_M.clear();
 
-  fatJet12_pT.clear();
-  fatJet12_eta.clear();
-  fatJet12_phi.clear();
-  fatJet12_E.clear();
-  fatJet12_M.clear();
+  // fatJet12_pT.clear();
+  // fatJet12_eta.clear();
+  // fatJet12_phi.clear();
+  // fatJet12_E.clear();
+  // fatJet12_M.clear();
 
     
 
@@ -917,23 +917,23 @@ void TreeService::fillTree(IObjectDef *objects ,PreliminarySel &region, Calculat
     }
   
   
-  int maxFatJet8 = objects->getFatJets_kt8()->size();
-  for (int iJet = 0; iJet < maxFatJet8; iJet++){
-    fatJet8_pT.push_back(0.001*(*(objects->getFatJets_kt8()))[iJet]->pt());
-    fatJet8_eta.push_back((*(objects->getFatJets_kt8()))[iJet]->eta());
-    fatJet8_phi.push_back((*(objects->getFatJets_kt8()))[iJet]->phi());
-    fatJet8_E.push_back(0.001*(*(objects->getFatJets_kt8()))[iJet]->e());
-    fatJet8_M.push_back(0.001*(*(objects->getFatJets_kt8()))[iJet]->m());
-  }
+  // int maxFatJet8 = objects->getFatJets_kt8()->size();
+  // for (int iJet = 0; iJet < maxFatJet8; iJet++){
+  //   fatJet8_pT.push_back(0.001*(*(objects->getFatJets_kt8()))[iJet]->pt());
+  //   fatJet8_eta.push_back((*(objects->getFatJets_kt8()))[iJet]->eta());
+  //   fatJet8_phi.push_back((*(objects->getFatJets_kt8()))[iJet]->phi());
+  //   fatJet8_E.push_back(0.001*(*(objects->getFatJets_kt8()))[iJet]->e());
+  //   fatJet8_M.push_back(0.001*(*(objects->getFatJets_kt8()))[iJet]->m());
+  // }
   
-  int maxFatJet12 = objects->getFatJets_kt12()->size();
-  for (int iJet = 0; iJet < maxFatJet12; iJet++){
-    fatJet12_pT.push_back(0.001*(*(objects->getFatJets_kt12()))[iJet]->pt());
-    fatJet12_eta.push_back((*(objects->getFatJets_kt12()))[iJet]->eta());
-    fatJet12_phi.push_back((*(objects->getFatJets_kt12()))[iJet]->phi());
-    fatJet12_E.push_back(0.001*(*(objects->getFatJets_kt12()))[iJet]->e());
-    fatJet12_M.push_back(0.001*(*(objects->getFatJets_kt12()))[iJet]->m());
-  }
+  // int maxFatJet12 = objects->getFatJets_kt12()->size();
+  // for (int iJet = 0; iJet < maxFatJet12; iJet++){
+  //   fatJet12_pT.push_back(0.001*(*(objects->getFatJets_kt12()))[iJet]->pt());
+  //   fatJet12_eta.push_back((*(objects->getFatJets_kt12()))[iJet]->eta());
+  //   fatJet12_phi.push_back((*(objects->getFatJets_kt12()))[iJet]->phi());
+  //   fatJet12_E.push_back(0.001*(*(objects->getFatJets_kt12()))[iJet]->e());
+  //   fatJet12_M.push_back(0.001*(*(objects->getFatJets_kt12()))[iJet]->m());
+  // }
   
 
 

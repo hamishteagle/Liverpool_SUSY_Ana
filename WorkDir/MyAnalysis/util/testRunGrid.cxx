@@ -69,7 +69,7 @@ int gridmain( int argc, char* argv[]) {
 	RunningWithPhotons = false;
       }
       
-      RunningWithSyst = true; //Hardcode for systematics 
+      RunningWithSyst = false; //Hardcode for systematics 
       std::cout << "Running with Syst = " << RunningWithSyst << std::endl;
       std::cout << "Running with Photons = " << RunningWithPhotons << std::endl;
 

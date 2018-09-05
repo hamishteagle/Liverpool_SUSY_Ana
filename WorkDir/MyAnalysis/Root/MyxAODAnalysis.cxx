@@ -276,12 +276,13 @@ EL::StatusCode MyxAODAnalysis :: changeInput (bool firstFile)
   
   std::cout << "Changing the input file." << std::endl;
   MetaData = dynamic_cast<TTree*> (wk()->inputFile()->Get("MetaData"));
+  std::cout<<"Got the MetaData"<<std::endl;
   if (MetaData) {
-    
+    std::cout<<"In metadata"<<std::endl;
     MetaData->LoadTree(0);
-    
+    std::cout<<"Loaded the tree"<<std::endl;
     m_isDerivation = !MetaData->GetBranch("StreamAOD");
-    
+    std::cout<<"Get Branch StreamAOD passed"<<std::endl;
   }
 
 return EL::StatusCode::SUCCESS;
@@ -291,6 +292,7 @@ return EL::StatusCode::SUCCESS;
 
 EL::StatusCode MyxAODAnalysis :: initialize ()
 {
+  std::cout<<"In initialise"<<std::endl;
   // Here you do everything that you need to do after the first input
   // file has been connected and before the first event is processed,
   // e.g. create additional histograms based on which variables are
@@ -685,7 +687,7 @@ EL::StatusCode MyxAODAnalysis :: execute ()
 	if (!isMC){
 	  if(!(m_grl->passRunLB(*eventInfo))){
 	    std::cout<<"Failed on good run lists"<<std::endl;
-	    if(!m_objs->removeFatJetTools(syst.name()))std::cout<<"Failed to remove FatJet tools"<<std::endl;
+	    //if(!m_objs->removeFatJetTools(syst.name()))std::cout<<"Failed to remove FatJet tools"<<std::endl;
 	    delete m_objs;
 	    std::cout<<"In reset checkMC"<<std::endl;
 	    checkMC.reset();
@@ -736,7 +738,7 @@ EL::StatusCode MyxAODAnalysis :: execute ()
 	    sctFlag = false;
 	    isyst++;
 	    std::cout<<"Failed on SCT"<<std::endl;
-	    if(!m_objs->removeFatJetTools(syst.name()))std::cout<<"Failed to remove FatJet tools"<<std::endl;
+	    //if(!m_objs->removeFatJetTools(syst.name()))std::cout<<"Failed to remove FatJet tools"<<std::endl;
 	    delete m_objs;
 	    checkMC.reset();
 	    continue;
@@ -745,7 +747,7 @@ EL::StatusCode MyxAODAnalysis :: execute ()
 	    coreFlag = false;
 	    isyst++;
 	    std::cout<<"Failed on core"<<std::endl;
-	    if(!m_objs->removeFatJetTools(syst.name()))std::cout<<"Failed to remove FatJet tools"<<std::endl;
+	    //if(!m_objs->removeFatJetTools(syst.name()))std::cout<<"Failed to remove FatJet tools"<<std::endl;
 	    delete m_objs;
 	    checkMC.reset();
 	    continue;
@@ -754,7 +756,7 @@ EL::StatusCode MyxAODAnalysis :: execute ()
 	    LArTileFlag=false;
 	    isyst++;
 	    std::cout<<"Failed on LAR tiles"<<std::endl;
-	    if(!m_objs->removeFatJetTools(syst.name()))std::cout<<"Failed to remove FatJet tools"<<std::endl;
+	    //if(!m_objs->removeFatJetTools(syst.name()))std::cout<<"Failed to remove FatJet tools"<<std::endl;
 	    delete m_objs;
 	    checkMC.reset();
 	    continue;
@@ -833,7 +835,7 @@ EL::StatusCode MyxAODAnalysis :: execute ()
 	  passedPrimVertex=false;
 	  isyst++;
 	  std::cout<<"Failed on single primary vertex"<<std::endl;
-	  if(!m_objs->removeFatJetTools(syst.name()))std::cout<<"Failed to remove FatJet tools"<<std::endl;
+	  //if(!m_objs->removeFatJetTools(syst.name()))std::cout<<"Failed to remove FatJet tools"<<std::endl;
 	  delete m_objs;
 	  checkMC.reset();
 	  continue;
@@ -845,7 +847,7 @@ EL::StatusCode MyxAODAnalysis :: execute ()
 	  passedJetClean=false;
 	  isyst++;
 	  std::cout<<"Failed on Jet cleaning"<<std::endl;
-	  if(!m_objs->removeFatJetTools(syst.name()))std::cout<<"Failed to remove FatJet tools"<<std::endl;
+	  //if(!m_objs->removeFatJetTools(syst.name()))std::cout<<"Failed to remove FatJet tools"<<std::endl;
 	  delete m_objs;
 	  continue;
 	}
@@ -855,7 +857,7 @@ EL::StatusCode MyxAODAnalysis :: execute ()
 	  passedCosmicMu=false;
 	  isyst++;
 	  std::cout<<"Failed on cosmic muons"<<std::endl;
-	  if(!m_objs->removeFatJetTools(syst.name()))std::cout<<"Failed to remove FatJet tools"<<std::endl;
+	  //if(!m_objs->removeFatJetTools(syst.name()))std::cout<<"Failed to remove FatJet tools"<<std::endl;
 	  delete m_objs;
 	  checkMC.reset();
 	  continue;
@@ -866,7 +868,7 @@ EL::StatusCode MyxAODAnalysis :: execute ()
 	  passedMuonClean=false;
 	  isyst++;
 	  std::cout<<"Failed on bad muons"<<std::endl;
-	  if(!m_objs->removeFatJetTools(syst.name()))std::cout<<"Failed to remove FatJet tools"<<std::endl;
+	  //if(!m_objs->removeFatJetTools(syst.name()))std::cout<<"Failed to remove FatJet tools"<<std::endl;
 	  delete m_objs;
 	  checkMC.reset();
 	  continue;
@@ -898,7 +900,7 @@ EL::StatusCode MyxAODAnalysis :: execute ()
 	if((m_objs->getGoodJets()->size()<2 || (m_objs->getGoodElectrons()->size()<1 && m_objs->getGoodMuons()->size()<1))){
 	  isyst++;
 	  //std::cout<<"Failed at trimming"<<std::endl;
-	  if(!m_objs->removeFatJetTools(syst.name()))std::cout<<"Failed to remove FatJet tools"<<std::endl;
+	  //if(!m_objs->removeFatJetTools(syst.name()))std::cout<<"Failed to remove FatJet tools"<<std::endl;
 	  delete m_objs;
 	  checkMC.reset();
 	  m_varCalc.reset();
@@ -909,18 +911,18 @@ EL::StatusCode MyxAODAnalysis :: execute ()
 	
 	if ( m_fileType != "DAOD_TRUTH1"){
 	  if (m_regions->interestingRegion || RunningLocally){
-	    (m_treeServiceVector[isyst])->fillTree(m_objs, *m_regions, *m_varCalc, *checkMC,m_finalSumOfWeights, m_initialSumOfWeights, puWgt, SFmctbbll, passedMETTrigger, passedMuTrigger, passedElTrigger, passedGammaTrigger, passedMultiJetTrigger, passedTriggers, PUSumOfWeights, truthfilt_MET, truthfilt_HT, coreFlag, sctFlag, LArTileFlag, passedPrimVertex, passedJetClean, passedCosmicMu, passedMuonClean, m_runNumber, renormedMcWgt, year );
+	    (m_treeServiceVector[isyst])->fillTree(m_objs, *m_regions, *m_varCalc, *checkMC,m_finalSumOfWeights, m_initialSumOfWeights, puWgt, SFmctbbll, passedMETTrigger, passedMuTrigger, passedElTrigger, passedGammaTrigger, passedMultiJetTrigger, passedTriggers, PUSumOfWeights, truthfilt_MET, truthfilt_HT, coreFlag, sctFlag, LArTileFlag, passedPrimVertex, passedJetClean, passedCosmicMu, passedMuonClean, m_runNumber, renormedMcWgt);
 	  }
 	}
 	// not running on reco. fill everything for TRUTH
 	else{
-	  (m_treeServiceVector[isyst])->fillTree(m_objs, *m_regions, *m_varCalc, *checkMC,m_finalSumOfWeights, m_initialSumOfWeights, puWgt, SFmctbbll, passedMETTrigger, passedMuTrigger, passedElTrigger, passedGammaTrigger, passedMultiJetTrigger, passedTriggers, PUSumOfWeights, truthfilt_MET, truthfilt_HT , coreFlag, sctFlag, LArTileFlag, passedPrimVertex, passedJetClean, passedCosmicMu, passedMuonClean, m_runNumber, renormedMcWgt, year);
+	  (m_treeServiceVector[isyst])->fillTree(m_objs, *m_regions, *m_varCalc, *checkMC,m_finalSumOfWeights, m_initialSumOfWeights, puWgt, SFmctbbll, passedMETTrigger, passedMuTrigger, passedElTrigger, passedGammaTrigger, passedMultiJetTrigger, passedTriggers, PUSumOfWeights, truthfilt_MET, truthfilt_HT , coreFlag, sctFlag, LArTileFlag, passedPrimVertex, passedJetClean, passedCosmicMu, passedMuonClean, m_runNumber, renormedMcWgt);
 	}
 	
 	isyst++;
 	
 
-	if (!m_objs->removeFatJetTools(syst.name())){std::cout<<"Failed to remove FatJet tools"<<std::endl;}
+	//if (!m_objs->removeFatJetTools(syst.name())){std::cout<<"Failed to remove FatJet tools"<<std::endl;}
 	delete m_objs;
 	checkMC.reset();
 	m_varCalc.reset();
@@ -964,10 +966,10 @@ EL::StatusCode MyxAODAnalysis :: execute ()
   const char* APP_NAME = "MyxAODAnalysis";
 
 
-  std::cout << "Sum of Pile up = " << HSumOfPileUp->GetBinContent(1) << std::endl;
-  std::cout << "Sum of number of events processed = " << noWeightHist->GetBinContent(1) << std::endl;
-  std::cout << "Sum of analysis weights = " << sherpaWeightHist->GetBinContent(1) << std::endl;
-  
+  //std::cout << "Sum of Pile up = " << HSumOfPileUp->GetBinContent(1) << std::endl;
+  //std::cout << "Sum of number of events processed = " << noWeightHist->GetBinContent(1) << std::endl;
+  //std::cout << "Sum of analysis weights = " << sherpaWeightHist->GetBinContent(1) << std::endl;
+  std::cout<<"Finished the run sucessfully"<<std::endl;
   
   // GRL
   

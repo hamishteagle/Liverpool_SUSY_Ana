@@ -75,11 +75,11 @@ ObjectDef::ObjectDef(xAOD::TEvent* event, ST::SUSYObjDef_xAOD* SUSYTool, xAOD::T
 
   DSID = mcChannelNumber;
 
-  fatjet_kt12_tool = new JetToolRunner("m_jetRecTool_kt12_"+systematic);
-  fatjet_kt8_tool = new JetToolRunner("m_jetRecTool_kt8_"+systematic);
+  //  fatjet_kt12_tool = new JetToolRunner("m_jetRecTool_kt12_"+systematic);
+  //fatjet_kt8_tool = new JetToolRunner("m_jetRecTool_kt8_"+systematic);
 
-  this->SetUpFatJetTools(fatjet_kt12_tool, 1.2, "goodJets"+systematic, "MyFatJetsKt12"+systematic);
-  this->SetUpFatJetTools(fatjet_kt8_tool, 0.8, "goodJets"+systematic, "MyFatJetsKt8"+systematic);
+  //  this->SetUpFatJetTools(fatjet_kt12_tool, 1.2, "goodJets"+systematic, "MyFatJetsKt12"+systematic);
+  //  this->SetUpFatJetTools(fatjet_kt8_tool, 0.8, "goodJets"+systematic, "MyFatJetsKt8"+systematic);
 
 
   this->SetPrimVertex();
@@ -99,8 +99,8 @@ ObjectDef::ObjectDef(xAOD::TEvent* event, ST::SUSYObjDef_xAOD* SUSYTool, xAOD::T
   this->FillBaselineTaus();
   this->FillBaselineMuons();
   this->FillGoodJets();
-  this->FillFatJets_kt8();
-  this->FillFatJets_kt12();
+  //this->FillFatJets_kt8();
+  //this->FillFatJets_kt12();
   //this->FillBaselinePhotons();
     
 }
@@ -869,7 +869,7 @@ void ObjectDef::FillFatJets_kt12(){
 
 }
 
-bool ObjectDef::SetUpFatJetTools(JetToolRunner *& tool, double jetradius, std::string inputcontainer, std::string outputcontainer){
+bool ObjectDef::SetUpFatJetTools(JetToolRunner *&tool, double jetradius, std::string inputcontainer, std::string outputcontainer){
 
   
   //double jetradius = 0.8; 
@@ -882,7 +882,7 @@ bool ObjectDef::SetUpFatJetTools(JetToolRunner *& tool, double jetradius, std::s
   ToolHandleArray<IPseudoJetGetter> hgets;
   ToolHandleArray<IJetExecuteTool> hrecs;
 
-  PseudoJetGetter* plcget = new PseudoJetGetter(("mylcget"+outputcontainer).c_str());
+  PseudoJetGetter * plcget = new PseudoJetGetter(("mylcget"+outputcontainer).c_str());
   plcget->msg().setLevel( MSG::ERROR);
   plcget->setProperty("InputContainer", inputcontainer);
   plcget->setProperty("OutputContainer", "Reclustered"+outputcontainer);
@@ -894,12 +894,12 @@ bool ObjectDef::SetUpFatJetTools(JetToolRunner *& tool, double jetradius, std::s
   hgets.push_back(hlcget);
 
 
-  JetFromPseudojet* pbuild = new JetFromPseudojet(("myjetbuild"+outputcontainer).c_str());
+  JetFromPseudojet * pbuild = new JetFromPseudojet(("myjetbuild"+outputcontainer).c_str());
   ToolHandle<IJetFromPseudojet> hbuild(pbuild);
   pbuild->msg().setLevel( MSG::ERROR);
   pbuild->initialize();
   
-  JetFinder* pfind = new JetFinder(("myjetfind"+outputcontainer).c_str());
+  JetFinder * pfind = new JetFinder(("myjetfind"+outputcontainer).c_str());
   pfind->msg().setLevel( MSG::ERROR);
   pfind->setProperty("JetAlgorithm", "AntiKt");
   pfind->setProperty("JetRadius", jetradius);
@@ -913,7 +913,7 @@ bool ObjectDef::SetUpFatJetTools(JetToolRunner *& tool, double jetradius, std::s
   
 
 
-  JetRecTool* pjrf = new JetRecTool(("myjrfind"+outputcontainer).c_str());
+  JetRecTool * pjrf = new JetRecTool(("myjrfind"+outputcontainer).c_str());
   pjrf->msg().setLevel( MSG::ERROR);
   pjrf->setProperty("OutputContainer", outputcontainer);
   pjrf->setProperty("PseudoJetGetters", hgets);
@@ -929,8 +929,11 @@ bool ObjectDef::SetUpFatJetTools(JetToolRunner *& tool, double jetradius, std::s
   //  Info("Initialising JetReclusteringTool(s)");
   tool->initialize();
   //tool->print();
-
-
+  
+  delete plcget;//Need to delete all of the below tools in some way to avoid a memory leal 
+  delete pbuild;
+  delete pfind;
+  delete pjrf;
   return true;
 }
 
@@ -956,6 +959,7 @@ bool ObjectDef::removeFatJetTools(std::string systName){
     std::string pjrfind_retriever12 = pjrfind12+"_retriever";
     
     asg::ToolStore::remove(plcGet8);
+    
     asg::ToolStore::remove(plcGet12);
     //std::cout<<"Removed the tool in a continue loop  plcget "<<std::endl;
     asg::ToolStore::remove(pbuild8);
@@ -976,6 +980,9 @@ bool ObjectDef::removeFatJetTools(std::string systName){
     asg::ToolStore::remove(FatJetsTool8);
     asg::ToolStore::remove(FatJetsTool12);
     //std::cout<<"Removed the fatJets tools "<<std::endl;
+    
+    delete fatjet_kt12_tool;
+    delete fatjet_kt8_tool;
     return true;
 }
 //Memory usage checking 
