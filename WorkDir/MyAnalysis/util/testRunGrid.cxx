@@ -68,7 +68,7 @@ int gridmain( int argc, char* argv[]) {
       else{
 	RunningWithPhotons = false;
       }
-      
+      RunningWithSyst=false;
       std::cout << "Running with Syst = " << RunningWithSyst << std::endl;
       std::cout << "Running with Photons = " << RunningWithPhotons << std::endl;
 

@@ -644,7 +644,7 @@ EL::StatusCode MyxAODAnalysis :: execute ()
 
 
       mcChannel = eventInfo->mcChannelNumber();
-      std::cout << "Looking for xsec for " << mcChannel << std::endl;
+      //std::cout << "Looking for xsec for " << mcChannel << std::endl;
       //getting metdata from the Map (MapVariables.cxx) using the text file in format as MGPy8EG_A14N23LO_BB_onestepN2hN1.txt
       std::shared_ptr<MapVariables> m_mappedVars( new MapVariables (PathResolverFindCalibFile("MyAnalysis/MyAnalysis/MGPy8EG_A14N23LO_BB_onestepN2hN1.txt")));
       std::shared_ptr<MapVariables> m_mappedBkgVars( new MapVariables (PathResolverFindCalibFile("MyAnalysis/MyAnalysis/susy_crossSections_13TeV.txt")));
@@ -1150,7 +1150,7 @@ EL::StatusCode MyxAODAnalysis :: execute ()
 
 
 
-  //std::cout << "Tree service vector size:" << m_treeServiceVector.size() << std::endl;  
+  std::cout << "Tree service vector size:" << m_treeServiceVector.size() << std::endl;  
 
   //  std::cout<<"Finished Event loop succesfully"<<std::endl;
   
