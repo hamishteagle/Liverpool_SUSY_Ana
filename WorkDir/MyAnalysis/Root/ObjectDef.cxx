@@ -12,7 +12,6 @@ ObjectDef::ObjectDef(xAOD::TEvent* event, ST::SUSYObjDef_xAOD* SUSYTool, xAOD::T
   
   METSig_tool = Tool_METSig; 
   
-
   baselineElectronsBeforeOR = new xAOD::ElectronContainer(SG::VIEW_ELEMENTS);
   signalElectronsBeforeOR = new xAOD::ElectronContainer(SG::VIEW_ELEMENTS);
   baselineTausBeforeOR = new xAOD::TauJetContainer(SG::VIEW_ELEMENTS);
@@ -42,7 +41,7 @@ ObjectDef::ObjectDef(xAOD::TEvent* event, ST::SUSYObjDef_xAOD* SUSYTool, xAOD::T
   BJets = new xAOD::JetContainer(SG::VIEW_ELEMENTS);
   nonBJets = new xAOD::JetContainer(SG::VIEW_ELEMENTS);
   METmuons  = new xAOD::MuonContainer(SG::VIEW_ELEMENTS);
-  
+  std::cout<<"before record"<<std::endl;
   eventStore->record(baselineElectronsBeforeOR,"baselineElectronsBeforeOR"+systematic);
   eventStore->record(signalElectronsBeforeOR,"signalElectronsBeforeOR"+systematic);
   eventStore->record(baselineTausBeforeOR,"baselineTausBeforeOR"+systematic);
@@ -108,13 +107,12 @@ ObjectDef::ObjectDef(xAOD::TEvent* event, ST::SUSYObjDef_xAOD* SUSYTool, xAOD::T
 
 void ObjectDef::FillPreORMuons(){
 
-  //std::cout << "In Pre Muons" << std::endl;
 
   xAOD::MuonContainer* muons_nominal(0);
   xAOD::ShallowAuxContainer* muons_nominal_aux(0);
-
+  
   objTool->GetMuons(muons_nominal, muons_nominal_aux);
-
+  
   eventStore->record(muons_nominal, "CalibratedMuons"+systematic);
   eventStore->record(muons_nominal_aux, "CalibratedMuons_Aux"+systematic);
   

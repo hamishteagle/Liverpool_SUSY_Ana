@@ -550,7 +550,6 @@ EL::StatusCode MyxAODAnalysis :: initialize ()
 
 EL::StatusCode MyxAODAnalysis :: execute ()
 {
-  
   // Here you do everything that needs to be done on every single
   // event, e.g. read input variables, apply cuts, and fill
   // histograms and trees.  This is where most of your actual analysis
@@ -595,21 +594,18 @@ EL::StatusCode MyxAODAnalysis :: execute ()
       if(sysInfo.affectsKinematics || sysInfo.affectsWeights) isNominal = false;
     }
 
-	
     const xAOD::EventInfo* eventInfo =0;
     if (! m_event->retrieve(eventInfo, "EventInfo").isSuccess() ){
       Error("execute()","Failed to retrieve event info collection, exiting!!");
       isyst++;
       continue;
     }
-    
     m_lumiBlockNumber = eventInfo->lumiBlock();
     m_runNumber = eventInfo->runNumber();
     EventNumber = (eventInfo->eventNumber());
     
     xAOD::TStore* store = wk()->xaodStore();
     
-	
     double btagWgt = 1;
     double electronWgt = 1;
     double muonWgt = 1;
@@ -672,6 +668,7 @@ EL::StatusCode MyxAODAnalysis :: execute ()
 	
 	
 	// initialise the object definitions class
+
 	IObjectDef* m_objs;
 	
 	if (m_fileType == "DAOD_TRUTH1"){
@@ -680,15 +677,14 @@ EL::StatusCode MyxAODAnalysis :: execute ()
 	else{
 	  m_objs = new ObjectDef (m_event, objTool, store, mcChannel, EventNumber, mcWgt, m_lumiScaled, syst.name(), doPhotons, m_metSignif); 
 	}
-
+	std::cout<<"after object def"<<std::endl;
 	// Initialise the class which sorts out the MC checks (if required)
 	std::unique_ptr<MCChecks> checkMC (new MCChecks ());
-
 	if (!isMC){
 	  if(!(m_grl->passRunLB(*eventInfo))){
 	    std::cout<<"Failed on good run lists"<<std::endl;
 	    //if(!m_objs->removeFatJetTools(syst.name()))std::cout<<"Failed to remove FatJet tools"<<std::endl;
-	    delete m_objs;
+	    
 	    std::cout<<"In reset checkMC"<<std::endl;
 	    checkMC.reset();
 	    continue;
@@ -702,7 +698,6 @@ EL::StatusCode MyxAODAnalysis :: execute ()
 	  HTruthHTFilt->Fill(truthfilt_HT);
 	  checkMC->ttbar_decay(m_event);
 	}
-	
 	bool isTruthFile = false;
 	if (m_fileType == "DAOD_TRUTH1"){
 	  isTruthFile = true;
@@ -739,8 +734,8 @@ EL::StatusCode MyxAODAnalysis :: execute ()
 	    isyst++;
 	    std::cout<<"Failed on SCT"<<std::endl;
 	    //if(!m_objs->removeFatJetTools(syst.name()))std::cout<<"Failed to remove FatJet tools"<<std::endl;
-	    delete m_objs;
-	    checkMC.reset();
+	    
+	    //checkMC.reset();
 	    continue;
 	  }
 	  if (eventInfo->isEventFlagBitSet(xAOD::EventInfo::Core,18)){
@@ -748,8 +743,8 @@ EL::StatusCode MyxAODAnalysis :: execute ()
 	    isyst++;
 	    std::cout<<"Failed on core"<<std::endl;
 	    //if(!m_objs->removeFatJetTools(syst.name()))std::cout<<"Failed to remove FatJet tools"<<std::endl;
-	    delete m_objs;
-	    checkMC.reset();
+	    
+	    //checkMC.reset();
 	    continue;
 	  }
 	  if ((eventInfo->errorState(xAOD::EventInfo::LAr)==xAOD::EventInfo::Error) || (eventInfo->errorState(xAOD::EventInfo::Tile) == xAOD::EventInfo::Error)){
@@ -757,14 +752,13 @@ EL::StatusCode MyxAODAnalysis :: execute ()
 	    isyst++;
 	    std::cout<<"Failed on LAR tiles"<<std::endl;
 	    //if(!m_objs->removeFatJetTools(syst.name()))std::cout<<"Failed to remove FatJet tools"<<std::endl;
-	    delete m_objs;
-	    checkMC.reset();
+	    
+	    //	    checkMC.reset();
 	    continue;
 	  }
 	}
 
 	double nBadJet = m_objs->getBadJets()->size();
-
 	//Not doing cosmic muons for now
 	//double nCosmicMu = m_objs->getCosmicMuons()->size();
 	double nCosmicMu = 0;
@@ -817,8 +811,7 @@ EL::StatusCode MyxAODAnalysis :: execute ()
 	    }
 	  }
 	}
-	//	std::cout<<"MemCheck 4;"<<std::endl;      
-	//	m_objs->CheckMem();
+
 	//NEW TRIGGER IMPLEMENTATION
 	std::vector<std::string> triggers = {"2e12_lhloose_L12EM10VH","HLT_2e15_lhvloose_nod0_L12EM13VH","HLT_2e17_lhvloose_nod0","HLT_e17_lhloose_mu14","HLT_e17_lhloose_nod0_mu14","HLT_mu22_mu8noL1","HLT_mu20_mu8noL1","HLT_mu18_mu8noL1","HLT_e24_lhmedium_L1EM20VH","HLT_e24_lhmedium_nod0_L1EM20VH","HLT_e24_lhtight_nod0_ivarloose","HLT_e26_lhtight_nod0_ivarloose","HLT_e60_lhmedium","HLT_e60_lhmedium_nod0","HLT_e120_lhloose","HLT_e140_lhloose_nod0","HLT_mu20_iloose_L1MU15","HLT_mu24_ivarloose","HLT_mu24_ivarloose_L1MU15","HLT_mu24_ivarmedium","HLT_mu26_ivarmedium","HLT_mu50","HLT_xe70_mht","HLT_xe70_tc_lcw","HLT_xe80_tc_lcw_L1XE50","HLT_xe90_mht_L1XE50","HLT_xe100_mht_L1XE50","HLT_xe110_mht_L1XE50"}; 
 	std::vector<int> passedTriggers;
@@ -827,7 +820,7 @@ EL::StatusCode MyxAODAnalysis :: execute ()
 	  passedTriggers.push_back(trigDecision);
   	}
 	
-
+	std::cout<<"after triggers "<<std::endl;
 	if (passedElTrigger == 1 || passedMuTrigger == 1) passedLepTrigger = true;
 	
 	bool passedPrimVertex=true;
@@ -836,41 +829,34 @@ EL::StatusCode MyxAODAnalysis :: execute ()
 	  isyst++;
 	  std::cout<<"Failed on single primary vertex"<<std::endl;
 	  //if(!m_objs->removeFatJetTools(syst.name()))std::cout<<"Failed to remove FatJet tools"<<std::endl;
-	  delete m_objs;
-	  checkMC.reset();
 	  continue;
 	  //return EL::StatusCode::SUCCESS;
 	}
-  
+  	std::cout<<"after triggers 1"<<std::endl;
 	bool passedJetClean=true;
 	if (nBadJet > 0){
 	  passedJetClean=false;
 	  isyst++;
 	  std::cout<<"Failed on Jet cleaning"<<std::endl;
 	  //if(!m_objs->removeFatJetTools(syst.name()))std::cout<<"Failed to remove FatJet tools"<<std::endl;
-	  delete m_objs;
 	  continue;
 	}
-	
+	std::cout<<"after triggers 2"<<std::endl;
 	bool passedCosmicMu=true;
 	if (nCosmicMu > 0){
 	  passedCosmicMu=false;
 	  isyst++;
 	  std::cout<<"Failed on cosmic muons"<<std::endl;
 	  //if(!m_objs->removeFatJetTools(syst.name()))std::cout<<"Failed to remove FatJet tools"<<std::endl;
-	  delete m_objs;
-	  checkMC.reset();
 	  continue;
 	}
-  
+  	std::cout<<"after triggers 3"<<std::endl;
   	bool passedMuonClean=true;
 	if (nBadMu > 0){
 	  passedMuonClean=false;
 	  isyst++;
 	  std::cout<<"Failed on bad muons"<<std::endl;
 	  //if(!m_objs->removeFatJetTools(syst.name()))std::cout<<"Failed to remove FatJet tools"<<std::endl;
-	  delete m_objs;
-	  checkMC.reset();
 	  continue;
 	}
 	
@@ -880,10 +866,11 @@ EL::StatusCode MyxAODAnalysis :: execute ()
 	if(coreFlag && sctFlag && LArTileFlag && passedPrimVertex && passedJetClean && passedCosmicMu && passedMuonClean){
 	  passedCleaningCuts=true; 
 	}
-	
+	std::cout<<"before unique ptr delcaration"<<std::endl;
 	std::unique_ptr<CalculateVariables> m_varCalc(new CalculateVariables ( m_objs, isTruthFile, doPhotons));
 	std::unique_ptr<PreliminarySel> m_regions(new PreliminarySel (*m_varCalc));
 	
+	std::cout<<"after unique ptr delcaration"<<std::endl;
 	double SFmctbbll = 1;
 	
 	if (!isData && m_fileType != "DAOD_TRUTH1" ) {
@@ -895,20 +882,16 @@ EL::StatusCode MyxAODAnalysis :: execute ()
 	  PUSumOfWeights = 0;
 	  lepWgt = 1;
 	}
-
+	std::cout<<"after puSum of weights"<<std::endl;
 	//trimming for >1 lepton && >2 jets && cleaning cuts
 	if((m_objs->getGoodJets()->size()<2 || (m_objs->getGoodElectrons()->size()<1 && m_objs->getGoodMuons()->size()<1))){
 	  isyst++;
 	  //std::cout<<"Failed at trimming"<<std::endl;
 	  //if(!m_objs->removeFatJetTools(syst.name()))std::cout<<"Failed to remove FatJet tools"<<std::endl;
-	  delete m_objs;
-	  checkMC.reset();
-	  m_varCalc.reset();
-	  m_regions.reset();
 	  continue;
 	}
 	
-	
+	std::cout<<"before filling the trees"<<std::endl;
 	if ( m_fileType != "DAOD_TRUTH1"){
 	  if (m_regions->interestingRegion || RunningLocally){
 	    (m_treeServiceVector[isyst])->fillTree(m_objs, *m_regions, *m_varCalc, *checkMC,m_finalSumOfWeights, m_initialSumOfWeights, puWgt, SFmctbbll, passedMETTrigger, passedMuTrigger, passedElTrigger, passedGammaTrigger, passedMultiJetTrigger, passedTriggers, PUSumOfWeights, truthfilt_MET, truthfilt_HT, coreFlag, sctFlag, LArTileFlag, passedPrimVertex, passedJetClean, passedCosmicMu, passedMuonClean, m_runNumber, renormedMcWgt);
@@ -921,12 +904,9 @@ EL::StatusCode MyxAODAnalysis :: execute ()
 	
 	isyst++;
 	
-
-	//if (!m_objs->removeFatJetTools(syst.name())){std::cout<<"Failed to remove FatJet tools"<<std::endl;}
-	delete m_objs;
-	checkMC.reset();
-	m_varCalc.reset();
-	m_regions.reset();
+	// checkMC.reset();
+	// m_varCalc.reset();
+	// m_regions.reset();
   }
 
 
