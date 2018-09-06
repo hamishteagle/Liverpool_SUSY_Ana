@@ -1,18 +1,14 @@
 #ifndef MapVariables_h
 #define MapVariables_h
-
+#include <map>
 class MapVariables
 
 {
  public:
   MapVariables(std::string mapVarFile);
-  double getSF(int datasetID);
-  double getCrossSection(int datasetID);
-  double getFilterEff(int datasetID);
-  double getKFactor(int datasetID);
-  double getRelUncert(int datasetID);
-  bool find(int datasetID);
-  
+  ~MapVariables(){};
+  bool finder(int &datasetID, std::map<int,double>&map);
+  void clearMap();
  public:
   std::map <int, double> xSecMap;
   std::map <int, double> kFacMap;

@@ -18,11 +18,11 @@ TreeService::TreeService(TTree *outputTree, TDirectory *OutDir){
   tree->Branch("eventNumber", &eventNumber);
   tree->Branch("mcEventWeight", &mcEventWeight);
   tree->Branch("RenormedMcEventWeight", &RenormedMcEventWeight);
-  //tree->Branch("weightsVector", &weightsVector);
+  tree->Branch("weightsVector", &weightsVector);
   tree->Branch("lumiWgt", &lumiScaled);
   tree->Branch("sampleSFmCTbbll",&sampleSFmCTbbll);
   tree->Branch("pileUpSumOfWeights",&pileUpSumOfWeights);
-
+  //  tree->Branch("year",&year);
 
 
   //Initial event cleaning
@@ -31,7 +31,6 @@ TreeService::TreeService(TTree *outputTree, TDirectory *OutDir){
   tree->Branch("sctFlag", &sctFlag);
   tree->Branch("LArTileFlag",&LArTileFlag);
   tree->Branch("passedPrimVertex", &passedPrimVertex);
-  tree->Branch("passedGRL", &passedGRL);
   
   //Object cleaning cuts
   tree->Branch("passedJetClean", &passedJetClean);
@@ -50,22 +49,169 @@ TreeService::TreeService(TTree *outputTree, TDirectory *OutDir){
   tree->Branch("elTriggerMatch", &elTriggerMatch);
   tree->Branch("muTriggerMatch", &muTriggerMatch);
   tree->Branch("phTriggerMatch", &phTriggerMatch);
+  
+
+
+  tree->Branch("pTZBoson",&pTZBoson);
+  tree->Branch("duplicateVar",&duplicateVar);
+  tree->Branch("etaZBoson",&etaZBoson);
+  tree->Branch("pTVBoson_Sherpa",&pTZBoson_Sherpa);
+  tree->Branch("etaVBoson_Sherpa",&etaZBoson_Sherpa);
+  tree->Branch("Zqq",&Zqq);
+  tree->Branch("Zll",&Zll);
+
+  tree->Branch("leadingbs", &leadingbs);
+  tree->Branch("primaryb", &primaryb);
+  tree->Branch("secondaryb", &secondaryb);
 
   tree->Branch("truthFilterMET", &truthFilterMET);
   tree->Branch("truthFilterHT", &truthFilterHT);
+  tree->Branch("jetFilterno", &jetFilterno);
+  tree->Branch("jetFilterno_prompt", &jetFilterno_prompt);
 
 
   tree->Branch("m_bb", &m_bb);
+  tree->Branch("m_tautau", &m_tautau);
+  tree->Branch("m_CT",&m_CT);
   tree->Branch("m_CTcorr",&m_CTcorr);
   tree->Branch("m_ll", &m_ll);
   tree->Branch("h_T", &h_T);
   tree->Branch("m_T", &m_T);
+  tree->Branch("mbLmin", &mbLmin);
+  tree->Branch("ratioMETmEff2j", &ratioMETmEff2j);
+  tree->Branch("mEff2j", &mEff2j);
+
+  tree->Branch("ratioMETmEff3j", &ratioMETmEff3j);
+  tree->Branch("mEff3j", &mEff3j);
 
   tree->Branch("njet20" ,&njet20);
   tree->Branch("njet25" ,&njet25);
   tree->Branch("njet30", &njet30);
   tree->Branch("njet35", &njet35);
   tree->Branch("njet50", &njet50);
+
+  tree->Branch("Reco_pTZ", &Reco_pTZ);
+  tree->Branch("Reco_etaZ", &Reco_etaZ);
+  tree->Branch("Reco_phiZ", &Reco_phiZ);
+  tree->Branch("DR_Zb1", &DR_Zb1);
+  tree->Branch("DR_Zb2", &DR_Zb2);
+  tree->Branch("minDR_Zb", &minDR_Zb);
+  tree->Branch("DPhi_Zb1", &DPhi_Zb1);
+  tree->Branch("DPhi_Zb2", &DPhi_Zb2);
+  tree->Branch("DEta_Zb1", &DEta_Zb1);
+  tree->Branch("DEta_Zb2", &DEta_Zb2);
+  
+  tree->Branch("Asymmetry", &Asymmetry);
+  tree->Branch("m_Tj1", &m_Tj1);
+  tree->Branch("m_Tj2", &m_Tj2);
+  tree->Branch("m_Tj3", &m_Tj3);
+  tree->Branch("m_Tj4", &m_Tj4);
+
+  tree->Branch("m_Ttj1", &m_Ttj1);
+  tree->Branch("m_Ttj2", &m_Ttj2);
+  tree->Branch("m_Ttj1tj2", &m_Ttj1tj2);
+  tree->Branch("minm_Ttj", &minm_Ttj);
+  tree->Branch("maxm_Ttj", &maxm_Ttj);
+
+  tree->Branch("m_Tbmin", &m_Tbmin);
+  tree->Branch("m_Tb1", &m_Tb1);
+  tree->Branch("m_Tb2", &m_Tb2);
+  tree->Branch("dPhib1_MET", &dPhib1_MET);
+  tree->Branch("dPhib2_MET", &dPhib2_MET);
+  tree->Branch("mindPhib_MET", &mindPhib_MET);
+
+
+  tree->Branch("delPhi_tj1MET", &delPhi_tj1MET);
+  tree->Branch("delPhi_tj2MET", &delPhi_tj2MET);
+  tree->Branch("delPhi_tj1tj2", &delPhi_tj1tj2);
+  tree->Branch("mindelPhi_tjMET", &mindelPhi_tjMET);
+  tree->Branch("maxdelPhi_tjMET", &maxdelPhi_tjMET);
+  tree->Branch("dRtj1b1", &dRtj1b1);
+  tree->Branch("dRtj1b2", &dRtj1b2);
+  tree->Branch("dRtj1b3", &dRtj1b3);
+  tree->Branch("dRtj1b4", &dRtj1b4);
+
+  tree->Branch("dRtj2b1", &dRtj2b1);
+  tree->Branch("dRtj2b2", &dRtj2b2);
+  tree->Branch("dRtj2b3", &dRtj2b3);
+  tree->Branch("dRtj2b4", &dRtj2b4);
+
+  tree->Branch("mindRtj1b", &mindRtj1b);
+  tree->Branch("mindRtj2b", &mindRtj2b);
+
+  tree->Branch("nb1", &nb1);
+  tree->Branch("nb2", &nb2);
+
+
+
+  // List of deltaPhi Variables:
+  tree->Branch("dPhij1MET", &dPhij1MET);
+  tree->Branch("dPhij2MET", &dPhij2MET);
+  tree->Branch("dPhij3MET", &dPhij3MET);
+  tree->Branch("dPhij4MET", &dPhij4MET);
+
+  tree->Branch("dPhiL1MET", &dPhiL1MET);
+  tree->Branch("dPhiL2MET", &dPhiL2MET);
+
+  tree->Branch("dPhib1b2", &dPhib1b2);
+  tree->Branch("dPhiL1L2", &dPhiL1L2);
+
+  tree->Branch("dPhiL1b1", &dPhiL1b1);
+  tree->Branch("dPhiL1b2", &dPhiL1b2);
+  tree->Branch("dPhiL2b1", &dPhiL2b1);
+  tree->Branch("dPhiL2B2", &dPhiL2b2);
+  
+  tree->Branch("ttbar_W1_decay", &ttbar_W1_decay);
+  tree->Branch("ttbar_W2_decay", &ttbar_W2_decay);
+  tree->Branch("ttbar_tau1_decay", &ttbar_tau1_decay);
+  tree->Branch("ttbar_tau2_decay", &ttbar_tau2_decay);
+  tree->Branch("tau_1_prongs", &tau_1_prongs);
+  tree->Branch("tau_2_prongs", &tau_2_prongs);
+
+
+  // Minimums, be careful when calculating for incomplete regions to set to something sensible:
+  tree->Branch("minDPhijMET", &minDPhijMET);
+  tree->Branch("minAdjDPhijMET", &minAdjDPhijMET);
+  tree->Branch("adjDPhij1MET", &adjDPhij1MET);
+  tree->Branch("minDPhiLb", &minDPhiLb);
+  tree->Branch("minDPhijMET_4", &minDPhijMET_4);
+
+  // List of deltaEta Variables:
+  tree->Branch("dEtab1b2", &dEtab1b2);
+  tree->Branch("dEtaL1L2", &dEtaL1L2);
+
+  tree->Branch("dEtaL1bSystem", &dEtaL1bSystem);
+  tree->Branch("dEtaL1b1", &dEtaL1b1);
+  tree->Branch("dEtaL1b2", &dEtaL1b2);
+
+  tree->Branch("dEtaL2bSystem", &dEtaL2bSystem);
+  tree->Branch("dEtaL2b1", &dEtaL2b1);
+  tree->Branch("dEtaL2b2", &dEtaL2b2);
+
+  // Minimums, again careful to calculate correctly:
+  tree->Branch("minDEtaLb", &minDEtaLb);
+  
+
+  // Delta R Variables, most only really make sense in the CRs (can't do deltaR with MET):
+  tree->Branch("dRtj1tj2", &dRtj1tj2);
+
+  tree->Branch("dRb1b2", &dRb1b2);
+  tree->Branch("dRL1b1", &dRL1b1);
+  tree->Branch("dRL1b2", &dRL1b2);
+  tree->Branch("dRL2b1", &dRL2b1);
+  tree->Branch("dRL2b2", &dRL2b2);
+  tree->Branch("minDRLb", &minDRLb);
+
+
+  tree->Branch("DRj1j2", &DRj1j2);
+  tree->Branch("DRj1j3", &DRj1j3);
+  tree->Branch("DRj1j4", &DRj1j4);
+  tree->Branch("DRj2j3", &DRj2j3);
+  tree->Branch("DRj2j4", &DRj2j4);
+  tree->Branch("DRj3j4", &DRj3j4);
+  
+  tree->Branch("RatioDRbbHt", &RatioDRbbHt);
+
 
   tree->Branch("pTj1",&pTj1);
   tree->Branch("pTj2",&pTj2);
@@ -76,6 +222,15 @@ TreeService::TreeService(TTree *outputTree, TDirectory *OutDir){
   tree->Branch("pTj7",&pTj7);
   tree->Branch("pTj8",&pTj8);
 
+  tree->Branch("etaj1",&etaj1);
+  tree->Branch("etaj2",&etaj2);
+  tree->Branch("etaj3",&etaj3);
+  tree->Branch("etaj4",&etaj4);
+  tree->Branch("phij1",&phij1);
+  tree->Branch("phij2",&phij2);
+  tree->Branch("phij3",&phij3);
+  tree->Branch("phij4",&phij4);
+
 
   tree->Branch("pTl1",&pTl1);
   tree->Branch("pTl2",&pTl2);
@@ -83,6 +238,7 @@ TreeService::TreeService(TTree *outputTree, TDirectory *OutDir){
   tree->Branch("etal2",&etal2);
   tree->Branch("phil1",&phil1);
   tree->Branch("phil2",&phil2);
+  tree->Branch("m_taulep",&m_taulep);
 
 
   tree->Branch("pTel1",&pTel1);
@@ -91,6 +247,16 @@ TreeService::TreeService(TTree *outputTree, TDirectory *OutDir){
   tree->Branch("pTmu2",&pTmu2);
   tree->Branch("pTtj1",&pTtj1);
   tree->Branch("pTtj2",&pTtj2);
+
+  tree->Branch("phitj1",&phitj1);
+  tree->Branch("phitj2",&phitj2);
+  tree->Branch("etatj1",&etatj1);
+  tree->Branch("etatj2",&etatj2);
+
+  tree->Branch("pTgamma",&pTgamma);
+  tree->Branch("etagamma",&etagamma);
+  tree->Branch("phigamma",&phigamma);
+
 
   tree->Branch("pTb1",&pTb1);
   tree->Branch("pTb2",&pTb2);
@@ -122,6 +288,10 @@ TreeService::TreeService(TTree *outputTree, TDirectory *OutDir){
   tree->Branch("ETMissPhi", &ETMissPhi);
   tree->Branch("adjustedETMiss", &adjustedETMiss);
   tree->Branch("adjustedETMissPhi", &adjustedETMissPhi);
+  tree->Branch("adjustedmEff2j", &adjustedmEff2j);
+  tree->Branch("adjustedRatio2j", &adjustedRatio2j);
+  tree->Branch("adjustedmEff3j", &adjustedmEff3j);
+  tree->Branch("adjustedRatio3j", &adjustedRatio3j);
 
   tree->Branch("m_finalWeightSum", &m_finalWeightSum);
   tree->Branch("m_intialWeightSum", &m_intialWeightSum);
@@ -140,6 +310,18 @@ TreeService::TreeService(TTree *outputTree, TDirectory *OutDir){
   tree->Branch("m_b2l", &m_b2l);
   tree->Branch("minm_bl", &minm_bl);
   tree->Branch("maxm_bl", &maxm_bl);
+
+  // Razor Variable Crap
+
+  tree->Branch("QCDDelta", &QCDDelta);
+  tree->Branch("invGammaRp1", &invGammaRp1);
+  tree->Branch("sHatR", &sHatR);
+  tree->Branch("MDelR", &MDelR);
+  tree->Branch("CorrectMDelR", &wrongMDelR);
+
+  tree->Branch("Aplanarity", &Aplanarity);
+  tree->Branch("TransformedAplanarity", &TransformedAplanarity);
+  tree->Branch("Sphericity", &Sphericity);
 
   // Scale Factors
 
@@ -169,16 +351,107 @@ TreeService::TreeService(TTree *outputTree, TDirectory *OutDir){
   
   //tree->Write();
   
+  tree->Branch("jet_imbalance",&jet_imbalance);
+  tree->Branch("minDRjj",&minDRjj);
+  tree->Branch("dEtajj_max",&dEtajj_max);
   tree->Branch("delPhiMinb",&delPhiMinb);
   tree->Branch("all_HT",&all_HT);
   tree->Branch("all_METSig",&all_METSig);
   tree->Branch("all_Meff",&all_Meff);
-  tree->Branch("amT2",&amT2);        
+  tree->Branch("nextrajets50",&nextrajets50);
+  tree->Branch("amT2",&amT2);
+
+
+  
+ tree->Branch("Weight", &Weight );		     
+ tree->Branch("MEWeight", &MEWeight );		     
+ tree->Branch("WeightNormalisation", &WeightNormalisation );	     
+ tree->Branch("NTrials", &NTrials );		     
+ tree->Branch("MUR0p5_MUF0p5_PDF261000", &MUR0p5_MUF0p5_PDF261000);    
+ tree->Branch("MUR0p5_MUF1_PDF261000", &MUR0p5_MUF1_PDF261000);	     
+ tree->Branch("MUR1_MUF0p5_PDF261000", &MUR1_MUF0p5_PDF261000);	     
+ tree->Branch("MUR1_MUF1_PDF261000", &MUR1_MUF1_PDF261000);	     
+ tree->Branch("MUR1_MUF2_PDF261000", &MUR1_MUF2_PDF261000);	     
+ tree->Branch("MUR2_MUF1_PDF261000", &MUR2_MUF1_PDF261000);	     
+ tree->Branch("MUR2_MUF2_PDF261000", &MUR2_MUF2_PDF261000);	     
+ tree->Branch("MUR1_MUF1_PDF261001", &MUR1_MUF1_PDF261001);	     
+ tree->Branch("MUR1_MUF1_PDF261002", &MUR1_MUF1_PDF261002);        
+
+ //MaxMin variables
+  tree->Branch("maxDR", &maxDR);		    
+  tree->Branch("InvMass_Bij_maxDR", &InvMass_Bij_maxDR); 
+  tree->Branch("Imbalance_maxDR", &Imbalance_maxDR);   
+  tree->Branch("JetAsymm_maxDR", &JetAsymm_maxDR);    
+  tree->Branch("minDR", &minDR);		    
+  tree->Branch("JetAsymmR_min", &JetAsymmR_min);	    
+  tree->Branch("InvMass_Bij_minR", &InvMass_Bij_minR);  
+  tree->Branch("minDR_noExcl", &minDR1);	    
+  tree->Branch("JetAsymmR_min_noExcl", &JetAsymmR_min1);    
+  tree->Branch("InvMass_Bij_minR_noExcl", &InvMass_Bij_minR1); 
+  
+
+  //SRB algorithm variables
+  tree->Branch("SRB_minDR", &SRB_minDR);
+  tree->Branch("SRB_minDR2", &SRB_minDR2);
+  tree->Branch("SRB_Hmbb", &SRB_Hmbb);
+
+  tree->Branch("SRB_Higgsino_minDR", &SRB_Higgsino_minDR);
+  tree->Branch("SRB_Higgsino_maxDR", &SRB_Higgsino_maxDR);
+  tree->Branch("SRB_Higgsino_Hmbb", &SRB_Higgsino_Hmbb);
+
+  // Attempt at Vectors
+  tree->Branch("jet_pT", &jet_pT);
+  tree->Branch("jet_eta", &jet_eta);
+  tree->Branch("jet_phi", &jet_phi);
+  tree->Branch("jet_E", &jet_E);
+  tree->Branch("jet_M", &jet_M);
+  tree->Branch("jet_flav", &jet_flav);
+  tree->Branch("jet_bWgt", &jet_bWgt);
+  tree->Branch("jet_truflav", &jet_truflav);
+  tree->Branch("jet_ntrks", &jet_ntrks);
+  tree->Branch("Stop0L_tauVeto", &Stop0L_tauVeto);
+
+
+  tree->Branch("el_pT"  ,&el_pT);  
+  tree->Branch("el_eta" ,&el_eta); 
+  tree->Branch("el_phi" ,&el_phi); 
+  tree->Branch("el_E"   ,&el_E);   
+
+
+  tree->Branch("mu_pT"  ,&mu_pT);  
+  tree->Branch("mu_eta" ,&mu_eta); 
+  tree->Branch("mu_phi" ,&mu_phi); 
+  tree->Branch("mu_E"   ,&mu_E);   
+
+  tree->Branch("tau_pT"  ,&tau_pT);  
+  tree->Branch("tau_eta" ,&tau_eta); 
+  tree->Branch("tau_phi" ,&tau_phi); 
+  tree->Branch("tau_E"   ,&tau_E);   
+  tree->Branch("tau_SmallestDR" ,&tau_SmallestDR); 
+  tree->Branch("tau_associatedTrue" ,&tau_associatedTrue);   
+
+
+
+  //tree->Branch("fatJet8_pT", &fatJet8_pT);
+  //tree->Branch("fatJet8_eta", &fatJet8_eta);
+  //tree->Branch("fatJet8_phi", &fatJet8_phi);
+  //tree->Branch("fatJet8_E", &fatJet8_E);
+  //tree->Branch("fatJet8_M", &fatJet8_M);
+
+  //tree->Branch("fatJet12_pT", &fatJet12_pT);
+  //tree->Branch("fatJet12_eta", &fatJet12_eta);
+  //tree->Branch("fatJet12_phi", &fatJet12_phi);
+  //tree->Branch("fatJet12_E", &fatJet12_E);
+  //tree->Branch("fatJet12_M", &fatJet12_M);
+
 
   tree->Branch("metsig_SumET", &metsig_SumET);
   tree->Branch("metsig_SumHT", &metsig_SumHT);
   tree->Branch("metsig_New", &metsig_New);
 
+
+  tree->Branch("multiJetTriggerPlateau", &multiJetTriggerPlateau);
+  tree->Branch("multiJetTriggerPassed", &multiJetTriggerPassed);
   tree->Branch("triggerDecisions", &triggerDecisions);
 
 
@@ -186,7 +459,7 @@ TreeService::TreeService(TTree *outputTree, TDirectory *OutDir){
 }
 
 
-void TreeService::fillTree(IObjectDef *objects ,PreliminarySel &region, CalculateVariables &variables, MCChecks MCTruthInfo, double mFinalWeight, double mInitialWeight, double puWeight, double SFmCTbbll, bool TrigMET, bool TrigMu, bool TrigEl, bool TrigGamma, bool Trig6j, std::vector<int> triggers, double puSumWeights, double TRUTHMET, double TRUTHHT, bool CoreFlags, bool SCTFlag,bool LArTileFlags, bool passGRL, bool passedPrimVertexes, bool passedJetCleans, bool passedCosmicMus, bool passedMuonCleans, double RNo,  double RenormedMCWgt){
+void TreeService::fillTree(IObjectDef *objects ,PreliminarySel &region, CalculateVariables &variables, MCChecks MCTruthInfo, double mFinalWeight, double mInitialWeight, double puWeight, double SFmCTbbll, bool TrigMET, bool TrigMu, bool TrigEl, bool TrigGamma, bool Trig6j, std::vector<int> triggers, double puSumWeights, double TRUTHMET, double TRUTHHT, bool CoreFlags, bool SCTFlag,bool LArTileFlags, bool passedPrimVertexes, bool passedJetCleans, bool passedCosmicMus, bool passedMuonCleans, double RNo,  double RenormedMCWgt){
 
   //  std::cout << "Filling the Tree" << std::endl;
   CutsRegion = region.region;
@@ -199,8 +472,7 @@ void TreeService::fillTree(IObjectDef *objects ,PreliminarySel &region, Calculat
   passedCosmicMu=passedCosmicMus;
   passedMuonClean=passedMuonCleans;
   triggerDecisions = triggers;
-  passedGRL = passGRL;
-  
+  //year = MCyear;
   m_finalWeightSum = mFinalWeight;
   m_intialWeightSum = mInitialWeight;
 
@@ -215,7 +487,7 @@ void TreeService::fillTree(IObjectDef *objects ,PreliminarySel &region, Calculat
   mcEventWeight = objects->mcEventWeight;
   RenormedMcEventWeight = RenormedMCWgt;
    
-  //weightsVector = MCTruthInfo.variationweights;
+  weightsVector = MCTruthInfo.variationweights;
 
   lumiScaled = objects->lumiScaled;
   puWgt = puWeight;
@@ -596,7 +868,19 @@ void TreeService::fillTree(IObjectDef *objects ,PreliminarySel &region, Calculat
   tau_phi.clear(); 
   tau_E.clear();   
   tau_SmallestDR.clear();   
-  tau_associatedTrue.clear();  
+  tau_associatedTrue.clear();   
+
+  // fatJet8_pT.clear();
+  // fatJet8_eta.clear();
+  // fatJet8_phi.clear();
+  // fatJet8_E.clear();
+  // fatJet8_M.clear();
+
+  // fatJet12_pT.clear();
+  // fatJet12_eta.clear();
+  // fatJet12_phi.clear();
+  // fatJet12_E.clear();
+  // fatJet12_M.clear();
 
     
 
@@ -631,6 +915,25 @@ void TreeService::fillTree(IObjectDef *objects ,PreliminarySel &region, Calculat
       if(mcID > 0){(*(objects->getGoodJets()))[iJet]->btagging()->MVx_discriminant("MV2c10", MV2c10wgt);}
       jet_bWgt.push_back(MV2c10wgt);
     }
+  
+  
+  // int maxFatJet8 = objects->getFatJets_kt8()->size();
+  // for (int iJet = 0; iJet < maxFatJet8; iJet++){
+  //   fatJet8_pT.push_back(0.001*(*(objects->getFatJets_kt8()))[iJet]->pt());
+  //   fatJet8_eta.push_back((*(objects->getFatJets_kt8()))[iJet]->eta());
+  //   fatJet8_phi.push_back((*(objects->getFatJets_kt8()))[iJet]->phi());
+  //   fatJet8_E.push_back(0.001*(*(objects->getFatJets_kt8()))[iJet]->e());
+  //   fatJet8_M.push_back(0.001*(*(objects->getFatJets_kt8()))[iJet]->m());
+  // }
+  
+  // int maxFatJet12 = objects->getFatJets_kt12()->size();
+  // for (int iJet = 0; iJet < maxFatJet12; iJet++){
+  //   fatJet12_pT.push_back(0.001*(*(objects->getFatJets_kt12()))[iJet]->pt());
+  //   fatJet12_eta.push_back((*(objects->getFatJets_kt12()))[iJet]->eta());
+  //   fatJet12_phi.push_back((*(objects->getFatJets_kt12()))[iJet]->phi());
+  //   fatJet12_E.push_back(0.001*(*(objects->getFatJets_kt12()))[iJet]->e());
+  //   fatJet12_M.push_back(0.001*(*(objects->getFatJets_kt12()))[iJet]->m());
+  // }
   
 
 

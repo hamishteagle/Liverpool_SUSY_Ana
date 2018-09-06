@@ -29,7 +29,6 @@ ObjectDef::ObjectDef(xAOD::TEvent* event, ST::SUSYObjDef_xAOD* SUSYTool, xAOD::T
   baselineMuons = new xAOD::MuonContainer(SG::VIEW_ELEMENTS);
   baselinePhotons = new xAOD::PhotonContainer(SG::VIEW_ELEMENTS);
   goodJets = new xAOD::JetContainer(SG::VIEW_ELEMENTS);
-  goodJets_fatColl = new xAOD::JetContainer(SG::VIEW_ELEMENTS);
   FatJets_kt8 = new xAOD::JetContainer(SG::VIEW_ELEMENTS);
   FatJets_kt12 = new xAOD::JetContainer(SG::VIEW_ELEMENTS);
   goodAntiKt4TruthJets = new xAOD::JetContainer(SG::VIEW_ELEMENTS);
@@ -59,7 +58,6 @@ ObjectDef::ObjectDef(xAOD::TEvent* event, ST::SUSYObjDef_xAOD* SUSYTool, xAOD::T
   eventStore->record(baselineMuons,"baselineMuons"+systematic);
   eventStore->record(baselinePhotons,"baselinePhotons"+systematic);
   eventStore->record(goodJets,"goodJets"+systematic);
-  eventStore->record(goodJets,"goodJets_fatColl"+systematic);
   eventStore->record(FatJets_kt8,"fatJets_kt8"+systematic);
   eventStore->record(FatJets_kt12,"fatJets_kt12"+systematic);
   eventStore->record(goodAntiKt4TruthJets,"goodAntiKt4TruthJets"+systematic);
@@ -795,7 +793,6 @@ void ObjectDef::FillGoodJets(){
       {
 	
 	goodJets->push_back(*jet_itr);
- goodJets_fatColl->push_back(*jet_itr);
 	
 	
 	flavour = -1;
@@ -811,7 +808,6 @@ void ObjectDef::FillGoodJets(){
   }
   
   goodJets->sort(ptSorter);
-  goodJets_fatColl->sort(ptSorter);
   BJets->sort(ptSorter);
   nonBJets->sort(ptSorter);
 
@@ -848,7 +844,6 @@ void ObjectDef::SetPrimVertex(){
 void ObjectDef::FillFatJets_kt8(){
   fatjet_kt8_tool->msg().setLevel( MSG::ERROR);
   fatjet_kt8_tool->execute();
-  //std::cout << goodJets_fatColl->size() << std::endl;
   currentEvent->retrieve( FatJets_kt8,"MyFatJetsKt8"+systematic );
   //if (!currentEvent->retrieve( FatJets_kt8,"MyFatJetsKt8"+systematic ).isSuccess()) std::cout << "Something went wrong here" << std::endl;
   //if (currentEvent->retrieve( FatJets_kt8,"MyFatJetsKt8"+systematic ).isSuccess()) std::cout << "FatJets container retrieved" << std::endl;
@@ -860,7 +855,6 @@ void ObjectDef::FillFatJets_kt8(){
 void ObjectDef::FillFatJets_kt12(){
   fatjet_kt12_tool->msg().setLevel( MSG::ERROR);
   fatjet_kt12_tool->execute();
-  //std::cout << goodJets_fatColl->size() << std::endl;
   currentEvent->retrieve( FatJets_kt12,"MyFatJetsKt12"+systematic );
   //if (!currentEvent->retrieve( FatJets_kt12,"MyFatJetsKt12"+systematic ).isSuccess()) std::cout << "Something went wrong here" << std::endl;
   //if (currentEvent->retrieve( FatJets_kt12,"MyFatJetsKt12"+systematic ).isSuccess()) << "FatJets container retrieved" << std::endl;
