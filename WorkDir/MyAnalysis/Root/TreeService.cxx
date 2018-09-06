@@ -14,6 +14,7 @@ TreeService::TreeService(TTree *outputTree, TDirectory *OutDir){
   //gDirectory->cd(OutDir.c_str());
 
   tree->Branch("mcID", &mcID);
+  tree->Branch("year", &year);
   tree->Branch("RunNumber", &RunNumber);
   tree->Branch("eventNumber", &eventNumber);
   tree->Branch("mcEventWeight", &mcEventWeight);
@@ -186,7 +187,7 @@ TreeService::TreeService(TTree *outputTree, TDirectory *OutDir){
 }
 
 
-void TreeService::fillTree(IObjectDef *objects ,PreliminarySel &region, CalculateVariables &variables, MCChecks MCTruthInfo, double mFinalWeight, double mInitialWeight, double puWeight, double SFmCTbbll, bool TrigMET, bool TrigMu, bool TrigEl, bool TrigGamma, bool Trig6j, std::vector<int> triggers, double puSumWeights, double TRUTHMET, double TRUTHHT, bool CoreFlags, bool SCTFlag,bool LArTileFlags, bool passGRL, bool passedPrimVertexes, bool passedJetCleans, bool passedCosmicMus, bool passedMuonCleans, double RNo,  double RenormedMCWgt){
+void TreeService::fillTree(IObjectDef *objects ,PreliminarySel &region, CalculateVariables &variables, MCChecks MCTruthInfo, double mFinalWeight, double mInitialWeight, double puWeight, double SFmCTbbll, bool TrigMET, bool TrigMu, bool TrigEl, bool TrigGamma, bool Trig6j, std::vector<int> triggers, double puSumWeights, double TRUTHMET, double TRUTHHT, bool CoreFlags, bool SCTFlag,bool LArTileFlags, bool passGRL, bool passedPrimVertexes, bool passedJetCleans, bool passedCosmicMus, bool passedMuonCleans, double RNo,  double RenormedMCWgt, int LumiYear){
 
   //  std::cout << "Filling the Tree" << std::endl;
   CutsRegion = region.region;
@@ -208,13 +209,13 @@ void TreeService::fillTree(IObjectDef *objects ,PreliminarySel &region, Calculat
   primaryb = variables.primaryB;
   secondaryb = variables.secondB;
   
-
+  
   mcID = objects->mcID;
   RunNumber = RNo;
   eventNumber = objects->eventNumber;
   mcEventWeight = objects->mcEventWeight;
   RenormedMcEventWeight = RenormedMCWgt;
-   
+  year = LumiYear; 
   //weightsVector = MCTruthInfo.variationweights;
 
   lumiScaled = objects->lumiScaled;
