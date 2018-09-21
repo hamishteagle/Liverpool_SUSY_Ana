@@ -148,7 +148,7 @@ CalculateVariables::CalculateVariables(IObjectDef *objects, bool isTruth, bool d
   all_METSig = eTMiss/std::sqrt(all_HT);
   all_Meff = all_HT + eTMiss;
   
-  std::cout << "all_HT " << all_HT  << std::endl;
+  //std::cout << "all_HT " << all_HT  << std::endl;
   //std::cout << "all_METSig " << all_METSig << std::endl;
   //std::cout << "all_Meff "<< all_Meff << std::endl;
   //std::cout << "ETMiss "<< eTMiss << std::endl;

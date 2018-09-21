@@ -40,7 +40,7 @@ ObjectDef::ObjectDef(xAOD::TEvent* event, ST::SUSYObjDef_xAOD* SUSYTool, xAOD::T
   BJets = new xAOD::JetContainer(SG::VIEW_ELEMENTS);
   nonBJets = new xAOD::JetContainer(SG::VIEW_ELEMENTS);
   METmuons  = new xAOD::MuonContainer(SG::VIEW_ELEMENTS);
-  std::cout<<"before record"<<std::endl;
+  
   eventStore->record(baselineElectronsBeforeOR,"baselineElectronsBeforeOR"+systematic);
   eventStore->record(signalElectronsBeforeOR,"signalElectronsBeforeOR"+systematic);
   eventStore->record(baselineTausBeforeOR,"baselineTausBeforeOR"+systematic);

@@ -19,7 +19,7 @@ TreeService::TreeService(TTree *outputTree, TDirectory *OutDir){
   tree->Branch("eventNumber", &eventNumber);
   tree->Branch("mcEventWeight", &mcEventWeight);
   tree->Branch("RenormedMcEventWeight", &RenormedMcEventWeight);
-  //tree->Branch("weightsVector", &weightsVector);
+  tree->Branch("weightsVector", &weightsVector);
   tree->Branch("lumiWgt", &lumiScaled);
   tree->Branch("sampleSFmCTbbll",&sampleSFmCTbbll);
   tree->Branch("pileUpSumOfWeights",&pileUpSumOfWeights);
@@ -216,7 +216,7 @@ void TreeService::fillTree(IObjectDef *objects ,PreliminarySel &region, Calculat
   mcEventWeight = objects->mcEventWeight;
   RenormedMcEventWeight = RenormedMCWgt;
   year = LumiYear; 
-  //weightsVector = MCTruthInfo.variationweights;
+  weightsVector = MCTruthInfo.variationweights;
 
   lumiScaled = objects->lumiScaled;
   puWgt = puWeight;

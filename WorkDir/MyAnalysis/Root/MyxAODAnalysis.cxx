@@ -442,7 +442,7 @@ EL::StatusCode MyxAODAnalysis :: initialize ()
   ST::ISUSYObjDef_xAODTool::DataSource datasource = (isData ? ST::ISUSYObjDef_xAODTool::Data : (isAtlfast ? ST::ISUSYObjDef_xAODTool::AtlfastII : ST::ISUSYObjDef_xAODTool::FullSim));  
 
   ANA_CHECK(objTool->setProperty("DataSource",datasource) ) ;
-  ANA_CHECK( objTool->setProperty("ConfigFile", PathResolverFindCalibFile("MyAnalysis/MyAnalysis//Sbottom_multiB_21.2.31.conf")));
+  ANA_CHECK( objTool->setProperty("ConfigFile", PathResolverFindCalibFile("MyAnalysis/MyAnalysis//EWK1L2B_21.2.31.conf")));
   ANA_CHECK(objTool->setBoolProperty("UseBtagging", true));
   //CHECK( objTool->setProperty("ShowerType", (int)m_showerType) );
 

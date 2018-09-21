@@ -33,7 +33,7 @@ int gridmain( int argc, char* argv[]) {
 
   int Month = now->tm_mon;
   std::string CurrentDate = std::to_string(now->tm_mday)+Months[Month];
-  std::string fileType = "SUSY1";
+  std::string fileType = "SUSY5";
   
   std::string appPhotons = "_MultiB_";
   
@@ -69,9 +69,6 @@ int gridmain( int argc, char* argv[]) {
 	RunningWithPhotons = false;
       }
       
-      RunningWithSyst = false; //Hardcode for systematics 
-      std::cout << "Running with Syst = " << RunningWithSyst << std::endl;
-      std::cout << "Running with Photons = " << RunningWithPhotons << std::endl;
 
       if (RunningWithPhotons){
 	appPhotons = "_Photons_";
@@ -97,6 +94,10 @@ int gridmain( int argc, char* argv[]) {
       if (found_data17 != std::string::npos){
 	fileType = "DATA17";
       }
+
+      RunningWithSyst = false; //Hardcode for systematics 
+      std::cout << "Running with Syst = " << RunningWithSyst << std::endl;
+      std::cout << "Running with Photons = " << RunningWithPhotons << std::endl;
       
       
       submitDir = CurrentDate+"_v1_"+fileType+appPhotons;
@@ -161,7 +162,7 @@ int gridmain( int argc, char* argv[]) {
   EL::PrunDriver driver;
   
   driver.options()->setString("nc_outputSampleName", "user.hteagle."+CurrentDate+"_"+fileType+"v1.%in:name[2]%.%in:name[3]%");
-  driver.options()->setString(EL::Job::optGridNFilesPerJob, "10");
+  driver.options()->setString(EL::Job::optGridNFilesPerJob, "2");
   // Use submit if you want to see all of the info about the submitted jobs. Use submitOnly if you want to send the jobs then Monitor online with panda
   //driver.submit( job, submitDir );
   driver.submitOnly( job, submitDir );
