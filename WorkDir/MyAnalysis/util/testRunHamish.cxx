@@ -101,6 +101,7 @@ int main( int argc, char* argv[]) {
     inputFile = "Wh/recoSamples/mc16_13TeV.410470.PhPy8EG_A14_ttbar_hdamp258p75_nonallhad.deriv.DAOD_SUSY5.e6337_e5984_s3126_r9364_r9315_p3563/";
     //inputFile = "Wh/dataSamples/data15_13TeV.periodD.physics_Main.PhysCont.DAOD_SUSY5.grp15_v01_p3372/"; 
     //inputFile = "Sbot_multiB/recoSamples/mc16_13TeV.363355.Sherpa_221_NNPDF30NNLO_ZqqZvv.deriv.DAOD_SUSY5.e5525_s3126_r9364_r9315_p3563/";
+    //inputFile = "Wh/dataSamples/data18_13TeV.periodB.physics_Main.PhysCont.DAOD_SUSY5.grp18_v01_p3544/";
 
     submitDir = submitDir+inputFile;
     inputFile = inputDir+inputFile;

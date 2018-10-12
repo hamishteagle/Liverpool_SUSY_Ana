@@ -347,14 +347,18 @@ EL::StatusCode MyxAODAnalysis :: initialize ()
   m_grl = new GoodRunsListSelectionTool("GoodRunsListSelectionTool");
   
   //PathResolverDirect
+    std::string fullGRLFilePath15 = PathResolverFindCalibFile("MyAnalysis/MyAnalysis/GRL/data15_13TeV.periodAllYear_DetStatus-v89-pro21-02_Unknown_PHYS_StandardGRL_All_Good_25ns.xml");
+  std::string fullGRLFilePath16 = PathResolverFindCalibFile("MyAnalysis/MyAnalysis/GRL/data16_13TeV.periodAllYear_DetStatus-v89-pro21-01_DQDefects-00-02-04_PHYS_StandardGRL_All_Good_25ns.xml");
+  std::string fullGRLFilePath17 = PathResolverFindCalibFile("MyAnalysis/MyAnalysis/GRL/data17_13TeV.periodAllYear_DetStatus-v97-pro21-13_Unknown_PHYS_StandardGRL_All_Good_25ns_Triggerno17e33prim.xml");                                      
+  std::string fullGRLFilePath18 = PathResolverFindCalibFile("MyAnalysis/MyAnalysis/GRL/data18_13TeV.periodAllYear_DetStatus-v102-pro22-03_Unknown_PHYS_StandardGRL_All_Good_25ns_Triggerno17e33prim.xml");
   
-  std::string fullGRLFilePath = PathResolverFindCalibFile("MyAnalysis/MyAnalysis/data16_13TeV.periodAllYear_DetStatus-v89-pro21-01_DQDefects-00-02-04_PHYS_StandardGRL_All_Good_25ns.xml");
-  std::string fullGRLFilePath1 = PathResolverFindCalibFile("MyAnalysis/MyAnalysis/data17_13TeV.periodAllYear_DetStatus-v97-pro21-13_Unknown_PHYS_StandardGRL_All_Good_25ns_Triggerno17e33prim.xml");                                      
-  std::string fullGRLFilePath2 = PathResolverFindCalibFile("MyAnalysis/MyAnalysis/LastGRL.xml");
+  std::string fullGRLFilePath2 = PathResolverFindCalibFile("MyAnalysis/MyAnalysis/GRL/LastGRL.xml");
   std::vector<std::string> vecStringGRL;
   
-  vecStringGRL.push_back(fullGRLFilePath);
-  vecStringGRL.push_back(fullGRLFilePath1);
+  vecStringGRL.push_back(fullGRLFilePath15);
+  vecStringGRL.push_back(fullGRLFilePath16);
+  vecStringGRL.push_back(fullGRLFilePath17);
+  vecStringGRL.push_back(fullGRLFilePath18);
   vecStringGRL.push_back(fullGRLFilePath2);
 
   CHECK(m_grl->setProperty( "GoodRunsListVec", vecStringGRL));
@@ -444,7 +448,8 @@ EL::StatusCode MyxAODAnalysis :: initialize ()
 
   ANA_CHECK(objTool->setProperty("DataSource",datasource) ) ;
   ANA_CHECK( objTool->setProperty("ConfigFile", PathResolverFindCalibFile("MyAnalysis/MyAnalysis/EWK_SUSYSkim1L.conf")));
-  //  ANA_CHECK( objTool->setProperty("ConfigFile", PathResolverFindCalibFile("MyAnalysis/MyAnalysis/EWK_SUSYSkim1L.conf")));//SUSYTools default will need to be changed...
+  //ANA_CHECK( objTool->setProperty("ConfigFile", PathResolverFindCalibFile("MyAnalysis/MyAnalysis/SUSYTools_Default_21_2_31.conf")));//SUSYTools default will need to be changed...
+  //ANA_CHECK( objTool->setProperty("ConfigFile", PathResolverFindCalibFile("MyAnalysis/MyAnalysis/SUSYTools_Default_21_2_42.conf")));//SUSYTools default will need to be changed...
   ANA_CHECK(objTool->setBoolProperty("UseBtagging", true));
   //CHECK( objTool->setProperty("ShowerType", (int)m_showerType) );
 
@@ -639,6 +644,7 @@ EL::StatusCode MyxAODAnalysis :: execute ()
     double renormedMcWgt = 1;
     double xsecteff = -1;    
     double filtereff = -1;
+    double kFactor =-1;
     // Will fix this when the PMGTools cross section stuff is available
     
     
@@ -656,6 +662,7 @@ EL::StatusCode MyxAODAnalysis :: execute ()
 	{
 	  xsecteff = m_mappedVars->getCrossSection(mcChannel);
 	  filtereff= m_mappedVars->getFilterEff(mcChannel);
+	  kFactor= m_mappedVars->getKFactor(mcChannel);
 	}
       else {//does mcID exist in Bkg map?
 	checkMap = m_mappedBkgVars->find(mcChannel);
@@ -663,11 +670,13 @@ EL::StatusCode MyxAODAnalysis :: execute ()
 	{
 	  xsecteff = m_mappedBkgVars->getCrossSection(mcChannel);
 	  filtereff= m_mappedBkgVars->getFilterEff(mcChannel);
+	  kFactor= m_mappedBkgVars->getKFactor(mcChannel);
 	}
 	else {
 	  //std::cout<<"ERROR: mcID does not exist in Map"<<std::endl;
           xsecteff = 1.;
           filtereff = 1.;
+	  kFactor=1.;
 	  //return EL::StatusCode::FAILURE;
 	}
       }
@@ -683,10 +692,11 @@ EL::StatusCode MyxAODAnalysis :: execute ()
     else {//Not MC
       xsecteff=1;
       filtereff=1;
+      kFactor=1;
     }
 
     //lumiScaled gives scaling to 1ifb
-    m_lumiScaled = (1000*xsecteff*filtereff)/m_finalSumOfWeights;
+    m_lumiScaled = (1000*xsecteff*filtereff*kFactor)/m_finalSumOfWeights;
     HSumOfPileUp->Fill(1,puWgt);
     
       
@@ -914,6 +924,19 @@ EL::StatusCode MyxAODAnalysis :: execute ()
 
     //NEW TRIGGER IMPLEMENTATION
     std::vector<std::string> triggers = {"2e12_lhloose_L12EM10VH","HLT_2e15_lhvloose_nod0_L12EM13VH","HLT_2e17_lhvloose_nod0","HLT_e17_lhloose_mu14","HLT_e17_lhloose_nod0_mu14","HLT_mu22_mu8noL1","HLT_mu20_mu8noL1","HLT_mu18_mu8noL1","HLT_e24_lhmedium_L1EM20VH","HLT_e24_lhmedium_nod0_L1EM20VH","HLT_e24_lhtight_nod0_ivarloose","HLT_e26_lhtight_nod0_ivarloose","HLT_e60_lhmedium","HLT_e60_lhmedium_nod0","HLT_e120_lhloose","HLT_e140_lhloose_nod0","HLT_mu20_iloose_L1MU15","HLT_mu24_ivarloose","HLT_mu24_ivarloose_L1MU15","HLT_mu24_ivarmedium","HLT_mu26_ivarmedium","HLT_mu50","HLT_xe70_mht","HLT_xe70_tc_lcw","HLT_xe80_tc_lcw_L1XE50","HLT_xe90_mht_L1XE50","HLT_xe100_mht_L1XE50","HLT_xe110_mht_L1XE50"}; 
+    //2018 triggers
+    triggers.push_back("HLT_2e17_lhvloose_nod0_L12EM15VHI");
+    triggers.push_back("HLT_2e24_lhvloose_nod0");
+    triggers.push_back("HLT_e24_lhvloose_nod0_2e12_lhvloose_nod0_L1EM20VH_3EM10VH");
+    triggers.push_back("HLT_e26_lhmedium_nod0_mu8noL1");
+    triggers.push_back("HLT_e7_lhmedium_nod0_mu24");
+    triggers.push_back("HLT_mu20_2mu4noL1");
+    triggers.push_back("HLT_e24_lhmedium_iloose_L1EM18VH");//Needed for data period C3-C4
+    triggers.push_back("HLT_xe110_pufit_xe70_L1XE50");
+    triggers.push_back("HLT_xe120_pufit_L1XE50");
+    triggers.push_back("HLT_xe110_pufit_xe70_L1XE50");
+    triggers.push_back("HLT_xe110_pufit_xe65_L1XE50");
+
     //std::vector< std::pair<std::string, int> > passedTriggers;
     std::vector<int> passedTriggers;
     for (auto x: triggers) {
