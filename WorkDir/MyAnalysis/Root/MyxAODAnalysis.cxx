@@ -383,20 +383,20 @@ EL::StatusCode MyxAODAnalysis :: initialize ()
   int periodNumber = eventInfo_init->runNumber();
   std::cout<<"MC production period  Number; "<<periodNumber<<std::endl;
   bool isMC16a = (periodNumber == 284500);
-  bool isMC16c = (periodNumber == 300000);
+  bool isMC16d = (periodNumber == 300000);
   
 
   bool isMC15a = false;
   bool isMC15b = false;
   bool isMC15c = false;
 
-  std::cout << "which MC is this: A, B, C, 16a, 16c" << isMC15a << isMC15b << isMC15c << isMC16a <<isMC16c<<std::endl;
+  std::cout << "which MC is this: A, B, C, 16a, 16c" << isMC15a << isMC15b << isMC15c << isMC16a <<isMC16d<<std::endl;
   if(isMC16a)
     {
       lumicalcFiles.push_back(PathResolverFindCalibFile("MyAnalysis/MyAnalysis/PileUp/PHYS_StandardGRL_All_Good_25ns_276262-284484_OflLumi-13TeV-008.root"));
       lumicalcFiles.push_back(PathResolverFindCalibFile("MyAnalysis/MyAnalysis/PileUp/PHYS_StandardGRL_All_Good_25ns_297730-311481_OflLumi-13TeV-009.root"));
     }
-  if(isMC16c){lumicalcFiles.push_back(PathResolverFindCalibFile("MyAnalysis/MyAnalysis/PileUp/physics_25ns_Triggerno17e33prim.lumicalc.OflLumi-13TeV-001.root"));}
+  if(isMC16d){lumicalcFiles.push_back(PathResolverFindCalibFile("MyAnalysis/MyAnalysis/PileUp/physics_25ns_Triggerno17e33prim.lumicalc.OflLumi-13TeV-001.root"));}
   std::cout << "Passed Lumi Calc Files" << std::endl;  
 
     

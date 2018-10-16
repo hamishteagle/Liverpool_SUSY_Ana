@@ -152,7 +152,7 @@ def latex_draw(label):
     Tl.SetTextAlign(13)
     Tl.SetNDC(True)
     #Tl.DrawLatex(0.195, 0.87,"#sqrt{s} = 13 TeV, 3.2 fb^{-1}")
-    Tl.DrawLatex(0.195, 0.87,"#sqrt{s} = 13 TeV, 79.8 fb^{-1}")
+    Tl.DrawLatex(0.195, 0.87,"#sqrt{s} = 13 TeV, 36.1 fb^{-1}")
     Tl.DrawLatex(0.195, 0.92,"#it{#bf{ATLAS}} Internal")
     Tl.DrawLatex(0.195, 0.82,label)
    
