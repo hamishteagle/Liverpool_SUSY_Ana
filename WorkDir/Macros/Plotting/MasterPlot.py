@@ -43,20 +43,18 @@ def main():
     # DiBosonFile = "/scratch/hteagle/multiB/nTuple_21_2_31/mc16a/diBoson.root"
     # HiggsFile = "/scratch/hteagle/multiB/nTuple_21_2_31/mc16a/VhTh.root" 
     # dataFile = "/scratch/hteagle/multiB/nTuple_21_2_31/data.root"
-    
-    #Liv ntuples_wh_21_2_31
-    DiJetFile = "/hepstore/hteagle/Wh/ntuples_21.2.31/skimmed/mc16a/diJet.root"
-    ttVFile = "/hepstore/hteagle/Wh/ntuples_21.2.31/skimmed/mc16a/ttV.root"
-    wJetFile = "/hepstore/hteagle/Wh/ntuples_21.2.31/skimmed/mc16a/wJets.root"
-    zJetFile = "/hepstore/hteagle/Wh/ntuples_21.2.31/skimmed/mc16a/zJets.root"
-    ttbarFile = "/hepstore/hteagle/Wh/ntuples_21.2.31/skimmed/mc16a/ttbar.root"
-    singleTopFile = "/hepstore/hteagle/Wh/ntuples_21.2.31/skimmed/mc16a/singleTop.root"
-    DiBosonFile = "/hepstore/hteagle/Wh/ntuples_21.2.31/skimmed/mc16a/diBoson.root"
-    HiggsFile = "/hepstore/hteagle/Wh/ntuples_21.2.31/skimmed/mc16a/VH.root" 
-    #dataFile = "/hepstore/hteagle/Wh/ntuples_21.2.31/skimmed/data_1516.root"
-    dataFile = "/hepstore/hteagle/Wh/ntuples_21.2.31/skimmed/data.root"
-    
 
+    #Liv ntuples_wh_21_2_31
+    DiJetFile = "/hepstore/hteagle/Wh/ntuples_21.2.31/mc16a/skimmed_newLumi/diJet.root"
+    ttVFile = "/hepstore/hteagle/Wh/ntuples_21.2.31/mc16a/skimmed_newLumi/ttV.root"
+    wJetFile = "/hepstore/hteagle/Wh/ntuples_21.2.31/mc16a/skimmed_newLumi/wJets.root"
+    zJetFile = "/hepstore/hteagle/Wh/ntuples_21.2.31/mc16a/skimmed_newLumi/zJets.root"
+    ttbarFile = "/hepstore/hteagle/Wh/ntuples_21.2.31/mc16a/skimmed_newLumi/ttbar.root"
+    singleTopFile = "/hepstore/hteagle/Wh/ntuples_21.2.31/mc16a/skimmed_newLumi/singleTop.root"
+    DiBosonFile = "/hepstore/hteagle/Wh/ntuples_21.2.31/mc16a/skimmed_newLumi/diBoson.root"
+    HiggsFile = "/hepstore/hteagle/Wh/ntuples_21.2.31/mc16a/skimmed_newLumi/VH.root" 
+    #dataFile = "/hepstore/hteagle/Wh/ntuples_21.2.31/skimmed/data_full_skim.root"
+    dataFile = "/hepstore/hteagle/Wh/ntuples_21.2.31/skimmed/data_1516.root"
     
 
 
@@ -78,7 +76,7 @@ def main():
     #signalFile = "/hepstore/hteagle/Sbot_multiB/nTuple_21_2_31_noFilter/mc16_13TeV.390285.MGPy8EG_A14N23LO_BB_onestepN2hN1_700_680_550.e5671_e5984_a875_r9364_r9315_p3404_sbottom_multib_fixed.root"
     
    ###These are for cutflow checks on Wh 1lbb
-    signalFile = "/hepstore/hteagle/Wh/ntuples_21.2.31/skimmed/mc16a/diJet.root"
+    signalFile = "/hepstore/hteagle/Wh/ntuples_21.2.31/mc16a/skimmed_newLumi/diJet.root"
     #signalFile = "/hepstore/hteagle/SubmissionOutputs/Wh/dataSamples/data15_13TeV.periodD.physics_Main.PhysCont.DAOD_SUSY5.grp15_v01_p3372/data-output/DAOD_SUSY5.root"
     foundSignalInput = ""
 
@@ -105,7 +103,7 @@ def main():
     #Sheff luminosity and weights
     luminosity_sheff = "79800*jvtweight*AnalysisWeight*pileupweight*LumiWeight*btagweight*MuonWeight*ElecWeight*isttbarMET400_OK*isttbarMET200_OK*isttbarMET300_OK*"
     #Liv luminosity and -weights
-    luminosity_liv ="1*36.1*JVTSF*puWgt*bJetSF*muonSF*electronSF*mcEventWeight*lumiWgtcorr*" 
+    luminosity_liv ="1*36.1*JVTSF*puWgt*bJetSF*muonSF*electronSF*mcEventWeight*lumiWgtRecalc*"#YearWeight*" DON'T FORGET to setAlias!!!
     cutstouse = ""
     #Liv Cleaning cuts
     cleaningCuts = "(coreFlag && sctFlag && LArTileFlag && passedPrimVertex && passedJetClean && passedCosmicMu && passedMuonClean)*"
@@ -120,7 +118,7 @@ def main():
     # Change this to put the output directory somewhere else
     directory = options.date+"_SbottomMultib_Preliminary/"+foundSignalInput
     print "Output Directory is: ", directory
-    label = "noSelection_Liv"
+    label = "preSelection_Wh_Liv"
     EventCounter = True
 
 
@@ -130,7 +128,7 @@ def main():
     # Change the "cutstouse" variable to produce different distributions for a given selection. If plotting a SR distribution, 
     # make sure that SR is contained in the label variable, which will blind the distribution
     if label == "noSelection_Liv":
-        cutstouse = cleaningCuts+triggerCuts+"1"
+        cutstouse = cleaningCuts+triggerCuts+"(ETMiss>250 && nBJets>=2 && nLeptons>0)"
     elif label == "preSelection_Wh_Liv":
         cutstouse = preSelection_Wh_Liv+METtriggerCuts+"1"
     #Run1 Wh 1lbb (from int note)
@@ -199,7 +197,7 @@ def main():
     if options.doRatio:
 
         # This uses the ratio plotting class, to produce a ratio plot of whatever variable you give as the first argument. The second argument is the latex which will be drawn on the x-axis. 3rd is the xlow, 4th is xhigh and 5th is the rebinning value. The rest you shouldn't need to change and instead should just copy from an existing usage of the function
-        RatioPlot.RatioPlot("1", "cuts", 0.5, 1.5, 1, ymax, cutstouse, directory, label, True, ttVFile, singleTopFile, DiBosonFile, HiggsFile, wJetFile, zJetFile, ttbarFile, DiJetFile, dataFile, signalFile, True, False, luminosity_liv)
+        #RatioPlot.RatioPlot("1", "cuts", 0.5, 1.5, 1, ymax, cutstouse, directory, label, True, ttVFile, singleTopFile, DiBosonFile, HiggsFile, wJetFile, zJetFile, ttbarFile, DiJetFile, dataFile, signalFile, True, False, luminosity_liv)
        #RatioPlot.RatioPlot("eT_miss_orig", "eT_miss_orig", 0., 1000, 1, ymax, cutstouse, directory, label, True, ttVFile, singleTopFile, DiBosonFile, HiggsFile, wJetFile, zJetFile, ttbarFile, dataFile, signalFile, False, False, luminosity_liv)
 
         #RatioPlot.RatioPlot("m_bb", "m_{bb}", 30, 630, 30, ymax, cutstouse, directory, label, False, ttVFile, singleTopFile, DiBosonFile, HiggsFile, wJetFile, zJetFile, ttbarFile, DiJetFile, dataFile, signalFile, False, False, luminosity_liv)

@@ -165,7 +165,9 @@ EL::StatusCode MyxAODAnalysis :: histInitialize ()
   renormedSherpaWeightHist = new TH1F("h_RenormedSherpaWeights","h_RenormedSherpaWeightHist",1 , 0.5, 1.5);
   h_SumOfWeights = new TH1D("h_SumOfWeights","h_SumOfWeights",1 , 0.5, 1.5);
   h_SumOfWeightsSquared = new TH1D("h_SumOfWeightsSquared","h_SumOfWeightsSquared",1 , 0.5, 1.5);
-
+  
+  //Checking the data with lumicalc
+  h_eventsPerRun = new TH1F("h_eventsPerRun","h_eventsPerRun",10000,0,10000);
 
   HSRA_noWgt = new TH1F("HSRA_noWgt","HSRA_noWgt", 50, 0.5, 50.5);
   HSRA_mcWgt = new TH1F("HSRA_mcWgt","HSRA_mcWgt", 50, 0.5, 50.5);
@@ -192,6 +194,7 @@ EL::StatusCode MyxAODAnalysis :: histInitialize ()
   h_SumOfWeightsSquared->SetDirectory (wk()->getOutputFile("output"));
   renormedSherpaWeightHist->SetDirectory (wk()->getOutputFile("output"));
 
+  h_eventsPerRun->SetDirectory(wk()->getOutputFile("output"));
   // Make the Histos for the full cutflows here then:
   
   HSRA_noWgt->SetDirectory (wk()->getOutputFile("output"));
@@ -280,7 +283,6 @@ EL::StatusCode MyxAODAnalysis :: fileExecute ()
 
     
 
-    // Skip this out if we're dealing with a Truth File
     
     nEventsProcessed  = cbknEventsProcessed;
     sumOfWeights        = cbksumOfWeights;
@@ -349,7 +351,7 @@ EL::StatusCode MyxAODAnalysis :: initialize ()
   //PathResolverDirect
     std::string fullGRLFilePath15 = PathResolverFindCalibFile("MyAnalysis/MyAnalysis/GRL/data15_13TeV.periodAllYear_DetStatus-v89-pro21-02_Unknown_PHYS_StandardGRL_All_Good_25ns.xml");
   std::string fullGRLFilePath16 = PathResolverFindCalibFile("MyAnalysis/MyAnalysis/GRL/data16_13TeV.periodAllYear_DetStatus-v89-pro21-01_DQDefects-00-02-04_PHYS_StandardGRL_All_Good_25ns.xml");
-  std::string fullGRLFilePath17 = PathResolverFindCalibFile("MyAnalysis/MyAnalysis/GRL/data17_13TeV.periodAllYear_DetStatus-v97-pro21-13_Unknown_PHYS_StandardGRL_All_Good_25ns_Triggerno17e33prim.xml");                                      
+  std::string fullGRLFilePath17 = PathResolverFindCalibFile("MyAnalysis/MyAnalysis/GRL/data17_13TeV.periodAllYear_DetStatus-v99-pro22-01_Unknown_PHYS_StandardGRL_All_Good_25ns_Triggerno17e33prim.xml");
   std::string fullGRLFilePath18 = PathResolverFindCalibFile("MyAnalysis/MyAnalysis/GRL/data18_13TeV.periodAllYear_DetStatus-v102-pro22-03_Unknown_PHYS_StandardGRL_All_Good_25ns_Triggerno17e33prim.xml");
   
   std::string fullGRLFilePath2 = PathResolverFindCalibFile("MyAnalysis/MyAnalysis/GRL/LastGRL.xml");
@@ -384,7 +386,7 @@ EL::StatusCode MyxAODAnalysis :: initialize ()
   std::cout<<"MC production period  Number; "<<periodNumber<<std::endl;
   bool isMC16a = (periodNumber == 284500);
   bool isMC16d = (periodNumber == 300000);
-  
+  bool isMC16e = (periodNumber == 310000);
 
   bool isMC15a = false;
   bool isMC15b = false;
@@ -396,7 +398,8 @@ EL::StatusCode MyxAODAnalysis :: initialize ()
       lumicalcFiles.push_back(PathResolverFindCalibFile("MyAnalysis/MyAnalysis/PileUp/PHYS_StandardGRL_All_Good_25ns_276262-284484_OflLumi-13TeV-008.root"));
       lumicalcFiles.push_back(PathResolverFindCalibFile("MyAnalysis/MyAnalysis/PileUp/PHYS_StandardGRL_All_Good_25ns_297730-311481_OflLumi-13TeV-009.root"));
     }
-  if(isMC16d){lumicalcFiles.push_back(PathResolverFindCalibFile("MyAnalysis/MyAnalysis/PileUp/physics_25ns_Triggerno17e33prim.lumicalc.OflLumi-13TeV-001.root"));}
+  if(isMC16d){lumicalcFiles.push_back(PathResolverFindCalibFile("MyAnalysis/MyAnalysis/PileUp/physics_25ns_Triggerno17e33prim.lumicalc.OflLumi-13TeV-010.root"));}
+  if(isMC16e){lumicalcFiles.push_back(PathResolverFindCalibFile("MyAnalysis/MyAnalysis/PileUp/physics_25ns_Triggerno17e33prim.lumicalc.OflLumi-13TeV-001.root"));}
   std::cout << "Passed Lumi Calc Files" << std::endl;  
 
     
@@ -445,6 +448,7 @@ EL::StatusCode MyxAODAnalysis :: initialize ()
   std::cout << " ABOUT TO INITIALIZE SUSYTOOLS " << std::endl;
 
   ST::ISUSYObjDef_xAODTool::DataSource datasource = (isData ? ST::ISUSYObjDef_xAODTool::Data : (isAtlfast ? ST::ISUSYObjDef_xAODTool::AtlfastII : ST::ISUSYObjDef_xAODTool::FullSim));  
+  
 
   ANA_CHECK(objTool->setProperty("DataSource",datasource) ) ;
   ANA_CHECK( objTool->setProperty("ConfigFile", PathResolverFindCalibFile("MyAnalysis/MyAnalysis/EWK_SUSYSkim1L.conf")));
@@ -604,8 +608,22 @@ EL::StatusCode MyxAODAnalysis :: execute ()
       continue;
     }
 
-  
-  
+    //File types (MC/truth)
+    bool isTruthFile = false;
+    if (m_fileType == "DAOD_TRUTH1"){
+      isTruthFile = true;
+    }
+    bool isMC = false;
+    if(eventInfo->eventType( xAOD::EventInfo::IS_SIMULATION) ){
+      isMC = true; // lets us do things correctly later
+    }
+
+    
+    //if(!isTruthFile) m_averageIntPerX  = objTool->GetCorrectedAverageInteractionsPerCrossing();//Let's see if this works ?? Doesn't work
+    //else m_averageIntPerX=0;
+    m_averageIntPerX=eventInfo->averageInteractionsPerCrossing();
+    m_actualIntPerX=eventInfo->actualInteractionsPerCrossing();
+
     m_lumiBlockNumber = eventInfo->lumiBlock();
     m_runNumber = eventInfo->runNumber();
     EventNumber = (eventInfo->eventNumber());
@@ -625,15 +643,12 @@ EL::StatusCode MyxAODAnalysis :: execute ()
     // Data MC Check
     
     
-    bool isMC = false;
+
     double weight = 1;
     
     double truth_pTW = 0;
     
     
-    if(eventInfo->eventType( xAOD::EventInfo::IS_SIMULATION) ){
-      isMC = true; // lets us do things correctly later
-    }
 
     
     mcChannel = 0;
@@ -696,7 +711,7 @@ EL::StatusCode MyxAODAnalysis :: execute ()
     }
 
     //lumiScaled gives scaling to 1ifb
-    m_lumiScaled = (1000*xsecteff*filtereff*kFactor)/m_finalSumOfWeights;
+    m_lumiScaled = (1000*xsecteff*filtereff*kFactor)/m_finalSumOfWeights;//This needs to be changed
     HSumOfPileUp->Fill(1,puWgt);
     
       
@@ -784,11 +799,6 @@ EL::StatusCode MyxAODAnalysis :: execute ()
     }
     
       
-    bool isTruthFile = false;
-    if (m_fileType == "DAOD_TRUTH1"){
-      isTruthFile = true;
-    
-    }
 
     
     if (isMC){
@@ -1110,7 +1120,13 @@ EL::StatusCode MyxAODAnalysis :: execute ()
       lepWgt = 1;
     }
     
-   
+  //Checking the number of events against the lumi
+  if (isData){
+    if((*m_varCalc).eTMiss>250){
+      if(isyst==0) std::cout<<"LumiBlockNumber; "<<m_lumiBlockNumber<<std::endl;
+      h_eventsPerRun->Fill(runNumber,1);
+    }
+  }
 
 
     if (isyst == 0){
@@ -1118,14 +1134,14 @@ EL::StatusCode MyxAODAnalysis :: execute ()
     }
     
     if ( m_fileType != "DAOD_TRUTH1"){
-      if (m_regions->interestingRegion || RunningLocally){
-	(m_treeServiceVector[isyst])->fillTree(m_objs, *m_regions, *m_varCalc, *checkMC,m_finalSumOfWeights, m_initialSumOfWeights, puWgt, SFmctbbll, passedMETTrigger, passedMuTrigger, passedElTrigger, passedGammaTrigger, passedMultiJetTrigger, passedTriggers, PUSumOfWeights, truthfilt_MET, truthfilt_HT, coreFlag, sctFlag, LArTileFlag, passGRL, passedPrimVertex, passedJetClean, passedCosmicMu, passedMuonClean, m_runNumber, renormedMcWgt, year);
+      if (m_regions->interestingRegion || RunningLocally && passedCleaningCuts){
+	(m_treeServiceVector[isyst])->fillTree(m_objs, *m_regions, *m_varCalc, *checkMC,m_finalSumOfWeights, m_initialSumOfWeights, puWgt, SFmctbbll, passedMETTrigger, passedMuTrigger, passedElTrigger, passedGammaTrigger, passedMultiJetTrigger, passedTriggers, PUSumOfWeights, truthfilt_MET, truthfilt_HT, coreFlag, sctFlag, LArTileFlag, passGRL, passedPrimVertex, passedJetClean, passedCosmicMu, passedMuonClean, m_runNumber, renormedMcWgt, year, m_averageIntPerX, m_actualIntPerX);
        }
     }
 
     // not running on reco. fill everything for TRUTH
     else{
-      (m_treeServiceVector[isyst])->fillTree(m_objs, *m_regions, *m_varCalc, *checkMC,m_finalSumOfWeights, m_initialSumOfWeights, puWgt, SFmctbbll, passedMETTrigger, passedMuTrigger, passedElTrigger, passedGammaTrigger, passedMultiJetTrigger, passedTriggers, PUSumOfWeights, truthfilt_MET, truthfilt_HT , coreFlag, sctFlag, LArTileFlag, passGRL, passedPrimVertex, passedJetClean, passedCosmicMu, passedMuonClean, m_runNumber, renormedMcWgt, year);
+      (m_treeServiceVector[isyst])->fillTree(m_objs, *m_regions, *m_varCalc, *checkMC,m_finalSumOfWeights, m_initialSumOfWeights, puWgt, SFmctbbll, passedMETTrigger, passedMuTrigger, passedElTrigger, passedGammaTrigger, passedMultiJetTrigger, passedTriggers, PUSumOfWeights, truthfilt_MET, truthfilt_HT , coreFlag, sctFlag, LArTileFlag, passGRL, passedPrimVertex, passedJetClean, passedCosmicMu, passedMuonClean, m_runNumber, renormedMcWgt, year, m_averageIntPerX, m_actualIntPerX);
    }
       
     isyst++;

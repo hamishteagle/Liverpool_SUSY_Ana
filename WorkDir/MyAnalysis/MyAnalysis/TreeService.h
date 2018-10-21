@@ -23,7 +23,7 @@ class TreeService
  public:
   TreeService(TTree *outputTree, TDirectory *OutDir);
 
-  void fillTree(IObjectDef *objects, PreliminarySel &region, CalculateVariables &variables, MCChecks MCTruthInfo , double mFinalWeight, double mInitialWeight, double puWeight, double SFmCTbbll, bool TrigMET, bool TrigMu, bool TrigEl, bool TrigGamma, bool Trig6j, std::vector<int> triggers, double puSumWeights, double TRUTHMET, double TRUTHHT ,bool CoreFlags, bool SCTFlag, bool LArTileFlag, bool passGRL, bool passedPrimVertex, bool passedJetClean, bool passedCosmicMu, bool passedMuonClean, double RNo, double RenormedMCWgt, int LumiYear);
+  void fillTree(IObjectDef *objects, PreliminarySel &region, CalculateVariables &variables, MCChecks MCTruthInfo , double mFinalWeight, double mInitialWeight, double puWeight, double SFmCTbbll, bool TrigMET, bool TrigMu, bool TrigEl, bool TrigGamma, bool Trig6j, std::vector<int> triggers, double puSumWeights, double TRUTHMET, double TRUTHHT ,bool CoreFlags, bool SCTFlag, bool LArTileFlag, bool passGRL, bool passedPrimVertex, bool passedJetClean, bool passedCosmicMu, bool passedMuonClean, double RNo, double RenormedMCWgt, int LumiYear, double m_averageIntPerCrossing, double m_actualIntPerCrossing);
   
   void writeTree();
 
@@ -43,7 +43,8 @@ class TreeService
   double mcEventWeight;
   double RenormedMcEventWeight;
   int year;
-    
+  double m_averageIntPerX;
+  double m_actualIntPerX;
   std::vector<float> weightsVector;
 
   double lumiScaled;

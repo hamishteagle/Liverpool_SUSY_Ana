@@ -145,7 +145,7 @@ public:
   TH1 *sherpaWeightHist; //!
   TH1 *h_SumOfWeights; //!
   TH1 *h_SumOfWeightsSquared; //!
-
+  TH1 *h_eventsPerRun;//!
   TH1 *renormedSherpaWeightHist; //!
 
   // Make the Histos for the full cutflows here then:
@@ -184,6 +184,8 @@ public:
   double m_PUSumOfWeights; //!
   double m_finalSumOfWeights; //!
   double m_initialSumOfWeights; //!
+  double m_averageIntPerX;//!
+  double m_actualIntPerX;//!
   double truth_pT_W; //!
 
   //  OutputStream *out; //!

@@ -23,7 +23,8 @@ TreeService::TreeService(TTree *outputTree, TDirectory *OutDir){
   tree->Branch("lumiWgt", &lumiScaled);
   tree->Branch("sampleSFmCTbbll",&sampleSFmCTbbll);
   tree->Branch("pileUpSumOfWeights",&pileUpSumOfWeights);
-
+  tree->Branch("m_averageIntPerX",&m_averageIntPerX);
+  tree->Branch("m_actualIntPerX",&m_actualIntPerX);
 
 
   //Initial event cleaning
@@ -187,7 +188,7 @@ TreeService::TreeService(TTree *outputTree, TDirectory *OutDir){
 }
 
 
-void TreeService::fillTree(IObjectDef *objects ,PreliminarySel &region, CalculateVariables &variables, MCChecks MCTruthInfo, double mFinalWeight, double mInitialWeight, double puWeight, double SFmCTbbll, bool TrigMET, bool TrigMu, bool TrigEl, bool TrigGamma, bool Trig6j, std::vector<int> triggers, double puSumWeights, double TRUTHMET, double TRUTHHT, bool CoreFlags, bool SCTFlag,bool LArTileFlags, bool passGRL, bool passedPrimVertexes, bool passedJetCleans, bool passedCosmicMus, bool passedMuonCleans, double RNo,  double RenormedMCWgt, int LumiYear){
+void TreeService::fillTree(IObjectDef *objects ,PreliminarySel &region, CalculateVariables &variables, MCChecks MCTruthInfo, double mFinalWeight, double mInitialWeight, double puWeight, double SFmCTbbll, bool TrigMET, bool TrigMu, bool TrigEl, bool TrigGamma, bool Trig6j, std::vector<int> triggers, double puSumWeights, double TRUTHMET, double TRUTHHT, bool CoreFlags, bool SCTFlag,bool LArTileFlags, bool passGRL, bool passedPrimVertexes, bool passedJetCleans, bool passedCosmicMus, bool passedMuonCleans, double RNo,  double RenormedMCWgt, int LumiYear, double m_averageIntPerCrossing, double m_actualIntPerCrossing){
 
   //  std::cout << "Filling the Tree" << std::endl;
   CutsRegion = region.region;
@@ -218,6 +219,8 @@ void TreeService::fillTree(IObjectDef *objects ,PreliminarySel &region, Calculat
   year = LumiYear; 
   weightsVector = MCTruthInfo.variationweights;
 
+  m_averageIntPerX=m_averageIntPerCrossing;
+  m_actualIntPerX=m_actualIntPerCrossing;
   lumiScaled = objects->lumiScaled;
   puWgt = puWeight;
   sampleSFmCTbbll = SFmCTbbll;

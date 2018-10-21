@@ -1228,9 +1228,6 @@ CalculateVariables::CalculateVariables(IObjectDef *objects, bool isTruth, bool d
       double SRB_Higgsino_mbb2= (b3m+b4m).M();
       
       SRB_Higgsino_Hmbb= (SRB_Higgsino_mbb1+SRB_Higgsino_mbb2)/2;
-      //std::cout<<"Average mass of bb pairs, SRB Higgsino; "<<SRB_Higgsino_Hmbb<<std::endl;
-      //std::cout<<"SRB_Higgsino_maxDR = "<<SRB_Higgsino_maxDR<<std::endl;
-      //std::cout<<"SRB_Higgsino_minDR = "<<SRB_Higgsino_minDR<<std::endl;
     }
  
   //SRB algorithms end

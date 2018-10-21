@@ -162,30 +162,39 @@ def RatioPlot(variable, xaxislabel, xmin, xmax, rebin, ymax, selection, director
 
     ttV = ROOT.TFile(ttVFile)
     ttVTree = ttV.Get("CollectionTree_")
+    #ttVTree.setAlias("YearWeight","year==2017 ? 43600/79800 : 36200/79800")
     
     SingleTop = ROOT.TFile(singleTopFile)
     SingleTopTree = SingleTop.Get("CollectionTree_")
-    
+    #SingleTopTree.setAlias("YearWeight","year==2017 ? 43600/79800 : 36200/79800")
+
     DiBoson = ROOT.TFile(DiBosonFile)
     DiBosonTree = DiBoson.Get("CollectionTree_")
+    #DiBosonTree.setAlias("YearWeight","year==2017 ? 43600/79800 : 36200/79800")
 
     Higgs = ROOT.TFile(HiggsFile)
     HiggsTree = Higgs.Get("CollectionTree_")
+    #HiggsTree.setAlias("YearWeight","year==2017 ? 43600/79800 : 36200/79800")
 
     DiJet = ROOT.TFile(DiJetFile)
     DiJetTree = DiJet.Get("CollectionTree_")
+    #DiJetTree.setAlias("YearWeight","year==2017 ? 43600/79800 : 36200/79800")
     
     Wjets = ROOT.TFile(WjetsFile)
     WjetsTree = Wjets.Get("CollectionTree_")
+    #WjetsTree.setAlias("YearWeight","year==2017 ? 43600/79800 : 36200/79800")
 
     Zjets = ROOT.TFile(ZjetsFile)
     ZjetsTree = Zjets.Get("CollectionTree_")
+    #ZjetsTree.setAlias("YearWeight","year==2017 ? 43600/79800 : 36200/79800")
 
     ttbar = ROOT.TFile(ttbarFile)
     ttbarTree = ttbar.Get("CollectionTree_")
+    #ttbarTree.setAlias("YearWeight","year==2017 ? 43600/79800 : 36200/79800")
     
     signal = ROOT.TFile(signalFile)
     signalTree = signal.Get("CollectionTree_")
+    #signalTree.setAlias("YearWeight","year==2017 ? 43600/79800 : 36200/79800")
     
     Data = ROOT.TFile(datafile)
     DataTree = Data.Get("CollectionTree_")
