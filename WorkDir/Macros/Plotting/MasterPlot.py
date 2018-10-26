@@ -54,7 +54,7 @@ def main():
     DiBosonFile = "/hepstore/hteagle/Wh/ntuples_21.2.31/mc16a/skimmed_newLumi/diBoson.root"
     HiggsFile = "/hepstore/hteagle/Wh/ntuples_21.2.31/mc16a/skimmed_newLumi/VH.root" 
     #dataFile = "/hepstore/hteagle/Wh/ntuples_21.2.31/skimmed/data_full_skim.root"
-    dataFile = "/hepstore/hteagle/Wh/ntuples_21.2.31/skimmed/data_1516.root"
+    dataFile = "/hepstore/hteagle/Wh/ntuples_21.2.31/skimmed/data.root"
     
 
 

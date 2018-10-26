@@ -78,7 +78,10 @@ def main():
    ###These are for cutflow checks on Wh 1lbb
     #signalFile = "/scratch/hteagle/multiB/nTuple_21_2_31/mc16a/signal/mc16_13TeV.390285.MGPy8EG_A14N23LO_BB_onestepN2hN1_700_680_550.e5671_e5984_a875_r9364_r9315_p3404_sbottom_multib_fixed.root"
     #    signalFile = "/scratch/hteagle/multiB/nTuple_21_2_31/mc/mc16_13TeV.390285.MGPy8EG_A14N23LO_BB_onestepN2hN1_700_680_550.sbottom_multib_fixed.root"
-    signalFile = "/scratch/hteagle/multiB/nTuple_21_2_31/mc/mc16_13TeV.390300.MGPy8EG_A14N23LO_BB_onestepN2hN1_800_780_650.sbottom_multib_fixed.root"
+    #signalFile = "/scratch/hteagle/multiB/nTuple_21_2_31/mc/mc16_13TeV.390300.MGPy8EG_A14N23LO_BB_onestepN2hN1_800_780_650.sbottom_multib_fixed.root"
+    #signalFile = "/scratch/hteagle/multiB/nTuple_21_2_31/mc/mc16_13TeV.390285.MGPy8EG_A14N23LO_BB_onestepN2hN1_700_680_550.sbottom_multib_fixed.root"
+    #signalFile = "/scratch/hteagle/multiB/nTuple_21_2_31/mc/mc16_13TeV.390308.MGPy8EG_A14N23LO_BB_onestepN2hN1_900_830_700.sbottom_multib_fixed.root"
+    signalFile = "/scratch/hteagle/multiB/nTuple_21_2_31/mc/mc16_13TeV.390314.MGPy8EG_A14N23LO_BB_onestepN2hN1_1000_930_800.sbottom_multib_fixed.root"
     foundSignalInput = ""
 
 
@@ -236,7 +239,7 @@ def main():
         # #RatioPlot.RatioPlot("nbaselineLep","#leptons",-0.5,9.5,1,ymax, cutstouse, directory, label, False, ttVFile, singleTopFile, DiBosonFile, HiggsFile, wJetFile, zJetFile, ttbarFile, DiJetFile, dataFile, signalFile, True, False, luminosity_sheff)
         #RatioPlot.RatioPlot("leadb1","ISRlead (0), b-jet lead (1)",-0.5,1.5,1,ymax, cutstouse, directory, label, False, ttVFile, singleTopFile, DiBosonFile, HiggsFile, wJetFile, zJetFile, ttbarFile, DiJetFile, dataFile, signalFile, False, False, luminosity_sheff)
         #RatioPlot.RatioPlot("SRB2_Mh1 ","Higgs candidate mass-DRmin",0,500,50,ymax, cutstouse, directory, label, False, ttVFile, singleTopFile, DiBosonFile, HiggsFile, wJetFile, zJetFile, ttbarFile, DiJetFile, dataFile, signalFile, False, False, luminosity_sheff)
-        RatioPlot.RatioPlot("SRB2_Mh2 ","Higgs candidate mass-DRmax",0,300,25,ymax, cutstouse, directory, label, False, ttVFile, singleTopFile, DiBosonFile, HiggsFile, wJetFile, zJetFile, ttbarFile, DiJetFile, dataFile, signalFile, False, False, luminosity_sheff)
+        #RatioPlot.RatioPlot("SRB2_Mh2 ","Higgs candidate mass-DRmax",0,300,25,ymax, cutstouse, directory, label, False, ttVFile, singleTopFile, DiBosonFile, HiggsFile, wJetFile, zJetFile, ttbarFile, DiJetFile, dataFile, signalFile, False, False, luminosity_sheff)
 
 
     if options.doCorr:
