@@ -34,15 +34,15 @@ def main():
 
 
     #Sheff ntuples_21_2_31
-    DiJetFile = "/scratch/hteagle/multiB/nTuple_21_2_31/mc/diJet.root"
-    ttVFile = "/scratch/hteagle/multiB/nTuple_21_2_31/mc/ttV.root"
-    wJetFile = "/scratch/hteagle/multiB/nTuple_21_2_31/mc/wJets.root"
-    zJetFile = "/scratch/hteagle/multiB/nTuple_21_2_31/mc/zJets.root"
-    ttbarFile = "/scratch/hteagle/multiB/nTuple_21_2_31/mc/ttbar.root"
-    singleTopFile = "/scratch/hteagle/multiB/nTuple_21_2_31/mc/singleTop.root"
-    DiBosonFile = "/scratch/hteagle/multiB/nTuple_21_2_31/mc/diBoson.root"
-    HiggsFile = "/scratch/hteagle/multiB/nTuple_21_2_31/mc/Vh.root" 
-    dataFile = "/scratch/hteagle/multiB/nTuple_21_2_31/data.root"
+    DiJetFile = "/hepstore/hteagle/Sbot_multiB/Sheff_ntuples_21_2_42/diJet.root"
+    ttVFile = "/hepstore/hteagle/Sbot_multiB/Sheff_ntuples_21_2_42/ttV.root"
+    wJetFile = "/hepstore/hteagle/Sbot_multiB/Sheff_ntuples_21_2_42/wJets.root"
+    zJetFile = "/hepstore/hteagle/Sbot_multiB/Sheff_ntuples_21_2_42/zJets.root"
+    ttbarFile = "/hepstore/hteagle/Sbot_multiB/Sheff_ntuples_21_2_42/ttbar.root"
+    singleTopFile = "/hepstore/hteagle/Sbot_multiB/Sheff_ntuples_21_2_42/singleTop.root"
+    DiBosonFile = "/hepstore/hteagle/Sbot_multiB/Sheff_ntuples_21_2_42/diBoson.root"
+    HiggsFile = "/hepstore/hteagle/Sbot_multiB/Sheff_ntuples_21_2_42/Higgs.root" 
+    dataFile = "/hepstore/hteagle/Sbot_multiB/Sheff_ntuples_21_2_42/data.root"
 
     #Liv ntuples_wh_21_2_31
     # DiJetFile = "/hepstore/hteagle/Wh/ntuples_21.2.31/mc16a/skimmed_newLumi/diJet.root"
@@ -77,11 +77,11 @@ def main():
     
    ###These are for cutflow checks on Wh 1lbb
     #signalFile = "/scratch/hteagle/multiB/nTuple_21_2_31/mc16a/signal/mc16_13TeV.390285.MGPy8EG_A14N23LO_BB_onestepN2hN1_700_680_550.e5671_e5984_a875_r9364_r9315_p3404_sbottom_multib_fixed.root"
-    #    signalFile = "/scratch/hteagle/multiB/nTuple_21_2_31/mc/mc16_13TeV.390285.MGPy8EG_A14N23LO_BB_onestepN2hN1_700_680_550.sbottom_multib_fixed.root"
-    #signalFile = "/scratch/hteagle/multiB/nTuple_21_2_31/mc/mc16_13TeV.390300.MGPy8EG_A14N23LO_BB_onestepN2hN1_800_780_650.sbottom_multib_fixed.root"
-    #signalFile = "/scratch/hteagle/multiB/nTuple_21_2_31/mc/mc16_13TeV.390285.MGPy8EG_A14N23LO_BB_onestepN2hN1_700_680_550.sbottom_multib_fixed.root"
-    #signalFile = "/scratch/hteagle/multiB/nTuple_21_2_31/mc/mc16_13TeV.390308.MGPy8EG_A14N23LO_BB_onestepN2hN1_900_830_700.sbottom_multib_fixed.root"
-    signalFile = "/scratch/hteagle/multiB/nTuple_21_2_31/mc/mc16_13TeV.390314.MGPy8EG_A14N23LO_BB_onestepN2hN1_1000_930_800.sbottom_multib_fixed.root"
+    #    signalFile = "/hepstore/hteagle/Sbot_multiB/Sheff_ntuples_21_2_42/mc16_13TeV.390285.MGPy8EG_A14N23LO_BB_onestepN2hN1_700_680_550.sbottom_multib_fixed.root"
+    #signalFile = "/hepstore/hteagle/Sbot_multiB/Sheff_ntuples_21_2_42/mc16_13TeV.390300.MGPy8EG_A14N23LO_BB_onestepN2hN1_800_780_650.sbottom_multib_fixed.root"
+    #signalFile = "/hepstore/hteagle/Sbot_multiB/Sheff_ntuples_21_2_42/mc16_13TeV.390285.MGPy8EG_A14N23LO_BB_onestepN2hN1_700_680_550.sbottom_multib_fixed.root"
+    #signalFile = "/hepstore/hteagle/Sbot_multiB/Sheff_ntuples_21_2_42/mc16_13TeV.390308.MGPy8EG_A14N23LO_BB_onestepN2hN1_900_830_700.sbottom_multib_fixed.root"
+    signalFile = "/hepstore/hteagle/Sbot_multiB/Sheff_ntuples_21_2_42/mc16_13TeV.390314.MGPy8EG_A14N23LO_BB_onestepN2hN1_1000_930_800.root"
     foundSignalInput = ""
 
 
@@ -105,7 +105,7 @@ def main():
 
 
     #Sheff luminosity and weights
-    luminosity_sheff = "150000*jvtweight*AnalysisWeight*pileupweight*LumiWeight*btagweight*MuonWeight*ElecWeight*isttbarMET400_OK*isttbarMET200_OK*isttbarMET300_OK*(YearWeight)*"
+    luminosity_sheff = "47800*jvtweight*AnalysisWeight*pileupweight*LumiWeight*btagweight*MuonWeight*ElecWeight*isttbarMET400_OK*isttbarMET200_OK*isttbarMET300_OK*"#(YearWeight)*"
 
  #Liv luminosity and -weights
     luminosity_liv ="1*36.1*JVTSF*puWgt*bJetSF*muonSF*electronSF*mcEventWeight*lumiWgtRecalc*"#YearWeight*" DON'T FORGET to setAlias!!!
@@ -123,7 +123,7 @@ def main():
     # Change this to put the output directory somewhere else
     directory = options.date+"_SbottomMultib_Preliminary/"+foundSignalInput
     print "Output Directory is: ", directory
-    label = "SR_SRB_new_N-1"
+    label = "pre-2b-4j-0L"
     EventCounter = True
 
 
@@ -163,7 +163,12 @@ def main():
 
     elif label == "VRA":
         cutstouse = "(passMETtriggers &&  eT_miss_orig>250 && num_bjets==3 && nj_good>=6 &&  nbaselineLep==0 && pT_1bjet >200 && (dphimin4_orig>0.4) &&  passtauveto && meff>1000)"
-
+    elif label == "pre-2b-4j-0L":
+        cutstouse = "(eT_miss_orig>250 && num_bjets>=2 && nj_good>=4 &&  nbaselineLep==0 && (dphimin4_orig>0.4))"
+    elif label == "pre-2b-4j-1L":
+        cutstouse = "((eT_miss_orig>250)*(nj_good>=4)*(num_bjets>=2)*(nEl+nMu==1)*(pT_1lep>20)*(nbaselineLep==1)*(MT>20))"
+    elif label == "pre-2b-4j-2LOS":
+        cutstouse = "(eT_miss_orig>250)*(nj_good>=4)*(num_bjets>=2)*(nbaselineLep==2)*( (nEl==2)*(nMu==0)||(nEl==0)*(nMu==2))*(pT_1lep>27)*(pT_2lep>20)"
 
     #SRB Regions
     elif label == "SR_SRB":
@@ -212,26 +217,29 @@ def main():
 
         #RatioPlot.RatioPlot("m_bb", "m_{bb}", 30, 630, 30, ymax, cutstouse, directory, label, False, ttVFile, singleTopFile, DiBosonFile, HiggsFile, wJetFile, zJetFile, ttbarFile, DiJetFile, dataFile, signalFile, False, False, luminosity_sheff)
         #RatioPlot.RatioPlot("fatJet8_M[0]", "m_{leading 0.8Jet}", 0, 200, 10, ymax, cutstouse, directory, label, False, ttVFile, singleTopFile, DiBosonFile, HiggsFile, wJetFile, zJetFile, ttbarFile, DiJetFile, dataFile, signalFile, False, False, luminosity_sheff)
-        #RatioPlot.RatioPlot("eT_miss", "E_{T}^{miss}", 0, 1000, 50, ymax, cutstouse, directory, label, False, ttVFile, singleTopFile, DiBosonFile, HiggsFile, wJetFile, zJetFile, ttbarFile, DiJetFile, dataFile, signalFile, False, False, luminosity_sheff)
-        #RatioPlot.RatioPlot("nJets", "n_{jets}", 0, 15, 1, ymax, cutstouse, directory, label, False, ttVFile, singleTopFile, DiBosonFile, HiggsFile, wJetFile, zJetFile, ttbarFile, DiJetFile, dataFile, signalFile, False,False, luminosity_sheff)
-        #RatioPlot.RatioPlot("nBJets", "n_{b-jets}", -0.5, 9.5, 1, ymax, cutstouse, directory, label, False, ttVFile, singleTopFile, DiBosonFile, HiggsFile, wJetFile, zJetFile, ttbarFile,DiJetFile, dataFile, signalFile, False, False, luminosity_sheff)
+        RatioPlot.RatioPlot("eT_miss", "E_{T}^{miss}", 250, 1000, 50, ymax, cutstouse, directory, label, False, ttVFile, singleTopFile, DiBosonFile,HiggsFile, wJetFile, zJetFile, ttbarFile, dataFile, signalFile, False, False, luminosity_sheff)
+        RatioPlot.RatioPlot("metsig", "Oject-based METsig", 0, 45, 2, ymax, cutstouse, directory, label, False, ttVFile, singleTopFile, DiBosonFile,HiggsFile, wJetFile, zJetFile, ttbarFile, dataFile, signalFile, False, False, luminosity_sheff)
+        RatioPlot.RatioPlot("nj_good", "n_{jets}", 0, 15, 1, ymax, cutstouse, directory, label, False, ttVFile, singleTopFile, DiBosonFile, HiggsFile, wJetFile, zJetFile, ttbarFile, dataFile, signalFile, False,False, luminosity_sheff)
+        RatioPlot.RatioPlot("num_bjets", "n_{b-jets}", -0.5, 9.5, 1, ymax, cutstouse, directory, label, False, ttVFile, singleTopFile, DiBosonFile, HiggsFile, wJetFile, zJetFile, ttbarFile, dataFile, signalFile, False, False, luminosity_sheff)
         #RatioPlot.RatioPlot("maxminDRmbb1", "min #Delta R(m_{bb})", 50, 250, 20, ymax, cutstouse, directory, label, False, ttVFile, singleTopFile, DiBosonFile, HiggsFile, wJetFile, zJetFile, ttbarFile, DiJetFile, dataFile, signalFile, False, False, luminosity_sheff)
         # #RatioPlot.RatioPlot("maxminDRmbb", "maxMin #Delta R(m_{bb})", 60, 160, 10, ymax, cutstouse, directory, label, False, ttVFile, singleTopFile, DiBosonFile, HiggsFile, wJetFile, zJetFile, ttbarFile, DiJetFile, dataFile, signalFile, False, False, luminosity_sheff)
         # #RatioPlot.RatioPlot("minDR", "min #Delta R(b,b)", 0, 4, 1, ymax, cutstouse, directory, label, False, ttVFile, singleTopFile, DiBosonFile, HiggsFile, wJetFile, zJetFile, ttbarFile, DiJetFile, dataFile, signalFile, False, False, luminosity_sheff)
-        #RatioPlot.RatioPlot("meff", "m_{eff}", 900, 2500, 80, ymax, cutstouse, directory, label, True, ttVFile, singleTopFile, DiBosonFile, HiggsFile, wJetFile, zJetFile, ttbarFile, DiJetFile, dataFile, signalFile, True, False, luminosity_sheff)
-        #RatioPlot.RatioPlot("pT_1lep", "p_{T}(leading lep)", 0, 300, 25, ymax, cutstouse, directory, label, False, ttVFile, singleTopFile, DiBosonFile, HiggsFile, wJetFile, zJetFile, ttbarFile, DiJetFile, dataFile, signalFile, False, False, luminosity_sheff)
+        RatioPlot.RatioPlot("meff", "m_{eff}", 500, 2500, 80, ymax, cutstouse, directory, label, False, ttVFile, singleTopFile, DiBosonFile, HiggsFile, wJetFile, zJetFile, ttbarFile, dataFile, signalFile, True, False, luminosity_sheff)
+        RatioPlot.RatioPlot("pT_1lep", "p_{T}(leading lep)", 30, 300, 25, ymax, cutstouse, directory, label, False, ttVFile, singleTopFile, DiBosonFile, HiggsFile, wJetFile, zJetFile, ttbarFile, dataFile, signalFile, False, False, luminosity_sheff)
         # #RatioPlot.RatioPlot("pTel1", "p_{T}(e)", 0, 800, 40, ymax, cutstouse, directory, label, False, ttVFile, singleTopFile, DiBosonFile, HiggsFile, wJetFile, zJetFile, ttbarFile, DiJetFile, dataFile, signalFile, False, False, luminosity_sheff)
         #RatioPlot.RatioPlot("dphimin4_orig", "min #Delta#phi(j,E_{T}^{miss})", 0, math.pi,20, ymax, cutstouse, directory, label, False, ttVFile, singleTopFile, DiBosonFile, HiggsFile, wJetFile, zJetFile, ttbarFile, DiJetFile, dataFile, signalFile, True, False, luminosity_sheff)
         #RatioPlot.RatioPlot("dPhi_1jet", "min #Delta#phi(j1,E_{T}^{miss})", -3.5, 3.5,20, ymax, cutstouse, directory, label, True, ttVFile, singleTopFile, DiBosonFile, HiggsFile, wJetFile, zJetFile, ttbarFile, DiJetFile, dataFile, signalFile, True, False, luminosity_sheff)
-       # RatioPlot.RatioPlot("pT_1bjet", "p_{T}^{b1}", 0, 800, 40, ymax, cutstouse, directory, label, True, ttVFile, singleTopFile, DiBosonFile, HiggsFile, wJetFile, zJetFile, ttbarFile, DiJetFile, dataFile, signalFile, False, False, luminosity_sheff)
-        #RatioPlot.RatioPlot("pT_1jet", "p_{T}^{j1} (non b)", 200, 800, 50, ymax, cutstouse, directory, label, True, ttVFile, singleTopFile, DiBosonFile, HiggsFile, wJetFile, zJetFile, ttbarFile, DiJetFile, dataFile, signalFile, False, False, luminosity_sheff)
-        #RatioPlot.RatioPlot("MT", "m_T", 0, 200, 10, ymax, cutstouse, directory, label, True, ttVFile, singleTopFile, DiBosonFile, HiggsFile, wJetFile, zJetFile, ttbarFile, DiJetFile, dataFile, signalFile, False, False, luminosity_sheff)
-        #RatioPlot.RatioPlot("m_CT", "m_{CT}", 0, 700, 80, ymax, cutstouse, directory, label, False, ttVFile, singleTopFile, DiBosonFile, HiggsFile, wJetFile, zJetFile, ttbarFile, DiJetFile, dataFile, signalFile, False, False, -luminosity_sheff)
-        #RatioPlot.RatioPlot("h_T", "H_{T}", 0, 2000, 150, ymax, cutstouse, directory, label, False, ttVFile, singleTopFile, DiBosonFile, HiggsFile, wJetFile, zJetFile, ttbarFile, DiJetFile, dataFile, signalFile, False, False, luminosity_sheff)
+        #RatioPlot.RatioPlot("pT_1bjet", "p_{T}^{b1}", 0, 800, 40, ymax, cutstouse, directory, label, False, ttVFile, singleTopFile, DiBosonFile, HiggsFile, wJetFile, zJetFile, ttbarFile,dataFile, signalFile, False, False, luminosity_sheff)
+        RatioPlot.RatioPlot("pT_1jet", "p_{T}^{j1} ", 200, 800, 50, ymax, cutstouse, directory, label, True, ttVFile, singleTopFile, DiBosonFile, HiggsFile, wJetFile, zJetFile, ttbarFile, dataFile, signalFile, False, False, luminosity_sheff)
+        #RatioPlot.RatioPlot("MT", "m_T", 0, 200, 10, ymax, cutstouse, directory, label, False, ttVFile, singleTopFile, DiBosonFile, HiggsFile, wJetFile, zJetFile, ttbarFile, DiJetFile, dataFile, signalFile, False, False, luminosity_sheff)
+        #RatioPlot.RatioPlot("m_CT", "m_{CT}", 0, 700, 80, ymax, cutstouse, directory, label, False, ttVFile, singleTopFile, DiBosonFile, HiggsFile, wJetFile, zJetFile, ttbarFile, dataFile, signalFile, False, False, -luminosity_sheff)
+        RatioPlot.RatioPlot("HT", "H_{T}", 0, 2000, 150, ymax, cutstouse, directory, label, False, ttVFile, singleTopFile, DiBosonFile, HiggsFile, wJetFile, zJetFile, ttbarFile, dataFile, signalFile, False, False, luminosity_sheff)
         # #RatioPlot.RatioPlot("dPhib1b2", "#Delta#phi(b_{1},b_{2})", 0, math.pi,20, ymax, cutstouse, directory, label, False, ttVFile, singleTopFile, DiBosonFile, HiggsFile, wJetFile, zJetFile, ttbarFile, DiJetFile, dataFile, signalFile, True, False, luminosity_sheff)
         # #RatioPlot.RatioPlot("HiggsMassCandidate_4Hb", "Higgs Candidate mass", 0, math.pi,20, ymax, cutstouse, directory, label, False, ttVFile, singleTopFile, DiBosonFile, HiggsFile, wJetFile, zJetFile, ttbarFile, DiJetFile, dataFile, signalFile, True, False, luminosity_sheff)
         #RatioPlot.RatioPlot("SRB1_Mh", "Average Mass of the 2 b-jet pairs (SRB1)", 0, 300,20, ymax, cutstouse, directory, label, False, ttVFile, singleTopFile, DiBosonFile, HiggsFile, wJetFile, zJetFile, ttbarFile, DiJetFile, dataFile, signalFile, False, False, luminosity_sheff)
-        RatioPlot.RatioPlot("SRB2_Mh", "Average Mass of the 2 b-jet pairs (SRB2)", 0, 300,20, ymax, cutstouse, directory, label, True, ttVFile, singleTopFile, DiBosonFile, HiggsFile, wJetFile, zJetFile, ttbarFile, DiJetFile, dataFile, signalFile, False, False, luminosity_sheff)
+        #RatioPlot.RatioPlot("SRB2_Mh", "Average Mass of the 2 b-jet pairs (SRB2)", 0, 300,20, ymax, cutstouse, directory, label, False, ttVFile, singleTopFile, DiBosonFile, wJetFile, zJetFile, ttbarFile, DiJetFile, dataFile, signalFile, False, False, luminosity_sheff)
+        #RatioPlot.RatioPlot("SRB3_mbb_avg", "Average Mass of the 2 b-jet pairs (SRB3)", 0, 300,20, ymax, cutstouse, directory, label, False, ttVFile, singleTopFile, DiBosonFile, wJetFile, zJetFile, ttbarFile, dataFile, signalFile, False, False, luminosity_sheff)
+       # RatioPlot.RatioPlot("SRB4_mbb_avg", "Average Mass of the 2 b-jet pairs (SRB4)", 0, 300,20, ymax, cutstouse, directory, label, False, ttVFile, singleTopFile, DiBosonFile, wJetFile, zJetFile, ttbarFile, dataFile, signalFile, False, False, luminosity_sheff)
         #RatioPlot.RatioPlot("SRB1_DRmin", "SRB1_DRmin", 0.0001, 6.0001,1, ymax, cutstouse, directory, label, False, ttVFile, singleTopFile, DiBosonFile, HiggsFile, wJetFile, zJetFile, ttbarFile, DiJetFile, dataFile, signalFile, True, False,luminosity_sheff)
         #RatioPlot.RatioPlot("SRB2_minDR", "SRB2_minDR", 0.0001, 6.0001,1, ymax, cutstouse, directory, label, False, ttVFile, singleTopFile, DiBosonFile, HiggsFile, wJetFile, zJetFile, ttbarFile, DiJetFile, dataFile, signalFile, True, False, luminosity_sheff)
         #RatioPlot.RatioPlot("SRB1_DRmin2", "SRB1_DRmin2", 0.0001, 6.0001,1, ymax, cutstouse, directory, label, False, ttVFile, singleTopFile, DiBosonFile, HiggsFile, wJetFile, zJetFile, ttbarFile, DiJetFile, dataFile, signalFile, True, False, luminosity_sheff)

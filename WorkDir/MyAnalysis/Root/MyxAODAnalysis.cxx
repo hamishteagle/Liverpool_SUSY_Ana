@@ -451,8 +451,8 @@ EL::StatusCode MyxAODAnalysis :: initialize ()
   
 
   ANA_CHECK(objTool->setProperty("DataSource",datasource) ) ;
-  ANA_CHECK( objTool->setProperty("ConfigFile", PathResolverFindCalibFile("MyAnalysis/MyAnalysis/EWK_SUSYSkim1L.conf")));
-  //ANA_CHECK( objTool->setProperty("ConfigFile", PathResolverFindCalibFile("MyAnalysis/MyAnalysis/SUSYTools_Default_21_2_31.conf")));//SUSYTools default will need to be changed...
+  //ANA_CHECK( objTool->setProperty("ConfigFile", PathResolverFindCalibFile("MyAnalysis/MyAnalysis/EWK_SUSYSkim1L.conf")));
+  ANA_CHECK( objTool->setProperty("ConfigFile", PathResolverFindCalibFile("MyAnalysis/MyAnalysis/SUSYToolsDefault_21_2_31.conf")));//SUSYTools default will need to be changed...
   //ANA_CHECK( objTool->setProperty("ConfigFile", PathResolverFindCalibFile("MyAnalysis/MyAnalysis/SUSYTools_Default_21_2_42.conf")));//SUSYTools default will need to be changed...
   ANA_CHECK(objTool->setBoolProperty("UseBtagging", true));
   //CHECK( objTool->setProperty("ShowerType", (int)m_showerType) );
@@ -879,8 +879,8 @@ EL::StatusCode MyxAODAnalysis :: execute ()
     
     double nBadJet = m_objs->getBadJets()->size();
     //Not doing cosmic muons for now
-    //double nCosmicMu = m_objs->getCosmicMuons()->size();
-    double nCosmicMu = 0;
+    double nCosmicMu = m_objs->getCosmicMuons()->size();
+    //double nCosmicMu = 0;
     double nBadMu = m_objs->getBadMuons()->size();
     
     // Put the trigger here:
@@ -1134,7 +1134,7 @@ EL::StatusCode MyxAODAnalysis :: execute ()
     }
     
     if ( m_fileType != "DAOD_TRUTH1"){
-      if (m_regions->interestingRegion || RunningLocally && passedCleaningCuts){
+      if (m_regions->interestingRegion || RunningLocally){
 	(m_treeServiceVector[isyst])->fillTree(m_objs, *m_regions, *m_varCalc, *checkMC,m_finalSumOfWeights, m_initialSumOfWeights, puWgt, SFmctbbll, passedMETTrigger, passedMuTrigger, passedElTrigger, passedGammaTrigger, passedMultiJetTrigger, passedTriggers, PUSumOfWeights, truthfilt_MET, truthfilt_HT, coreFlag, sctFlag, LArTileFlag, passGRL, passedPrimVertex, passedJetClean, passedCosmicMu, passedMuonClean, m_runNumber, renormedMcWgt, year, m_averageIntPerX, m_actualIntPerX);
        }
     }

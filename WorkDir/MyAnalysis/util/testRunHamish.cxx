@@ -29,7 +29,7 @@ int main( int argc, char* argv[]) {
   bool RunningWithSyst;
   bool RunningWithPhotons;
   
-  std::string gridoption = "y";//Option for running on the grid
+  std::string gridoption = "n";//Option for running on the grid
   
 
     if (gridoption == "y")
@@ -98,10 +98,10 @@ int main( int argc, char* argv[]) {
     //inputFile = "data15_13TeV.periodD.physics_Main.PhysCont.DAOD_SUSY1.grp15_v01_p3372";
     //inputFile = "temp/mc16_13TeV.363355.Sherpa_221_NNPDF30NNLO_ZqqZvv.deriv.DAOD_SUSY1.e5525_s3126_r9364_r9315_p3401/";
     //inputFile = "Sbot_multiB/recoSamples/signal/mc16_13TeV.390219.MGPy8EG_A14N23LO_BB_onestepN2hN1_800_795_60.deriv.DAOD_SUSY1.e5671_e5984_a875_r9364_r9315_p3404/";
-    //inputFile = "Wh/recoSamples/mc16_13TeV.410470.PhPy8EG_A14_ttbar_hdamp258p75_nonallhad.deriv.DAOD_SUSY5.e6337_e5984_s3126_r9364_r9315_p3563/";
+    inputFile = "Wh/recoSamples/mc16_13TeV.410470.PhPy8EG_A14_ttbar_hdamp258p75_nonallhad.deriv.DAOD_SUSY5.e6337_e5984_s3126_r9364_r9315_p3563/";
     //inputFile = "Wh/dataSamples/data15_13TeV.periodD.physics_Main.PhysCont.DAOD_SUSY5.grp15_v01_p3372/"; 
     //inputFile = "Sbot_multiB/recoSamples/mc16_13TeV.363355.Sherpa_221_NNPDF30NNLO_ZqqZvv.deriv.DAOD_SUSY5.e5525_s3126_r9364_r9315_p3563/";
-    inputFile = "Wh/dataSamples/data18_13TeV.periodB.physics_Main.PhysCont.DAOD_SUSY5.grp18_v01_p3544/";
+    //inputFile = "Wh/dataSamples/data18_13TeV.periodB.physics_Main.PhysCont.DAOD_SUSY5.grp18_v01_p3544/";
 
     submitDir = submitDir+inputFile;
     inputFile = inputDir+inputFile;

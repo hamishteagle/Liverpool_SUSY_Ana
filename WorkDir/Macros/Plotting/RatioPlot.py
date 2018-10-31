@@ -151,12 +151,11 @@ def latex_draw(label):
     Tl.SetTextSize(0.035)
     Tl.SetTextAlign(13)
     Tl.SetNDC(True)
-    #Tl.DrawLatex(0.195, 0.87,"#sqrt{s} = 13 TeV, 3.2 fb^{-1}")
-    Tl.DrawLatex(0.195, 0.87,"#sqrt{s} = 13 TeV, 36.1 fb^{-1}")
+    Tl.DrawLatex(0.195, 0.87,"#sqrt{s} = 13 TeV, 79.8 fb^{-1}")
     Tl.DrawLatex(0.195, 0.92,"#it{#bf{ATLAS}} Internal")
     Tl.DrawLatex(0.195, 0.82,label)
    
-def RatioPlot(variable, xaxislabel, xmin, xmax, rebin, ymax, selection, directory, label, doEctCounter, ttVFile, singleTopFile, DiBosonFile, HiggsFile, WjetsFile, ZjetsFile, ttbarFile, DiJetFile , datafile, signalFile, phiplot, etaplot, luminosity):
+def RatioPlot(variable, xaxislabel, xmin, xmax, rebin, ymax, selection, directory, label, doEctCounter, ttVFile, singleTopFile, DiBosonFile, HiggsFile, WjetsFile, ZjetsFile, ttbarFile, DiJetFile, datafile, signalFile, phiplot, etaplot, luminosity):
 
     output_dir = directory+label
 
