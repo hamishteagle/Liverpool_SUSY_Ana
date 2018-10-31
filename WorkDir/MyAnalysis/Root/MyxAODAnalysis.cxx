@@ -664,54 +664,53 @@ EL::StatusCode MyxAODAnalysis :: execute ()
     
     
     if (isMC){
-
-
       mcChannel = eventInfo->mcChannelNumber();
+    }
       //std::cout << "Looking for xsec for " << mcChannel << std::endl;
       //getting metdata from the Map (MapVariables.cxx) using the text file in format as MGPy8EG_A14N23LO_BB_onestepN2hN1.txt
-      std::shared_ptr<MapVariables> m_mappedVars( new MapVariables ("MyAnalysis/data/MyAnalysis/MGPy8EG_A14N23LO_BB_onestepN2hN1.txt"));
-      std::shared_ptr<MapVariables> m_mappedBkgVars( new MapVariables ("MyAnalysis/data/MyAnalysis/susy_crossSections_13TeV.txt"));
-      //does this mcID exist in signal map? 
-      bool checkMap = m_mappedVars->find(mcChannel);
-      if (checkMap) 
-	{
-	  xsecteff = m_mappedVars->getCrossSection(mcChannel);
-	  filtereff= m_mappedVars->getFilterEff(mcChannel);
-	  kFactor= m_mappedVars->getKFactor(mcChannel);
-	}
-      else {//does mcID exist in Bkg map?
-	checkMap = m_mappedBkgVars->find(mcChannel);
-	if (checkMap)                                                                                
-	{
-	  xsecteff = m_mappedBkgVars->getCrossSection(mcChannel);
-	  filtereff= m_mappedBkgVars->getFilterEff(mcChannel);
-	  kFactor= m_mappedBkgVars->getKFactor(mcChannel);
-	}
-	else {
-	  //std::cout<<"ERROR: mcID does not exist in Map"<<std::endl;
-          xsecteff = 1.;
-          filtereff = 1.;
-	  kFactor=1.;
-	  //return EL::StatusCode::FAILURE;
-	}
-      }
-      mcWgt = eventInfo->mcEventWeight();
-      renormedMcWgt = mcWgt;
-      if (std::abs(renormedMcWgt) >= 100){
-	renormedMcWgt = 1;
-      }
-      if (m_fileType != "DAOD_TRUTH1"){ 
-	puWgt = objTool->GetPileupWeight();
-      }
-    }
-    else {//Not MC
-      xsecteff=1;
-      filtereff=1;
-      kFactor=1;
-    }
-
+    //   std::shared_ptr<MapVariables> m_mappedVars( new MapVariables ("MyAnalysis/data/MyAnalysis/MGPy8EG_A14N23LO_BB_onestepN2hN1.txt"));
+    //   std::shared_ptr<MapVariables> m_mappedBkgVars( new MapVariables ("MyAnalysis/data/MyAnalysis/susy_crossSections_13TeV.txt"));
+    //   //does this mcID exist in signal map? 
+    //   bool checkMap = m_mappedVars->find(mcChannel);
+    //   if (checkMap) 
+    // 	{
+    // 	  xsecteff = m_mappedVars->getCrossSection(mcChannel);
+    // 	  filtereff= m_mappedVars->getFilterEff(mcChannel);
+    // 	  kFactor= m_mappedVars->getKFactor(mcChannel);
+    // 	}
+    //   else {//does mcID exist in Bkg map?
+    // 	checkMap = m_mappedBkgVars->find(mcChannel);
+    // 	if (checkMap)                                                                                
+    // 	{
+    // 	  xsecteff = m_mappedBkgVars->getCrossSection(mcChannel);
+    // 	  filtereff= m_mappedBkgVars->getFilterEff(mcChannel);
+    // 	  kFactor= m_mappedBkgVars->getKFactor(mcChannel);
+    // 	}
+    // 	else {
+    // 	  //std::cout<<"ERROR: mcID does not exist in Map"<<std::endl;
+    //       xsecteff = 1.;
+    //       filtereff = 1.;
+    // 	  kFactor=1.;
+    // 	  //return EL::StatusCode::FAILURE;
+    // 	}
+    //   }
+    //   mcWgt = eventInfo->mcEventWeight();
+    //   renormedMcWgt = mcWgt;
+    //   if (std::abs(renormedMcWgt) >= 100){
+    // 	renormedMcWgt = 1;
+    //   }
+    //   if (m_fileType != "DAOD_TRUTH1"){ 
+    // 	puWgt = objTool->GetPileupWeight();
+    //   }
+    // }
+    // else {//Not MC
+    //   xsecteff=1;
+    //   filtereff=1;
+    //   kFactor=1;
+    // }
+ 
     //lumiScaled gives scaling to 1ifb
-    m_lumiScaled = (1000*xsecteff*filtereff*kFactor)/m_finalSumOfWeights;//This needs to be changed
+    m_lumiScaled = 1;//This needs to be changed
     HSumOfPileUp->Fill(1,puWgt);
     
       
@@ -1127,7 +1126,18 @@ EL::StatusCode MyxAODAnalysis :: execute ()
       h_eventsPerRun->Fill(runNumber,1);
     }
   }
-
+  //Continue trimming
+  if (! passedCleaningCuts) continue;
+  int passOneTrigger=0;
+  for (unsigned int i=0; i<triggers.size();i++){
+    if (triggers[i]>0){
+      passOneTrigger++;
+    } 
+  }
+  if (passOneTrigger==0){
+    continue;
+  }
+  
 
     if (isyst == 0){
       std::unique_ptr<Cutflows> m_cutflows (new Cutflows (*m_varCalc, *m_regions, SRAHists, SRBHists, SRCHists, btagWgt, lepWgt, trigWgt, puWgt, mcWgt, EventNumber, passedMETTrigger, passedLepTrigger, passedGammaTrigger, truthfilt_MET));

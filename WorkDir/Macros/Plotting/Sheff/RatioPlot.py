@@ -549,6 +549,8 @@ def RatioPlot(variable, xaxislabel, xmin, xmax, rebin, ymax, selection, director
     TempRatioPlot.Divide(SMCheck)
     
     # Add the Histograms to the Stack Order Matters
+    StackedPlot.Add(ZjetsPlot)
+    print "Added Zjets"
     StackedPlot.Add(HiggsPlot)
     print "Added Higgs"
     StackedPlot.Add(DiBosonPlot)
@@ -561,8 +563,6 @@ def RatioPlot(variable, xaxislabel, xmin, xmax, rebin, ymax, selection, director
     print "Added SingleTop"
     #StackedPlot.Add(DiJetPlot)
     #print "Added DiJet"
-    StackedPlot.Add(ZjetsPlot)
-    print "Added Zjets"
     StackedPlot.Add(ttbarPlot)
     print "Added ttbar"
     
@@ -620,7 +620,7 @@ def RatioPlot(variable, xaxislabel, xmin, xmax, rebin, ymax, selection, director
     SMBkgPlot.SetTitleSize(0.045,"Y")
     SMBkgPlot.SetTitleOffset(1.5,"Y")
     SMBkgPlot.SetLabelSize(0.045,"Y")
-    SMBkgPlot.SetMinimum(0.005)
+    SMBkgPlot.SetMinimum(0.05)
     
 
     #SMBkgPlot.SetMaximum(SMBkgPlot.Integral()*3)
