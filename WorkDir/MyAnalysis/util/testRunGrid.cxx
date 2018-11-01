@@ -100,6 +100,18 @@ int gridmain( int argc, char* argv[]) {
 	fileType = "DATA18";
       }
 
+      int found_mc16a = inputFile.find("r9315");
+      if(found_mc16a != std::string::npos){
+	fileType = "MC16a";
+      }
+      int found_mc16d = inputFile.find("r10201");
+      if(found_mc16d != std::string::npos){
+	fileType = "MC16d";
+      }      
+      int found_mc16e = inputFile.find("r10724");
+      if(found_mc16e != std::string::npos){
+	fileType = "MC16e";
+      }      
       RunningWithSyst = false; //Hardcode for systematics 
       std::cout << "Running with Syst = " << RunningWithSyst << std::endl;
       std::cout << "Running with Photons = " << RunningWithPhotons << std::endl;

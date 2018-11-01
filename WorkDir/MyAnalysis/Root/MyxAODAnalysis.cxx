@@ -1126,18 +1126,23 @@ EL::StatusCode MyxAODAnalysis :: execute ()
       h_eventsPerRun->Fill(runNumber,1);
     }
   }
-  //Continue trimming
+  ////Continue trimming
+  //Doesn't pass the cleaning cuts
   if (! passedCleaningCuts) continue;
   int passOneTrigger=0;
+  //Doesn't pass any of the triggers
   for (unsigned int i=0; i<triggers.size();i++){
+    std::cout<<"Trigger ;"<<i<<" bool;"<<triggers[i]<<std::endl;
     if (triggers[i]>0){
+      
       passOneTrigger++;
     } 
   }
   if (passOneTrigger==0){
+    std::cout<<"Didn't pass any triggers"<<std::endl;
     continue;
   }
-  
+  std::cout<<"Passed at least one trigger"<<std::endl;
 
     if (isyst == 0){
       std::unique_ptr<Cutflows> m_cutflows (new Cutflows (*m_varCalc, *m_regions, SRAHists, SRBHists, SRCHists, btagWgt, lepWgt, trigWgt, puWgt, mcWgt, EventNumber, passedMETTrigger, passedLepTrigger, passedGammaTrigger, truthfilt_MET));
