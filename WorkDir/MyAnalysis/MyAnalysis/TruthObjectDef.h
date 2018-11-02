@@ -13,7 +13,7 @@ class TruthObjectDef: public virtual IObjectDef
 
  public:
   //TruthObjectDef with fat jets fails on PsuedoJetGetter
-  TruthObjectDef(xAOD::TEvent* event, ST::SUSYObjDef_xAOD* SUSYTool, xAOD::TStore* store, double mcChannelNumber, double eventN, double mcEventWgt, double crosssect, std::string systName, bool doPhotons, asg::AnaToolHandle<IMETSignificance> Tool_METSig); //, JetToolRunner* Tool_FatJets_kt12, JetToolRunner* Tool_FatJets_kt8
+  TruthObjectDef(xAOD::TEvent* event, ST::SUSYObjDef_xAOD* SUSYTool, xAOD::TStore* store, double mcChannelNumber, double eventN, double mcEventWgt, double crosssect, std::string systName, bool doPhotons, asg::AnaToolHandle<IMETSignificance> Tool_METSig, double m_averageIntPerX); //, JetToolRunner* Tool_FatJets_kt12, JetToolRunner* Tool_FatJets_kt8
 
   ~TruthObjectDef(){};
 

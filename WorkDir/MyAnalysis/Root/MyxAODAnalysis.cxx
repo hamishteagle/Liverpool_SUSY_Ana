@@ -451,8 +451,8 @@ EL::StatusCode MyxAODAnalysis :: initialize ()
   
 
   ANA_CHECK(objTool->setProperty("DataSource",datasource) ) ;
-  //ANA_CHECK( objTool->setProperty("ConfigFile", PathResolverFindCalibFile("MyAnalysis/MyAnalysis/EWK_SUSYSkim1L.conf")));
-  ANA_CHECK( objTool->setProperty("ConfigFile", PathResolverFindCalibFile("MyAnalysis/MyAnalysis/SUSYToolsDefault_21_2_31.conf")));//SUSYTools default will need to be changed...
+  ANA_CHECK( objTool->setProperty("ConfigFile", PathResolverFindCalibFile("MyAnalysis/MyAnalysis/EWK_SUSYSkim1L.conf")));
+  //ANA_CHECK( objTool->setProperty("ConfigFile", PathResolverFindCalibFile("MyAnalysis/MyAnalysis/SUSYToolsDefault_21_2_31.conf")));//SUSYTools default will need to be changed...
   //ANA_CHECK( objTool->setProperty("ConfigFile", PathResolverFindCalibFile("MyAnalysis/MyAnalysis/SUSYTools_Default_21_2_42.conf")));//SUSYTools default will need to be changed...
   ANA_CHECK(objTool->setBoolProperty("UseBtagging", true));
   //CHECK( objTool->setProperty("ShowerType", (int)m_showerType) );
@@ -619,11 +619,14 @@ EL::StatusCode MyxAODAnalysis :: execute ()
     }
 
     
-    //if(!isTruthFile) m_averageIntPerX  = objTool->GetCorrectedAverageInteractionsPerCrossing();//Let's see if this works ?? Doesn't work
-    //else m_averageIntPerX=0;
+    if(!isTruthFile){
     m_averageIntPerX=eventInfo->averageInteractionsPerCrossing();
     m_actualIntPerX=eventInfo->actualInteractionsPerCrossing();
-
+    }
+    else {
+      m_averageIntPerX=1;
+      m_actualIntPerX=1;
+    }
     m_lumiBlockNumber = eventInfo->lumiBlock();
     m_runNumber = eventInfo->runNumber();
     EventNumber = (eventInfo->eventNumber());
@@ -745,10 +748,10 @@ EL::StatusCode MyxAODAnalysis :: execute ()
     //std::cout << "Filled the objects" << std::endl;
 
     if (m_fileType == "DAOD_TRUTH1"){
-      m_objs  = new TruthObjectDef (m_event, objTool, store, mcChannel, EventNumber, mcWgt, m_lumiScaled, syst.name(), doPhotons,  m_metSignif);
+      m_objs  = new TruthObjectDef (m_event, objTool, store, mcChannel, EventNumber, mcWgt, m_lumiScaled, syst.name(), doPhotons,  m_metSignif, m_averageIntPerX);
     }
     else{
-      m_objs  = new ObjectDef (m_event, objTool, store, mcChannel, EventNumber, mcWgt, m_lumiScaled, syst.name(), doPhotons, m_metSignif); 
+      m_objs  = new ObjectDef (m_event, objTool, store, mcChannel, EventNumber, mcWgt, m_lumiScaled, syst.name(), doPhotons, m_metSignif, m_averageIntPerX); 
     }
     
     

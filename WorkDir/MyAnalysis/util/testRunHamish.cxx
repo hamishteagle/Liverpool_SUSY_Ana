@@ -29,7 +29,7 @@ int main( int argc, char* argv[]) {
   bool RunningWithSyst;
   bool RunningWithPhotons;
   
-  std::string gridoption = "y";//Option for running on the grid
+  std::string gridoption = "n";//Option for running on the grid
   
 
     if (gridoption == "y")

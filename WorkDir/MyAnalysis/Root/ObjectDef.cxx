@@ -7,7 +7,7 @@ bool ptSorter( const xAOD::IParticle* j1, const xAOD::IParticle* j2 ) {
 }
 
 //ObjectDef with FatJets (Crashes on PseudoJetGetter when running on systematics)
-ObjectDef::ObjectDef(xAOD::TEvent* event, ST::SUSYObjDef_xAOD* SUSYTool, xAOD::TStore* store, double mcChannelNumber, double eventN, double mcEventWgt, double m_lumiScaled, std::string systName, bool doPhotons, asg::AnaToolHandle<IMETSignificance> Tool_METSig):IObjectDef(event, SUSYTool, store, mcChannelNumber, eventN, mcEventWgt, m_lumiScaled, systName, doPhotons) //JetToolRunner* Tool_FatJets_kt12, JetToolRunner* Tool_FatJets_kt8, 
+ObjectDef::ObjectDef(xAOD::TEvent* event, ST::SUSYObjDef_xAOD* SUSYTool, xAOD::TStore* store, double mcChannelNumber, double eventN, double mcEventWgt, double m_lumiScaled, std::string systName, bool doPhotons, asg::AnaToolHandle<IMETSignificance> Tool_METSig, double m_averageIntPerX):IObjectDef(event, SUSYTool, store, mcChannelNumber, eventN, mcEventWgt, m_lumiScaled, systName, doPhotons, m_averageIntPerX)
 {
   
   METSig_tool = Tool_METSig; 
@@ -435,7 +435,7 @@ const xAOD::ElectronContainer* electrons = 0;
   MET = (*met_it)->met();
   METphi = (*met_it)->phi();
 
-  METSig_tool->varianceMET(&met, "RefJet", "PVSoftTrk","Final");
+  METSig_tool->varianceMET(&met, m_averageIntPerX, "RefJet", "PVSoftTrk","Final");
   double m_metsigET = METSig_tool->GetMETOverSqrtSumET();
   double m_metsigHT = METSig_tool->GetMETOverSqrtHT();
   double m_metsig = METSig_tool->GetSignificance();
