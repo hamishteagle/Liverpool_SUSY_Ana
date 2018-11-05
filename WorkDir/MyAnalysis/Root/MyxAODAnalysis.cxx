@@ -392,7 +392,7 @@ EL::StatusCode MyxAODAnalysis :: initialize ()
   bool isMC15b = false;
   bool isMC15c = false;
 
-  std::cout << "which MC is this: A, B, C, 16a, 16c" << isMC15a << isMC15b << isMC15c << isMC16a <<isMC16d<<std::endl;
+  std::cout << "which MC is this: A, B, C, 16a, 16d, 16e" << isMC15a << isMC15b << isMC15c << isMC16a <<isMC16d<<isMC16e<<std::endl;
   if(isMC16a)
     {
       lumicalcFiles.push_back(PathResolverFindCalibFile("MyAnalysis/MyAnalysis/PileUp/PHYS_StandardGRL_All_Good_25ns_276262-284484_OflLumi-13TeV-008.root"));
@@ -454,6 +454,8 @@ EL::StatusCode MyxAODAnalysis :: initialize ()
   ANA_CHECK( objTool->setProperty("ConfigFile", PathResolverFindCalibFile("MyAnalysis/MyAnalysis/EWK_SUSYSkim1L.conf")));
   //ANA_CHECK( objTool->setProperty("ConfigFile", PathResolverFindCalibFile("MyAnalysis/MyAnalysis/SUSYToolsDefault_21_2_31.conf")));//SUSYTools default will need to be changed...
   //ANA_CHECK( objTool->setProperty("ConfigFile", PathResolverFindCalibFile("MyAnalysis/MyAnalysis/SUSYTools_Default_21_2_42.conf")));//SUSYTools default will need to be changed...
+  //ANA_CHECK( objTool->setProperty("ConfigFile", PathResolverFindCalibFile("MyAnalysis/MyAnalysis/SUSYToolsDefault_21_2_31.conf")));//SUSYTools default will need to be changed...
+  
   ANA_CHECK(objTool->setBoolProperty("UseBtagging", true));
   //CHECK( objTool->setProperty("ShowerType", (int)m_showerType) );
 
@@ -530,7 +532,7 @@ EL::StatusCode MyxAODAnalysis :: initialize ()
       else if (datasource==ST::ISUSYObjDef_xAODTool::AtlfastII){
       m_metSignif.setProperty("IsAFII",true);
       }*/
-  
+
   ANA_CHECK(m_metSignif.retrieve());
   m_metSignif->initialize();
 

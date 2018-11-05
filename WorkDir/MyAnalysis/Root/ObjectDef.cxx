@@ -791,10 +791,8 @@ void ObjectDef::FillGoodJets(){
     else if( (*jet_itr)->auxdata< char >("baseline")==1  && (*jet_itr)->auxdata< char >("signal")==1 && (*jet_itr)->auxdata< char >("passOR")==1) 
            
       {
-	
 	goodJets->push_back(*jet_itr);
-	
-	
+
 	flavour = -1;
 	(*jet_itr)->getAttribute("TruthLabelID",flavour);
 	if ( (*jet_itr)->auxdata< char >("bjet")==1 && (fabs((*jet_itr)->eta() < 2.5)))
