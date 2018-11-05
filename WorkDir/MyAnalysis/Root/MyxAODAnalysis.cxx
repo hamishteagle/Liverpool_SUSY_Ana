@@ -351,17 +351,17 @@ EL::StatusCode MyxAODAnalysis :: initialize ()
   //PathResolverDirect
     std::string fullGRLFilePath15 = PathResolverFindCalibFile("MyAnalysis/MyAnalysis/GRL/data15_13TeV.periodAllYear_DetStatus-v89-pro21-02_Unknown_PHYS_StandardGRL_All_Good_25ns.xml");
   std::string fullGRLFilePath16 = PathResolverFindCalibFile("MyAnalysis/MyAnalysis/GRL/data16_13TeV.periodAllYear_DetStatus-v89-pro21-01_DQDefects-00-02-04_PHYS_StandardGRL_All_Good_25ns.xml");
-  std::string fullGRLFilePath17 = PathResolverFindCalibFile("MyAnalysis/MyAnalysis/GRL/data17_13TeV.periodAllYear_DetStatus-v99-pro22-01_Unknown_PHYS_StandardGRL_All_Good_25ns_Triggerno17e33prim.xml");
-  std::string fullGRLFilePath18 = PathResolverFindCalibFile("MyAnalysis/MyAnalysis/GRL/data18_13TeV.periodAllYear_DetStatus-v102-pro22-03_Unknown_PHYS_StandardGRL_All_Good_25ns_Triggerno17e33prim.xml");
+  std::string fullGRLFilePath17 = PathResolverFindCalibFile("MyAnalysis/MyAnalysis/GRL/data17_13TeV_44.3_AllYear_20180619_physics_25ns_Triggerno17e33prim.xml");
+  std::string fullGRLFilePath18 = PathResolverFindCalibFile("MyAnalysis/MyAnalysis/GRL/data18_13TeV_47.8_AllYear_20180924_physics_25ns_Triggerno17e33prim.xml");
   
-  std::string fullGRLFilePath2 = PathResolverFindCalibFile("MyAnalysis/MyAnalysis/GRL/LastGRL.xml");
+  //std::string fullGRLFilePath2 = PathResolverFindCalibFile("MyAnalysis/MyAnalysis/GRL/LastGRL.xml");
   std::vector<std::string> vecStringGRL;
   
   vecStringGRL.push_back(fullGRLFilePath15);
   vecStringGRL.push_back(fullGRLFilePath16);
   vecStringGRL.push_back(fullGRLFilePath17);
   vecStringGRL.push_back(fullGRLFilePath18);
-  vecStringGRL.push_back(fullGRLFilePath2);
+  //vecStringGRL.push_back(fullGRLFilePath2);
 
   CHECK(m_grl->setProperty( "GoodRunsListVec", vecStringGRL));
   CHECK(m_grl->setProperty("PassThrough", false));

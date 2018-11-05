@@ -178,7 +178,7 @@ int gridmain( int argc, char* argv[]) {
   // Run the job using the griddriver:
   EL::PrunDriver driver;
   
-  driver.options()->setString("nc_outputSampleName", "user.hteagle."+CurrentDate+"_"+fileType+"v1.%in:name[2]%.%in:name[3]%");
+  driver.options()->setString("nc_outputSampleName", "user.hteagle."+CurrentDate+"_"+fileType+"v1.%in:name[2]%.%in:name[3]%_21_2_51");
   driver.options()->setString(EL::Job::optGridNFilesPerJob, "10");
   // Use submit if you want to see all of the info about the submitted jobs. Use submitOnly if you want to send the jobs then Monitor online with panda
   //driver.submit( job, submitDir );
