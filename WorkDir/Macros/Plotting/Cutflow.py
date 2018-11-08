@@ -27,6 +27,7 @@ def Cutflow(label, cutstouse, signalFile,luminosity):
             for section2 in cutsinit2:
                 cuts.append(section2)
         
+        print "File; "+str(signalFile)
         print "cuts recovered=", cuts
     
     

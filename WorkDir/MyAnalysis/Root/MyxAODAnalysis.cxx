@@ -938,6 +938,10 @@ EL::StatusCode MyxAODAnalysis :: execute ()
 
     //NEW TRIGGER IMPLEMENTATION
     std::vector<std::string> triggers = {"2e12_lhloose_L12EM10VH","HLT_2e15_lhvloose_nod0_L12EM13VH","HLT_2e17_lhvloose_nod0","HLT_e17_lhloose_mu14","HLT_e17_lhloose_nod0_mu14","HLT_mu22_mu8noL1","HLT_mu20_mu8noL1","HLT_mu18_mu8noL1","HLT_e24_lhmedium_L1EM20VH","HLT_e24_lhmedium_nod0_L1EM20VH","HLT_e24_lhtight_nod0_ivarloose","HLT_e26_lhtight_nod0_ivarloose","HLT_e60_lhmedium","HLT_e60_lhmedium_nod0","HLT_e120_lhloose","HLT_e140_lhloose_nod0","HLT_mu20_iloose_L1MU15","HLT_mu24_ivarloose","HLT_mu24_ivarloose_L1MU15","HLT_mu24_ivarmedium","HLT_mu26_ivarmedium","HLT_mu50","HLT_xe70_mht","HLT_xe70_tc_lcw","HLT_xe80_tc_lcw_L1XE50","HLT_xe90_mht_L1XE50","HLT_xe100_mht_L1XE50","HLT_xe110_mht_L1XE50"}; 
+    //2016_D4 trigger
+    triggers.push_back("HLT_xe110_L1XE50");
+    //2017 triggers
+    triggers.push_back("HLT_xe110_pufit_L1XE50");
     //2018 triggers
     triggers.push_back("HLT_2e17_lhvloose_nod0_L12EM15VHI");
     triggers.push_back("HLT_2e24_lhvloose_nod0");
@@ -948,7 +952,6 @@ EL::StatusCode MyxAODAnalysis :: execute ()
     triggers.push_back("HLT_e24_lhmedium_iloose_L1EM18VH");//Needed for data period C3-C4
     triggers.push_back("HLT_xe110_pufit_xe70_L1XE50");
     triggers.push_back("HLT_xe120_pufit_L1XE50");
-    triggers.push_back("HLT_xe110_pufit_xe70_L1XE50");
     triggers.push_back("HLT_xe110_pufit_xe65_L1XE50");
 
     //std::vector< std::pair<std::string, int> > passedTriggers;

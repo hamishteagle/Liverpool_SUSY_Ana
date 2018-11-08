@@ -155,7 +155,7 @@ def latex_draw(label):
     Tl.DrawLatex(0.195, 0.92,"#it{#bf{ATLAS}} Internal")
     Tl.DrawLatex(0.195, 0.82,label)
    
-def RatioPlot(variable, xaxislabel, xmin, xmax, rebin, ymax, selection, directory, label, doEctCounter, ttVFile, singleTopFile, DiBosonFile, HiggsFile, WjetsFile, ZjetsFile, ttbarFile, DiJetFile, datafile, signalFile, phiplot, etaplot, luminosity):
+def RatioPlot(variable, xaxislabel, xmin, xmax, rebin, ymax, selection, directory, label, doEctCounter, ttVFile, singleTopFile, DiBosonFile, HiggsFile, WjetsFile, ZjetsFile, ttbarFile, DiJetFile, datafile, inputSignalFiles, phiplot, etaplot, luminosity):
 
     output_dir = directory+label
 
@@ -191,19 +191,26 @@ def RatioPlot(variable, xaxislabel, xmin, xmax, rebin, ymax, selection, director
     ttbarTree = ttbar.Get("CollectionTree_")
     #ttbarTree.setAlias("YearWeight","year==2017 ? 43600/79800 : 36200/79800")
     
-    signal = ROOT.TFile(signalFile)
-    signalTree = signal.Get("CollectionTree_")
-    #signalTree.setAlias("YearWeight","year==2017 ? 43600/79800 : 36200/79800")
-    
+    ##Adaptation for multiple signal files
+    signalFiles={}#Dictionary of trees
+    i=0
+    for signalFile in inputSignalFiles: 
+        signalFiles["signalFile_"+str(i)] = ROOT.TFile(signalFile)
+        print "signalFile_"+str(i)+"="+signalFile
+        #signalTree.setAlias("YearWeight","year==2017 ? 43600/79800 : 36200/79800")
+        i=i+1
+
+        
+        
     Data = ROOT.TFile(datafile)
     DataTree = Data.Get("CollectionTree_")
     
     blind = False
-
     if ("SR" in label):
         blind = True 
-        Data = ROOT.TFile(signalFile)
-        DataTree = signal.Get("CollectionTree_")
+        Data = ROOT.TFile(signalFiles[0])
+        DataTree = signalFiles[0].Get("CollectionTree_")
+        
     crblind =False
     if ("CR" in label or "VR" in label):
         crblind =True
@@ -304,9 +311,15 @@ def RatioPlot(variable, xaxislabel, xmin, xmax, rebin, ymax, selection, director
     HiggsTempPlot.Sumw2()
     DiJetTempPlot.Sumw2()
 
+    signalPlots={}
 
-    signalPlot = ROOT.TH1D("signalPlot","Title",numberofbins,xmin,xmax )
-    signalTree.Draw(variabletoplot+">> signalPlot",cutstouse) 
+    print "length of signalFiles: "+str(len(signalFiles))
+    for i in range (0,len(signalFiles)):
+        signalTree = signalFiles["signalFile_"+str(i)].Get("CollectionTree_")
+        signalPlots["signalPlot_"+str(i)] = ROOT.TH1D("signalPlot_"+str(i),"Title",numberofbins,xmin,xmax )
+        print "signalPlot_"+str(i)+"=ROOT.TH1D(signalPlot_"+str(i)
+        signalTree.Draw(variabletoplot+">>signalPlot_"+str(i),cutstouse)
+        
 
     SingleTopTree.Draw(variabletoplot+">>SingleTopPlot",cutstouse)
     ttVTree.Draw(variabletoplot+">>ttVPlot",cutstouse)
@@ -368,7 +381,9 @@ def RatioPlot(variable, xaxislabel, xmin, xmax, rebin, ymax, selection, director
         DataPlot.Rebin(rebinvalue)
         HiggsPlot.Rebin(rebinvalue)
         DiJetPlot.Rebin(rebinvalue)
-        signalPlot.Rebin(rebinvalue)
+        for string,Plot in signalPlots.items():
+            print "Plot; type ="+str(type(Plot))
+            Plot.Rebin(rebinvalue)
 
 
 
@@ -468,9 +483,13 @@ def RatioPlot(variable, xaxislabel, xmin, xmax, rebin, ymax, selection, director
     #WjetsPlot.SetLineColor(3002)
     #ZjetsPlot.SetLineColor(3005)
     #HiggsPlot.SetLineColor(3006)
-    
-    signalPlot.SetLineColor(ROOT.kMagenta)
-    
+    for signalPlot in signalPlots:
+        i=0
+        
+        signalPlots[signalPlot].SetLineColor(ROOT.kMagenta+i)
+        signalPlots[signalPlot].SetLineWidth(3)
+        signalPlots[signalPlot].SetLineStyle(2)
+        ++i
     
     #SMBkgPlot.SetLineColor(ROOT.kRed) # Sbottom Style
     SMBkgPlot.SetLineColor(ROOT.kBlack)
@@ -485,8 +504,6 @@ def RatioPlot(variable, xaxislabel, xmin, xmax, rebin, ymax, selection, director
     ZjetsPlot.SetLineWidth(1)
     HiggsPlot.SetLineWidth(1)
     DiJetPlot.SetLineWidth(1)
-    signalPlot.SetLineWidth(3)
-    signalPlot.SetLineStyle(2)
 
 
 
@@ -512,8 +529,8 @@ def RatioPlot(variable, xaxislabel, xmin, xmax, rebin, ymax, selection, director
     WjetsPlot.GetXaxis().SetRangeUser(minvalue,maxvalue)
     ZjetsPlot.GetXaxis().SetRangeUser(minvalue,maxvalue)
     SMBkgPlot.GetXaxis().SetRangeUser(minvalue,maxvalue)
-    signalPlot.GetXaxis().SetRangeUser(minvalue,maxvalue)
-    
+    for signalPlot in signalPlots:
+        signalPlots["signalPlot_0"].GetXaxis().SetRangeUser(minvalue,maxvalue)
     DataPlot.GetXaxis().SetRangeUser(minvalue,maxvalue)
 
 
@@ -581,23 +598,21 @@ def RatioPlot(variable, xaxislabel, xmin, xmax, rebin, ymax, selection, director
     Legend.AddEntry(HiggsPlot,"Higgs", "F")
     Legend.AddEntry(DiJetPlot,"DiJet", "F")
 
-    print signalFile
-
-
-    if (signalFile.find("Combined") != -1):
-        signalmass = (signalFile.split("_")[1])+"_"+(signalFile.split("_")[2])+"_"+((signalFile.split("_")[3]).split(".")[0])
-        Legend.AddEntry(signalPlot,"(m_{#tilde{b}}, m_{#tilde{#chi}_{1}^{#pm}}, m_{#tilde{#chi}_{1}^{0}}) = ("+(signalFile.split("_")[1])+", "+(signalFile.split("_")[2])+", "+(signalFile.split("_")[3]).split(".")[0]+")GeV", "L")
-    elif (signalFile.find("BB_direct") != -1):
-        signalmass = (signalFile.split("_")[5])+"_"+(signalFile.split("_")[6])
-        Legend.AddEntry(signalPlot,"(m_{#tilde{b}}, m_{#tilde{#chi}_{1}^{0}}) = ("+(signalFile.split("_")[5])+", "+(signalFile.split("_")[6])+")GeV", "L")
-    elif (signalFile.find("onestepN2hN1") != -1):
-        print "found onestepN2hN1"
-        signalmass = (signalFile.split("_")[2])+"_"+(signalFile.split("_")[3])+"_"+(signalFile.split("_")[4])
-        Legend.AddEntry(signalPlot,"(m_{#tilde{b}}, m_{#tilde{#chi}_{2}^{0}}, m_{#tilde{#chi}_{1}^{0}}) = ("+(signalFile.split("_")[7])+", "+(signalFile.split("_")[8])+", "+((signalFile.split("_")[9]).split(".")[0])+")GeV", "L")
+    for i in range (0,len(inputSignalFiles)):
+        if (inputSignalFiles[i].find("Combined") != -1):
+            signalmass = (inputSignalFiles[i].split("_")[1])+"_"+(inputSignalFiles[i].split("_")[2])+"_"+((inputSignalFiles[i].split("_")[3]).split(".")[0])
+            Legend.AddEntry(signalPlots["signalPlot_"+str(i)],"(m_{#tilde{b}}, m_{#tilde{#chi}_{1}^{#pm}}, m_{#tilde{#chi}_{1}^{0}}) = ("+(inputSignalFiles[i].split("_")[1])+", "+(inputSignalFiles[i].split("_")[2])+", "+(inputSignalFiles[i].split("_")[3]).split(".")[0]+")GeV", "L")
+        elif (inputSignalFiles[i].find("BB_direct") != -1):
+            signalmass = (inputSignalFiles[i].split("_")[5])+"_"+(inputSignalFiles[i].split("_")[6])
+            Legend.AddEntry(signalPlots["signalPlot_"+str(i)],"(m_{#tilde{b}}, m_{#tilde{#chi}_{1}^{0}}) = ("+(inputSignalFiles[i].split("_")[5])+", "+(inputSignalFiles[i].split("_")[6])+")GeV", "L")
+        elif (inputSignalFiles[i].find("onestepN2hN1") != -1):
+            print "found onestepN2hN1"
+            signalmass = (inputSignalFiles[i].split("_")[2])+"_"+(inputSignalFiles[i].split("_")[3])+"_"+(inputSignalFiles[i].split("_")[4])
+            Legend.AddEntry(signalPlots["signalPlot_"+str(i)],"(m_{#tilde{b}}, m_{#tilde{#chi}_{2}^{0}}, m_{#tilde{#chi}_{1}^{0}}) = ("+(inputSignalFiles[i].split("_")[7])+", "+(inputSignalFiles[i].split("_")[8])+", "+((inputSignalFiles[i].split("_")[9]).split(".")[0])+")GeV", "L")
         #Legend.AddEntry(signalPlot,signalmass+"(x5)", "L")
 
-    else:
-        Legend.AddEntry(signalPlot,"(m_{#tilde{b}}, m_{#tilde{#chi}}_{1}^{0}) = (800,1)GeV", "L")
+        else:
+            Legend.AddEntry(signalPlots["signalPlot_"+str(i)],"(m_{#tilde{b}}, m_{#tilde{#chi}}_{1}^{0}) = (800,1)GeV", "L")
 
     Legend.SetTextSize(0.03)
     #Legend.SetTextFont(2)
@@ -645,7 +660,8 @@ def RatioPlot(variable, xaxislabel, xmin, xmax, rebin, ymax, selection, director
     SMBkgLine.Draw("same;HIST")
     StackedPlot.Draw("same;HIST")
     if not crblind:
-        signalPlot.Draw("SAME;HIST")
+        for signalPlot in signalPlots:
+            signalPlots[signalPlot].Draw("SAME;HIST")
     if not blind:
         DataPlot.Draw("P same E1 X0")
         
@@ -723,7 +739,8 @@ def RatioPlot(variable, xaxislabel, xmin, xmax, rebin, ymax, selection, director
         if ("SR" in label):
             SRbool=True
         print "Doing Event counter"
-        EventCounter(DataPlot,ttbarTempPlot,DiBosonTempPlot, signalPlot ,ZjetsTempPlot,WjetsTempPlot,ttVTempPlot,SingleTopTempPlot, HiggsTempPlot, SMBkgPlot, SRbool)
+        for signalPlot in signalPlots:
+            EventCounter(DataPlot,ttbarTempPlot,DiBosonTempPlot, signalPlots[signalPlot] ,ZjetsTempPlot,WjetsTempPlot,ttVTempPlot,SingleTopTempPlot, HiggsTempPlot, SMBkgPlot, SRbool)
 
 
     print "Canvas saved as " + output_dir+histtoplot + ".pdf"
