@@ -451,13 +451,9 @@ EL::StatusCode MyxAODAnalysis :: initialize ()
   
 
   ANA_CHECK(objTool->setProperty("DataSource",datasource) ) ;
-  ANA_CHECK( objTool->setProperty("ConfigFile", PathResolverFindCalibFile("MyAnalysis/MyAnalysis/EWK_SUSYSkim1L.conf")));
-  //ANA_CHECK( objTool->setProperty("ConfigFile", PathResolverFindCalibFile("MyAnalysis/MyAnalysis/SUSYToolsDefault_21_2_31.conf")));//SUSYTools default will need to be changed...
-  //ANA_CHECK( objTool->setProperty("ConfigFile", PathResolverFindCalibFile("MyAnalysis/MyAnalysis/SUSYTools_Default_21_2_42.conf")));//SUSYTools default will need to be changed...
-  //ANA_CHECK( objTool->setProperty("ConfigFile", PathResolverFindCalibFile("MyAnalysis/MyAnalysis/SUSYToolsDefault_21_2_31.conf")));//SUSYTools default will need to be changed...
-  
+  //ANA_CHECK( objTool->setProperty("ConfigFile", PathResolverFindCalibFile("MyAnalysis/MyAnalysis/EWK_SUSYSkim1L.conf")));
+  ANA_CHECK( objTool->setProperty("ConfigFile", PathResolverFindCalibFile("MyAnalysis/data/MyAnalysis/EWK_consistent_21.2.51.conf")));
   ANA_CHECK(objTool->setBoolProperty("UseBtagging", true));
-  //CHECK( objTool->setProperty("ShowerType", (int)m_showerType) );
 
   // skip this if we're not running on a reco file
   if (m_fileType != "DAOD_TRUTH1"){

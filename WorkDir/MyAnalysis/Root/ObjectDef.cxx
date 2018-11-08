@@ -787,15 +787,15 @@ void ObjectDef::FillGoodJets(){
       {
 	badJets->push_back( *jet_itr);
       }
-    
-    else if( (*jet_itr)->auxdata< char >("baseline")==1  && (*jet_itr)->auxdata< char >("signal")==1 && (*jet_itr)->auxdata< char >("passOR")==1) 
+
+    else if( (*jet_itr)->auxdata< char >("baseline")==1  && (*jet_itr)->auxdata< char >("signal")==1  && (*jet_itr)->auxdata< char >("passOR")==1 && (fabs((*jet_itr)->eta()) < 2.8) &&  (fabs((*jet_itr)->pt() > 25000)))
            
       {
 	goodJets->push_back(*jet_itr);
 
 	flavour = -1;
 	(*jet_itr)->getAttribute("TruthLabelID",flavour);
-	if ( (*jet_itr)->auxdata< char >("bjet")==1 && (fabs((*jet_itr)->eta() < 2.5)))
+	if ( (*jet_itr)->auxdata< char >("bjet")==1)
 	  {
 	    BJets->push_back( *jet_itr);
 	  }
