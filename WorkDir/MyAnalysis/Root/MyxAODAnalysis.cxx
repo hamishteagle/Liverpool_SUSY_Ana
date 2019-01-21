@@ -452,7 +452,7 @@ EL::StatusCode MyxAODAnalysis :: initialize ()
 
   ANA_CHECK(objTool->setProperty("DataSource",datasource) ) ;
   //ANA_CHECK( objTool->setProperty("ConfigFile", PathResolverFindCalibFile("MyAnalysis/MyAnalysis/EWK_SUSYSkim1L.conf")));
-  ANA_CHECK( objTool->setProperty("ConfigFile", PathResolverFindCalibFile("MyAnalysis/data/MyAnalysis/EWK_consistent_21.2.51.conf")));
+  ANA_CHECK( objTool->setProperty("ConfigFile", PathResolverFindCalibFile("MyAnalysis/MyAnalysis/EWK_consistent_21.2.51.conf")));
   ANA_CHECK(objTool->setBoolProperty("UseBtagging", true));
 
   // skip this if we're not running on a reco file
@@ -666,6 +666,7 @@ EL::StatusCode MyxAODAnalysis :: execute ()
     
     if (isMC){
       mcChannel = eventInfo->mcChannelNumber();
+      puWgt = objTool->GetPileupWeight();
     }
       //std::cout << "Looking for xsec for " << mcChannel << std::endl;
       //getting metdata from the Map (MapVariables.cxx) using the text file in format as MGPy8EG_A14N23LO_BB_onestepN2hN1.txt
@@ -701,7 +702,7 @@ EL::StatusCode MyxAODAnalysis :: execute ()
     // 	renormedMcWgt = 1;
     //   }
     //   if (m_fileType != "DAOD_TRUTH1"){ 
-    // 	puWgt = objTool->GetPileupWeight();
+
     //   }
     // }
     // else {//Not MC
@@ -711,6 +712,7 @@ EL::StatusCode MyxAODAnalysis :: execute ()
     // }
  
     //lumiScaled gives scaling to 1ifb
+    
     m_lumiScaled = 1;//This needs to be changed
     HSumOfPileUp->Fill(1,puWgt);
     

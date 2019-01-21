@@ -37,14 +37,14 @@ def CorrelationPlot(variable1, variable2, xaxislabel, yaxislabel, xmin, xmax, xb
 
     
 
-    print "input files read in"
+    print ("input files read in")
 
     #output_dir = "Histograms/CorrelationPlots/"
     
     change_me = "Histograms/"+directory+"Correlations/"
 #    change_me = directory+"/"+label+"/Tight/"
     #output_dir = output_dir + change_me
-    print "Directory is:", change_me
+    print ("Directory is:", str(change_me))
     ensure_dir(change_me)
     xvariabletoplot = variable1
     xminvalue = xmin
@@ -120,7 +120,7 @@ def CorrelationPlot(variable1, variable2, xaxislabel, yaxislabel, xmin, xmax, xb
     Canvas2.SaveAs("Histograms/Correlation/signal.png")
     #Canvas2.SaveAs("Histograms/" +change_me + xvariabletoplot+"_"+yvariabletoplot +"Signal.eps")
 
-    print "Directory is:", change_me
+    print ("Directory is:", str(change_me))
 
 
     return

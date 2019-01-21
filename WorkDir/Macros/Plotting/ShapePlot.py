@@ -190,7 +190,7 @@ def ShapePlot1(variable, xaxislabel, xmin, xmax, rebin, ymax, selection, directo
     
     
 
-    print "Number of entries in bbnunu: " , inplot1Entries, " in bbll: ", inplot2Entries 
+    print ("Number of entries in bbnunu: " , str(inplot1Entries), " in bbll: ", str(inplot2Entries))
 
     Canvas = ROOT.TCanvas("Canvas1","Canvas1",0,0,900,900)
 
@@ -322,9 +322,9 @@ def ShapePlot1(variable, xaxislabel, xmin, xmax, rebin, ymax, selection, directo
     #inPlot3.Draw("same p E1 X0")
     #inPlot4.Draw("same p")
     
-    print "1 - ", inPlot1.Integral(), " 2 - ", inPlot2.Integral(), " 3 - ", inPlot3.Integral()
+    print ("1 - ", str(inPlot1.Integral()), " 2 - ", inPlot2.Integral(), " 3 - ", inPlot3.Integral())
     lo,hi = inPlot1.FindBin(0), inPlot1.FindBin(2500)
-    print "1 - ", inPlot1.Integral(lo,hi), " 2 - ", inPlot2.Integral(lo,hi), " 3 - ", inPlot3.Integral(lo,hi)
+    print ("1 - ", inPlot1.Integral(lo,hi), " 2 - ", inPlot2.Integral(lo,hi), " 3 - ", inPlot3.Integral(lo,hi))
 
     latex_draw(label)
     Legend.Draw()
@@ -357,9 +357,9 @@ def ShapePlot1(variable, xaxislabel, xmin, xmax, rebin, ymax, selection, directo
     if (variabletoplot == "m_CT"): 
 
 
-        print "Total ratio for bbnunu/jjll = ", inPlot2.Integral()/inPlot1.Integral()
-        print "Total ratio for bbll/jjll = ",  inPlot3.Integral()/inPlot1.Integral()
-        print "Total ratio for bbll/jjll = ", inPlot2.Integral()/inPlot3.Integral()
+        print( "Total ratio for bbnunu/jjll = ", inPlot2.Integral()/inPlot1.Integral())
+        print( "Total ratio for bbll/jjll = ",  inPlot3.Integral()/inPlot1.Integral())
+        print( "Total ratio for bbll/jjll = ", inPlot2.Integral()/inPlot3.Integral())
 
         e1 = ROOT.Double()
         n1 = inPlot1.IntegralAndError(0, maxvalue, e1)
@@ -367,40 +367,40 @@ def ShapePlot1(variable, xaxislabel, xmin, xmax, rebin, ymax, selection, directo
         n2 = inPlot2.IntegralAndError(0, maxvalue, e2)
         e3 = ROOT.Double()
         n3 = inPlot3.IntegralAndError(0, maxvalue, e3)
-        print "jjll Integral and Error", n1, ", " , e1
-        print "bbnunu Integral and Error ", n2, ", " , e2
-        print "bbll Integral and Error ", n3, ", " , e3
+        print( "jjll Integral and Error", n1, ", " , e1)
+        print( "bbnunu Integral and Error ", n2, ", " , e2)
+        print( "bbll Integral and Error ", n3, ", " , e3)
 
         
 
-        print "Total ratio for bbnunu/jjll = ", n2/n1
-        print "Total ratio for bbll/jjll = ",  n3/n1
-        print "Total ratio for bbll/jjll = ", n2/n3, "Total error for bbll/jjll = ", (n2/n3)*(( (e2/n2)**2 + (e3/n3)**2 )**0.5)
+        print( "Total ratio for bbnunu/jjll = ", n2/n1)
+        print( "Total ratio for bbll/jjll = ",  n3/n1)
+        print( "Total ratio for bbll/jjll = ", n2/n3, "Total error for bbll/jjll = ", (n2/n3)*(( (e2/n2)**2 + (e3/n3)**2 )**0.5))
 
-        print "Total error for bbnunu/bbll = ", (n2/n1)*(( (e2/n2)**2 + (e1/n1)**2 )**0.5)
-        print "Total error for bbll/jjll = ", (n3/n1)*(( (e3/n3)**2 + (e1/n1)**2 )**0.5)
-        print "Total error for bbll/jjll = ", (n2/n3)*(( (e2/n2)**2 + (e3/n3)**2 )**0.5)
+        print( "Total error for bbnunu/bbll = ", (n2/n1)*(( (e2/n2)**2 + (e1/n1)**2 )**0.5))
+        print( "Total error for bbll/jjll = ", (n3/n1)*(( (e3/n3)**2 + (e1/n1)**2 )**0.5))
+        print( "Total error for bbll/jjll = ", (n2/n3)*(( (e2/n2)**2 + (e3/n3)**2 )**0.5))
 
 
         
         
 
 
-        print "x_low ", "x_high", "bbnunu/jjll", "jjll/bbnunu"
+        print( "x_low ", "x_high", "bbnunu/jjll", "jjll/bbnunu")
         for bin in range (1,tempInPlot2.GetNbinsX()+1):
             if tempInPlot2.GetBinContent(bin) != 0:
-                print (bin-1)*50, bin*50, tempInPlot2.GetBinContent(bin), 1/tempInPlot2.GetBinContent(bin)
+                print( (bin-1)*50, bin*50, tempInPlot2.GetBinContent(bin), 1/tempInPlot2.GetBinContent(bin))
                 if bin ==2:
-                    print "Red content: ", inPlot2.GetBinContent(bin), inPlot2.GetBinError(bin)
-                    print "black line content: ", inPlot1.GetBinContent(bin),  inPlot1.GetBinError(bin)
+                    print( "Red content: ", inPlot2.GetBinContent(bin), inPlot2.GetBinError(bin))
+                    print( "black line content: ", inPlot1.GetBinContent(bin),  inPlot1.GetBinError(bin))
             else:
-                print (bin-1)*50, bin*50, tempInPlot2.GetBinContent(bin) , "0"
-        print "x_low ", "x_high", "bbll/jjll", "jjll/bbll"
+                print( (bin-1)*50, bin*50, tempInPlot2.GetBinContent(bin) , "0")
+        print( "x_low ", "x_high", "bbll/jjll", "jjll/bbll")
         for bin in range (1,tempInPlot3.GetNbinsX()+1):
             if tempInPlot3.GetBinContent(bin) != 0:
-                print (bin-1)*50, bin*50, tempInPlot3.GetBinContent(bin), 1/tempInPlot3.GetBinContent(bin)
+                print( (bin-1)*50, bin*50, tempInPlot3.GetBinContent(bin), 1/tempInPlot3.GetBinContent(bin))
             else:
-                print (bin-1)*50, bin*50, tempInPlot3.GetBinContent(bin), "0"
+                print( (bin-1)*50, bin*50, tempInPlot3.GetBinContent(bin), "0")
 
     tempInPlot3.SetMarkerColor(ROOT.kBlack)
     tempInPlot3.SetMarkerStyle(21)
@@ -451,12 +451,12 @@ def ShapePlot1(variable, xaxislabel, xmin, xmax, rebin, ymax, selection, directo
         outputMCTFile.Write()
         outputMCTFile.Close()
         Canvas.SaveAs(output_dir + histtoplot +".root")
-        print "Histo produced",output_dir+histtoplot+".root"
+        print( "Histo produced",output_dir+histtoplot+".root")
 
-    print "Histo produced",output_dir+histtoplot+".png"
-    print "Histo produced",output_dir+histtoplot+".pdf"
-    print "Histo produced",output_dir+histtoplot+".eps"
-    print "Histo produced",output_dir+histtoplot+".C"
+    print( "Histo produced",output_dir+histtoplot+".png")
+    print( "Histo produced",output_dir+histtoplot+".pdf")
+    print( "Histo produced",output_dir+histtoplot+".eps")
+    print( "Histo produced",output_dir+histtoplot+".C")
 
     return
 
@@ -657,9 +657,9 @@ def ShapePlot2(variable, xaxislabel, xmin, xmax, rebin, ymax, selection, directo
     Canvas.SaveAs(output_dir + histtoplot +".eps")
     Canvas.SaveAs(output_dir + histtoplot +".C")
 
-    print "Histo produced",output_dir+histtoplot+".png"
-    print "Histo produced",output_dir+histtoplot+".eps"
-    print "Histo produced",output_dir+histtoplot+".C"
+    print( "Histo produced",output_dir+histtoplot+".png")
+    print( "Histo produced",output_dir+histtoplot+".eps")
+    print( "Histo produced",output_dir+histtoplot+".C")
 
     return
 
@@ -756,8 +756,8 @@ def ShapePlot4(variable, xaxislabel, xmin, xmax, rebin, ymax, selection, directo
     #tempgamma = ROOT.TH1D("tempgamma","Title",numberofbins,xmin,maxvalue )
     #inTree3.Draw("1>>tempgamma",cutstousePh)
     
-    #print "number of scaled Z Events = ", tempZ.Integral()
-    #print "number of scaled Gamma Events = ", tempgamma.Integral()
+    #print( "number of scaled Z Events = ", tempZ.Integral()
+    #print( "number of scaled Gamma Events = ", tempgamma.Integral()
     
 
     inPlot1 = ROOT.TH1D("inPlot1","Title",numberofbins,xmin,maxvalue )
@@ -921,9 +921,9 @@ def ShapePlot4(variable, xaxislabel, xmin, xmax, rebin, ymax, selection, directo
     inPlot3.Draw("same p E1 X0")
     #inPlot4.Draw("same p")
     
-    #print "1 - ", inPlot1.Integral(), " 2 - ", inPlot2.Integral(), " 3 - ", inPlot3.Integral()
+    #print( "1 - ", inPlot1.Integral(), " 2 - ", inPlot2.Integral(), " 3 - ", inPlot3.Integral()
     #lo,hi = inPlot1.FindBin(0), inPlot1.FindBin(2500)
-    #print "1 - ", inPlot1.Integral(lo,hi), " 2 - ", inPlot2.Integral(lo,hi), " 3 - ", inPlot3.Integral(lo,hi)
+    #print( "1 - ", inPlot1.Integral(lo,hi), " 2 - ", inPlot2.Integral(lo,hi), " 3 - ", inPlot3.Integral(lo,hi)
 
     latex_draw(label)
     Legend.Draw()
@@ -965,14 +965,14 @@ def ShapePlot4(variable, xaxislabel, xmin, xmax, rebin, ymax, selection, directo
     #tempInPlot2.Draw("same E1 X0")
 
     if (variabletoplot == "m_CT"):
-        print "x_low ", "x_high", "GammaJets/ZJets", "ZJets/GammaJets"
+        print( "x_low ", "x_high", "GammaJets/ZJets", "ZJets/GammaJets")
         
         for bin in range (1,tempInPlot2.GetNbinsX()+1):
-            print (bin-1)*50, bin*50, tempInPlot3.GetBinContent(bin), 1/tempInPlot3.GetBinContent(bin)
+            print( (bin-1)*50, bin*50, tempInPlot3.GetBinContent(bin), 1/tempInPlot3.GetBinContent(bin))
 
 
     
-    #print "New Scale Factor = ", ScaleFactorNew
+    #print( "New Scale Factor = ", ScaleFactorNew
     #tempInPlot3.Scale(ScaleFactorNew)
     #tempInPlot5.Scale(ScaleFactorNew)
 
@@ -992,16 +992,16 @@ def ShapePlot4(variable, xaxislabel, xmin, xmax, rebin, ymax, selection, directo
         outputMCTFile.Write()
         outputMCTFile.Close()
         Canvas.SaveAs(output_dir + histtoplot +".root")
-        print "Histo produced",output_dir+histtoplot+".root"
+        print( "Histo produced",output_dir+histtoplot+".root")
 
     Canvas.SaveAs(output_dir + histtoplot +".png")
     Canvas.SaveAs(output_dir + histtoplot +".pdf")
     Canvas.SaveAs(output_dir + histtoplot +".eps")
     Canvas.SaveAs(output_dir + histtoplot +".C")
 
-    print "Histo produced",output_dir+histtoplot+".png"
-    print "Histo produced",output_dir+histtoplot+".pdf"
-    print "Histo produced",output_dir+histtoplot+".eps"
-    print "Histo produced",output_dir+histtoplot+".C"
+    print( "Histo produced",output_dir+histtoplot+".png")
+    print( "Histo produced",output_dir+histtoplot+".pdf")
+    print( "Histo produced",output_dir+histtoplot+".eps")
+    print( "Histo produced",output_dir+histtoplot+".C")
 
     return

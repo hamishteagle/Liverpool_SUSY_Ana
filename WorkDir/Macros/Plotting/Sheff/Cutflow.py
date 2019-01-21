@@ -44,6 +44,7 @@ def Cutflow(label, cutstouse, signalFile,luminosity):
         
         cutsUsedInit="1"
         cutsUsedScaledInit=scaling+cutsUsedInit
+        signalTree.SetAlias("YearWeight","treatAsYear==2017 ? 43600/48500 : 36200/48500")
         signalTree.Draw("1>>SignalHist",cutsUsedScaledInit)
         e=ROOT.Double()
         n=signalHist.IntegralAndError(0, 10000000000, e)

@@ -27,15 +27,15 @@ def Cutflow(label, cutstouse, signalFile,luminosity):
             for section2 in cutsinit2:
                 cuts.append(section2)
         
-        print "File; "+str(signalFile)
-        print "cuts recovered=", cuts
+        print( "File; "+str(signalFile))
+        print( "cuts recovered=", cuts)
     
     
         signal=ROOT.TFile(signalFile)
         Livbool=label.find("_Liv")
         
         if Livbool>0:
-            print "This is a liverpool selection"
+            print( "This is a liverpool selection")
             signalTree=signal.Get("CollectionTree_")
         elif Livbool==-1:
             signalTree=signal.Get("NominalFixed")
@@ -49,18 +49,18 @@ def Cutflow(label, cutstouse, signalFile,luminosity):
         e=ROOT.Double()
         n=signalHist.IntegralAndError(0, 10000000000, e)
         
-        print "No Cuts", n, e
+        print( "No Cuts", n, e)
         cutsUsed="1"
         cutsUsedScaled="1"
         for cut in cuts:
             cutsUsed=cutsUsed+" && "+cut
             cutsUsedScaled=scaling+"("+cutsUsed+")"
-            #print "cutsUsedScaled=", cutsUsedScaled
+            #print( "cutsUsedScaled=", cutsUsedScaled)
             signalTree.Draw("1>>SignalHist",cutsUsedScaled)
         
             e1=ROOT.Double()
             n1=signalHist.IntegralAndError(0, 10000000000, e1)
-            print ('{0:50}-> {1:>10} p\m {2:>10.2f}'.format(cut, n1, e1)) 
+            print( ('{0:50}-> {1:>10} p\m {2:>10.2f}'.format(cut, n1, e1)) )
         signalHist.Delete
 
 

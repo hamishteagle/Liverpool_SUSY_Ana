@@ -181,8 +181,11 @@ TreeService::TreeService(TTree *outputTree, TDirectory *OutDir){
   tree->Branch("metsig_SumHT", &metsig_SumHT);
   tree->Branch("metsig_New", &metsig_New);
 
+  //Additional variables for WH 1Lbb
   tree->Branch("triggerDecisions", &triggerDecisions);
-
+  tree->Branch("dRb1b2", &dRb1b2);
+  tree->Branch("dRL1b1", &dRL1b1);
+  tree->Branch("dRL1b2", &dRL1b2);
 
 
 }

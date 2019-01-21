@@ -100,7 +100,7 @@ int gridmain( int argc, char* argv[]) {
 	fileType = "DATA18";
       }
 
-      int found_mc16a = inputFile.find("r9315");
+      int found_mc16a = inputFile.find("r9364");
       if(found_mc16a != std::string::npos){
 	fileType = "MC16a";
       }
