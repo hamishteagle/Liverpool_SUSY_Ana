@@ -1,17 +1,17 @@
 #include "MyAnalysis/ObjectDef.h"
 #include "MyAnalysis/IObjectDef.h"
-#include <iterator> 
+#include <iterator>
 
 bool ptSorter( const xAOD::IParticle* j1, const xAOD::IParticle* j2 ) {
   return ( j1->pt() > j2->pt() );
 }
 
 //ObjectDef with FatJets (Crashes on PseudoJetGetter when running on systematics)
-ObjectDef::ObjectDef(xAOD::TEvent* event, ST::SUSYObjDef_xAOD* SUSYTool, xAOD::TStore* store, double mcChannelNumber, double eventN, double mcEventWgt, double m_lumiScaled, std::string systName, bool doPhotons, asg::AnaToolHandle<IMETSignificance> Tool_METSig, double m_averageIntPerX):IObjectDef(event, SUSYTool, store, mcChannelNumber, eventN, mcEventWgt, m_lumiScaled, systName, doPhotons, m_averageIntPerX)
+ObjectDef::ObjectDef(asg::SgTEvent* event, ST::SUSYObjDef_xAOD* SUSYTool, xAOD::TStore* store, double mcChannelNumber, double eventN, double mcEventWgt, double m_lumiScaled, std::string systName, bool doPhotons, asg::AnaToolHandle<IMETSignificance> Tool_METSig, double m_averageIntPerX):IObjectDef(event, SUSYTool, store, mcChannelNumber, eventN, mcEventWgt, m_lumiScaled, systName, doPhotons, m_averageIntPerX)
 {
-  
-  METSig_tool = Tool_METSig; 
-  
+
+  METSig_tool = Tool_METSig;
+
   baselineElectronsBeforeOR = new xAOD::ElectronContainer(SG::VIEW_ELEMENTS);
   signalElectronsBeforeOR = new xAOD::ElectronContainer(SG::VIEW_ELEMENTS);
   baselineTausBeforeOR = new xAOD::TauJetContainer(SG::VIEW_ELEMENTS);
@@ -40,7 +40,7 @@ ObjectDef::ObjectDef(xAOD::TEvent* event, ST::SUSYObjDef_xAOD* SUSYTool, xAOD::T
   BJets = new xAOD::JetContainer(SG::VIEW_ELEMENTS);
   nonBJets = new xAOD::JetContainer(SG::VIEW_ELEMENTS);
   METmuons  = new xAOD::MuonContainer(SG::VIEW_ELEMENTS);
-  
+
   eventStore->record(baselineElectronsBeforeOR,"baselineElectronsBeforeOR"+systematic);
   eventStore->record(signalElectronsBeforeOR,"signalElectronsBeforeOR"+systematic);
   eventStore->record(baselineTausBeforeOR,"baselineTausBeforeOR"+systematic);
@@ -64,11 +64,11 @@ ObjectDef::ObjectDef(xAOD::TEvent* event, ST::SUSYObjDef_xAOD* SUSYTool, xAOD::T
   eventStore->record(goodAntiKt3TruthJets,"goodAntiKt3TruthJets"+systematic);
   eventStore->record(goodElectrons,"goodElectrons"+systematic);
   eventStore->record(goodTaus,"goodTaus"+systematic);
-  eventStore->record(goodMuons,"goodMuons"+systematic); 
-  eventStore->record(goodPhotons,"goodPhotons"+systematic); 
+  eventStore->record(goodMuons,"goodMuons"+systematic);
+  eventStore->record(goodPhotons,"goodPhotons"+systematic);
   eventStore->record(BJets,"BJets"+systematic);
   eventStore->record(nonBJets,"nonBJets"+systematic);
-  eventStore->record(METmuons,"Something"+systematic);  
+  eventStore->record(METmuons,"Something"+systematic);
 
   DSID = mcChannelNumber;
 
@@ -85,13 +85,13 @@ ObjectDef::ObjectDef(xAOD::TEvent* event, ST::SUSYObjDef_xAOD* SUSYTool, xAOD::T
   this->FillPreORTaus();
   this->FillPreORJets();
   this->FillPreORPhotons();
-  
+
   //this->FillOldMET(); This was the MET calculation without adding the photon to it
   //this->OldOverlapRemoval(); //This was the OR calculation without adding photons
   this->OverlapRemoval(); //This now includes photons and taus
-  
+
   this->FillMET();
-    
+
   this->FillBaselineElectrons();
   this->FillBaselineTaus();
   this->FillBaselineMuons();
@@ -99,7 +99,7 @@ ObjectDef::ObjectDef(xAOD::TEvent* event, ST::SUSYObjDef_xAOD* SUSYTool, xAOD::T
   //this->FillFatJets_kt8();
   //this->FillFatJets_kt12();
   //this->FillBaselinePhotons();
-    
+
 }
 
 
@@ -108,31 +108,31 @@ void ObjectDef::FillPreORMuons(){
 
   xAOD::MuonContainer* muons_nominal(0);
   xAOD::ShallowAuxContainer* muons_nominal_aux(0);
-  
+
   objTool->GetMuons(muons_nominal, muons_nominal_aux);
-  
+
   eventStore->record(muons_nominal, "CalibratedMuons"+systematic);
   eventStore->record(muons_nominal_aux, "CalibratedMuons_Aux"+systematic);
-  
+
 
   xAOD::MuonContainer::iterator mu_itr = (muons_nominal)->begin();
   xAOD::MuonContainer::iterator mu_end  = (muons_nominal)->end();
-  
+
   for( ; mu_itr != mu_end; ++mu_itr ) {
     if ((**mu_itr).muonType()==(**mu_itr).Combined || (**mu_itr).muonType()==(**mu_itr).MuonStandAlone )
       METmuons->push_back(*mu_itr);
-    
-    
+
+
     if ( (*mu_itr)->auxdata< char >("baseline") && !(*mu_itr)->auxdata< char >("bad") ){
       baselineMuonsBeforeOR->push_back (*mu_itr);
-      
+
       if ( (*mu_itr)->auxdata< char >("signal") )
 	signalMuonsBeforeOR->push_back (*mu_itr);
     }
 
-    if (  (*mu_itr)->auxdata< char >("baseline") && ( (*mu_itr)->auxdata< char >("bad"))) 
+    if (  (*mu_itr)->auxdata< char >("baseline") && ( (*mu_itr)->auxdata< char >("bad")))
       badMuons->push_back( *mu_itr);
-    
+
   }
 
   baselineMuonsBeforeOR->sort(ptSorter);
@@ -152,33 +152,33 @@ void ObjectDef::FillPreORElectrons(){
 
   xAOD::ElectronContainer* electrons_nominal(0);
   xAOD::ShallowAuxContainer* electrons_nominal_aux(0);
-  
+
   objTool->GetElectrons(electrons_nominal, electrons_nominal_aux);
 
   eventStore->record(electrons_nominal, "CalibratedElectronCollection"+systematic);
   eventStore->record(electrons_nominal_aux, "CalibratedElectronCollection_Aux"+systematic);
 
-  
+
   xAOD::ElectronContainer::iterator el_itr = (electrons_nominal)->begin();
   xAOD::ElectronContainer::iterator el_end = (electrons_nominal)->end();
 
   for( ; el_itr != el_end; ++el_itr ) {
 
     xAOD::Electron el = **el_itr;
-    
-    
+
+
     if ( (*el_itr)->auxdata< char >("baseline")){
       baselineElectronsBeforeOR->push_back (*el_itr);
-      
+
       if (  (*el_itr)->auxdata< char >("signal") )
 	signalElectronsBeforeOR->push_back (*el_itr);
     }
   }
-  
+
   baselineElectronsBeforeOR->sort(ptSorter);
   signalElectronsBeforeOR->sort(ptSorter);
-  
- 
+
+
 }
 
 
@@ -189,13 +189,13 @@ void ObjectDef::FillPreORTaus(){
 
   xAOD::TauJetContainer* taus_nominal(0);
   xAOD::ShallowAuxContainer* taus_nominal_aux(0);
-  
+
   objTool->GetTaus(taus_nominal, taus_nominal_aux);
 
   eventStore->record(taus_nominal, "CalibratedTauCollection"+systematic);
   eventStore->record(taus_nominal_aux, "CalibratedTauCollection_Aux"+systematic);
 
-  
+
   xAOD::TauJetContainer::iterator ta_itr = (taus_nominal)->begin();
   xAOD::TauJetContainer::iterator ta_end = (taus_nominal)->end();
 
@@ -203,20 +203,20 @@ void ObjectDef::FillPreORTaus(){
   for( ; ta_itr != ta_end; ++ta_itr ) {
 
     xAOD::TauJet ta = **ta_itr;
-    
-    
+
+
     if ( (*ta_itr)->auxdata< char >("baseline")){
       baselineTausBeforeOR->push_back (*ta_itr);
-      
+
       if (  (*ta_itr)->auxdata< char >("signal") )
 	signalTausBeforeOR->push_back (*ta_itr);
     }
 
   }
-  
+
   baselineTausBeforeOR->sort(ptSorter);
   signalTausBeforeOR->sort(ptSorter);
-    
+
 }
 
 
@@ -228,34 +228,34 @@ void ObjectDef::FillPreORPhotons(){
 
   xAOD::PhotonContainer* photons_nominal(0);
   xAOD::ShallowAuxContainer* photons_nominal_aux(0);
-  
+
   objTool->GetPhotons(photons_nominal, photons_nominal_aux);
 
   eventStore->record(photons_nominal, "CalibratedPhotonCollection"+systematic);
   eventStore->record(photons_nominal_aux, "CalibratedPhotonCollection_Aux"+systematic);
 
 
-  
+
   xAOD::PhotonContainer::iterator ph_itr = (photons_nominal)->begin();
   xAOD::PhotonContainer::iterator ph_end = (photons_nominal)->end();
-  
+
   for( ; ph_itr != ph_end; ++ph_itr ) {
 
     xAOD::Photon ph = **ph_itr;
-    
-    
+
+
     if ( (*ph_itr)->auxdata< char >("baseline")){
       baselinePhotonsBeforeOR->push_back (*ph_itr);
-      
+
       if (  (*ph_itr)->auxdata< char >("signal") )
 	signalPhotonsBeforeOR->push_back (*ph_itr);
     }
   }
-  
+
   baselinePhotonsBeforeOR->sort(ptSorter);
   signalPhotonsBeforeOR->sort(ptSorter);
 
-  
+
 }
 
 
@@ -278,13 +278,13 @@ void ObjectDef::FillPreORJets(){
   xAOD::JetContainer::iterator jet_itr = (jets_nominal)->begin();
   xAOD::JetContainer::iterator jet_end = (jets_nominal)->end();
   for( ; jet_itr != jet_end; ++jet_itr ) {
-    
+
     typedef ElementLink< xAOD::IParticleContainer > Link_t;
     static const char* linkName = "originalObjectLink";
     const xAOD::IParticleContainer* cont =
       dynamic_cast< const xAOD::IParticleContainer* >( (*jet_itr)->container() );
     if( ! cont ) {
-      std::cout << 
+      std::cout <<
 	"Input object not part of a container, 'originalObjectLink' ElementLink not established" << std::endl;
     }
     else{
@@ -293,15 +293,15 @@ void ObjectDef::FillPreORJets(){
       auxLink = link;
       auxLink.toPersistent();
     }
-      
+
     if ( (*jet_itr)->auxdata< char >("baseline") ){
-      
+
       goodJetsBeforeOR->push_back(*jet_itr);
     }
-    
+
   }
   goodJetsBeforeOR->sort(ptSorter);
-  
+
 }
 
 
@@ -310,10 +310,10 @@ void ObjectDef::FillOldMET(){
 
   xAOD::MissingETContainer met;
   xAOD::MissingETAuxContainer metAux;
-  
+
   met.setStore(&metAux);
 
-  
+
 
   xAOD::MissingETContainer::const_iterator met_it = met.find("Final");
 
@@ -321,15 +321,15 @@ void ObjectDef::FillOldMET(){
   currentEvent->retrieve( jets, "AntiKt4EMTopoJets");
 
   xAOD::JetContainer* METjets = 0;
-  
+
   eventStore->retrieve( METjets, "CalibratedAntiKt4EMTopoJets"+systematic );
-  
+
   const xAOD::MuonContainer* muons = 0;
   currentEvent->retrieve( muons, "Muons");
 
   xAOD::MuonContainer* METmuonsAll = 0;
   eventStore->retrieve( METmuonsAll, "CalibratedMuons"+systematic );
-  
+
   const xAOD::ElectronContainer* electrons = 0;
   currentEvent->retrieve( electrons, "Electrons");
 
@@ -337,33 +337,33 @@ void ObjectDef::FillOldMET(){
   eventStore->retrieve( METelectrons, "CalibratedElectronCollection"+systematic );
 
 
- 
+
   xAOD::setOriginalObjectLink(*jets,*METjets);
   xAOD::setOriginalObjectLink(*muons,*METmuonsAll);
   xAOD::setOriginalObjectLink(*electrons,*METelectrons);
-  
+
   objTool->GetMET(met, METjets, METelectrons,METmuonsAll,NULL,NULL,true);
-  
+
   met_it = met.find("Final");
 
   if (met_it == met.end())
     {
       std::cout << "No RefFinal inside MET container" << std::endl;
     }
-  
+
 
 
   double mpx = (*met_it)->mpx();
   double mpy = (*met_it)->mpy();
 
   METvector = new TVector2 (mpx,mpy);
- 
+
   MET = (*met_it)->met();
   METphi = (*met_it)->phi();
 
 
-  
- 
+
+
   return;
 
 }
@@ -375,25 +375,25 @@ void ObjectDef::FillMET(){
 
   xAOD::MissingETContainer met;
   xAOD::MissingETAuxContainer metAux;
-  
+
   met.setStore(&metAux);
 
 
   xAOD::MissingETContainer::const_iterator met_it = met.find("Final");
- 
+
  const xAOD::JetContainer* jets = 0;
  currentEvent->retrieve( jets, "AntiKt4EMTopoJets");
 
  xAOD::JetContainer* METjets = 0;
- 
+
  eventStore->retrieve( METjets, "CalibratedAntiKt4EMTopoJets"+systematic );
- 
+
  const xAOD::MuonContainer* muons = 0;
  currentEvent->retrieve( muons, "Muons");
 
  xAOD::MuonContainer* METmuonsAll = 0;
  eventStore->retrieve( METmuonsAll, "CalibratedMuons"+systematic );
- 
+
 const xAOD::ElectronContainer* electrons = 0;
  currentEvent->retrieve( electrons, "Electrons");
 
@@ -406,32 +406,32 @@ const xAOD::ElectronContainer* electrons = 0;
   xAOD::PhotonContainer* METphotons = 0;
   eventStore->retrieve( METphotons, "CalibratedPhotonCollection"+systematic );
 
-  
+
   xAOD::setOriginalObjectLink(*jets,*METjets);
   xAOD::setOriginalObjectLink(*muons,*METmuonsAll);
   xAOD::setOriginalObjectLink(*electrons,*METelectrons);
   xAOD::setOriginalObjectLink(*photons,*METphotons);
 
 
-  
+
   objTool->GetMET(met, METjets, METelectrons,METmuonsAll, METphotons,NULL,true);
-  
+
   met_it = met.find("Final");
-  
-  
-  
+
+
+
   if (met_it == met.end())
     {
       std::cout << "No RefFinal inside MET container" << std::endl;
     }
-  
+
   //std::cout <<  " MET_Final: " << (*(met.find("Final")))->met() << " MET_Ele: " << (*(met.find("RefEle")))->met() << " MET_Jet: " <<(*(met.find("RefJet")))->met() << " MET_Photon: " <<(*(met.find("RefGamma")))->met() << " MET_Muons: " <<(*(met.find("Muons")))->met() << std::endl;
-  
+
   double mpx = (*met_it)->mpx();
   double mpy = (*met_it)->mpy();
 
   METvector = new TVector2 (mpx,mpy);
- 
+
   MET = (*met_it)->met();
   METphi = (*met_it)->phi();
 
@@ -439,11 +439,11 @@ const xAOD::ElectronContainer* electrons = 0;
   double m_metsigET = METSig_tool->GetMETOverSqrtSumET();
   double m_metsigHT = METSig_tool->GetMETOverSqrtHT();
   double m_metsig = METSig_tool->GetSignificance();
-  
+
   metSignificances.push_back(m_metsigET);
   metSignificances.push_back(m_metsigHT);
   metSignificances.push_back(m_metsig);
-  
+
   return;
 
 }
@@ -466,18 +466,18 @@ void ObjectDef::FillBaselineElectrons(){
 
   xAOD::ElectronContainer::iterator el_itr = baselineElectronsBeforeOR->begin();
   xAOD::ElectronContainer::iterator el_end = baselineElectronsBeforeOR->end();
-  
+
   electronSF = 1;
 
   for( ; el_itr != el_end; ++el_itr ) {
-    
+
     if  ( (*el_itr)->auxdata< char >("passOR") && ( (*el_itr)->auxdata< char >("baseline") ) )
       baselineElectrons->push_back( *el_itr);
-    
+
     if ( ( (*el_itr)->auxdata< char >("passOR") ) && ( (*el_itr)->auxdata< char >("signal") ) && ( (*el_itr)->auxdata< char >("baseline") ) ) {
       goodElectrons->push_back( *el_itr);
     }
-    
+
   }
 
   xAOD::ElectronContainer* TriggerPassElectrons  = new xAOD::ElectronContainer(SG::VIEW_ELEMENTS);
@@ -492,7 +492,7 @@ void ObjectDef::FillBaselineElectrons(){
 
   // loop over for Trig matched here
   int year = objTool->treatAsYear();
-  
+
   electronSF = 1;
   electronTriggerSF = 1;
   el_itr = goodElectrons->begin();
@@ -508,13 +508,13 @@ void ObjectDef::FillBaselineElectrons(){
 	  electronTriggerSF = objTool->GetTotalElectronSF(*goodElectrons,false,false,true,false,"singleLepton");
 	}
     }
-    
+
     bool thisElectronPass = false;
 
 
       if (objTool->treatAsYear() == 2015){
 	if (objTool->isData()){
-	  
+
 	  if ( (((objTool->IsTrigMatched( *el_itr, "HLT_e24_lhmedium_L1EM20VH") && (*el_itr)->pt() > 27000 )) || ((objTool->IsTrigMatched( *el_itr, "HLT_e60_lhmedium") && (*el_itr)->pt() > 62000 )) || ((objTool->IsTrigMatched( *el_itr, "HLT_e120_lhloose") && (*el_itr)->pt() > 122000 ))))
 	    {
 	      //electronTriggerSF = objTool->GetSignalElecSF(**el_itr, false, false, true, "Eff_SINGLE_E_2015_e24_lhmedium_L1EM20VH_OR_e60_lhmedium_OR_e120_lhloose_2016_e26_lhtight_nod0_ivarloose_OR_e60_lhmedium_nod0_OR_e140_lhloose_nod0_Tight_Gradient");
@@ -531,7 +531,7 @@ void ObjectDef::FillBaselineElectrons(){
 	    }
 	}
 	else{
-	  if ( ( ( (objTool->IsTrigMatched( *el_itr, "HLT_e24_lhmedium_L1EM20VH") && (*el_itr)->pt() > 27000 ) ) || ((objTool->IsTrigMatched( *el_itr, "HLT_e60_lhmedium") && (*el_itr)->pt() > 62000 )) || ((objTool->IsTrigMatched( *el_itr, "HLT_e120_lhloose") && (*el_itr)->pt() > 122000 ))) ) 
+	  if ( ( ( (objTool->IsTrigMatched( *el_itr, "HLT_e24_lhmedium_L1EM20VH") && (*el_itr)->pt() > 27000 ) ) || ((objTool->IsTrigMatched( *el_itr, "HLT_e60_lhmedium") && (*el_itr)->pt() > 62000 )) || ((objTool->IsTrigMatched( *el_itr, "HLT_e120_lhloose") && (*el_itr)->pt() > 122000 ))) )
 	    {
 	      TriggerPassElectrons->push_back(*el_itr);
 	      //electronSF = objTool->GetTotalElectronSF(*TriggerPassElectrons, true, true, true, true);
@@ -543,33 +543,33 @@ void ObjectDef::FillBaselineElectrons(){
 	  }
 	}
       }
-      
+
       else if (objTool->treatAsYear() == 2016){
  	if (  ( (objTool->IsTrigMatched( *el_itr, "HLT_e26_lhtight_nod0_ivarloose") && (*el_itr)->pt() > 27000  )  ||  (objTool->IsTrigMatched( *el_itr, "HLT_e60_lhmedium_nod0") && (*el_itr)->pt() > 62000  )  || (objTool->IsTrigMatched( *el_itr, "HLT_e140_lhloose_nod0") && (*el_itr)->pt() > 142000 ) ) )
 	 {
 	   //electronTriggerSF = objTool->GetSignalElecSF(**el_itr, false, false, true, "Eff_SINGLE_E_2015_e24_lhmedium_L1EM20VH_OR_e60_lhmedium_OR_e120_lhloose_2016_e26_lhtight_nod0_ivarloose_OR_e60_lhmedium_nod0_OR_e140_lhloose_nod0_Tight_Gradient");
 	    TriggerPassElectrons->push_back(*el_itr);
-	    
+
 	    passElectronTriggerMatch = true;
 	    thisElectronPass = true;
-	    
+
 	  }
 	else
 	  {
 	    NontriggerpassElectrons->push_back(*el_itr);
 	    //electronTriggerSF = objTool->GetTotalElectronSF(*NontriggerpassElectrons, true, true, false, true);
 	  }
-	
+
       }
 
 
       if (passElectronTriggerMatch) break;
       leadingLepton = false;
   }
-  //electronTriggerSF = objTool->GetTotalElectronSF(*TriggerPassElectrons,false,false,true,false, "singleLepton");      
+  //electronTriggerSF = objTool->GetTotalElectronSF(*TriggerPassElectrons,false,false,true,false, "singleLepton");
   //electronSF = electronSF*electronTriggerSF;
-  
-  
+
+
 }
 
 
@@ -578,21 +578,21 @@ void ObjectDef::FillBaselineTaus(){
 
   xAOD::TauJetContainer::iterator ta_itr = baselineTausBeforeOR->begin();
   xAOD::TauJetContainer::iterator ta_end = baselineTausBeforeOR->end();
-  
+
   tauSF = 1;
-  
+
   for( ; ta_itr != ta_end; ++ta_itr ) {
-    
+
     if  ( (*ta_itr)->auxdata< char >("passOR") && ( (*ta_itr)->auxdata< char >("baseline") ) ){
       baselineTaus->push_back( *ta_itr);
-    
+
     }
-    
+
     if ( ( (*ta_itr)->auxdata< char >("passOR") ) && ( (*ta_itr)->auxdata< char >("signal") ) && ( (*ta_itr)->auxdata< char >("baseline") ) ) {
       goodTaus->push_back( *ta_itr);
 
     }
-    
+
   }
 
   xAOD::TauJetContainer* TriggerPassTaus  = new xAOD::TauJetContainer(SG::VIEW_ELEMENTS);
@@ -607,7 +607,7 @@ void ObjectDef::FillBaselineTaus(){
 
   // loop over for Trig matched here
   int year = objTool->treatAsYear();
-  
+
   tauSF = 1;
   tauTriggerSF = 1;
   ta_itr = goodTaus->begin();
@@ -616,21 +616,21 @@ void ObjectDef::FillBaselineTaus(){
 
   bool leadingLepton = true;
   for (; ta_itr != ta_end; ++ta_itr) {
-    // I don't think trigger matching/etc is used here. 
+    // I don't think trigger matching/etc is used here.
     if (leadingLepton){
     // the below will return just the ID SF
     tauSF = objTool->GetTotalTauSF(*goodTaus,true,false);
     // This trigger SF is only returning the trigger SF
     tauTriggerSF = objTool->GetTotalTauSF(*goodTaus,false,true,"tau25_medium1_tracktwo");
-    
+
     }
 
     leadingLepton = false;
   }
-  //tauTriggerSF = objTool->GetTotalTauSF(*TriggerPassTaus,false,false,true,false, "singleLepton");      
+  //tauTriggerSF = objTool->GetTotalTauSF(*TriggerPassTaus,false,false,true,false, "singleLepton");
   //tauSF = tauSF*tauTriggerSF;
-  
-  
+
+
 }
 
 
@@ -639,37 +639,37 @@ void ObjectDef::FillBaselinePhotons(){
 
   xAOD::PhotonContainer::iterator ph_itr = baselinePhotonsBeforeOR->begin();
   xAOD::PhotonContainer::iterator ph_end = baselinePhotonsBeforeOR->end();
-  
+
   photonSF = 1;
 
   for( ; ph_itr != ph_end; ++ph_itr ) {
     if  ( (*ph_itr)->auxdata< char >("passOR") && ( (*ph_itr)->auxdata< char >("baseline") ) )
       baselinePhotons->push_back( *ph_itr);
-    
+
     if ( ( (*ph_itr)->auxdata< char >("passOR") ) && ( (*ph_itr)->auxdata< char >("signal") ) ) {
       goodPhotons->push_back( *ph_itr);
-     
+
     }
-    
+
   }
   baselinePhotons->sort(ptSorter);
   goodPhotons->sort(ptSorter);
 
-  
+
   ph_itr = goodPhotons->begin();
   ph_end = goodPhotons->end();
-  
+
   passPhotonTriggerMatch = false;
   for (; ph_itr != ph_end; ++ph_itr) {
-    
+
     if (objTool->IsTrigMatched( *ph_itr, "HLT_g120_loose") && (*ph_itr)->pt() > 130000)
       {
 	passPhotonTriggerMatch = true;
-	
+
 	if ( this->DSID <= 0){
 	  photonSF = 1;
 	}
-	
+
 	else{
 	  photonSF = objTool->GetTotalPhotonSF( *goodPhotons, true,true);
 	}
@@ -679,15 +679,15 @@ void ObjectDef::FillBaselinePhotons(){
 }
 
 void ObjectDef::FillBaselineMuons(){
-  
+
   xAOD::MuonContainer::iterator mu_itr = baselineMuonsBeforeOR->begin();
   xAOD::MuonContainer::iterator mu_end = baselineMuonsBeforeOR->end();
-  
+
   double MuonTriggerSF = 1;
   double MuonRecoSF = 1;
   muonSF = 1;
   oldMuonSF = 1;
-  
+
   for( ; mu_itr != mu_end; ++mu_itr ) {
     if  ( ( (*mu_itr)->auxdata< char >("passOR") ) && !(*mu_itr)->auxdata< char >("cosmic") && ( (*mu_itr)->auxdata< char >("baseline") )  )
       baselineMuons->push_back( *mu_itr);
@@ -696,7 +696,7 @@ void ObjectDef::FillBaselineMuons(){
     if ( ( (*mu_itr)->auxdata< char >("passOR") ) && ( (*mu_itr)->auxdata< char >("signal") ==1 ) && (*mu_itr)->auxdata< char >("cosmic") ==0 ) {
       goodMuons->push_back( *mu_itr);
     }
-    
+
   }
 
   baselineMuons->sort(ptSorter);
@@ -724,7 +724,7 @@ void ObjectDef::FillBaselineMuons(){
     {
       if ( objTool->treatAsYear() == 2015){
 	MuonTriggerSF = objTool->GetTotalMuonSF(*goodMuons,false,false,"HLT_mu20_iloose_L1MU15_OR_HLT_mu50");
-      }      
+      }
       else {//These triggers are the same for 2016/17 may change for 2018
 	MuonTriggerSF = objTool->GetTotalMuonSF(*goodMuons,false,false,"HLT_mu26_ivarmedium_OR_HLT_mu50");
       }
@@ -733,7 +733,7 @@ void ObjectDef::FillBaselineMuons(){
     }
 
     if ( objTool->treatAsYear() == 2015){
-      
+
       if ( ((objTool->IsTrigMatched( *mu_itr, "HLT_mu20_iloose_L1MU15") && (*mu_itr)->pt() > 27) || (objTool->IsTrigMatched( *mu_itr, "HLT_mu50") && (*mu_itr)->pt() > 27))  && !passMuonTriggerMatch && !thisMuonPass)
 	{
 	  TriggerPassMuons->push_back(*mu_itr);
@@ -741,12 +741,12 @@ void ObjectDef::FillBaselineMuons(){
 	  thisMuonPass = true;
 	}
     }
-    
+
     else if ( objTool->treatAsYear() == 2016){
-    
+
       if ( ((objTool->IsTrigMatched( *mu_itr, "HLT_mu50") && (*mu_itr)->pt() > 27) || (objTool->IsTrigMatched( *mu_itr, "HLT_mu26_ivarmedium") && (*mu_itr)->pt() > 27))  && !passMuonTriggerMatch && !thisMuonPass){
 	TriggerPassMuons->push_back(*mu_itr);
-	
+
 	passMuonTriggerMatch = true;
 	thisMuonPass = true;
       }
@@ -760,12 +760,12 @@ void ObjectDef::FillBaselineMuons(){
   }
   //muonSF = objTool->GetTotalMuonSF(*TriggerPassMuons, false, false, "HLT_mu26_ivarmedium_OR_HLT_mu50");
   //muonSF *= objTool->GetTotalMuonSF(*NontriggerpassMuons, true, true, "");
-  
+
   muonSF = MuonTriggerSF*MuonRecoSF;
 
-    
+
 }
-  
+
 
 
 
@@ -776,20 +776,20 @@ void ObjectDef::FillGoodJets(){
   int jet = 0;
 
   bJetSF = 1;
-  
+
   for( ; jet_itr != jet_end; ++jet_itr ) {
-    
+
     int flavour = -1;
 
     (*jet_itr)->getAttribute("TruthLabelID",flavour);
-    
+
     if ( (*jet_itr)->auxdata< char >("passOR")==1 &&  (*jet_itr)->auxdata< char >("bad")==1 )
       {
 	badJets->push_back( *jet_itr);
       }
 
     else if( (*jet_itr)->auxdata< char >("baseline")==1  && (*jet_itr)->auxdata< char >("signal")==1  && (*jet_itr)->auxdata< char >("passOR")==1 && (fabs((*jet_itr)->eta()) < 2.8) &&  (fabs((*jet_itr)->pt() > 25000)))
-           
+
       {
 	goodJets->push_back(*jet_itr);
 
@@ -804,7 +804,7 @@ void ObjectDef::FillGoodJets(){
 	}
       }
   }
-  
+
   goodJets->sort(ptSorter);
   BJets->sort(ptSorter);
   nonBJets->sort(ptSorter);
@@ -815,14 +815,14 @@ void ObjectDef::FillGoodJets(){
   else{
     bJetSF = objTool->BtagSF(goodJets);
   }
-  
+
   if ( this->DSID <= 0){
     JVTSF = 1;
   }
   else{
     JVTSF = objTool->JVT_SF(goodJets);
   }
-  
+
 }
 
 void ObjectDef::SetPrimVertex(){
@@ -830,13 +830,13 @@ void ObjectDef::SetPrimVertex(){
   const xAOD::VertexContainer* primVertex = 0;
   currentEvent->retrieve( primVertex, "PrimaryVertices" );
   nVertex = 0;
-  
+
   for ( const auto& vx : *primVertex) {
       if (vx->vertexType() == xAOD::VxType::PriVtx) {
         nVertex++ ;
       }
    }
-  
+
 }
 
 void ObjectDef::FillFatJets_kt8(){
@@ -845,8 +845,8 @@ void ObjectDef::FillFatJets_kt8(){
   currentEvent->retrieve( FatJets_kt8,"MyFatJetsKt8"+systematic );
   //if (!currentEvent->retrieve( FatJets_kt8,"MyFatJetsKt8"+systematic ).isSuccess()) std::cout << "Something went wrong here" << std::endl;
   //if (currentEvent->retrieve( FatJets_kt8,"MyFatJetsKt8"+systematic ).isSuccess()) std::cout << "FatJets container retrieved" << std::endl;
-  
-  
+
+
 }
 
 
@@ -861,9 +861,9 @@ void ObjectDef::FillFatJets_kt12(){
 
 bool ObjectDef::SetUpFatJetTools(JetToolRunner *&tool, double jetradius, std::string inputcontainer, std::string outputcontainer){
 
-  
-  //double jetradius = 0.8; 
-  xAOD::IParticleContainer* m_goodJets_recl; //!  
+
+  //double jetradius = 0.8;
+  xAOD::IParticleContainer* m_goodJets_recl; //!
   //std::string inputcontainer = "GoodJets_recl";
   //std::string outputcontainer = "fatJets_kt8"+systName;
   tool = 0;
@@ -888,7 +888,7 @@ bool ObjectDef::SetUpFatJetTools(JetToolRunner *&tool, double jetradius, std::st
   ToolHandle<IJetFromPseudojet> hbuild(pbuild);
   pbuild->msg().setLevel( MSG::ERROR);
   pbuild->initialize();
-  
+
   JetFinder * pfind = new JetFinder(("myjetfind"+outputcontainer).c_str());
   pfind->msg().setLevel( MSG::ERROR);
   pfind->setProperty("JetAlgorithm", "AntiKt");
@@ -900,7 +900,7 @@ bool ObjectDef::SetUpFatJetTools(JetToolRunner *&tool, double jetradius, std::st
 
   ToolHandle<IJetFinder> hfind(pfind);
   pfind->initialize();
-  
+
 
 
   JetRecTool * pjrf = new JetRecTool(("myjrfind"+outputcontainer).c_str());
@@ -912,15 +912,15 @@ bool ObjectDef::SetUpFatJetTools(JetToolRunner *&tool, double jetradius, std::st
   ToolHandle<IJetExecuteTool> hjrf(pjrf);
   hrecs.push_back(pjrf);
 
- 
+
   tool = new JetToolRunner(("jetrunner"+outputcontainer).c_str());
   tool->msg().setLevel( MSG::ERROR);
   tool->setProperty("Tools", hrecs);
   //  Info("Initialising JetReclusteringTool(s)");
   tool->initialize();
   //tool->print();
-  
-  delete plcget;//Need to delete all of the below tools in some way to avoid a memory leal 
+
+  delete plcget;//Need to delete all of the below tools in some way to avoid a memory leal
   delete pbuild;
   delete pfind;
   delete pjrf;
@@ -933,8 +933,8 @@ bool ObjectDef::removeFatJetTools(std::string systName){
 
     std::string FatJets8ToolName = "MyFatJetsKt8"+systName;
     std::string FatJets12ToolName = "MyFatJetsKt12"+systName;
-    std::string FatJetsTool8 ="m_jetRecTool_kt8_"+systName; 
-    std::string FatJetsTool12 ="m_jetRecTool_kt12_"+systName; 
+    std::string FatJetsTool8 ="m_jetRecTool_kt8_"+systName;
+    std::string FatJetsTool12 ="m_jetRecTool_kt12_"+systName;
     std::string plcGet8 = "mylcget"+FatJets8ToolName;
     std::string plcGet12 = "mylcget"+FatJets12ToolName;
     std::string pbuild8 = "myjetbuild"+FatJets8ToolName;
@@ -947,9 +947,9 @@ bool ObjectDef::removeFatJetTools(std::string systName){
     std::string prunner12 = "jetrunner"+FatJets12ToolName;
     std::string pjrfind_retriever8 = pjrfind8+"_retriever";
     std::string pjrfind_retriever12 = pjrfind12+"_retriever";
-    
+
     asg::ToolStore::remove(plcGet8);
-    
+
     asg::ToolStore::remove(plcGet12);
     //std::cout<<"Removed the tool in a continue loop  plcget "<<std::endl;
     asg::ToolStore::remove(pbuild8);
@@ -970,12 +970,12 @@ bool ObjectDef::removeFatJetTools(std::string systName){
     asg::ToolStore::remove(FatJetsTool8);
     asg::ToolStore::remove(FatJetsTool12);
     //std::cout<<"Removed the fatJets tools "<<std::endl;
-    
+
     delete fatjet_kt12_tool;
     delete fatjet_kt8_tool;
     return true;
 }
-//Memory usage checking 
+//Memory usage checking
 void ObjectDef::process_mem_usage(double& vm_usage, double& resident_set)
 {
   vm_usage     = 0.0;

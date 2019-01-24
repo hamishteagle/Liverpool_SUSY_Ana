@@ -55,7 +55,7 @@
 
 #include "CPAnalysisExamples/errorcheck.h"
 
-#include "AsgTools/AsgTool.h"       
+#include "AsgTools/AsgTool.h"
 #include "AsgTools/IAsgTool.h"
 #include "AsgTools/AsgMessaging.h"
 
@@ -109,7 +109,7 @@
 #include "AssociationUtils/OverlapRemovalTool.h"
 
 
-#include "AsgTools/AsgTool.h"       
+#include "AsgTools/AsgTool.h"
 #include "AsgTools/IAsgTool.h"
 #include "AsgTools/AsgMessaging.h"
 #include "xAODBase/IParticle.h"
@@ -123,10 +123,10 @@ class IObjectDef
 {
 
  public:
-  
-  IObjectDef(xAOD::TEvent* event, ST::SUSYObjDef_xAOD* SUSYTool, xAOD::TStore* store, double mcChannelNumber, double eventN, double mcEventWgt, double m_lumiScaled, std::string systName, bool doPhotons, double m_averageIntPerX){
-    
-    
+
+  IObjectDef(asg::SgTEvent* event, ST::SUSYObjDef_xAOD* SUSYTool, xAOD::TStore* store, double mcChannelNumber, double eventN, double mcEventWgt, double m_lumiScaled, std::string systName, bool doPhotons, double m_averageIntPerX){
+
+
     currentEvent = event;
     objTool = SUSYTool;
     eventStore = store;
@@ -137,9 +137,9 @@ class IObjectDef
     systematic = systName;
     doPhotonOR = doPhotons;
   };
-  
+
   virtual ~IObjectDef(){};
-  
+
   virtual void FillPreORMuons() = 0;
   virtual void FillPreORElectrons() = 0;
   virtual void FillPreORTaus() = 0;
@@ -200,13 +200,13 @@ class IObjectDef
 
 
 
-  
+
  public:
-  xAOD::TEvent* currentEvent;
-  ST::SUSYObjDef_xAOD* objTool;  
+  asg::SgTEvent* currentEvent;
+  ST::SUSYObjDef_xAOD* objTool;
   xAOD::TStore* eventStore;
 
-  
+
   // useful variables for debugging purposes
   double mcID;
   double lumiScaled;
@@ -216,6 +216,6 @@ class IObjectDef
   double m_averageIntPerX;
   std::string systematic;
 
- 
+
 };
 #endif

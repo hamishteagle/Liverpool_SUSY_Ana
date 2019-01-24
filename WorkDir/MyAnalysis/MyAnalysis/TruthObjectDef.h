@@ -13,7 +13,7 @@ class TruthObjectDef: public virtual IObjectDef
 
  public:
   //TruthObjectDef with fat jets fails on PsuedoJetGetter
-  TruthObjectDef(xAOD::TEvent* event, ST::SUSYObjDef_xAOD* SUSYTool, xAOD::TStore* store, double mcChannelNumber, double eventN, double mcEventWgt, double crosssect, std::string systName, bool doPhotons, asg::AnaToolHandle<IMETSignificance> Tool_METSig, double m_averageIntPerX); //, JetToolRunner* Tool_FatJets_kt12, JetToolRunner* Tool_FatJets_kt8
+  TruthObjectDef(asg::SgTEvent* event, ST::SUSYObjDef_xAOD* SUSYTool, xAOD::TStore* store, double mcChannelNumber, double eventN, double mcEventWgt, double crosssect, std::string systName, bool doPhotons, asg::AnaToolHandle<IMETSignificance> Tool_METSig, double m_averageIntPerX); //, JetToolRunner* Tool_FatJets_kt12, JetToolRunner* Tool_FatJets_kt8
 
   ~TruthObjectDef(){};
 
@@ -45,7 +45,7 @@ class TruthObjectDef: public virtual IObjectDef
   bool removeFatJetTools(std::string systName);
   void process_mem_usage(double &vm_usage, double &resident_set);
   int CheckMem();
-  
+
   // Getters
   xAOD::JetContainer* getBadJets(){return badJets;};
   xAOD::JetContainer* getGoodJets(){return goodJets;};
@@ -64,7 +64,7 @@ class TruthObjectDef: public virtual IObjectDef
   xAOD::TruthParticleContainer* getGoodPhotons(){return goodPhotons;};
   xAOD::TruthParticleContainer* getGoodElectrons(){return goodElectrons;};
   xAOD::TruthParticleContainer* getGoodTaus(){return goodTaus;};
-  std::vector<double> getMETSignificance(){return metSignificances;}; 
+  std::vector<double> getMETSignificance(){return metSignificances;};
   TVector2* getMETvector(){return METvector;};
   double getMET(){return MET;};
   double getMETPhi(){return METphi;};
@@ -95,8 +95,8 @@ class TruthObjectDef: public virtual IObjectDef
   xAOD::TruthParticleContainer* badMuons;
   xAOD::TruthParticleContainer* baselineElectrons;
   xAOD::TruthParticleContainer* baselineTaus;
-  xAOD::TruthParticleContainer* baselineMuons;  
-  xAOD::TruthParticleContainer* baselinePhotons;  
+  xAOD::TruthParticleContainer* baselineMuons;
+  xAOD::TruthParticleContainer* baselinePhotons;
   xAOD::JetContainer* goodJets;
   xAOD::JetContainer* FatJets_kt8;
   xAOD::JetContainer* FatJets_kt12;
@@ -108,7 +108,7 @@ class TruthObjectDef: public virtual IObjectDef
   xAOD::TruthParticleContainer* goodPhotons;
   xAOD::JetContainer* BJets;
   xAOD::JetContainer* nonBJets;
-  xAOD::TruthParticleContainer* METmuons;  
+  xAOD::TruthParticleContainer* METmuons;
 
   double MET;
   double METphi;
@@ -126,7 +126,7 @@ class TruthObjectDef: public virtual IObjectDef
 
   bool doPhotonOR;
 
-  asg::AnaToolHandle<IMETSignificance> METSig_tool; 
+  asg::AnaToolHandle<IMETSignificance> METSig_tool;
 
   //JetToolRunner* fatjet_kt12_tool;
   //JetToolRunner* fatjet_kt8_tool;

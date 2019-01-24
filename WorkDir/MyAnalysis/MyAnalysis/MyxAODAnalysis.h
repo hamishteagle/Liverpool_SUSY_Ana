@@ -1,7 +1,7 @@
 #ifndef MyAnalysis_MyxAODAnalysis_H
 #define MyAnalysis_MyxAODAnalysis_H
 
-#include <EventLoop/Algorithm.h>
+//#include <EventLoop/Algorithm.h>
 #include "xAODRootAccess/Init.h"
 #include "xAODRootAccess/TEvent.h"
 //#include "PATInterfaces/SystematicRegistry.h"
@@ -20,12 +20,15 @@
 
 #include "PileupReweighting/PileupReweightingTool.h"
 #include "AsgTools/ToolHandle.h"
+#include "AsgTools/AsgMetadataTool.h"
+
+#include <AnaAlgorithm/AnaAlgorithm.h>
 
 // Added for new METSig
-#include "METUtilities/METSignificance.h" 
+#include "METUtilities/METSignificance.h"
 
 // GRL inclusion
-class GoodRunsListSelectionTool; 
+class GoodRunsListSelectionTool;
 //class JetCleaningTool;
 //class JERTool;
 
@@ -50,37 +53,37 @@ namespace SUSY{
 //class TreeService;
 
 
-class MyxAODAnalysis : public EL::Algorithm
+class MyxAODAnalysis : public EL::AnaAlgorithm
 {
 #ifndef __CINT__
-  ST::SUSYObjDef_xAOD *objTool; //! 
+  ST::SUSYObjDef_xAOD *objTool;
 #endif // not __CINT__
-  
+
 #ifndef __CINT__
-  SUSY::CrossSectionDB *xSectDataBase; //!
+  SUSY::CrossSectionDB *xSectDataBase;
 #endif // not __CINT__
 
 
 
   //
   //#ifndef __CINT__
-  //CP::MuonCalibrationAndSmearingTool *m_muonCalibrationAndSmearingTool; //!
+  //CP::MuonCalibrationAndSmearingTool *m_muonCalibrationAndSmearingTool;
   //#endif // not__CINT__
 
 #ifndef __CINT__
-  GoodRunsListSelectionTool *m_grl; //!
-  CP::PileupReweightingTool *pu_tool; //!
-  JetToolRunner* m_jetRecTool_kt12; //!
-  JetToolRunner* m_jetRecTool_kt8; //!
+  GoodRunsListSelectionTool *m_grl;
+  CP::PileupReweightingTool *pu_tool;
+  JetToolRunner* m_jetRecTool_kt12;
+  JetToolRunner* m_jetRecTool_kt8;
 
 #endif // not__CINT__
 
   //#ifndef __CINT__
-  //JERTool *m_JERTool; //!
+  //JERTool *m_JERTool;
   //#endif // not__CINT__
 
   //#ifndef __CINT__
-  //JetCleaningTool *m_jetCleaning; //!
+  //JetCleaningTool *m_jetCleaning;
   //#endif // not__CINT__
 
   // put your configuration variables here as public variables.
@@ -88,47 +91,48 @@ class MyxAODAnalysis : public EL::Algorithm
 public:
   // float cutValue;
 
-  xAOD::TEvent *m_event; //!
+  xAOD::TEvent *m_event;
+
+  asg::AsgMetadataTool *Asgmdtool;
+
+  TTree *MetaData;
+  bool m_isDerivation;
 
 
-  TTree *MetaData; //!
-  bool m_isDerivation; //!
-  
+  int m_eventCounter;
+  int m_numCleanEvents;
+  int m_numElectronEvents;
+  int m_numMuonEvents;
 
-  int m_eventCounter; //!
-  int m_numCleanEvents; //!
-  int m_numElectronEvents; //!
-  int m_numMuonEvents; //!
+  double PUSumOfWeights;
 
-  double PUSumOfWeights; //!
-  
-  int m_runNumber; //!
-  int m_lumiBlockNumber; //!
+  int m_runNumber;
+  int m_lumiBlockNumber;
 
   std::string m_fileType;
   std::string m_fileName;
   double m_fileLumi;
-  bool isData;//!
-  bool isAtlfast;//!
-  bool is25ns; //!
-  bool isSignal; //!
+  bool isData;
+  bool isAtlfast;
+  bool is25ns;
+  bool isSignal;
 
-  int isyst; //!
-  int m_totalEvents; //!
+  int isyst;
+  int m_totalEvents;
 
-  double m_lumiScaled; //!
+  double m_lumiScaled;
 
-  std::unordered_map<int, double> *eventNumberMap; //!
+  std::unordered_map<int, double> *eventNumberMap;
 
-  std::vector<ST::SystInfo> systInfoList; //!
+  std::vector<ST::SystInfo> systInfoList;
 
-  
-  std::vector<CP::SystematicSet> m_sysList; //!
-  //TH1 *h_jetPt; //!
-  TH1 *h_cuts; //!
-  std::vector <std::string> cutList; //!
-  std::vector <std::string> runningOverSysts; //!
-  asg::AnaToolHandle<IMETSignificance> m_metSignif; //!
+
+  std::vector<CP::SystematicSet> m_sysList;
+  //TH1 *h_jetPt;
+  TH1 *h_cuts;
+  std::vector <std::string> cutList;
+  std::vector <std::string> runningOverSysts;
+  asg::AnaToolHandle<IMETSignificance> m_metSignif;
 
   //  EL::OutputStream out
 
@@ -137,73 +141,72 @@ public:
   // Put our new containers here
   // variables that don't get filled at submission time should be
   // protected from being send from the submission node to the worker
-  // node (done by the //!)
+  // node (done by the )
  public:
-  // Tree *myTree; //!
+  // Tree *myTree;
 
-  TH1 *noWeightHist; //!
-  TH1 *sherpaWeightHist; //!
-  TH1 *h_SumOfWeights; //!
-  TH1 *h_SumOfWeightsSquared; //!
-  TH1 *h_eventsPerRun;//!
-  TH1 *renormedSherpaWeightHist; //!
+  TH1 *noWeightHist;
+  TH1 *sherpaWeightHist;
+  TH1 *h_SumOfWeights;
+  TH1 *h_SumOfWeightsSquared;
+  TH1 *h_eventsPerRun;
+  TH1 *renormedSherpaWeightHist;
 
   // Make the Histos for the full cutflows here then:
-  
-  TH1F *HSRA_noWgt; //!
-  TH1F *HSRA_mcWgt; //!
-  TH1F *HSRA_allWgt; //!
 
-  TH1F *HSRB_noWgt; //!
-  TH1F *HSRB_mcWgt; //!
-  TH1F *HSRB_allWgt; //!
+  TH1F *HSRA_noWgt;
+  TH1F *HSRA_mcWgt;
+  TH1F *HSRA_allWgt;
 
-  TH1F *HSRC_noWgt; //!
-  TH1F *HSRC_mcWgt; //!
-  TH1F *HSRC_allWgt; //!
+  TH1F *HSRB_noWgt;
+  TH1F *HSRB_mcWgt;
+  TH1F *HSRB_allWgt;
 
-  TH1F *HTruthMETFilt; //!
-  TH1F *HTruthHTFilt; //!
-  TH1F *HSumOfPileUp; //!
+  TH1F *HSRC_noWgt;
+  TH1F *HSRC_mcWgt;
+  TH1F *HSRC_allWgt;
 
-
-  bool doSyst;
-  bool doPhotons;
-  bool RunningLocally;
+  TH1F *HTruthMETFilt;
+  TH1F *HTruthHTFilt;
+  TH1F *HSumOfPileUp;
 
 
   std::string outputName;
   std::string inputFile;
-  
-  //TTree *tree; //!
-  unsigned long long EventNumber; //!
 
-  int mcChannel; //!
+  //TTree *tree;
+  unsigned long long EventNumber;
 
-  std::vector<TreeService*> m_treeServiceVector; //!
-  double m_PUSumOfWeights; //!
-  double m_finalSumOfWeights; //!
-  double m_initialSumOfWeights; //!
-  double m_averageIntPerX;//!
-  double m_actualIntPerX;//!
-  double truth_pT_W; //!
+  int mcChannel;
 
-  //  OutputStream *out; //!
+  std::vector<TreeService*> m_treeServiceVector;
+  double m_PUSumOfWeights;
+  double m_finalSumOfWeights;
+  double m_initialSumOfWeights;
+  double m_averageIntPerX;
+  double m_actualIntPerX;
+  double truth_pT_W;
+
+  //  OutputStream *out;
 
   // this is a standard constructor
-  MyxAODAnalysis ();
+  MyxAODAnalysis (const std::string& name, ISvcLocator* pSvcLocator);
 
   // these are the functions inherited from Algorithm
-  virtual EL::StatusCode setupJob (EL::Job& job);
-  virtual EL::StatusCode fileExecute ();
-  virtual EL::StatusCode histInitialize ();
-  virtual EL::StatusCode changeInput (bool firstFile);
-  virtual EL::StatusCode initialize ();
-  virtual EL::StatusCode execute ();
-  virtual EL::StatusCode postExecute ();
-  virtual EL::StatusCode finalize ();
-  virtual EL::StatusCode histFinalize ();
+  //virtual StatusCode setupJob (EL::Job& job);
+  virtual StatusCode fileExecute ();
+  virtual StatusCode beginInputFile (bool firstFile);
+  virtual StatusCode initialize ();
+  virtual StatusCode execute ();
+  virtual StatusCode postExecute ();
+  virtual StatusCode finalize ();
+  virtual StatusCode histFinalize ();
 
+ private:
+   
+   int doSyst;
+   int doPhotons;
+   int RunningLocally;
 
   // put functions here?
  public:

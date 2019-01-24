@@ -9,7 +9,7 @@ SUSYTools
 
 
 atlas_add_root_dictionary(MyAnalysisLib MyAnalysisLibCintDict
-			ROOT_HEADERS MyAnalysis/MyxAODAnalysis.h Root/LinkDef.h 
+			ROOT_HEADERS MyAnalysis/MyxAODAnalysis.h Root/LinkDef.h
 			EXTERNAL_PACKAGES ROOT
 )
 
@@ -19,7 +19,7 @@ atlas_add_root_dictionary(MyAnalysisLib MyAnalysisLibCintDict
 atlas_add_library (MyAnalysisLib MyAnalysis/*.h Root/*.cxx ${MyAnalysisLibCintDict}
   PUBLIC_HEADERS MyAnalysis BoostedJetTaggers SUSYTools NewMT2 METUtilities RestFrames
 
-  LINK_LIBRARIES AnaAlgorithmLib AsgAnalysisInterfaces            GoodRunsListsLib            TruthUtils            xAODMetaData
+  LINK_LIBRARIES AnaAlgorithmLib AsgAnalysisInterfaces         GoodRunsListsLib            TruthUtils            xAODMetaData
 AsgExampleToolsLib                    NewMT2Lib		          METInterface                RootCoreUtils                   ZMassConstraintLib   xAODMetaDataCnv
 AsgTools                              HFORToolsLib                METUtilitiesLib  	      SUSYToolsLib            xAODMissingET
 AssociationUtilsLib                   IRegionSelector             MVAUtils                    SampleHandler                   egammaLayerRecalibTool  xAODMuon
@@ -73,9 +73,9 @@ atlas_add_dictionary (MyAnalysisDict
 atlas_install_data( data/* )
 
 
-atlas_add_executable( testRun util/testRunHamish.cxx util/testRunGrid.cxx ${testRun.h}
-		      LINK_LIBRARIES MyAnalysisLib ${Boost_LIBRARIES}
-)
+#atlas_add_executable( testRun util/testRunHamish.cxx util/testRunGrid.cxx ${testRun.h}
+#		      LINK_LIBRARIES MyAnalysisLib ${Boost_LIBRARIES}
+#)
 
 
 

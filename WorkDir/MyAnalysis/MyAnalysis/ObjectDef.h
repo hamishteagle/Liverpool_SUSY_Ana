@@ -10,7 +10,7 @@ class ObjectDef: public virtual IObjectDef
 {
 
  public:
-  ObjectDef(xAOD::TEvent* event, ST::SUSYObjDef_xAOD* SUSYTool, xAOD::TStore* store, double mcChannelNumber, double eventN, double mcEventWgt, double m_lumiScaled, std::string systName, bool doPhotons, asg::AnaToolHandle<IMETSignificance> Tool_METSig, double m_averageIntPerX);
+  ObjectDef(asg::SgTEvent* event, ST::SUSYObjDef_xAOD* SUSYTool, xAOD::TStore* store, double mcChannelNumber, double eventN, double mcEventWgt, double m_lumiScaled, std::string systName, bool doPhotons, asg::AnaToolHandle<IMETSignificance> Tool_METSig, double m_averageIntPerX);
 
   ~ObjectDef(){};
 
@@ -42,7 +42,7 @@ class ObjectDef: public virtual IObjectDef
   bool removeFatJetTools(std::string systName);
   void process_mem_usage(double & vm_usage, double &resident_set);
   int  CheckMem();
-  
+
   // Getters
   xAOD::JetContainer* getBadJets(){return badJets;};
   xAOD::JetContainer* getGoodJets(){return goodJets;};
@@ -61,8 +61,8 @@ class ObjectDef: public virtual IObjectDef
   xAOD::TauJetContainer* getGoodTaus(){return goodTaus;};
   xAOD::PhotonContainer* getBaselinePhotons(){return baselinePhotons;};
   xAOD::PhotonContainer* getGoodPhotons(){return goodPhotons;};
-  std::vector<double> getMETSignificance(){return metSignificances;}; 
-  
+  std::vector<double> getMETSignificance(){return metSignificances;};
+
 
   TVector2* getMETvector(){return METvector;};
   double getMET(){return MET;};
@@ -103,8 +103,8 @@ class ObjectDef: public virtual IObjectDef
   xAOD::MuonContainer* badMuons;
   xAOD::ElectronContainer* baselineElectrons;
   xAOD::TauJetContainer* baselineTaus;
-  xAOD::MuonContainer* baselineMuons;  
-  xAOD::PhotonContainer* baselinePhotons;  
+  xAOD::MuonContainer* baselineMuons;
+  xAOD::PhotonContainer* baselinePhotons;
   xAOD::JetContainer* goodJets;
   xAOD::JetContainer* FatJets_kt8;
   xAOD::JetContainer* FatJets_kt12;
@@ -116,8 +116,8 @@ class ObjectDef: public virtual IObjectDef
   xAOD::PhotonContainer* goodPhotons;
   xAOD::JetContainer* BJets;
   xAOD::JetContainer* nonBJets;
-  xAOD::MuonContainer* METmuons;  
-  
+  xAOD::MuonContainer* METmuons;
+
 
   double MET;
   double METphi;
@@ -138,7 +138,7 @@ class ObjectDef: public virtual IObjectDef
   int nVertex;
 
 
-  asg::AnaToolHandle<IMETSignificance> METSig_tool; 
+  asg::AnaToolHandle<IMETSignificance> METSig_tool;
 
   std::vector<double> metSignificances;
 
@@ -146,7 +146,7 @@ class ObjectDef: public virtual IObjectDef
   bool passMuonTriggerMatch;
   bool passTauTriggerMatch;
   bool passPhotonTriggerMatch;
-  
+
 
 
 

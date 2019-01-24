@@ -17,23 +17,23 @@ class MCChecks
 {
  public:
   MCChecks();
-  
-  bool RetrieveWeights(xAOD::TEvent* event);
-  bool SherpaWOR(xAOD::TEvent* event, double ptThreshold);
-  bool VariableForDuplicates(xAOD::TEvent* event);
-  bool DiBosonOR(xAOD::TEvent* event);
-  bool SherpaUncertaintyWeights(xAOD::TEvent* event);
-  bool TruthTaus(xAOD::TEvent* event);
+
+  bool RetrieveWeights(asg::SgTEvent* event);
+  bool SherpaWOR(asg::SgTEvent* event, double ptThreshold);
+  bool VariableForDuplicates(asg::SgTEvent* event);
+  bool DiBosonOR(asg::SgTEvent* event);
+  bool SherpaUncertaintyWeights(asg::SgTEvent* event);
+  bool TruthTaus(asg::SgTEvent* event);
 
 
-  double OverlappingMETSlices(xAOD::TEvent* event);
+  double OverlappingMETSlices(asg::SgTEvent* event);
 
-  bool ZpT(xAOD::TEvent* event);
-  bool SherpaZpT(xAOD::TEvent* event);
-  bool ttbarpT(xAOD::TEvent* event);
-  int HeavyFlavourFilter_countJets(xAOD::TEvent* event, bool doPrompt);
+  bool ZpT(asg::SgTEvent* event);
+  bool SherpaZpT(asg::SgTEvent* event);
+  bool ttbarpT(asg::SgTEvent* event);
+  int HeavyFlavourFilter_countJets(asg::SgTEvent* event, bool doPrompt);
 
-  bool ttbar_decay(xAOD::TEvent* event);
+  bool ttbar_decay(asg::SgTEvent* event);
 
 
   int jetFilterno_prompt;
@@ -66,14 +66,14 @@ class MCChecks
 
   int ttbar_W2_decay;
   int ttbar_tau2_decay;
-  
+
   double tau_1_prongs;
   double tau_2_prongs;
 
   TLorentzVector tau_1;
   TLorentzVector tau_2;
 
-  std::vector<TLorentzVector> TruthTau;   
+  std::vector<TLorentzVector> TruthTau;
   std::vector<float> variationweights;
 
   double Weight;

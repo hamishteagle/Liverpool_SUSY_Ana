@@ -56,7 +56,7 @@
 
 #include "CPAnalysisExamples/errorcheck.h"
 
-#include "AsgTools/AsgTool.h"       
+#include "AsgTools/AsgTool.h"
 #include "AsgTools/IAsgTool.h"
 #include "AsgTools/AsgMessaging.h"
 
@@ -109,7 +109,7 @@
 #include "AssociationUtils/OverlapRemovalTool.h"
 
 
-#include "AsgTools/AsgTool.h"       
+#include "AsgTools/AsgTool.h"
 #include "AsgTools/IAsgTool.h"
 #include "AsgTools/AsgMessaging.h"
 #include "xAODBase/IParticle.h"
@@ -122,12 +122,12 @@
 class IObjectDef
 
 {
-  
-  IObjectDef(xAOD::TEvent* event, ST::SUSYObjDef_xAOD* SUSYTool, xAOD::TStore* store, double mcChannelNumber, double eventN, double mcEventWgt, double m_lumiScaled, std::string systName, bool doPhotons, double m_averageIntPerX ){
+
+  IObjectDef(asg::SgTEvent* event, ST::SUSYObjDef_xAOD* SUSYTool, xAOD::TStore* store, double mcChannelNumber, double eventN, double mcEventWgt, double m_lumiScaled, std::string systName, bool doPhotons, double m_averageIntPerX ){
   };
-  
+
   virtual ~IObjectDef();
-  
+
   // Function to set all of the objects using SUSYTools
   virtual void FillPreORMuons() = 0;
   virtual void FillPreORElectrons() = 0;
@@ -147,6 +147,6 @@ class IObjectDef
   virtual void SetPrimVertex() = 0;
 
 
-  
+
 };
 #endif

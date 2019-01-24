@@ -1,8 +1,8 @@
 #include "MyAnalysis/TruthObjectDef.h"
 #include "MyAnalysis/IObjectDef.h"
-#include <iterator> 
-#include <stdio.h>     
-#include <stdlib.h>    
+#include <iterator>
+#include <stdio.h>
+#include <stdlib.h>
 #include <random>
 #include "MCTruthClassifier/MCTruthClassifier.h"
 
@@ -21,7 +21,7 @@ bool ptTruthSorter( const xAOD::IParticle* j1, const xAOD::IParticle* j2 ) {
 }
 
 //TruthObject Def with FatJets fails on PseudoJetGetter
-TruthObjectDef::TruthObjectDef(xAOD::TEvent* event, ST::SUSYObjDef_xAOD* SUSYTool, xAOD::TStore* store, double mcChannelNumber, double eventN, double mcEventWgt, double crossSect, std::string systName, bool doPhotons, asg::AnaToolHandle<IMETSignificance> Tool_METSig, double  m_averageIntPerX):IObjectDef(event, SUSYTool, store, mcChannelNumber, eventN, mcEventWgt, crossSect, systName, doPhotons, m_averageIntPerX) //, JetToolRunner* Tool_FatJets_kt12, JetToolRunner* Tool_FatJets_kt8
+TruthObjectDef::TruthObjectDef(asg::SgTEvent* event, ST::SUSYObjDef_xAOD* SUSYTool, xAOD::TStore* store, double mcChannelNumber, double eventN, double mcEventWgt, double crossSect, std::string systName, bool doPhotons, asg::AnaToolHandle<IMETSignificance> Tool_METSig, double  m_averageIntPerX):IObjectDef(event, SUSYTool, store, mcChannelNumber, eventN, mcEventWgt, crossSect, systName, doPhotons, m_averageIntPerX) //, JetToolRunner* Tool_FatJets_kt12, JetToolRunner* Tool_FatJets_kt8
 
 {
 
@@ -57,9 +57,9 @@ TruthObjectDef::TruthObjectDef(xAOD::TEvent* event, ST::SUSYObjDef_xAOD* SUSYToo
   BJets = new xAOD::JetContainer(SG::VIEW_ELEMENTS);
   nonBJets = new xAOD::JetContainer(SG::VIEW_ELEMENTS);
   METmuons  = new xAOD::TruthParticleContainer(SG::VIEW_ELEMENTS);
-  
 
- 
+
+
 
   eventStore->record(baselineElectronsBeforeOR,"baselineElectronsBeforeOR");
   eventStore->record(signalElectronsBeforeOR,"signalElectronsBeforeOR");
@@ -81,42 +81,42 @@ TruthObjectDef::TruthObjectDef(xAOD::TEvent* event, ST::SUSYObjDef_xAOD* SUSYToo
   eventStore->record(goodAntiKt3TruthJets,"goodAntiKt3TruthJets");
   eventStore->record(goodElectrons,"goodElectrons");
   eventStore->record(goodTaus,"goodTaus");
-  eventStore->record(goodMuons,"goodMuons"); 
+  eventStore->record(goodMuons,"goodMuons");
   eventStore->record(BJets,"BJets");
   eventStore->record(nonBJets,"nonBJets");
-  eventStore->record(METmuons,"METmuons");  
+  eventStore->record(METmuons,"METmuons");
 
   fatjet_kt12_tool = new JetToolRunner("m_jetRecTool_kt12_");
   fatjet_kt8_tool = new JetToolRunner("m_jetRecTool_kt8_");
- 
+
   this->SetUpFatJetTools(fatjet_kt12_tool, 1.2, "goodJets", "MyFatJetsKt12");
   this->SetUpFatJetTools(fatjet_kt8_tool, 0.8, "goodJets", "MyFatJetsKt8");
 
   this->FillPreORMuons();
   this->FillPreORElectrons();
   this->FillPreORTaus();
-  
+
   //this->FillPreORPhotons();
-  
+
   this->FillPreORJets();
   this->FillMET();
-  
+
   this->OldOverlapRemoval();
   //this->OverlapRemoval();
-  
+
   this->FillBaselineElectrons();
   this->FillBaselineTaus();
   this->FillBaselineMuons();
-  
+
   //this->FillBaselinePhotons();
-  
+
   this->FillGoodJets();
   this->SetPrimVertex();
 
   this->FillFatJets_kt8();
   this->FillFatJets_kt12();
 
-  
+
 
 }
 
@@ -134,16 +134,16 @@ void TruthObjectDef::FillPreORMuons(){
 
   xAOD::TruthParticleContainer::iterator mu_itr = (muons_shallowCopy.first)->begin();
   xAOD::TruthParticleContainer::iterator mu_end  = (muons_shallowCopy.first)->end();
-  
+
   for( ; mu_itr != mu_end; ++mu_itr ) {
-    
-    
+
+
     if ((**mu_itr).pt() > 10000 && fabs((**mu_itr).eta())<2.4){
 
       if (6==(**mu_itr).auxdata<unsigned int>("classifierParticleType")){
 	//if ((**mu_itr).status() == 2){
 	  dec_baseline(**mu_itr) = true;
-	  dec_signal(**mu_itr) = true; 
+	  dec_signal(**mu_itr) = true;
 	  //(No iso for truth particles so makes no sense)
 	  baselineMuonsBeforeOR->push_back (*mu_itr);
 	  signalMuonsBeforeOR->push_back (*mu_itr);
@@ -153,12 +153,12 @@ void TruthObjectDef::FillPreORMuons(){
     //    else{
     //  badMuons->push_back(*mu_itr);
     //}
-    
+
   }
-  
+
   baselineMuonsBeforeOR->sort(ptTruthSorter);
   signalMuonsBeforeOR->sort(ptTruthSorter);
-  
+
 
   return;
 
@@ -175,7 +175,7 @@ void TruthObjectDef::FillPreORElectrons(){
   std::pair< xAOD::TruthParticleContainer*, xAOD::ShallowAuxContainer* > electrons_shallowCopy = xAOD::shallowCopyContainer( *electrons );
   eventStore->record(electrons_shallowCopy.first, "CalibratedElectronCollection");
   eventStore->record(electrons_shallowCopy.second, "CalibratedElectronCollection_Aux");
-  
+
   xAOD::TruthParticleContainer::iterator el_itr = (electrons_shallowCopy.first)->begin();
   xAOD::TruthParticleContainer::iterator el_end = (electrons_shallowCopy.first)->end();
 
@@ -183,12 +183,12 @@ void TruthObjectDef::FillPreORElectrons(){
   for( ; el_itr != el_end; ++el_itr ) {
 
     if ((**el_itr).pt() > 10000 && fabs((**el_itr).eta())<2.4){
-      
+
       if (2==(**el_itr).auxdata<unsigned int>("classifierParticleType")){
       //if ((**el_itr).status() == 1){
-	  
+
 	  dec_baseline(**el_itr) = true;
-	  dec_signal(**el_itr) = true; 
+	  dec_signal(**el_itr) = true;
 	  //(No iso for truth particles so makes no sense)
 	  baselineElectronsBeforeOR->push_back (*el_itr);
 	  signalElectronsBeforeOR->push_back (*el_itr);
@@ -196,10 +196,10 @@ void TruthObjectDef::FillPreORElectrons(){
 	  //}
     }
   }
-  
+
   baselineElectronsBeforeOR->sort(ptTruthSorter);
   signalElectronsBeforeOR->sort(ptTruthSorter);
- 
+
 }
 
 
@@ -213,7 +213,7 @@ void TruthObjectDef::FillPreORTaus(){
   std::pair< xAOD::TruthParticleContainer*, xAOD::ShallowAuxContainer* > taus_shallowCopy = xAOD::shallowCopyContainer( *taus );
   eventStore->record(taus_shallowCopy.first, "CalibratedTauCollection");
   eventStore->record(taus_shallowCopy.second, "CalibratedTauCollection_Aux");
-  
+
   xAOD::TruthParticleContainer::iterator ta_itr = (taus_shallowCopy.first)->begin();
   xAOD::TruthParticleContainer::iterator ta_end = (taus_shallowCopy.first)->end();
 
@@ -221,12 +221,12 @@ void TruthObjectDef::FillPreORTaus(){
   for( ; ta_itr != ta_end; ++ta_itr ) {
 
     if ((**ta_itr).pt() > 10000 && fabs((**ta_itr).eta())<2.4){
-      
+
       if (10==(**ta_itr).auxdata<unsigned int>("classifierParticleType")){
       //if ((**ta_itr).status() == 1){
-	  
+
 	  dec_baseline(**ta_itr) = true;
-	  dec_signal(**ta_itr) = true; 
+	  dec_signal(**ta_itr) = true;
 	  //(No iso for truth particles so makes no sense)
 	  baselineTausBeforeOR->push_back (*ta_itr);
 	  signalTausBeforeOR->push_back (*ta_itr);
@@ -234,10 +234,10 @@ void TruthObjectDef::FillPreORTaus(){
 	  //}
     }
   }
-  
+
   baselineTausBeforeOR->sort(ptTruthSorter);
   signalTausBeforeOR->sort(ptTruthSorter);
- 
+
 }
 
 
@@ -250,7 +250,7 @@ void TruthObjectDef::FillPreORPhotons(){
   std::pair< xAOD::TruthParticleContainer*, xAOD::ShallowAuxContainer* > photons_shallowCopy = xAOD::shallowCopyContainer( *photons );
   eventStore->record(photons_shallowCopy.first, "CalibratedPhotonCollection");
   eventStore->record(photons_shallowCopy.second, "CalibratedPhotonCollection_Aux");
-  
+
   xAOD::TruthParticleContainer::iterator ph_itr = (photons_shallowCopy.first)->begin();
   xAOD::TruthParticleContainer::iterator ph_end = (photons_shallowCopy.first)->end();
 
@@ -259,24 +259,24 @@ void TruthObjectDef::FillPreORPhotons(){
 
     //if ((**ph_itr).pt() > 25000 && fabs((**ph_itr).eta())<2.37){
 
-      
+
 
       if (14==(**ph_itr).auxdata<unsigned int>("classifierParticleType")){
 	dec_baseline(**ph_itr) = true;
 	  baselinePhotonsBeforeOR->push_back (*ph_itr);
-	  
+
 	  //if ((**ph_itr).pt() > 130000){
-	    
-	    dec_signal(**ph_itr) = true; 
+
+	    dec_signal(**ph_itr) = true;
 	    signalPhotonsBeforeOR->push_back (*ph_itr);
 	    //}
       //}
     }
   }
-  
+
   baselinePhotonsBeforeOR->sort(ptTruthSorter);
   signalPhotonsBeforeOR->sort(ptTruthSorter);
-  
+
 }
 
 
@@ -302,18 +302,18 @@ void TruthObjectDef::FillPreORJets(){
       dec_baseline(**jet_itr) = true;
       goodJetsBeforeOR->push_back (*jet_itr);
     }
-    
+
     //else{
       //dec_badjet(**jet_itr) = true;
       //badJets->push_back (*jet_itr);
     //}
 
 
-  }  
+  }
   goodJetsBeforeOR->sort(ptTruthSorter);
-    
+
 }
-  
+
 
 void TruthObjectDef::FillMET(){
 
@@ -324,25 +324,25 @@ void TruthObjectDef::FillMET(){
   if (!met_Truth){
     std::cout << "Could not find MET_Truth container in xAOD" << std::endl;
   }
- 
+
   MET = (*met_Truth)["NonInt"]->met();
-  //METphi = (*met_Truth)["NonInt"]->met(); 
+  //METphi = (*met_Truth)["NonInt"]->met();
   double mpx = (*met_Truth)["NonInt"]->mpx();
   double mpy = (*met_Truth)["NonInt"]->mpy();
-  
+
   METvector = new TVector2 (mpx,mpy);
   METphi = METvector->Phi();
 
-  double m_metsigET = 0; 
+  double m_metsigET = 0;
   double m_metsigHT = 0;
-  double m_metsig = 0; 
+  double m_metsig = 0;
 
-  
+
   metSignificances.push_back(m_metsigET);
   metSignificances.push_back(m_metsigHT);
   metSignificances.push_back(m_metsig);
 
-    
+
   return;
 
 }
@@ -353,7 +353,7 @@ void TruthObjectDef::OldOverlapRemoval(){
   double dRjete = 0.4;
   double dRjetmu = 0.4;
   bool doHarmonization = false;
- 
+
   xAOD::JetContainer::const_iterator jet_itr = goodJetsBeforeOR->begin();
   xAOD::JetContainer::const_iterator jet_end = goodJetsBeforeOR->end();
   for( ; jet_itr != jet_end; ++jet_itr ) {
@@ -375,7 +375,7 @@ void TruthObjectDef::OldOverlapRemoval(){
     else
       dec_passOR( **mu_itr ) = 0;
   }
-  
+
   // remove jets overlapping with (baseline/signal) electrons
   xAOD::TruthParticleContainer::const_iterator el_itr = baselineElectronsBeforeOR->begin();
   xAOD::TruthParticleContainer::const_iterator el_end = baselineElectronsBeforeOR->end();
@@ -389,42 +389,42 @@ void TruthObjectDef::OldOverlapRemoval(){
     }else{
       dec_passOR( **el_itr ) = 1;
     }
-    
+
 
     //xAOD::JetContainer::const_iterator jet_itr = jets->begin();
     //xAOD::JetContainer::const_iterator jet_end = jets->end();
-    
+
     // Reset Jet Iterator
     jet_itr = goodJetsBeforeOR->begin();
 
-    
+
     for( ; jet_itr != jet_end; ++jet_itr ) {
       if( !dec_passOR(**jet_itr) ) continue;
-      
+
       TLorentzVector el4vec = (*el_itr)->p4();
       TLorentzVector jet4vec = (*jet_itr)->p4();
-      
+
       if (el4vec.DeltaR(jet4vec)<dRejet) {
 	dec_passOR( **jet_itr ) = 0;
       }
     }
   } // END loop over electrons
-  
+
   // Remove electrons and muons overlapping with jets
   // Reset El Iterator
   el_itr = baselineElectronsBeforeOR->begin();
   //el_end = electrons->end();
   for( ; el_itr != el_end; ++el_itr ) {
-    
+
     if( !dec_passOR(**el_itr) ) continue;
-    
+
     for( ; jet_itr != jet_end; ++jet_itr ) {
-      
+
       if ( !dec_passOR( **jet_itr ) ) continue;
-      
+
       TLorentzVector el4vec = (*el_itr)->p4();
       TLorentzVector jet4vec = (*jet_itr)->p4();
-      
+
       if (el4vec.DeltaR(jet4vec)<dRjete) {
        	dec_passOR( **el_itr ) = 0;
       }
@@ -434,18 +434,18 @@ void TruthObjectDef::OldOverlapRemoval(){
   // Reset Jets & Muon iterator
   jet_itr = goodJetsBeforeOR->begin();
   mu_itr = baselineMuonsBeforeOR->begin();
-  
+
   for( ; mu_itr != mu_end; ++mu_itr ) {
-    
+
     if( !dec_passOR(**mu_itr) ) continue;
-    
+
     for( ; jet_itr != jet_end; ++jet_itr ) {
-      
+
       if ( !dec_passOR( **jet_itr ) ) continue;
-      
+
       TLorentzVector mu4vec = (*mu_itr)->p4();
       TLorentzVector jet4vec = (*jet_itr)->p4();
-      
+
       std::vector<int> nTrkVec;
       //(*jet_itr)->getAttribute(xAOD::JetAttribute::NumTrkPt500, nTrkVec);
       //int jet_nTrk = nTrkVec[0];
@@ -459,7 +459,7 @@ void TruthObjectDef::OldOverlapRemoval(){
       }
     }
   }
-  
+
 }
 
 
@@ -471,11 +471,11 @@ void TruthObjectDef::OverlapRemoval(){
   double dRjete = 0.4;
   double dRjetmu = 0.4;
   bool doHarmonization = false;
- 
-  double dRphjet = 0.4; 
+
+  double dRphjet = 0.4;
   double dReph = 0.4;
   double dRmuph = 0.4;
-  
+
   xAOD::JetContainer::const_iterator jet_itr = goodJetsBeforeOR->begin();
   xAOD::JetContainer::const_iterator jet_end = goodJetsBeforeOR->end();
   for( ; jet_itr != jet_end; ++jet_itr ) {
@@ -486,7 +486,7 @@ void TruthObjectDef::OverlapRemoval(){
       dec_passOR( **jet_itr ) = 0;
   }
 
-  
+
   xAOD::TruthParticleContainer::const_iterator ph_itr = baselinePhotonsBeforeOR->begin();
   xAOD::TruthParticleContainer::const_iterator ph_end = baselinePhotonsBeforeOR->end();
   for( ; ph_itr != ph_end; ++ph_itr ) {
@@ -498,7 +498,7 @@ void TruthObjectDef::OverlapRemoval(){
     else
       dec_passOR( **ph_itr ) = 0;
   }
-  
+
   xAOD::TruthParticleContainer::const_iterator mu_itr = baselineMuonsBeforeOR->begin();
   xAOD::TruthParticleContainer::const_iterator mu_end = baselineMuonsBeforeOR->end();
   for( ; mu_itr != mu_end; ++mu_itr ) {
@@ -510,7 +510,7 @@ void TruthObjectDef::OverlapRemoval(){
     else
       dec_passOR( **mu_itr ) = 0;
   }
-  
+
   // remove jets overlapping with (baseline/signal) electrons
   xAOD::TruthParticleContainer::const_iterator el_itr = baselineElectronsBeforeOR->begin();
   xAOD::TruthParticleContainer::const_iterator el_end = baselineElectronsBeforeOR->end();
@@ -524,45 +524,45 @@ void TruthObjectDef::OverlapRemoval(){
     }else{
       dec_passOR( **el_itr ) = 1;
     }
-    
+
 
     //xAOD::JetContainer::const_iterator jet_itr = jets->begin();
     //xAOD::JetContainer::const_iterator jet_end = jets->end();
-    
+
     // Reset Jet Iterator
     jet_itr = goodJetsBeforeOR->begin();
 
-    
+
     for( ; jet_itr != jet_end; ++jet_itr ) {
       if( !dec_passOR(**jet_itr) ) continue;
-      
+
       TLorentzVector el4vec = (*el_itr)->p4();
       TLorentzVector jet4vec = (*jet_itr)->p4();
-      
+
       if (el4vec.DeltaR(jet4vec)<dRejet) {
 	dec_passOR( **jet_itr ) = 0;
       }
     }
   } // END loop over electrons
-  
-  
+
+
   // Remove electrons and muons overlapping with jets
   // Reset El Iterator
   el_itr = baselineElectronsBeforeOR->begin();
   jet_itr = goodJetsBeforeOR->begin();
   //el_end = electrons->end();
-  
+
   for( ; el_itr != el_end; ++el_itr ) {
-    
+
     if( !dec_passOR(**el_itr) ) continue;
-    
+
     for( ; jet_itr != jet_end; ++jet_itr ) {
-      
+
       if ( !dec_passOR( **jet_itr ) ) continue;
-      
+
       TLorentzVector el4vec = (*el_itr)->p4();
       TLorentzVector jet4vec = (*jet_itr)->p4();
-      
+
       if (el4vec.DeltaR(jet4vec)<dRjete) {
        	dec_passOR( **el_itr ) = 0;
       }
@@ -572,18 +572,18 @@ void TruthObjectDef::OverlapRemoval(){
   // Reset Jets & Muon iterator
   jet_itr = goodJetsBeforeOR->begin();
   mu_itr = baselineMuonsBeforeOR->begin();
-  
+
   for( ; mu_itr != mu_end; ++mu_itr ) {
-    
+
     if( !dec_passOR(**mu_itr) ) continue;
-    
+
     for( ; jet_itr != jet_end; ++jet_itr ) {
-      
+
       if ( !dec_passOR( **jet_itr ) ) continue;
-      
+
       TLorentzVector mu4vec = (*mu_itr)->p4();
       TLorentzVector jet4vec = (*jet_itr)->p4();
-      
+
       std::vector<int> nTrkVec;
       //(*jet_itr)->getAttribute(xAOD::JetAttribute::NumTrkPt500, nTrkVec);
       //int jet_nTrk = nTrkVec[0];
@@ -604,16 +604,16 @@ void TruthObjectDef::OverlapRemoval(){
   ph_itr = baselinePhotonsBeforeOR->begin();
 
   for( ; ph_itr != ph_end; ++ph_itr ) {
-    
+
     if( !dec_passOR(**ph_itr) ) continue;
-    
+
     for( ; jet_itr != jet_end; ++jet_itr ) {
-      
+
       if ( !dec_passOR( **jet_itr ) ) continue;
-      
+
       TLorentzVector ph4vec = (*ph_itr)->p4();
       TLorentzVector jet4vec = (*jet_itr)->p4();
-      
+
       if (ph4vec.DeltaR(jet4vec)<dRphjet) {
 	  dec_passOR( **jet_itr ) = 0;
       }
@@ -627,16 +627,16 @@ void TruthObjectDef::OverlapRemoval(){
   ph_itr = baselinePhotonsBeforeOR->begin();
 
   for( ; ph_itr != ph_end; ++ph_itr ) {
-    
+
     if( !dec_passOR(**ph_itr) ) continue;
-    
+
     for( ; mu_itr != mu_end; ++mu_itr ) {
-      
+
       if ( !dec_passOR( **mu_itr ) ) continue;
-      
+
       TLorentzVector ph4vec = (*ph_itr)->p4();
       TLorentzVector mu4vec = (*mu_itr)->p4();
-      
+
       if (ph4vec.DeltaR(mu4vec)<dRmuph) {
 	  dec_passOR( **mu_itr ) = 0;
       }
@@ -649,23 +649,23 @@ void TruthObjectDef::OverlapRemoval(){
   ph_itr = baselinePhotonsBeforeOR->begin();
 
   for( ; ph_itr != ph_end; ++ph_itr ) {
-    
+
     if( !dec_passOR(**ph_itr) ) continue;
-    
+
     for( ; el_itr != el_end; ++el_itr ) {
-      
+
       if ( !dec_passOR( **el_itr ) ) continue;
-      
+
       TLorentzVector ph4vec = (*ph_itr)->p4();
       TLorentzVector mu4vec = (*el_itr)->p4();
-      
+
       if (ph4vec.DeltaR(mu4vec)<dReph) {
 	  dec_passOR( **el_itr ) = 0;
       }
     }
   }
 
-  
+
 }
 
 
@@ -673,22 +673,22 @@ void TruthObjectDef::FillBaselineElectrons(){
 
   xAOD::TruthParticleContainer::iterator el_itr = baselineElectronsBeforeOR->begin();
   xAOD::TruthParticleContainer::iterator el_end = baselineElectronsBeforeOR->end();
-  
+
   electronSF = 1;
   electronTriggerSF = 1;
 
   for( ; el_itr != el_end; ++el_itr ) {
     //if  (fabs((*el_itr)->eta()) < 2.47){
-    
+
     if  ( (*el_itr)->auxdata< char >("passOR") && ( (*el_itr)->auxdata< char >("baseline") ) )
       baselineElectrons->push_back( *el_itr);
-    
+
     if ( ( (*el_itr)->auxdata< char >("passOR") ) && ( (*el_itr)->auxdata< char >("signal") ) ) {
       goodElectrons->push_back( *el_itr);
       //electronSF = electronSF*objTool->GetSignalElecSF(**el_itr);
-      
+
     }
-    
+
   }
   baselineElectrons->sort(ptTruthSorter);
   goodElectrons->sort(ptTruthSorter);
@@ -699,22 +699,22 @@ void TruthObjectDef::FillBaselineTaus(){
 
   xAOD::TruthParticleContainer::iterator ta_itr = baselineTausBeforeOR->begin();
   xAOD::TruthParticleContainer::iterator ta_end = baselineTausBeforeOR->end();
-  
+
   tauSF = 1;
   tauTriggerSF = 1;
 
   for( ; ta_itr != ta_end; ++ta_itr ) {
     //if  (fabs((*el_itr)->eta()) < 2.47){
-    
+
     if  ( (*ta_itr)->auxdata< char >("passOR") && ( (*ta_itr)->auxdata< char >("baseline") ) )
       baselineTaus->push_back( *ta_itr);
-    
+
     if ( ( (*ta_itr)->auxdata< char >("passOR") ) && ( (*ta_itr)->auxdata< char >("signal") ) ) {
       goodTaus->push_back( *ta_itr);
       //tauSF = tauSF*objTool->GetSignalElecSF(**el_itr);
-      
+
     }
-    
+
   }
   baselineTaus->sort(ptTruthSorter);
   goodTaus->sort(ptTruthSorter);
@@ -731,12 +731,12 @@ void TruthObjectDef::FillBaselinePhotons(){
   for( ; ph_itr != ph_end; ++ph_itr ) {
     if  ( (*ph_itr)->auxdata< char >("passOR") && ( (*ph_itr)->auxdata< char >("baseline") ) )
       baselinePhotons->push_back( *ph_itr);
-    
+
     if ( ( (*ph_itr)->auxdata< char >("passOR") ) && ( (*ph_itr)->auxdata< char >("signal") ) ) {
       goodPhotons->push_back( *ph_itr);
-      
+
     }
-    
+
   }
   baselinePhotons->sort(ptTruthSorter);
   goodPhotons->sort(ptTruthSorter);
@@ -746,10 +746,10 @@ void TruthObjectDef::FillBaselinePhotons(){
 
 
 void TruthObjectDef::FillBaselineMuons(){
-   
+
   xAOD::TruthParticleContainer::iterator mu_itr = baselineMuonsBeforeOR->begin();
   xAOD::TruthParticleContainer::iterator mu_end = baselineMuonsBeforeOR->end();
-  
+
   muonSF = 1;
   oldMuonSF = 1;
   for( ; mu_itr != mu_end; ++mu_itr ) {
@@ -761,7 +761,7 @@ void TruthObjectDef::FillBaselineMuons(){
       goodMuons->push_back( *mu_itr);
       //muonSF = muonSF*objTool->GetSignalMuonSF(**mu_itr);
     }
-    
+
   }
   baselineMuons->sort(ptTruthSorter);
   cosmicMuons->sort(ptTruthSorter);
@@ -773,7 +773,7 @@ void TruthObjectDef::FillGoodJets(){
 
   //    xAOD::TruthParticleContainer::iterator jet_itr = goodJetsBeforeOR->begin();
   //   xAOD::TruthParticleContainer::iterator jet_end = goodJetsBeforeOR->end();
-    
+
   xAOD::JetContainer::iterator jet_itr = goodJetsBeforeOR->begin();
   xAOD::JetContainer::iterator jet_end = goodJetsBeforeOR->end();
 
@@ -783,10 +783,10 @@ void TruthObjectDef::FillGoodJets(){
 
   bJetSF = 1;
 
-      
-  
+
+
   for( ; jet_itr != jet_end; ++jet_itr ) {
-    
+
     int flavour = -1;
 
     //    int brokenFlavour = -1;
@@ -798,19 +798,19 @@ void TruthObjectDef::FillGoodJets(){
       //std::cout << "Failed to get HadronConeExclTruthLabelID Truth Label ID" << std::endl;
       foundHadCone = false;
     }
-    
+
     if (   (*jet_itr)->pt() > 20000. && (*jet_itr)->auxdata< char >("bad") && (*jet_itr)->auxdata< char >("baseline")  )
       {
 	badJets->push_back( *jet_itr);
       }
-    
+
     else if( (*jet_itr)->auxdata< char >("baseline")==1  &&
 	     (*jet_itr)->auxdata< char >("passOR")==1  &&
 	     (*jet_itr)->pt() > 0.  && ( fabs( (*jet_itr)->eta()) < 2.8) )
       {
 	goodJets->push_back( *jet_itr);
-	
-	
+
+
 	flavour = -1;
 	if (foundHadCone == false){
 	(*jet_itr)->getAttribute("ConeTruthLabelID",flavour);
@@ -818,10 +818,10 @@ void TruthObjectDef::FillGoodJets(){
 	else {
 	  (*jet_itr)->getAttribute("HadronConeExclTruthLabelID",flavour);
 	}//std::cout << "jet flavour " << flavour << std::endl;
-	
+
 	int nTrk = -1;
 	(*jet_itr)->getAttribute("NumTrkPt1000",nTrk);
-	
+
 	// "Mock" b-tagging:
 	std::random_device rd;
 	std::mt19937 gen(rd());
@@ -848,26 +848,26 @@ void TruthObjectDef::FillGoodJets(){
 	      dec_bjet(**jet_itr) = true;
 	    }
 	  }
-	  
+
 	}
-	
+
 	if ((*jet_itr)->auxdata< char >("bjet")){
 	  BJets->push_back(*jet_itr);
 	}
 	else
 	  nonBJets->push_back(*jet_itr);
-	
+
       }
   }
-    
+
   goodJets->sort(ptTruthSorter);
   BJets->sort(ptTruthSorter);
   nonBJets->sort(ptTruthSorter);
-  
+
   //  bJetSF = objTool->BtagSF(BJets);
   bJetSF = 1;
   JVTSF = 1;
-  
+
 }
 
 
@@ -875,7 +875,7 @@ void TruthObjectDef::SetPrimVertex(){
 
   const xAOD::TruthVertexContainer* primVertex = 0;
   currentEvent->retrieve( primVertex, "TruthVertices" );
-  //nVertex = primVertex->size();   
+  //nVertex = primVertex->size();
   nVertex = 1;
 }
 
@@ -900,9 +900,9 @@ void TruthObjectDef::FillFatJets_kt12(){
 
 bool TruthObjectDef::SetUpFatJetTools(JetToolRunner *& tool, double jetradius, std::string inputcontainer, std::string outputcontainer){
 
-  
-  //double jetradius = 0.8; 
-  xAOD::IParticleContainer* m_goodJets_recl; //!  
+
+  //double jetradius = 0.8;
+  xAOD::IParticleContainer* m_goodJets_recl; //!
   //std::string inputcontainer = "GoodJets_recl";
   //std::string outputcontainer = "fatJets_kt8"+systName;
   tool = 0;
@@ -924,9 +924,9 @@ bool TruthObjectDef::SetUpFatJetTools(JetToolRunner *& tool, double jetradius, s
 
   JetFromPseudojet* pbuild = new JetFromPseudojet(("myjetbuild"+outputcontainer).c_str());
   ToolHandle<IJetFromPseudojet> hbuild(pbuild);
-  
+
   pbuild->initialize();
-  
+
   JetFinder* pfind = new JetFinder(("myjetfind"+outputcontainer).c_str());
   pfind->setProperty("JetAlgorithm", "AntiKt");
   pfind->setProperty("JetRadius", jetradius);
@@ -937,7 +937,7 @@ bool TruthObjectDef::SetUpFatJetTools(JetToolRunner *& tool, double jetradius, s
   ToolHandle<IJetFinder> hfind(pfind);
   //asg::ToolStore::put(pfind);
   pfind->initialize();
-  
+
 
 
   JetRecTool* pjrf = new JetRecTool(("myjrfind"+outputcontainer).c_str());
@@ -948,7 +948,7 @@ bool TruthObjectDef::SetUpFatJetTools(JetToolRunner *& tool, double jetradius, s
   ToolHandle<IJetExecuteTool> hjrf(pjrf);
   hrecs.push_back(pjrf);
 
- 
+
   tool = new JetToolRunner(("jetrunner"+outputcontainer).c_str());
   tool->setProperty("Tools", hrecs);
   //  Info("Initialising JetReclusteringTool(s)");
@@ -967,9 +967,9 @@ bool TruthObjectDef::removeFatJetTools(std::string systName){
     std::cout<<"FatJets8ToolName = "<<FatJets8ToolName<<std::endl;
     std::string FatJets12ToolName = "MyFatJetsKt12"+systName;
     std::cout<<"FatJets12ToolName = "<<FatJets12ToolName<<std::endl;
-    std::string FatJetsTool8 ="m_jetRecTool_kt8_"+systName; 
+    std::string FatJetsTool8 ="m_jetRecTool_kt8_"+systName;
     std::cout<<"FatJetsTool8 = "<<FatJetsTool8<<std::endl;
-    std::string FatJetsTool12 ="m_jetRecTool_kt12_"+systName; 
+    std::string FatJetsTool12 ="m_jetRecTool_kt12_"+systName;
     std::cout<<"FatJetsTool12 = "<<FatJetsTool12<<std::endl;
     std::string plcGet8 = "mylcget"+FatJets8ToolName;
     std::string plcGet12 = "mylcget"+FatJets12ToolName;
@@ -983,7 +983,7 @@ bool TruthObjectDef::removeFatJetTools(std::string systName){
     std::string prunner12 = "jetrunner"+FatJets12ToolName;
     std::string pjrfind_retriever8 = pjrfind8+"_retriever";
     std::string pjrfind_retriever12 = pjrfind12+"_retriever";
-    
+
     asg::ToolStore::remove(plcGet8);
     asg::ToolStore::remove(plcGet12);
     std::cout<<"Removed the tool plcget "<<std::endl;
@@ -1007,7 +1007,7 @@ bool TruthObjectDef::removeFatJetTools(std::string systName){
     std::cout<<"Removed the fatJets tools "<<std::endl;
     return true;
 }
-//Memory usage checking 
+//Memory usage checking
 void TruthObjectDef::process_mem_usage(double& vm_usage, double& resident_set)
 {
   vm_usage     = 0.0;
