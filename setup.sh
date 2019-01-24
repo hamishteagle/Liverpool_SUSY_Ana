@@ -1,6 +1,7 @@
 #!/bin/bash
 
 setupATLAS
+mkdir build
 cd build
 asetup 21.2.55,AnalysisBase
 cmake ../WorkDir/
