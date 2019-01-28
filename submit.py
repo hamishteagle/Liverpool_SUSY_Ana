@@ -7,7 +7,7 @@ class submit:
 
     def __init__(self):
 
-        self.inputput = ''
+        self.input = ''
 
     def main(self):
       # Parse arguments
@@ -20,7 +20,7 @@ class submit:
 
         # Make input file name accessible
 
-        self.inputput = args.input_file
+        self.input = args.input_file
 
         # Setup ROOT
 
@@ -76,7 +76,7 @@ class submit:
 
             job = ROOT.EL.Job()
             job.sampleHandler( sh )
-            job.options().setDouble( ROOT.EL.Job.optMaxEvents, 500 )
+            #job.options().setDouble( ROOT.EL.Job.optMaxEvents, 500 )
             print('Running on grid? ' + str(args.grid_running))
 
             # Configure algorithm

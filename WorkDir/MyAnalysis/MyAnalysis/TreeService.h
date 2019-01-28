@@ -23,13 +23,13 @@ class TreeService
  public:
   TreeService(TTree *outputTree, TDirectory *OutDir);
 
-  void fillTree(IObjectDef *objects, PreliminarySel &region, CalculateVariables &variables, MCChecks MCTruthInfo , double mFinalWeight, double mInitialWeight, double puWeight, double SFmCTbbll, bool TrigMET, bool TrigMu, bool TrigEl, bool TrigGamma, bool Trig6j, std::vector<int> triggers, double puSumWeights, double TRUTHMET, double TRUTHHT ,bool CoreFlags, bool SCTFlag, bool LArTileFlag, bool passGRL, bool passedPrimVertex, bool passedJetClean, bool passedCosmicMu, bool passedMuonClean, double RNo, double RenormedMCWgt, int LumiYear, double m_averageIntPerCrossing, double m_actualIntPerCrossing);
-  
+  void fillTree(IObjectDef *objects, PreliminarySel &region, CalculateVariables &variables, MCChecks MCTruthInfo , double mFinalWeight, double mInitialWeight, double puWeight, double SFmCTbbll, bool TrigMET, bool TrigMu, bool TrigEl, bool TrigGamma, bool Trig6j, std::vector<int> triggers, double puSumWeights, double TRUTHMET, double TRUTHHT ,bool CoreFlags, bool SCTFlag, bool LArTileFlag, bool passGRL, bool passedPrimVertex, bool passedJetClean, bool passedCosmicMu, bool passedMuonClean, double RNo, double RenormedMCWgt, int LumiYear, double m_averageIntPerCrossing, double m_actualIntPerCrossing, double m_xsec, double m_filteff, double m_kfactor);
+
   void writeTree();
 
 
  public:
-  
+
   // Store our Trees. Need to set up the structure in the initialise
 
   TTree *tree;
@@ -47,13 +47,17 @@ class TreeService
   double m_actualIntPerX;
   std::vector<float> weightsVector;
 
+  double xsec;
+  double filteff;
+  double kfactor;
+
   double lumiScaled;
   double sampleSFmCTbbll;
   double puWgt;
   bool leadingbs;
   bool primaryb;
   bool secondaryb;
-  
+
   //Initial event cleaning
   bool coreFlag;
   bool sctFlag;
@@ -157,7 +161,7 @@ class TreeService
   double dPhiL1b2;
   double dPhiL2b1;
   double dPhiL2b2;
-  
+
   double minDPhijMET;
   double minDPhijMET_4;
   double adjDPhij1MET;
@@ -213,11 +217,11 @@ class TreeService
   double phij3;
   double phij4;
 
-  double pTl1; 
+  double pTl1;
   double pTl2;
   double etal1;
   double etal2;
-  double phil1; 
+  double phil1;
   double phil2;
   double m_taulep;
 
@@ -226,7 +230,7 @@ class TreeService
   double phigamma;
   double nPhoton;
 
-  double pTb1; 
+  double pTb1;
   double pTb2;
   double pTb3;
   double pTb4;
@@ -234,7 +238,7 @@ class TreeService
   double etab2;
   double etab3;
   double etab4;
-  double phib1; 
+  double phib1;
   double phib2;
   double phib3;
   double phib4;
@@ -294,14 +298,14 @@ class TreeService
   double ratioMETmEff2j;
   double mEff3j;
   double ratioMETmEff3j;
-  
+
   double adjustedETMiss;
   double adjustedETMissPhi;
   double adjustedmEff2j;
   double adjustedRatio2j;
   double adjustedmEff3j;
   double adjustedRatio3j;
-  
+
   double truthBosonPt;
   double m_finalWeightSum;
   double m_intialWeightSum;
@@ -325,7 +329,7 @@ class TreeService
 
   // Razor Variable Crap
 
-  double QCDDelta; 
+  double QCDDelta;
   double invGammaRp1;
   double sHatR;
   double MDelR;
@@ -364,7 +368,7 @@ class TreeService
   // DM Specific
 
   double jet_imbalance; //
-  double minDRjj; 
+  double minDRjj;
   double dEtajj_max;
 
   // tbMET Specific
@@ -389,7 +393,7 @@ class TreeService
   double MUR2_MUF1_PDF261000;
   double MUR2_MUF2_PDF261000;
   double MUR1_MUF1_PDF261001;
-  double MUR1_MUF1_PDF261002;        
+  double MUR1_MUF1_PDF261002;
 
 
 
@@ -402,7 +406,7 @@ class TreeService
   double JetAsymmR_min;
   double InvMass_Bij_minR;
   double JetAsymmR_min1;
-  double InvMass_Bij_minR1; 
+  double InvMass_Bij_minR1;
 
   double SRB_minDR;
   double SRB_minDR2;
@@ -417,7 +421,7 @@ class TreeService
 
   int ttbar_W2_decay;
   int ttbar_tau2_decay;
-  
+
   double tau_1_prongs;
   double tau_2_prongs;
 
@@ -436,22 +440,22 @@ class TreeService
   std::vector<double> el_eta;
   std::vector<double> el_phi;
   std::vector<double> el_E;
-  std::vector<double> el_Q;   
+  std::vector<double> el_Q;
 
   std::vector<double> mu_pT;
   std::vector<double> mu_eta;
   std::vector<double> mu_phi;
   std::vector<double> mu_E;
-  std::vector<double> mu_Q;   
+  std::vector<double> mu_Q;
 
   std::vector<double> tau_pT;
   std::vector<double> tau_eta;
   std::vector<double> tau_phi;
   std::vector<double> tau_E;
-  std::vector<double> tau_Q;   
-  std::vector<double> tau_SmallestDR;   
-  std::vector<int> tau_associatedTrue;   
-  
+  std::vector<double> tau_Q;
+  std::vector<double> tau_SmallestDR;
+  std::vector<int> tau_associatedTrue;
+
 
   std::vector<double> fatJet8_pT;
   std::vector<double> fatJet8_eta;
@@ -471,7 +475,7 @@ class TreeService
 
   int multiJetTriggerPlateau;
   bool multiJetTriggerPassed;
-  
+
 
 };
 #endif

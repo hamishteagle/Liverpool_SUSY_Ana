@@ -187,6 +187,8 @@ public:
   double m_actualIntPerX;
   double truth_pT_W;
 
+  int counter = 0;
+
   //  OutputStream *out;
 
   // this is a standard constructor
@@ -200,10 +202,9 @@ public:
   virtual StatusCode execute ();
   virtual StatusCode postExecute ();
   virtual StatusCode finalize ();
-  virtual StatusCode histFinalize ();
 
  private:
-   
+
    int doSyst;
    int doPhotons;
    int RunningLocally;

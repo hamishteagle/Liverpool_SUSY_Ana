@@ -1,5 +1,4 @@
 #include <EventLoop/Job.h>
-//#include <EventLoop/StatusCode.h>
 #include <EventLoop/Worker.h>
 #include <MyAnalysis/MyxAODAnalysis.h>
 #include "CPAnalysisExamples/errorcheck.h"
@@ -61,37 +60,7 @@ MyxAODAnalysis :: MyxAODAnalysis (const std::string& name,
   declareProperty( "doPhotons", doPhotons = 1, "Do photons?");
   declareProperty( "RunningLocally", RunningLocally = 1, "Running locally?");
 
-
-  //return StatusCode::SUCCESS;
-
 }
-
-
-
-//StatusCode MyxAODAnalysis :: setupJob (EL::Job& job)
-//{
-  // Here you put code that sets up the job on the submission object
-  // so that it is ready to work with your algorithm, e.g. you can
-  // request the D3PDReader service or add output files.  Any code you
-  // put here could instead also go into the submission script.  The
-  // sole advantage of putting it here is that it gets automatically
-  // activated/deactivated when you add/remove the algorithm from your
-  // job, which may or may not be of value to you.
-
-
-
-//  job.useXAOD();
-
-  // 10MB is cached
-//  job.options()->setDouble(EL::Job::optCacheSize, 10*1024*1024);
-
-  // 50 entries are used for the Cache
-//  job.options()->setDouble (EL::Job::optCacheLearnEntries, 50);
-
-//  xAOD::Init("MyxAODAnalysis").ignore(); //call before opening first file
-
-//  return StatusCode::SUCCESS;
-//}
 
 StatusCode MyxAODAnalysis :: fileExecute ()
 {
@@ -100,18 +69,11 @@ StatusCode MyxAODAnalysis :: fileExecute ()
 
   const char* APP_NAME = "MyxAODAnalysis";
 
-  std::cout << "fileExecute" << std::endl;
-
-  std::cout << "We are changing the input file now. Currently in file execute " << std::endl;
-
-
   m_event = wk()->xaodEvent();
   double nEventsProcessed  = 0;
   double sumOfWeights        = 0;
   double sumOfWeightsSquared = 0;
-  if(m_isDerivation && m_fileType != "DAOD_TRUTH1" && isData == false){
-
-    std::cout << "This file is a derivation" << std::endl;
+  if(m_isDerivation && (m_fileType != "DAOD_TRUTH1" || m_fileType != "DAOD_TRUTH3") && isData == false){
 
     // check for corruption
     const xAOD::CutBookkeeperContainer* incompleteCBC;
@@ -127,7 +89,6 @@ StatusCode MyxAODAnalysis :: fileExecute ()
       return StatusCode::FAILURE;
     }
 
-
     // First, let's find the smallest cycle number,
     // i.e., the original first processing step/cycle
     int minCycle = 10000;
@@ -137,7 +98,7 @@ StatusCode MyxAODAnalysis :: fileExecute ()
     // Now, let's actually find the right one that contains all the needed info...
     const xAOD::CutBookkeeper* allEventsCBK=0;
     const xAOD::CutBookkeeper* DxAODEventsCBK=0;
-    std::string derivationName = "DAOD_SUSY7"; //need to replace by appropriate name
+    std::string derivationName = "DAOD_SUSY5"; //need to replace by appropriate name
     const xAOD::CutBookkeeper* all = 0; int maxCycle=-1; //need to find the max cycle where input stream is StreamAOD and the name is AllExecutedEvents
 
     for ( auto cbk :  *completeCBC ) {
@@ -161,21 +122,16 @@ StatusCode MyxAODAnalysis :: fileExecute ()
     sumOfWeightsSquared = cbksumOfWeightsSquared;
   }
 
-  std::cout << "Sum of Weights: " << sumOfWeights << std::endl;
-  std::cout << "Sum of Weights Squared: " << sumOfWeightsSquared << std::endl;
   m_finalSumOfWeights += sumOfWeights;
   m_initialSumOfWeights += sumOfWeightsSquared;
   h_SumOfWeights->Fill(1,sumOfWeights);
   h_SumOfWeightsSquared->Fill(1,sumOfWeightsSquared);
-
 
   std::cout << "Total Sum of Weights: " << m_finalSumOfWeights << std::endl;
   std::cout << "Total Sum of Weights Squared: " << m_initialSumOfWeights << std::endl;
 
   return StatusCode::SUCCESS;
 }
-
-
 
 StatusCode MyxAODAnalysis :: beginInputFile (bool firstFile)
 {
@@ -184,9 +140,6 @@ StatusCode MyxAODAnalysis :: beginInputFile (bool firstFile)
   // D3PDReader or a similar service this method is not needed.
   // get the MetaData tree once a new file is opened, with
 
-  std::cout << "changeInput" << std::endl;
-
-  std::cout << "Changing the input file." << std::endl;
   MetaData = dynamic_cast<TTree*> (wk()->inputFile()->Get("MetaData"));
   if (MetaData) {
 
@@ -198,8 +151,6 @@ StatusCode MyxAODAnalysis :: beginInputFile (bool firstFile)
 
 return StatusCode::SUCCESS;
 }
-
-
 
 StatusCode MyxAODAnalysis :: initialize ()
 {
@@ -526,11 +477,6 @@ StatusCode MyxAODAnalysis :: initialize ()
   ANA_CHECK(m_metSignif.retrieve());
   m_metSignif->initialize();
 
-
-
-  //Info("initialize()","number of events = %lli", m_event->getEntries());
-  //m_totalEvents = m_event->getEntries();
-
   //Write all of the trees
   for (int m = 0; m < (m_treeServiceVector.size()); m++){
     m_treeServiceVector[m]->writeTree();
@@ -542,7 +488,6 @@ StatusCode MyxAODAnalysis :: initialize ()
 
   return StatusCode::SUCCESS;
 }
-
 
 StatusCode MyxAODAnalysis :: execute ()
 {
@@ -564,21 +509,33 @@ StatusCode MyxAODAnalysis :: execute ()
 
   isyst = 0;
 
+  m_event = wk()->xaodEvent();
+  int m_entries = m_event->getEntries();
 
+  if (counter == 0) {
+    std::cout << "First event" << std::endl;
+    beginInputFile(false);
+    fileExecute();
+  }
 
+  counter++;
 
+  if (counter == m_entries - 1) {
+    std::cout << "Last event" << std::endl;
+    counter = 0;
+  }
 
   for (const auto& sysInfo : systInfoList){
     const CP::SystematicSet& syst = sysInfo.systset;
 
     int year = 0;
     int runNumber = 0;
-    if (m_fileType != "DAOD_TRUTH1"){
+    if (m_fileType != "DAOD_TRUTH1" && m_fileType != "DAOD_TRUTH3"){
       objTool->ApplyPRWTool();
       year = objTool->treatAsYear();
     }
 
-    if (m_fileType != "DAOD_TRUTH1"){
+    if (m_fileType != "DAOD_TRUTH1" && m_fileType != "DAOD_TRUTH3"){
 
       if (objTool->resetSystematics() != CP::SystematicCode::Ok){
 	Error(APP_NAME, "Cannot reset SUSYTools systematics" );
@@ -602,7 +559,7 @@ StatusCode MyxAODAnalysis :: execute ()
 
     //File types (MC/truth)
     bool isTruthFile = false;
-    if (m_fileType == "DAOD_TRUTH1"){
+    if (m_fileType == "DAOD_TRUTH1" || m_fileType == "DAOD_TRUTH3"){
       isTruthFile = true;
     }
     bool isMC = false;
@@ -652,58 +609,43 @@ StatusCode MyxAODAnalysis :: execute ()
     double truthfilt_MET = 0;
     double truthfilt_HT = 0;
     double renormedMcWgt = 1;
-    double xsecteff = -1;
-    double filtereff = -1;
-    double kFactor =-1;
+    double xsec = -1;
+    double filteff = -1;
+    double kfactor = -1;
     // Will fix this when the PMGTools cross section stuff is available
 
 
     if (isMC){
       mcChannel = eventInfo->mcChannelNumber();
       puWgt = objTool->GetPileupWeight();
-    }
+    //}
       //std::cout << "Looking for xsec for " << mcChannel << std::endl;
-      //getting metdata from the Map (MapVariables.cxx) using the text file in format as MGPy8EG_A14N23LO_BB_onestepN2hN1.txt
-    //   std::shared_ptr<MapVariables> m_mappedVars( new MapVariables ("MyAnalysis/data/MyAnalysis/MGPy8EG_A14N23LO_BB_onestepN2hN1.txt"));
-    //   std::shared_ptr<MapVariables> m_mappedBkgVars( new MapVariables ("MyAnalysis/data/MyAnalysis/susy_crossSections_13TeV.txt"));
-    //   //does this mcID exist in signal map?
-    //   bool checkMap = m_mappedVars->find(mcChannel);
-    //   if (checkMap)
-    // 	{
-    // 	  xsecteff = m_mappedVars->getCrossSection(mcChannel);
-    // 	  filtereff= m_mappedVars->getFilterEff(mcChannel);
-    // 	  kFactor= m_mappedVars->getKFactor(mcChannel);
-    // 	}
-    //   else {//does mcID exist in Bkg map?
-    // 	checkMap = m_mappedBkgVars->find(mcChannel);
-    // 	if (checkMap)
-    // 	{
-    // 	  xsecteff = m_mappedBkgVars->getCrossSection(mcChannel);
-    // 	  filtereff= m_mappedBkgVars->getFilterEff(mcChannel);
-    // 	  kFactor= m_mappedBkgVars->getKFactor(mcChannel);
-    // 	}
-    // 	else {
-    // 	  //std::cout<<"ERROR: mcID does not exist in Map"<<std::endl;
-    //       xsecteff = 1.;
-    //       filtereff = 1.;
-    // 	  kFactor=1.;
-    // 	  //return StatusCode::FAILURE;
-    // 	}
-    //   }
-    //   mcWgt = eventInfo->mcEventWeight();
-    //   renormedMcWgt = mcWgt;
-    //   if (std::abs(renormedMcWgt) >= 100){
-    // 	renormedMcWgt = 1;
-    //   }
-    //   if (m_fileType != "DAOD_TRUTH1"){
-
-    //   }
-    // }
-    // else {//Not MC
-    //   xsecteff=1;
-    //   filtereff=1;
-    //   kFactor=1;
-    // }
+    //getting metdata from the Map (MapVariables.cxx) using the text file in format as MGPy8EG_A14N23LO_BB_onestepN2hN1.txt
+      //std::shared_ptr<MapVariables> m_mappedVars( new MapVariables ("MyAnalysis/data/MyAnalysis/MGPy8EG_A14N23LO_BB_onestepN2hN1.txt"));
+      //std::shared_ptr<MapVariables> m_mappedBkgVars( new MapVariables ("MyAnalysis/data/MyAnalysis/susy_crossSections_13TeV.txt"));
+    //does this mcID exist in signal map?
+      //bool checkMap = m_mappedVars->find(mcChannel);
+      //if (checkMap)
+      //{
+      //  xsec = m_mappedVars->getCrossSection(mcChannel);
+      //  filteff= m_mappedVars->getFilterEff(mcChannel);
+      //  kfactor= m_mappedVars->getKFactor(mcChannel);
+      //}
+      //else {//does mcID exist in Bkg map?
+     	//  checkMap = m_mappedBkgVars->find(mcChannel);
+    	//  if (checkMap)
+     	//  {
+    //      xsec = m_mappedBkgVars->getCrossSection(mcChannel);
+    // 	    filteff= m_mappedBkgVars->getFilterEff(mcChannel);
+    // 	    kfactor= m_mappedBkgVars->getKFactor(mcChannel);
+    // 	  }
+  //    }
+      mcWgt = eventInfo->mcEventWeight();
+      renormedMcWgt = mcWgt;
+      if (std::abs(renormedMcWgt) >= 100){
+     	  renormedMcWgt = 1;
+      }
+    }
 
     //lumiScaled gives scaling to 1ifb
 
@@ -1150,13 +1092,13 @@ StatusCode MyxAODAnalysis :: execute ()
 
     if ( m_fileType != "DAOD_TRUTH1"){
       if (m_regions->interestingRegion || RunningLocally){
-	(m_treeServiceVector[isyst])->fillTree(m_objs, *m_regions, *m_varCalc, *checkMC,m_finalSumOfWeights, m_initialSumOfWeights, puWgt, SFmctbbll, passedMETTrigger, passedMuTrigger, passedElTrigger, passedGammaTrigger, passedMultiJetTrigger, passedTriggers, PUSumOfWeights, truthfilt_MET, truthfilt_HT, coreFlag, sctFlag, LArTileFlag, passGRL, passedPrimVertex, passedJetClean, passedCosmicMu, passedMuonClean, m_runNumber, renormedMcWgt, year, m_averageIntPerX, m_actualIntPerX);
+	(m_treeServiceVector[isyst])->fillTree(m_objs, *m_regions, *m_varCalc, *checkMC,m_finalSumOfWeights, m_initialSumOfWeights, puWgt, SFmctbbll, passedMETTrigger, passedMuTrigger, passedElTrigger, passedGammaTrigger, passedMultiJetTrigger, passedTriggers, PUSumOfWeights, truthfilt_MET, truthfilt_HT, coreFlag, sctFlag, LArTileFlag, passGRL, passedPrimVertex, passedJetClean, passedCosmicMu, passedMuonClean, m_runNumber, renormedMcWgt, year, m_averageIntPerX, m_actualIntPerX, xsec, filteff, kfactor);
        }
     }
 
     // not running on reco. fill everything for TRUTH
     else{
-      (m_treeServiceVector[isyst])->fillTree(m_objs, *m_regions, *m_varCalc, *checkMC,m_finalSumOfWeights, m_initialSumOfWeights, puWgt, SFmctbbll, passedMETTrigger, passedMuTrigger, passedElTrigger, passedGammaTrigger, passedMultiJetTrigger, passedTriggers, PUSumOfWeights, truthfilt_MET, truthfilt_HT , coreFlag, sctFlag, LArTileFlag, passGRL, passedPrimVertex, passedJetClean, passedCosmicMu, passedMuonClean, m_runNumber, renormedMcWgt, year, m_averageIntPerX, m_actualIntPerX);
+      (m_treeServiceVector[isyst])->fillTree(m_objs, *m_regions, *m_varCalc, *checkMC,m_finalSumOfWeights, m_initialSumOfWeights, puWgt, SFmctbbll, passedMETTrigger, passedMuTrigger, passedElTrigger, passedGammaTrigger, passedMultiJetTrigger, passedTriggers, PUSumOfWeights, truthfilt_MET, truthfilt_HT , coreFlag, sctFlag, LArTileFlag, passGRL, passedPrimVertex, passedJetClean, passedCosmicMu, passedMuonClean, m_runNumber, renormedMcWgt, year, m_averageIntPerX, m_actualIntPerX, xsec, filteff, kfactor);
    }
 
     isyst++;
@@ -1173,9 +1115,7 @@ StatusCode MyxAODAnalysis :: execute ()
   return StatusCode::SUCCESS;
 }
 
-
-
-  StatusCode MyxAODAnalysis :: postExecute ()
+StatusCode MyxAODAnalysis :: postExecute ()
 {
   // Here you do everything that needs to be done after the main event
   // processing.  This is typically very rare, particularly in user
@@ -1186,9 +1126,7 @@ StatusCode MyxAODAnalysis :: execute ()
   return StatusCode::SUCCESS;
 }
 
-
-
- StatusCode MyxAODAnalysis :: finalize ()
+StatusCode MyxAODAnalysis :: finalize ()
  {
   // This method is the mirror image of initialize(), meaning it gets
   // called after the last event has been processed on the worker node
@@ -1416,23 +1354,3 @@ StatusCode MyxAODAnalysis :: execute ()
 
   return StatusCode::SUCCESS;
  }
-
-
-
-StatusCode MyxAODAnalysis :: histFinalize ()
-{
-  // This method is the mirror image of histInitialize(), meaning it
-  // gets called after the last event has been processed on the worker
-  // node and allows you to finish up any objects you created in
-  // histInitialize() before they are written to disk.  This is
-  // actually fairly rare, since this happens separately for each
-  // worker node.  Most of the time you want to do your
-  // post-processing on the submission node after all your histogram
-  // outputs have been merged.  This is different from finalize() in
-  // that it gets called on all worker nodes regardless of whether
-  // they processed input events.
-
-  std::cout << "histFinalize" << std::endl;
-
-  return StatusCode::SUCCESS;
-}

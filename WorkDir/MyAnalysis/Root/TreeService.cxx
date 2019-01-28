@@ -34,7 +34,7 @@ TreeService::TreeService(TTree *outputTree, TDirectory *OutDir){
   tree->Branch("LArTileFlag",&LArTileFlag);
   tree->Branch("passedPrimVertex", &passedPrimVertex);
   tree->Branch("passedGRL", &passedGRL);
-  
+
   //Object cleaning cuts
   tree->Branch("passedJetClean", &passedJetClean);
   tree->Branch("passedCosmicMu", &passedCosmicMu);
@@ -45,9 +45,9 @@ TreeService::TreeService(TTree *outputTree, TDirectory *OutDir){
   tree->Branch("passedMuTrigger", &passedMuTrigger);
   tree->Branch("passedElTrigger", &passedElTrigger);
   tree->Branch("passedGammaTrigger", &passedGammaTrigger);
-  
 
-  
+
+
   //Trigger matching
   tree->Branch("elTriggerMatch", &elTriggerMatch);
   tree->Branch("muTriggerMatch", &muTriggerMatch);
@@ -127,7 +127,7 @@ TreeService::TreeService(TTree *outputTree, TDirectory *OutDir){
 
   tree->Branch("m_finalWeightSum", &m_finalWeightSum);
   tree->Branch("m_intialWeightSum", &m_intialWeightSum);
-  
+
 
   tree->Branch("m_jj", &m_jj);
   tree->Branch("m_jjb1", &m_jjb1);
@@ -168,14 +168,14 @@ TreeService::TreeService(TTree *outputTree, TDirectory *OutDir){
   tree->Branch("minb1MV2weight", &minbMV2weight);
   tree->Branch("b1_ntrk", &b1_ntrk);
   tree->Branch("b2_ntrk", &b2_ntrk);
-  
+
   //tree->Write();
-  
+
   tree->Branch("delPhiMinb",&delPhiMinb);
   tree->Branch("all_HT",&all_HT);
   tree->Branch("all_METSig",&all_METSig);
   tree->Branch("all_Meff",&all_Meff);
-  tree->Branch("amT2",&amT2);        
+  tree->Branch("amT2",&amT2);
 
   tree->Branch("metsig_SumET", &metsig_SumET);
   tree->Branch("metsig_SumHT", &metsig_SumHT);
@@ -187,11 +187,16 @@ TreeService::TreeService(TTree *outputTree, TDirectory *OutDir){
   tree->Branch("dRL1b1", &dRL1b1);
   tree->Branch("dRL1b2", &dRL1b2);
 
+  //Xsec info
+  tree->Branch("xsec", &xsec);
+  tree->Branch("filteff", &filteff);
+  tree->Branch("kfactor", &kfactor);
+
 
 }
 
 
-void TreeService::fillTree(IObjectDef *objects ,PreliminarySel &region, CalculateVariables &variables, MCChecks MCTruthInfo, double mFinalWeight, double mInitialWeight, double puWeight, double SFmCTbbll, bool TrigMET, bool TrigMu, bool TrigEl, bool TrigGamma, bool Trig6j, std::vector<int> triggers, double puSumWeights, double TRUTHMET, double TRUTHHT, bool CoreFlags, bool SCTFlag,bool LArTileFlags, bool passGRL, bool passedPrimVertexes, bool passedJetCleans, bool passedCosmicMus, bool passedMuonCleans, double RNo,  double RenormedMCWgt, int LumiYear, double m_averageIntPerCrossing, double m_actualIntPerCrossing){
+void TreeService::fillTree(IObjectDef *objects ,PreliminarySel &region, CalculateVariables &variables, MCChecks MCTruthInfo, double mFinalWeight, double mInitialWeight, double puWeight, double SFmCTbbll, bool TrigMET, bool TrigMu, bool TrigEl, bool TrigGamma, bool Trig6j, std::vector<int> triggers, double puSumWeights, double TRUTHMET, double TRUTHHT, bool CoreFlags, bool SCTFlag,bool LArTileFlags, bool passGRL, bool passedPrimVertexes, bool passedJetCleans, bool passedCosmicMus, bool passedMuonCleans, double RNo,  double RenormedMCWgt, int LumiYear, double m_averageIntPerCrossing, double m_actualIntPerCrossing, double m_xsec, double m_filteff, double m_kfactor){
 
   //  std::cout << "Filling the Tree" << std::endl;
   CutsRegion = region.region;
@@ -205,21 +210,25 @@ void TreeService::fillTree(IObjectDef *objects ,PreliminarySel &region, Calculat
   passedMuonClean=passedMuonCleans;
   triggerDecisions = triggers;
   passedGRL = passGRL;
-  
+
   m_finalWeightSum = mFinalWeight;
   m_intialWeightSum = mInitialWeight;
+
+  xsec = m_xsec;
+  filteff = m_filteff;
+  kfactor = m_kfactor;
 
   leadingbs = variables.leadingBs;
   primaryb = variables.primaryB;
   secondaryb = variables.secondB;
-  
-  
+
+
   mcID = objects->mcID;
   RunNumber = RNo;
   eventNumber = objects->eventNumber;
   mcEventWeight = objects->mcEventWeight;
   RenormedMcEventWeight = RenormedMCWgt;
-  year = LumiYear; 
+  year = LumiYear;
   weightsVector = MCTruthInfo.variationweights;
 
   m_averageIntPerX=m_averageIntPerCrossing;
@@ -304,12 +313,12 @@ void TreeService::fillTree(IObjectDef *objects ,PreliminarySel &region, Calculat
   MUR2_MUF1_PDF261000 = MCTruthInfo.MUR2_MUF1_PDF261000;
   MUR2_MUF2_PDF261000 = MCTruthInfo.MUR2_MUF2_PDF261000;
   MUR1_MUF1_PDF261001 = MCTruthInfo.MUR1_MUF1_PDF261001;
-  MUR1_MUF1_PDF261002 = MCTruthInfo.MUR1_MUF1_PDF261002;        
+  MUR1_MUF1_PDF261002 = MCTruthInfo.MUR1_MUF1_PDF261002;
 
 
 
 
-  
+
   pTj1 = variables.pTj1;
   pTj2 = variables.pTj2;
   pTj3 = variables.pTj3;
@@ -328,7 +337,7 @@ void TreeService::fillTree(IObjectDef *objects ,PreliminarySel &region, Calculat
   njet50 = variables.njet50;
 
 
-  Reco_pTZ = variables.pTZ;       
+  Reco_pTZ = variables.pTZ;
   Reco_etaZ = variables.etaZ;
   Reco_phiZ = variables.phiZ;
   DR_Zb1 = variables.DR_Zb1;
@@ -338,7 +347,7 @@ void TreeService::fillTree(IObjectDef *objects ,PreliminarySel &region, Calculat
   DPhi_Zb2 = variables.DPhi_Zb2;
   DEta_Zb1 = variables.DEta_Zb1;
   DEta_Zb2 = variables.DEta_Zb2;
-  
+
 
 
 
@@ -354,17 +363,17 @@ void TreeService::fillTree(IObjectDef *objects ,PreliminarySel &region, Calculat
   etaj2 = variables.etaj2;
   etaj3 = variables.etaj3;
   etaj4 = variables.etaj4;
-  
+
   phij1 = variables.phij1;
   phij2 = variables.phij2;
   phij3 = variables.phij3;
   phij4 = variables.phij4;
-  
-  pTl1 = variables.pTl1; 
+
+  pTl1 = variables.pTl1;
   pTl2 = variables.pTl2;
   etal1 = variables.etal1;
   etal2 = variables.etal2;
-  phil1 = variables.phil1; 
+  phil1 = variables.phil1;
   phil2 = variables.phil2;
   m_taulep = variables.m_taulep;
 
@@ -380,9 +389,9 @@ void TreeService::fillTree(IObjectDef *objects ,PreliminarySel &region, Calculat
   phitj1 = variables.phitj1;
   phitj2 = variables.phitj2;
 
-  pTgamma = variables.pTgamma; 
+  pTgamma = variables.pTgamma;
   etagamma = variables.etagamma;
-  phigamma = variables.phigamma; 
+  phigamma = variables.phigamma;
 
 
   nJets = variables.nJets;
@@ -395,7 +404,7 @@ void TreeService::fillTree(IObjectDef *objects ,PreliminarySel &region, Calculat
   nBaselineMuons = variables.nBaselineMuon;
 
   nPhoton = variables.nPhoton;
-  
+
   nMuons = variables.nMuon;
   nBadMuons = objects->getBadMuons()->size();
   nElectrons = variables.nElectron;
@@ -404,7 +413,7 @@ void TreeService::fillTree(IObjectDef *objects ,PreliminarySel &region, Calculat
   adjustedETMiss = variables.adjustedETMiss;
   ETMissPhi = variables.eTMissPhi;
   adjustedETMissPhi = variables.adjustedETMissPhi;
-  
+
   // fill these from the variables class
   m_bb = variables.m_bb;
   m_tautau = variables.m_tautau;
@@ -424,7 +433,7 @@ void TreeService::fillTree(IObjectDef *objects ,PreliminarySel &region, Calculat
   ratioMETmEff2j = variables.ratioMETmEff2j;
   ratioMETmEff3j = variables.ratioMETmEff3j;
 
-  pTb1 = variables.pTb1; 
+  pTb1 = variables.pTb1;
   pTb2 = variables.pTb2;
   pTb3 = variables.pTb3;
   pTb4 = variables.pTb4;
@@ -432,19 +441,19 @@ void TreeService::fillTree(IObjectDef *objects ,PreliminarySel &region, Calculat
   etab2 = variables.etab2;
   etab3 = variables.etab3;
   etab4 = variables.etab4;
-  phib1 = variables.phib1; 
+  phib1 = variables.phib1;
   phib2 = variables.phib2;
   phib3 = variables.phib3;
   phib4 = variables.phib4;
 
- 
+
   dPhij1MET = variables.delPhi1;
   dPhij2MET = variables.delPhi2;
   dPhij3MET = variables.delPhi3;
   dPhij4MET = variables.delPhi4;
   dPhiL1MET = variables.dPhiL1MET;
   dPhiL2MET = variables.dPhiL2MET;
-  
+
   dPhib1b2 = variables.dPhib1b2;
   dPhiL1L2 = variables.dPhiL1L2;
 
@@ -452,25 +461,25 @@ void TreeService::fillTree(IObjectDef *objects ,PreliminarySel &region, Calculat
   dPhiL1b2 = variables.dPhiL1b2;
   dPhiL2b1 = variables.dPhiL2b1;
   dPhiL2b2 = variables.dPhiL2b2;
-  
+
   minDPhijMET = variables.minDelPhi;
   minDPhijMET_4 = variables.minDelPhi_4;
   minAdjDPhijMET = variables.adjMinDelPhi;
   minDPhiLb = variables.minDPhiLb;
-  
+
   dEtab1b2 = variables.dEtab1b2;
   dEtaL1L2 = variables.dEtaL1L2;
-  
+
   dEtaL1bSystem = variables.dEtaL1bSystem;
   dEtaL1b1 = variables.dEtaL1b1;
   dEtaL1b2 = variables.dEtaL1b2;
-  
+
   dEtaL2bSystem = variables.dEtaL2bSystem;
   dEtaL2b1 = variables.dEtaL2b1;
   dEtaL2b2 = variables.dEtaL2b2;
 
   minDEtaLb= variables.minDEtaLb;
-    
+
 
 
   dRtj1tj2 = variables.dRtj1tj2;
@@ -483,7 +492,7 @@ void TreeService::fillTree(IObjectDef *objects ,PreliminarySel &region, Calculat
   minDRLb = variables.minDRLb;
 
   RatioDRbbHt = variables.ratioDRbbHt;
-  
+
   m_jj = variables.m_jj;
   m_jjb1 = variables.m_jjb1;
   m_jjb2 = variables.m_jjb2;
@@ -499,7 +508,7 @@ void TreeService::fillTree(IObjectDef *objects ,PreliminarySel &region, Calculat
   maxm_bl = variables.maxm_bl;
 
 
-  QCDDelta = variables.RJVars_QCD_Delta; 
+  QCDDelta = variables.RJVars_QCD_Delta;
   invGammaRp1 = variables.RJVarsSS_invGamma;
   sHatR = variables.RJVarsSS_s_hat;
   MDelR = variables.RJVarsSS_MDelR;
@@ -507,12 +516,12 @@ void TreeService::fillTree(IObjectDef *objects ,PreliminarySel &region, Calculat
 
   //Vetos for cutflow
   Stop0L_tauVeto = variables.Stop0L_tauVeto;
-  
+
   Aplanarity = variables.Aplanarity;
   TransformedAplanarity = variables.transformedAplan;
   Sphericity = variables.Sphericity;
 
-  
+
   // Scale Factors:
 
   muonSF = objects->getMuonSF();
@@ -548,7 +557,7 @@ void TreeService::fillTree(IObjectDef *objects ,PreliminarySel &region, Calculat
 
 
   jet_imbalance = variables.jet_imbalance; //
-  minDRjj = variables.minDRjj; 
+  minDRjj = variables.minDRjj;
   dEtajj_max = variables.dEtajj_max;
 
   delPhiMinb = variables.delPhiMinb;
@@ -557,8 +566,8 @@ void TreeService::fillTree(IObjectDef *objects ,PreliminarySel &region, Calculat
   all_Meff = variables.all_Meff;
   nextrajets50 = variables.nextrajets50;
   amT2 = variables.amT2;
-  
-  //MaxMin 
+
+  //MaxMin
   maxDR = variables.maxDR;
   InvMass_Bij_maxDR = variables.InvMass_Bij_maxDR;
   Imbalance_maxDR = variables.Imbalance_maxDR;
@@ -568,8 +577,8 @@ void TreeService::fillTree(IObjectDef *objects ,PreliminarySel &region, Calculat
   JetAsymmR_min = variables.JetAsymmR_min;
   InvMass_Bij_minR = variables.InvMass_Bij_minR;
   JetAsymmR_min1 = variables.JetAsymmR_min1;
-  InvMass_Bij_minR1 = variables.InvMass_Bij_minR1; 
-  
+  InvMass_Bij_minR1 = variables.InvMass_Bij_minR1;
+
   //SRB algs
   SRB_minDR2 = variables.SRB_minDR2;
   SRB_minDR = variables.SRB_minDR;
@@ -588,24 +597,24 @@ void TreeService::fillTree(IObjectDef *objects ,PreliminarySel &region, Calculat
   jet_bWgt.clear();
   jet_truflav.clear();
 
-  el_pT.clear();  
-  el_eta.clear(); 
-  el_phi.clear(); 
-  el_E.clear();   
+  el_pT.clear();
+  el_eta.clear();
+  el_phi.clear();
+  el_E.clear();
 
-  mu_pT.clear();  
-  mu_eta.clear(); 
-  mu_phi.clear(); 
-  mu_E.clear();   
+  mu_pT.clear();
+  mu_eta.clear();
+  mu_phi.clear();
+  mu_E.clear();
 
-  tau_pT.clear();  
-  tau_eta.clear(); 
-  tau_phi.clear(); 
-  tau_E.clear();   
-  tau_SmallestDR.clear();   
-  tau_associatedTrue.clear();  
+  tau_pT.clear();
+  tau_eta.clear();
+  tau_phi.clear();
+  tau_E.clear();
+  tau_SmallestDR.clear();
+  tau_associatedTrue.clear();
 
-    
+
 
   int maxJet = objects->getGoodJets()->size();
   for (int iJet = 0; iJet < maxJet; iJet++)
@@ -638,7 +647,7 @@ void TreeService::fillTree(IObjectDef *objects ,PreliminarySel &region, Calculat
       if(mcID > 0){(*(objects->getGoodJets()))[iJet]->btagging()->MVx_discriminant("MV2c10", MV2c10wgt);}
       jet_bWgt.push_back(MV2c10wgt);
     }
-  
+
 
 
   int maxEl = objects->getGoodElectrons()->size();
@@ -648,7 +657,7 @@ void TreeService::fillTree(IObjectDef *objects ,PreliminarySel &region, Calculat
     el_phi.push_back((*(objects->getGoodElectrons()))[iel]->phi());
     el_E.push_back(0.001*(*(objects->getGoodElectrons()))[iel]->e());
   }
-  
+
   int maxMu = objects->getGoodMuons()->size();
   for (int imu = 0; imu < maxMu; imu++){
     mu_pT.push_back(0.001*(*(objects->getGoodMuons()))[imu]->pt());
@@ -692,7 +701,7 @@ void TreeService::fillTree(IObjectDef *objects ,PreliminarySel &region, Calculat
 
 
   }
-  
+
 
 
   metsig_SumET = ((objects->getMETSignificance()))[0];
@@ -703,7 +712,7 @@ void TreeService::fillTree(IObjectDef *objects ,PreliminarySel &region, Calculat
   multiJetTriggerPassed = Trig6j;
 
   tree->Fill();
-  
+
 
 }
 
