@@ -16,6 +16,7 @@ class submit:
         parser.add_argument( '-i', '--input_file', dest='input_file', action = 'store', help = 'Input file/directory for EventLoop', default='/hepstore/hteagle/Wh/recoSamples/mc16_13TeV.410470.PhPy8EG_A14_ttbar_hdamp258p75_nonallhad.deriv.DAOD_SUSY5.e6337_s3126_r10724_p3652/')
         parser.add_argument( '-s', '--submission-dir', dest = 'submission_dir', action = 'store', help = 'Submission directory for EventLoop',default='submitdir' )
         parser.add_argument( '-g', '--grid', dest = 'grid_running', type = bool, default = False)
+        parser.add_argument( '-l', '--list', dest = 'submit_together', type = bool, default = False)
         args = parser.parse_args()
 
         # Make input file name accessible
@@ -39,7 +40,7 @@ class submit:
 
             job = ROOT.EL.Job()
             job.sampleHandler( sh )
-            #job.options().setDouble( ROOT.EL.Job.optMaxEvents, 500 )
+            job.options().setDouble( ROOT.EL.Job.optMaxEvents, 500 )
             print('Running on grid? ' + str(args.grid_running))
 
             # Configure algorithm
@@ -70,8 +71,15 @@ class submit:
 
             sh = ROOT.SH.SampleHandler()
             sh.setMetaString('nc_tree','CollectionTree')
-            ROOT.SH.scanRucio(sh, args.input_file)
-            sh.printContent()
+
+            if args.submit_together == False:
+                ROOT.SH.scanRucio(sh, args.input_file)
+                sh.printContent()
+            else:
+                samplegrid = ROOT.SH.SampleGrid("AllTogether")
+                samplegrid.meta().setString(ROOT.SH.MetaFields.gridName, args.input_file)
+                samplegrid.meta().setString(ROOT.SH.MetaFields.gridFilter, ROOT.SH.MetaFields.gridFilter_default)
+                sh.add(samplegrid)
 
             # Create EventLoop job
 
@@ -104,6 +112,8 @@ class submit:
             driver = ROOT.EL.PrunDriver()
             driver.options().setString("nc_outputSampleName", str(self.get_name())+'v1.%in:name[2]%.%in:name[3]%')
             driver.options().setString( ROOT.EL.Job.optGridNFilesPerJob, "5")
+            if args.submit_together == True:
+                job.options().setString( ROOT.EL.Job.optSubmitFlags, "--addNthFieldOfInDSToLFN=2,3,6 --useContElementBoundary")
             driver.submitOnly( job, args.submission_dir )
 
             print("Job submitted")

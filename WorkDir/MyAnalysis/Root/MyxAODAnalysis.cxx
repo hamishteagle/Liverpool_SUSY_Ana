@@ -484,6 +484,15 @@ StatusCode MyxAODAnalysis :: initialize ()
     m_treeServiceVector[m]->writeTree();
   }
 
+  // PMG xsec tools
+
+  //Instantiation (if not using some ToolHandle )
+  std::cout<<"Initializing Cross Section Tool"<<std::endl;
+  ASG_SET_ANA_TOOL_TYPE( m_PMGCrossSectionTool, PMGTools::PMGCrossSectionTool);
+  m_PMGCrossSectionTool.setName("myCrossSectionTool");
+  m_PMGCrossSectionTool.retrieve();
+  m_PMGCrossSectionTool->readInfosFromDir("/cvmfs/atlas.cern.ch/repo/sw/database/GroupData/dev/PMGTools/");
+
 
   std::cout << "Finished initialisation" << std::endl;
 
@@ -642,6 +651,15 @@ StatusCode MyxAODAnalysis :: execute ()
     // 	    kfactor= m_mappedBkgVars->getKFactor(mcChannel);
     // 	  }
   //    }
+
+      try {
+        xsec = m_PMGCrossSectionTool->getAMIXsection(mcChannel);
+        filteff = m_PMGCrossSectionTool->getFilterEff(mcChannel);
+        kfactor = m_PMGCrossSectionTool->getKfactor(mcChannel);
+      } catch (...) {
+        if (counter == 1) std::cout << "PMGCrossSectionTool exception caught" << std::endl;
+      }
+
       mcWgt = eventInfo->mcEventWeight();
       renormedMcWgt = mcWgt;
       if (std::abs(renormedMcWgt) >= 100){

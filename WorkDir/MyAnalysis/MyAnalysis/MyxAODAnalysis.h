@@ -27,6 +27,11 @@
 // Added for new METSig
 #include "METUtilities/METSignificance.h"
 
+//PMG xsec tool
+#include "AsgTools/AnaToolHandle.h"
+#include "PMGAnalysisInterfaces/IPMGCrossSectionTool.h"
+#include "PMGTools/PMGCrossSectionTool.h"
+
 // GRL inclusion
 class GoodRunsListSelectionTool;
 //class JetCleaningTool;
@@ -208,6 +213,7 @@ public:
    int doPhotons;
    int RunningLocally;
    std::string inputFile;
+   asg::AnaToolHandle<PMGTools::IPMGCrossSectionTool> m_PMGCrossSectionTool;
 
   // put functions here?
  public:
