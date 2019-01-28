@@ -59,6 +59,7 @@ MyxAODAnalysis :: MyxAODAnalysis (const std::string& name,
   declareProperty( "doSyst", doSyst = 1, "Do systematics?");
   declareProperty( "doPhotons", doPhotons = 1, "Do photons?");
   declareProperty( "RunningLocally", RunningLocally = 1, "Running locally?");
+  declareProperty( "inputFile", inputFile = "", "Input file name?");
 
 }
 
@@ -465,14 +466,15 @@ StatusCode MyxAODAnalysis :: initialize ()
   ANA_CHECK(m_metSignif.setProperty("TreatPUJets",   true));
   ANA_CHECK(m_metSignif.setProperty("IsDataJet",   false));
   ANA_CHECK(m_metSignif.setProperty("IsDataMuon", false));
-  ANA_CHECK(m_metSignif.setProperty("IsAFII",  false));
 
   /*  if(datasource==ST::ISUSYObjDef_xAODTool::Data){
       m_metSignif.setProperty("IsData",true);
-      }
-      else if (datasource==ST::ISUSYObjDef_xAODTool::AtlfastII){
-      m_metSignif.setProperty("IsAFII",true);
-      }*/
+    } */
+  if (isAtlfast==1){
+      ANA_CHECK(m_metSignif.setProperty("IsAFII",true));
+  } else {
+      ANA_CHECK(m_metSignif.setProperty("IsAFII",  false));
+  }
 
   ANA_CHECK(m_metSignif.retrieve());
   m_metSignif->initialize();
@@ -728,7 +730,7 @@ StatusCode MyxAODAnalysis :: execute ()
     if (isMC) passGRL = true;
 
     // get the truth MET info for OR removals between ttbar/single top samples
-    if (mcChannel == 410000 || mcChannel == 410013 || mcChannel == 410014 || mcChannel == 407012 || mcChannel == 407322 || mcChannel == 407009 || mcChannel == 407010 || mcChannel == 407011 || mcChannel == 407018 || mcChannel == 407019 || mcChannel == 407120 || mcChannel == 407021){
+    if (mcChannel == 410470 || (mcChannel >= 407342 && mcChannel <= 407347) || mcChannel == 410646 || mcChannel == 410647){
     truthfilt_MET = 0.001*eventInfo->auxdata< float >("GenFiltMET");
     truthfilt_HT = 0.001*eventInfo->auxdata< float>("GenFiltHT");
     HTruthMETFilt->Fill(truthfilt_MET);
@@ -1101,6 +1103,7 @@ StatusCode MyxAODAnalysis :: execute ()
       (m_treeServiceVector[isyst])->fillTree(m_objs, *m_regions, *m_varCalc, *checkMC,m_finalSumOfWeights, m_initialSumOfWeights, puWgt, SFmctbbll, passedMETTrigger, passedMuTrigger, passedElTrigger, passedGammaTrigger, passedMultiJetTrigger, passedTriggers, PUSumOfWeights, truthfilt_MET, truthfilt_HT , coreFlag, sctFlag, LArTileFlag, passGRL, passedPrimVertex, passedJetClean, passedCosmicMu, passedMuonClean, m_runNumber, renormedMcWgt, year, m_averageIntPerX, m_actualIntPerX, xsec, filteff, kfactor);
    }
 
+    delete m_objs;
     isyst++;
 
   }

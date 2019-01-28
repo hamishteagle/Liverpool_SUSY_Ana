@@ -172,7 +172,6 @@ public:
 
 
   std::string outputName;
-  std::string inputFile;
 
   //TTree *tree;
   unsigned long long EventNumber;
@@ -208,6 +207,7 @@ public:
    int doSyst;
    int doPhotons;
    int RunningLocally;
+   std::string inputFile;
 
   // put functions here?
  public:

@@ -52,6 +52,7 @@ class submit:
             alg.doSyst = 0
             alg.doPhotons = 0
             alg.RunningLocally = 1
+            alg.inputFile = args.input_file
 
             # Add algorithm to job
 
@@ -76,7 +77,7 @@ class submit:
 
             job = ROOT.EL.Job()
             job.sampleHandler( sh )
-            #job.options().setDouble( ROOT.EL.Job.optMaxEvents, 500 )
+            job.options().setDouble( ROOT.EL.Job.optMaxEvents, 500 )
             print('Running on grid? ' + str(args.grid_running))
 
             # Configure algorithm
@@ -89,6 +90,7 @@ class submit:
             alg.doSyst = 0
             alg.doPhotons = 0
             alg.RunningLocally = 0
+            alg.inputFile = args.input_file
 
             # Add algorithm to job
 
