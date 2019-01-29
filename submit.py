@@ -111,7 +111,7 @@ class submit:
             job.options().setDouble( ROOT.EL.Job.optRemoveSubmitDir, 1 )
             driver = ROOT.EL.PrunDriver()
             driver.options().setString("nc_outputSampleName", str(self.get_name())+'v1.%in:name[2]%.%in:name[3]%')
-            driver.options().setString( ROOT.EL.Job.optGridNFilesPerJob, "5")
+            #driver.options().setString( ROOT.EL.Job.optGridNFilesPerJob, "5")
             if args.submit_together == True:
                 job.options().setString( ROOT.EL.Job.optSubmitFlags, "--addNthFieldOfInDSToLFN=2,3,6 --useContElementBoundary")
             driver.submitOnly( job, args.submission_dir )
