@@ -1088,23 +1088,22 @@ StatusCode MyxAODAnalysis :: execute ()
       h_eventsPerRun->Fill(runNumber,1);
     }
   }
+
+
   ////Continue trimming
   //Doesn't pass the cleaning cuts
   if (! passedCleaningCuts) continue;
+
   int passOneTrigger=0;
   //Doesn't pass any of the triggers
   for (unsigned int i=0; i<passedTriggers.size();i++){
-    //std::cout<<"Trigger ;"<<i<<" bool;"<<passedTriggers[i]<<std::endl;
     if (passedTriggers[i]>0){
-
       passOneTrigger++;
     }
   }
   if (passOneTrigger==0){
-    //std::cout<<"Didn't pass any triggers"<<std::endl;
     continue;
   }
-  //std::cout<<"Passed at least one trigger"<<std::endl;
 
     if (isyst == 0){
       std::unique_ptr<Cutflows> m_cutflows (new Cutflows (*m_varCalc, *m_regions, SRAHists, SRBHists, SRCHists, btagWgt, lepWgt, trigWgt, puWgt, mcWgt, EventNumber, passedMETTrigger, passedLepTrigger, passedGammaTrigger, truthfilt_MET));
@@ -1113,7 +1112,7 @@ StatusCode MyxAODAnalysis :: execute ()
     if ( m_fileType != "DAOD_TRUTH1"){
       if (m_regions->interestingRegion || RunningLocally){
 	(m_treeServiceVector[isyst])->fillTree(m_objs, *m_regions, *m_varCalc, *checkMC,m_finalSumOfWeights, m_initialSumOfWeights, puWgt, SFmctbbll, passedMETTrigger, passedMuTrigger, passedElTrigger, passedGammaTrigger, passedMultiJetTrigger, passedTriggers, PUSumOfWeights, truthfilt_MET, truthfilt_HT, coreFlag, sctFlag, LArTileFlag, passGRL, passedPrimVertex, passedJetClean, passedCosmicMu, passedMuonClean, m_runNumber, renormedMcWgt, year, m_averageIntPerX, m_actualIntPerX, xsec, filteff, kfactor);
-       }
+      }
     }
 
     // not running on reco. fill everything for TRUTH

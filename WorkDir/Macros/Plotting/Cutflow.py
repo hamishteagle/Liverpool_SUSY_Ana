@@ -14,6 +14,7 @@ def ensure_dir(d):
 
 def Cutflow(label, cutstouse, signalFile,luminosity):
     
+    print (str(cutstouse))
     for i in range(2):
         scaling="1*"
         if i ==1:
@@ -23,23 +24,17 @@ def Cutflow(label, cutstouse, signalFile,luminosity):
         for section in cutsinit:
             section=section.strip()#removig white space from either end
             section=section.strip('()')#removing parenthesis from each end
-            cutsinit2=section.split("&&")
-            for section2 in cutsinit2:
-                cuts.append(section2)
+            #cutsinit2=section.split("&&")
+            #for section2 in cutsinit2:
+            cuts.append(section)
         
         print( "File; "+str(signalFile))
         print( "cuts recovered=", cuts)
     
     
         signal=ROOT.TFile(signalFile)
-        Livbool=label.find("_Liv")
-        
-        if Livbool>0:
-            print( "This is a liverpool selection")
-            signalTree=signal.Get("CollectionTree_")
-        elif Livbool==-1:
-            signalTree=signal.Get("NominalFixed")
-            
+        signalTree=signal.Get("CollectionTree_")
+                    
         signalHist=ROOT.TH1D("SignalHist","SignalHist",1,0.5,1.5)
 
         
@@ -50,12 +45,12 @@ def Cutflow(label, cutstouse, signalFile,luminosity):
         n=signalHist.IntegralAndError(0, 10000000000, e)
         
         print( "No Cuts", n, e)
-        cutsUsed="1"
-        cutsUsedScaled="1"
+        cutsUsed="(1)"
+        cutsUsedScaled="1*"
         for cut in cuts:
-            cutsUsed=cutsUsed+" && "+cut
+            cutsUsed=cutsUsed+"*("+cut+")"
+            #print( "cutsUsed=", cutsUsed)
             cutsUsedScaled=scaling+"("+cutsUsed+")"
-            #print( "cutsUsedScaled=", cutsUsedScaled)
             signalTree.Draw("1>>SignalHist",cutsUsedScaled)
         
             e1=ROOT.Double()
