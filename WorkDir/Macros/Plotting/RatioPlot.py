@@ -317,6 +317,7 @@ def RatioPlot(variable, xaxislabel, xmin, xmax, rebin, ymax, selection, director
 
     print( "length of signalFiles: "+str(len(signalFiles)))
     for i in range (0,len(signalFiles)):
+        print("Drawing signalPlot"+str(i))
         signalTree = signalFiles["signalFile_"+str(i)].Get("CollectionTree_")
         signalPlots["signalPlot_"+str(i)] = ROOT.TH1D("signalPlot_"+str(i),"Title",numberofbins,xmin,xmax )
         print( "signalPlot_"+str(i)+"=ROOT.TH1D(signalPlot_"+str(i))
@@ -577,12 +578,13 @@ def RatioPlot(variable, xaxislabel, xmin, xmax, rebin, ymax, selection, director
         Legend.AddEntry(DiJetPlot,"DiJet", "F")
     j=0
     for inputSignalFile in inputSignalFiles:
+        TruthBool = False
+        if (inputSignalFile.find("TRUTH") != -1):
+            TruthBool = True
+
         if (inputSignalFile.find("C1N2") != -1):
             print ('inputSignalFile has type:'+str(type(inputSignalFile)))
             print ('inputSignalFile is:'+str(inputSignalFile))
-            TruthBool = False
-            if (inputSignalFile.find("TRUTH") != -1):
-                TruthBool = True
             inputSignalFile=inputSignalFile.split("C1N2_Wh_hbb_")
             signalmass = (inputSignalFile[1].split("_")[0])+","+(inputSignalFile[1].split("_")[1])
             if TruthBool:
@@ -590,7 +592,11 @@ def RatioPlot(variable, xaxislabel, xmin, xmax, rebin, ymax, selection, director
             Legend.AddEntry(signalPlots["signalPlot_"+str(j)],"(m_{#tilde{#chi}_{2}^{0}}/m_{#tilde{#chi}_{1}^{#pm}}, m_{#tilde{#chi}_{1}^{0}}) = ("+signalmass+")GeV", "L")
 
         else:
-            Legend.AddEntry(signalPlots["signalPlot_"+str(j)],"(m_{#tilde{b}}, m_{#tilde{#chi}}_{1}^{0}) = (800,1)GeV", "L")
+            #Legend.AddEntry(signalPlots["signalPlot_"+str(j)],"(m_{#tilde{b}}, m_{#tilde{#chi}}_{1}^{0}) = (800,1)GeV", "L")
+            if TruthBool:
+                Legend.AddEntry(signalPlots["signalPlot_"+str(j)],"singleTop_Truth", "L")
+            else:
+                Legend.AddEntry(signalPlots["signalPlot_"+str(j)],"singleTop", "L")
         j+=1
     Legend.SetTextSize(0.02)
     #Legend.SetTextFont(2)
@@ -641,6 +647,7 @@ def RatioPlot(variable, xaxislabel, xmin, xmax, rebin, ymax, selection, director
             if sigOnly:
                 if i==0 :
                     signalPlots[signalPlot].GetXaxis().SetTitle(xaxislabel)
+                    signalPlots[signalPlot].SetLabelSize(0.12,"X")
                     signalPlots[signalPlot].SetMaximum(signalPlots[signalPlot].GetMaximum()*10)
                     signalPlots[signalPlot].Draw("HIST;E")
                     print ("number of events: "+str(signalPlots[signalPlot].GetEntries()))

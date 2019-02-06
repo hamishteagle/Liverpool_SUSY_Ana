@@ -1,0 +1,975 @@
+Warning in <TInterpreter::ReadRootmapFile>: class  MyxAODAnalysis found in libMyAnalysisDict.so  is already in libMyAnalysisLib.so 
+[?1034hxAOD::Init                INFO    Environment initialised for data access
+SampleHandler with 1 files
+Sample:name=mc16_13TeV:mc16_13TeV.396688.MadGraphPythia8EvtGen_A14N23LO_C1N2_Wh_hbb_187p5_12p5_lep.deriv.DAOD_SUSY5.e6972_a875_r10724_p3736
+ nc_grid=mc16_13TeV:mc16_13TeV.396688.MadGraphPythia8EvtGen_A14N23LO_C1N2_Wh_hbb_187p5_12p5_lep.deriv.DAOD_SUSY5.e6972_a875_r10724_p3736
+ nc_grid_filter=*.root*
+
+Running on grid? True
+Submitting mc16_13TeV:mc16_13TeV.396688.MadGraphPythia8EvtGen_A14N23LO_C1N2_Wh_hbb_187p5_12p5_lep.deriv.DAOD_SUSY5.e6972_a875_r10724_p3736...
+Job submitted
+Warning in <TInterpreter::ReadRootmapFile>: class  MyxAODAnalysis found in libMyAnalysisDict.so  is already in libMyAnalysisLib.so 
+[?1034hxAOD::Init                INFO    Environment initialised for data access
+SampleHandler with 1 files
+Sample:name=mc16_13TeV:mc16_13TeV.396691.MadGraphPythia8EvtGen_A14N23LO_C1N2_Wh_hbb_200p0_0p0_lep.deriv.DAOD_SUSY5.e6972_a875_r10724_p3736
+ nc_grid=mc16_13TeV:mc16_13TeV.396691.MadGraphPythia8EvtGen_A14N23LO_C1N2_Wh_hbb_200p0_0p0_lep.deriv.DAOD_SUSY5.e6972_a875_r10724_p3736
+ nc_grid_filter=*.root*
+
+Running on grid? True
+Submitting mc16_13TeV:mc16_13TeV.396691.MadGraphPythia8EvtGen_A14N23LO_C1N2_Wh_hbb_200p0_0p0_lep.deriv.DAOD_SUSY5.e6972_a875_r10724_p3736...
+Job submitted
+Warning in <TInterpreter::ReadRootmapFile>: class  MyxAODAnalysis found in libMyAnalysisDict.so  is already in libMyAnalysisLib.so 
+[?1034hxAOD::Init                INFO    Environment initialised for data access
+SampleHandler with 1 files
+Sample:name=mc16_13TeV:mc16_13TeV.396718.MadGraphPythia8EvtGen_A14N23LO_C1N2_Wh_hbb_325p0_50p0_lep.deriv.DAOD_SUSY5.e6972_a875_r10724_p3736
+ nc_grid=mc16_13TeV:mc16_13TeV.396718.MadGraphPythia8EvtGen_A14N23LO_C1N2_Wh_hbb_325p0_50p0_lep.deriv.DAOD_SUSY5.e6972_a875_r10724_p3736
+ nc_grid_filter=*.root*
+
+Running on grid? True
+Submitting mc16_13TeV:mc16_13TeV.396718.MadGraphPythia8EvtGen_A14N23LO_C1N2_Wh_hbb_325p0_50p0_lep.deriv.DAOD_SUSY5.e6972_a875_r10724_p3736...
+Job submitted
+Warning in <TInterpreter::ReadRootmapFile>: class  MyxAODAnalysis found in libMyAnalysisDict.so  is already in libMyAnalysisLib.so 
+[?1034hxAOD::Init                INFO    Environment initialised for data access
+SampleHandler with 1 files
+Sample:name=mc16_13TeV:mc16_13TeV.396754.MadGraphPythia8EvtGen_A14N23LO_C1N2_Wh_hbb_550p0_100p0_lep.deriv.DAOD_SUSY5.e6972_s3126_r10724_p3736
+ nc_grid=mc16_13TeV:mc16_13TeV.396754.MadGraphPythia8EvtGen_A14N23LO_C1N2_Wh_hbb_550p0_100p0_lep.deriv.DAOD_SUSY5.e6972_s3126_r10724_p3736
+ nc_grid_filter=*.root*
+
+Running on grid? True
+Submitting mc16_13TeV:mc16_13TeV.396754.MadGraphPythia8EvtGen_A14N23LO_C1N2_Wh_hbb_550p0_100p0_lep.deriv.DAOD_SUSY5.e6972_s3126_r10724_p3736...
+Job submitted
+Warning in <TInterpreter::ReadRootmapFile>: class  MyxAODAnalysis found in libMyAnalysisDict.so  is already in libMyAnalysisLib.so 
+[?1034hxAOD::Init                INFO    Environment initialised for data access
+SampleHandler with 1 files
+Sample:name=mc16_13TeV:mc16_13TeV.396730.MadGraphPythia8EvtGen_A14N23LO_C1N2_Wh_hbb_400p0_50p0_lep.deriv.DAOD_SUSY5.e6972_a875_r10724_p3736
+ nc_grid=mc16_13TeV:mc16_13TeV.396730.MadGraphPythia8EvtGen_A14N23LO_C1N2_Wh_hbb_400p0_50p0_lep.deriv.DAOD_SUSY5.e6972_a875_r10724_p3736
+ nc_grid_filter=*.root*
+
+Running on grid? True
+Submitting mc16_13TeV:mc16_13TeV.396730.MadGraphPythia8EvtGen_A14N23LO_C1N2_Wh_hbb_400p0_50p0_lep.deriv.DAOD_SUSY5.e6972_a875_r10724_p3736...
+Job submitted
+Warning in <TInterpreter::ReadRootmapFile>: class  MyxAODAnalysis found in libMyAnalysisDict.so  is already in libMyAnalysisLib.so 
+[?1034hxAOD::Init                INFO    Environment initialised for data access
+SampleHandler with 1 files
+Sample:name=mc16_13TeV:mc16_13TeV.396748.MadGraphPythia8EvtGen_A14N23LO_C1N2_Wh_hbb_500p0_250p0_lep.deriv.DAOD_SUSY5.e6972_a875_r10724_p3736
+ nc_grid=mc16_13TeV:mc16_13TeV.396748.MadGraphPythia8EvtGen_A14N23LO_C1N2_Wh_hbb_500p0_250p0_lep.deriv.DAOD_SUSY5.e6972_a875_r10724_p3736
+ nc_grid_filter=*.root*
+
+Running on grid? True
+Submitting mc16_13TeV:mc16_13TeV.396748.MadGraphPythia8EvtGen_A14N23LO_C1N2_Wh_hbb_500p0_250p0_lep.deriv.DAOD_SUSY5.e6972_a875_r10724_p3736...
+Job submitted
+Warning in <TInterpreter::ReadRootmapFile>: class  MyxAODAnalysis found in libMyAnalysisDict.so  is already in libMyAnalysisLib.so 
+[?1034hxAOD::Init                INFO    Environment initialised for data access
+SampleHandler with 1 files
+Sample:name=mc16_13TeV:mc16_13TeV.396714.MadGraphPythia8EvtGen_A14N23LO_C1N2_Wh_hbb_300p0_75p0_lep.deriv.DAOD_SUSY5.e6972_a875_r10724_p3736
+ nc_grid=mc16_13TeV:mc16_13TeV.396714.MadGraphPythia8EvtGen_A14N23LO_C1N2_Wh_hbb_300p0_75p0_lep.deriv.DAOD_SUSY5.e6972_a875_r10724_p3736
+ nc_grid_filter=*.root*
+
+Running on grid? True
+Submitting mc16_13TeV:mc16_13TeV.396714.MadGraphPythia8EvtGen_A14N23LO_C1N2_Wh_hbb_300p0_75p0_lep.deriv.DAOD_SUSY5.e6972_a875_r10724_p3736...
+Job submitted
+Warning in <TInterpreter::ReadRootmapFile>: class  MyxAODAnalysis found in libMyAnalysisDict.so  is already in libMyAnalysisLib.so 
+[?1034hxAOD::Init                INFO    Environment initialised for data access
+SampleHandler with 1 files
+Sample:name=mc16_13TeV:mc16_13TeV.396775.MadGraphPythia8EvtGen_A14N23LO_C1N2_Wh_hbb_700p0_0p0_lep.deriv.DAOD_SUSY5.e6972_s3126_r10724_p3736
+ nc_grid=mc16_13TeV:mc16_13TeV.396775.MadGraphPythia8EvtGen_A14N23LO_C1N2_Wh_hbb_700p0_0p0_lep.deriv.DAOD_SUSY5.e6972_s3126_r10724_p3736
+ nc_grid_filter=*.root*
+
+Running on grid? True
+Submitting mc16_13TeV:mc16_13TeV.396775.MadGraphPythia8EvtGen_A14N23LO_C1N2_Wh_hbb_700p0_0p0_lep.deriv.DAOD_SUSY5.e6972_s3126_r10724_p3736...
+Job submitted
+Warning in <TInterpreter::ReadRootmapFile>: class  MyxAODAnalysis found in libMyAnalysisDict.so  is already in libMyAnalysisLib.so 
+[?1034hxAOD::Init                INFO    Environment initialised for data access
+SampleHandler with 1 files
+Sample:name=mc16_13TeV:mc16_13TeV.396809.MadGraphPythia8EvtGen_A14N23LO_C1N2_Wh_hbb_1000p0_0p0_lep.deriv.DAOD_SUSY5.e6972_s3126_r10724_p3736
+ nc_grid=mc16_13TeV:mc16_13TeV.396809.MadGraphPythia8EvtGen_A14N23LO_C1N2_Wh_hbb_1000p0_0p0_lep.deriv.DAOD_SUSY5.e6972_s3126_r10724_p3736
+ nc_grid_filter=*.root*
+
+Running on grid? True
+Submitting mc16_13TeV:mc16_13TeV.396809.MadGraphPythia8EvtGen_A14N23LO_C1N2_Wh_hbb_1000p0_0p0_lep.deriv.DAOD_SUSY5.e6972_s3126_r10724_p3736...
+Job submitted
+Warning in <TInterpreter::ReadRootmapFile>: class  MyxAODAnalysis found in libMyAnalysisDict.so  is already in libMyAnalysisLib.so 
+[?1034hxAOD::Init                INFO    Environment initialised for data access
+SampleHandler with 1 files
+Sample:name=mc16_13TeV:mc16_13TeV.396791.MadGraphPythia8EvtGen_A14N23LO_C1N2_Wh_hbb_800p0_0p0_lep.deriv.DAOD_SUSY5.e6972_s3126_r10724_p3736
+ nc_grid=mc16_13TeV:mc16_13TeV.396791.MadGraphPythia8EvtGen_A14N23LO_C1N2_Wh_hbb_800p0_0p0_lep.deriv.DAOD_SUSY5.e6972_s3126_r10724_p3736
+ nc_grid_filter=*.root*
+
+Running on grid? True
+Submitting mc16_13TeV:mc16_13TeV.396791.MadGraphPythia8EvtGen_A14N23LO_C1N2_Wh_hbb_800p0_0p0_lep.deriv.DAOD_SUSY5.e6972_s3126_r10724_p3736...
+Job submitted
+Warning in <TInterpreter::ReadRootmapFile>: class  MyxAODAnalysis found in libMyAnalysisDict.so  is already in libMyAnalysisLib.so 
+[?1034hxAOD::Init                INFO    Environment initialised for data access
+SampleHandler with 1 files
+Sample:name=mc16_13TeV:mc16_13TeV.396736.MadGraphPythia8EvtGen_A14N23LO_C1N2_Wh_hbb_450p0_0p0_lep.deriv.DAOD_SUSY5.e6972_s3126_r10724_p3736
+ nc_grid=mc16_13TeV:mc16_13TeV.396736.MadGraphPythia8EvtGen_A14N23LO_C1N2_Wh_hbb_450p0_0p0_lep.deriv.DAOD_SUSY5.e6972_s3126_r10724_p3736
+ nc_grid_filter=*.root*
+
+Running on grid? True
+Submitting mc16_13TeV:mc16_13TeV.396736.MadGraphPythia8EvtGen_A14N23LO_C1N2_Wh_hbb_450p0_0p0_lep.deriv.DAOD_SUSY5.e6972_s3126_r10724_p3736...
+Job submitted
+Warning in <TInterpreter::ReadRootmapFile>: class  MyxAODAnalysis found in libMyAnalysisDict.so  is already in libMyAnalysisLib.so 
+[?1034hxAOD::Init                INFO    Environment initialised for data access
+SampleHandler with 1 files
+Sample:name=mc16_13TeV:mc16_13TeV.396786.MadGraphPythia8EvtGen_A14N23LO_C1N2_Wh_hbb_750p0_100p0_lep.deriv.DAOD_SUSY5.e6972_s3126_r10724_p3736
+ nc_grid=mc16_13TeV:mc16_13TeV.396786.MadGraphPythia8EvtGen_A14N23LO_C1N2_Wh_hbb_750p0_100p0_lep.deriv.DAOD_SUSY5.e6972_s3126_r10724_p3736
+ nc_grid_filter=*.root*
+
+Running on grid? True
+Submitting mc16_13TeV:mc16_13TeV.396786.MadGraphPythia8EvtGen_A14N23LO_C1N2_Wh_hbb_750p0_100p0_lep.deriv.DAOD_SUSY5.e6972_s3126_r10724_p3736...
+Job submitted
+Warning in <TInterpreter::ReadRootmapFile>: class  MyxAODAnalysis found in libMyAnalysisDict.so  is already in libMyAnalysisLib.so 
+[?1034hxAOD::Init                INFO    Environment initialised for data access
+SampleHandler with 1 files
+Sample:name=mc16_13TeV:mc16_13TeV.396734.MadGraphPythia8EvtGen_A14N23LO_C1N2_Wh_hbb_400p0_250p0_lep.deriv.DAOD_SUSY5.e6972_a875_r10724_p3736
+ nc_grid=mc16_13TeV:mc16_13TeV.396734.MadGraphPythia8EvtGen_A14N23LO_C1N2_Wh_hbb_400p0_250p0_lep.deriv.DAOD_SUSY5.e6972_a875_r10724_p3736
+ nc_grid_filter=*.root*
+
+Running on grid? True
+Submitting mc16_13TeV:mc16_13TeV.396734.MadGraphPythia8EvtGen_A14N23LO_C1N2_Wh_hbb_400p0_250p0_lep.deriv.DAOD_SUSY5.e6972_a875_r10724_p3736...
+Job submitted
+Warning in <TInterpreter::ReadRootmapFile>: class  MyxAODAnalysis found in libMyAnalysisDict.so  is already in libMyAnalysisLib.so 
+[?1034hxAOD::Init                INFO    Environment initialised for data access
+SampleHandler with 1 files
+Sample:name=mc16_13TeV:mc16_13TeV.396770.MadGraphPythia8EvtGen_A14N23LO_C1N2_Wh_hbb_650p0_100p0_lep.deriv.DAOD_SUSY5.e6972_s3126_r10724_p3736
+ nc_grid=mc16_13TeV:mc16_13TeV.396770.MadGraphPythia8EvtGen_A14N23LO_C1N2_Wh_hbb_650p0_100p0_lep.deriv.DAOD_SUSY5.e6972_s3126_r10724_p3736
+ nc_grid_filter=*.root*
+
+Running on grid? True
+Submitting mc16_13TeV:mc16_13TeV.396770.MadGraphPythia8EvtGen_A14N23LO_C1N2_Wh_hbb_650p0_100p0_lep.deriv.DAOD_SUSY5.e6972_s3126_r10724_p3736...
+Job submitted
+Warning in <TInterpreter::ReadRootmapFile>: class  MyxAODAnalysis found in libMyAnalysisDict.so  is already in libMyAnalysisLib.so 
+[?1034hxAOD::Init                INFO    Environment initialised for data access
+SampleHandler with 1 files
+Sample:name=mc16_13TeV:mc16_13TeV.396778.MadGraphPythia8EvtGen_A14N23LO_C1N2_Wh_hbb_700p0_150p0_lep.deriv.DAOD_SUSY5.e6972_s3126_r10724_p3736
+ nc_grid=mc16_13TeV:mc16_13TeV.396778.MadGraphPythia8EvtGen_A14N23LO_C1N2_Wh_hbb_700p0_150p0_lep.deriv.DAOD_SUSY5.e6972_s3126_r10724_p3736
+ nc_grid_filter=*.root*
+
+Running on grid? True
+Submitting mc16_13TeV:mc16_13TeV.396778.MadGraphPythia8EvtGen_A14N23LO_C1N2_Wh_hbb_700p0_150p0_lep.deriv.DAOD_SUSY5.e6972_s3126_r10724_p3736...
+Job submitted
+Warning in <TInterpreter::ReadRootmapFile>: class  MyxAODAnalysis found in libMyAnalysisDict.so  is already in libMyAnalysisLib.so 
+[?1034hxAOD::Init                INFO    Environment initialised for data access
+SampleHandler with 1 files
+Sample:name=mc16_13TeV:mc16_13TeV.396701.MadGraphPythia8EvtGen_A14N23LO_C1N2_Wh_hbb_237p5_62p5_lep.deriv.DAOD_SUSY5.e6972_a875_r10724_p3736
+ nc_grid=mc16_13TeV:mc16_13TeV.396701.MadGraphPythia8EvtGen_A14N23LO_C1N2_Wh_hbb_237p5_62p5_lep.deriv.DAOD_SUSY5.e6972_a875_r10724_p3736
+ nc_grid_filter=*.root*
+
+Running on grid? True
+Submitting mc16_13TeV:mc16_13TeV.396701.MadGraphPythia8EvtGen_A14N23LO_C1N2_Wh_hbb_237p5_62p5_lep.deriv.DAOD_SUSY5.e6972_a875_r10724_p3736...
+Job submitted
+Warning in <TInterpreter::ReadRootmapFile>: class  MyxAODAnalysis found in libMyAnalysisDict.so  is already in libMyAnalysisLib.so 
+[?1034hxAOD::Init                INFO    Environment initialised for data access
+SampleHandler with 1 files
+Sample:name=mc16_13TeV:mc16_13TeV.396703.MadGraphPythia8EvtGen_A14N23LO_C1N2_Wh_hbb_250p0_25p0_lep.deriv.DAOD_SUSY5.e6972_a875_r10724_p3736
+ nc_grid=mc16_13TeV:mc16_13TeV.396703.MadGraphPythia8EvtGen_A14N23LO_C1N2_Wh_hbb_250p0_25p0_lep.deriv.DAOD_SUSY5.e6972_a875_r10724_p3736
+ nc_grid_filter=*.root*
+
+Running on grid? True
+Submitting mc16_13TeV:mc16_13TeV.396703.MadGraphPythia8EvtGen_A14N23LO_C1N2_Wh_hbb_250p0_25p0_lep.deriv.DAOD_SUSY5.e6972_a875_r10724_p3736...
+Job submitted
+Warning in <TInterpreter::ReadRootmapFile>: class  MyxAODAnalysis found in libMyAnalysisDict.so  is already in libMyAnalysisLib.so 
+[?1034hxAOD::Init                INFO    Environment initialised for data access
+SampleHandler with 1 files
+Sample:name=mc16_13TeV:mc16_13TeV.396745.MadGraphPythia8EvtGen_A14N23LO_C1N2_Wh_hbb_500p0_100p0_lep.deriv.DAOD_SUSY5.e6972_s3126_r10724_p3736
+ nc_grid=mc16_13TeV:mc16_13TeV.396745.MadGraphPythia8EvtGen_A14N23LO_C1N2_Wh_hbb_500p0_100p0_lep.deriv.DAOD_SUSY5.e6972_s3126_r10724_p3736
+ nc_grid_filter=*.root*
+
+Running on grid? True
+Submitting mc16_13TeV:mc16_13TeV.396745.MadGraphPythia8EvtGen_A14N23LO_C1N2_Wh_hbb_500p0_100p0_lep.deriv.DAOD_SUSY5.e6972_s3126_r10724_p3736...
+Job submitted
+Warning in <TInterpreter::ReadRootmapFile>: class  MyxAODAnalysis found in libMyAnalysisDict.so  is already in libMyAnalysisLib.so 
+[?1034hxAOD::Init                INFO    Environment initialised for data access
+SampleHandler with 1 files
+Sample:name=mc16_13TeV:mc16_13TeV.396724.MadGraphPythia8EvtGen_A14N23LO_C1N2_Wh_hbb_350p0_150p0_lep.deriv.DAOD_SUSY5.e6972_a875_r10724_p3736
+ nc_grid=mc16_13TeV:mc16_13TeV.396724.MadGraphPythia8EvtGen_A14N23LO_C1N2_Wh_hbb_350p0_150p0_lep.deriv.DAOD_SUSY5.e6972_a875_r10724_p3736
+ nc_grid_filter=*.root*
+
+Running on grid? True
+Submitting mc16_13TeV:mc16_13TeV.396724.MadGraphPythia8EvtGen_A14N23LO_C1N2_Wh_hbb_350p0_150p0_lep.deriv.DAOD_SUSY5.e6972_a875_r10724_p3736...
+Job submitted
+Warning in <TInterpreter::ReadRootmapFile>: class  MyxAODAnalysis found in libMyAnalysisDict.so  is already in libMyAnalysisLib.so 
+[?1034hxAOD::Init                INFO    Environment initialised for data access
+SampleHandler with 1 files
+Sample:name=mc16_13TeV:mc16_13TeV.396765.MadGraphPythia8EvtGen_A14N23LO_C1N2_Wh_hbb_600p0_300p0_lep.deriv.DAOD_SUSY5.e6972_a875_r10724_p3736
+ nc_grid=mc16_13TeV:mc16_13TeV.396765.MadGraphPythia8EvtGen_A14N23LO_C1N2_Wh_hbb_600p0_300p0_lep.deriv.DAOD_SUSY5.e6972_a875_r10724_p3736
+ nc_grid_filter=*.root*
+
+Running on grid? True
+Submitting mc16_13TeV:mc16_13TeV.396765.MadGraphPythia8EvtGen_A14N23LO_C1N2_Wh_hbb_600p0_300p0_lep.deriv.DAOD_SUSY5.e6972_a875_r10724_p3736...
+Job submitted
+Warning in <TInterpreter::ReadRootmapFile>: class  MyxAODAnalysis found in libMyAnalysisDict.so  is already in libMyAnalysisLib.so 
+[?1034hxAOD::Init                INFO    Environment initialised for data access
+SampleHandler with 1 files
+Sample:name=mc16_13TeV:mc16_13TeV.396794.MadGraphPythia8EvtGen_A14N23LO_C1N2_Wh_hbb_800p0_150p0_lep.deriv.DAOD_SUSY5.e6972_s3126_r10724_p3736
+ nc_grid=mc16_13TeV:mc16_13TeV.396794.MadGraphPythia8EvtGen_A14N23LO_C1N2_Wh_hbb_800p0_150p0_lep.deriv.DAOD_SUSY5.e6972_s3126_r10724_p3736
+ nc_grid_filter=*.root*
+
+Running on grid? True
+Submitting mc16_13TeV:mc16_13TeV.396794.MadGraphPythia8EvtGen_A14N23LO_C1N2_Wh_hbb_800p0_150p0_lep.deriv.DAOD_SUSY5.e6972_s3126_r10724_p3736...
+Job submitted
+Warning in <TInterpreter::ReadRootmapFile>: class  MyxAODAnalysis found in libMyAnalysisDict.so  is already in libMyAnalysisLib.so 
+[?1034hxAOD::Init                INFO    Environment initialised for data access
+SampleHandler with 1 files
+Sample:name=mc16_13TeV:mc16_13TeV.396744.MadGraphPythia8EvtGen_A14N23LO_C1N2_Wh_hbb_500p0_50p0_lep.deriv.DAOD_SUSY5.e6972_s3126_r10724_p3736
+ nc_grid=mc16_13TeV:mc16_13TeV.396744.MadGraphPythia8EvtGen_A14N23LO_C1N2_Wh_hbb_500p0_50p0_lep.deriv.DAOD_SUSY5.e6972_s3126_r10724_p3736
+ nc_grid_filter=*.root*
+
+Running on grid? True
+Submitting mc16_13TeV:mc16_13TeV.396744.MadGraphPythia8EvtGen_A14N23LO_C1N2_Wh_hbb_500p0_50p0_lep.deriv.DAOD_SUSY5.e6972_s3126_r10724_p3736...
+Job submitted
+Warning in <TInterpreter::ReadRootmapFile>: class  MyxAODAnalysis found in libMyAnalysisDict.so  is already in libMyAnalysisLib.so 
+[?1034hxAOD::Init                INFO    Environment initialised for data access
+SampleHandler with 1 files
+Sample:name=mc16_13TeV:mc16_13TeV.396762.MadGraphPythia8EvtGen_A14N23LO_C1N2_Wh_hbb_600p0_150p0_lep.deriv.DAOD_SUSY5.e6972_s3126_r10724_p3736
+ nc_grid=mc16_13TeV:mc16_13TeV.396762.MadGraphPythia8EvtGen_A14N23LO_C1N2_Wh_hbb_600p0_150p0_lep.deriv.DAOD_SUSY5.e6972_s3126_r10724_p3736
+ nc_grid_filter=*.root*
+
+Running on grid? True
+Submitting mc16_13TeV:mc16_13TeV.396762.MadGraphPythia8EvtGen_A14N23LO_C1N2_Wh_hbb_600p0_150p0_lep.deriv.DAOD_SUSY5.e6972_s3126_r10724_p3736...
+Job submitted
+Warning in <TInterpreter::ReadRootmapFile>: class  MyxAODAnalysis found in libMyAnalysisDict.so  is already in libMyAnalysisLib.so 
+[?1034hxAOD::Init                INFO    Environment initialised for data access
+SampleHandler with 1 files
+Sample:name=mc16_13TeV:mc16_13TeV.396687.MadGraphPythia8EvtGen_A14N23LO_C1N2_Wh_hbb_177p5_47p5_lep.deriv.DAOD_SUSY5.e6972_a875_r10724_p3736
+ nc_grid=mc16_13TeV:mc16_13TeV.396687.MadGraphPythia8EvtGen_A14N23LO_C1N2_Wh_hbb_177p5_47p5_lep.deriv.DAOD_SUSY5.e6972_a875_r10724_p3736
+ nc_grid_filter=*.root*
+
+Running on grid? True
+Submitting mc16_13TeV:mc16_13TeV.396687.MadGraphPythia8EvtGen_A14N23LO_C1N2_Wh_hbb_177p5_47p5_lep.deriv.DAOD_SUSY5.e6972_a875_r10724_p3736...
+Job submitted
+Warning in <TInterpreter::ReadRootmapFile>: class  MyxAODAnalysis found in libMyAnalysisDict.so  is already in libMyAnalysisLib.so 
+[?1034hxAOD::Init                INFO    Environment initialised for data access
+SampleHandler with 1 files
+Sample:name=mc16_13TeV:mc16_13TeV.396758.MadGraphPythia8EvtGen_A14N23LO_C1N2_Wh_hbb_550p0_300p0_lep.deriv.DAOD_SUSY5.e6972_a875_r10724_p3736
+ nc_grid=mc16_13TeV:mc16_13TeV.396758.MadGraphPythia8EvtGen_A14N23LO_C1N2_Wh_hbb_550p0_300p0_lep.deriv.DAOD_SUSY5.e6972_a875_r10724_p3736
+ nc_grid_filter=*.root*
+
+Running on grid? True
+Submitting mc16_13TeV:mc16_13TeV.396758.MadGraphPythia8EvtGen_A14N23LO_C1N2_Wh_hbb_550p0_300p0_lep.deriv.DAOD_SUSY5.e6972_a875_r10724_p3736...
+Job submitted
+Warning in <TInterpreter::ReadRootmapFile>: class  MyxAODAnalysis found in libMyAnalysisDict.so  is already in libMyAnalysisLib.so 
+[?1034hxAOD::Init                INFO    Environment initialised for data access
+SampleHandler with 1 files
+Sample:name=mc16_13TeV:mc16_13TeV.396816.MadGraphPythia8EvtGen_A14N23LO_C1N2_Wh_hbb_1000p0_350p0_lep.deriv.DAOD_SUSY5.e6972_s3126_r10724_p3736
+ nc_grid=mc16_13TeV:mc16_13TeV.396816.MadGraphPythia8EvtGen_A14N23LO_C1N2_Wh_hbb_1000p0_350p0_lep.deriv.DAOD_SUSY5.e6972_s3126_r10724_p3736
+ nc_grid_filter=*.root*
+
+Running on grid? True
+Submitting mc16_13TeV:mc16_13TeV.396816.MadGraphPythia8EvtGen_A14N23LO_C1N2_Wh_hbb_1000p0_350p0_lep.deriv.DAOD_SUSY5.e6972_s3126_r10724_p3736...
+Job submitted
+Warning in <TInterpreter::ReadRootmapFile>: class  MyxAODAnalysis found in libMyAnalysisDict.so  is already in libMyAnalysisLib.so 
+[?1034hxAOD::Init                INFO    Environment initialised for data access
+SampleHandler with 1 files
+Sample:name=mc16_13TeV:mc16_13TeV.396705.MadGraphPythia8EvtGen_A14N23LO_C1N2_Wh_hbb_250p0_75p0_lep.deriv.DAOD_SUSY5.e6972_a875_r10724_p3736
+ nc_grid=mc16_13TeV:mc16_13TeV.396705.MadGraphPythia8EvtGen_A14N23LO_C1N2_Wh_hbb_250p0_75p0_lep.deriv.DAOD_SUSY5.e6972_a875_r10724_p3736
+ nc_grid_filter=*.root*
+
+Running on grid? True
+Submitting mc16_13TeV:mc16_13TeV.396705.MadGraphPythia8EvtGen_A14N23LO_C1N2_Wh_hbb_250p0_75p0_lep.deriv.DAOD_SUSY5.e6972_a875_r10724_p3736...
+Job submitted
+Warning in <TInterpreter::ReadRootmapFile>: class  MyxAODAnalysis found in libMyAnalysisDict.so  is already in libMyAnalysisLib.so 
+[?1034hxAOD::Init                INFO    Environment initialised for data access
+SampleHandler with 1 files
+Sample:name=mc16_13TeV:mc16_13TeV.396740.MadGraphPythia8EvtGen_A14N23LO_C1N2_Wh_hbb_450p0_200p0_lep.deriv.DAOD_SUSY5.e6972_a875_r10724_p3736
+ nc_grid=mc16_13TeV:mc16_13TeV.396740.MadGraphPythia8EvtGen_A14N23LO_C1N2_Wh_hbb_450p0_200p0_lep.deriv.DAOD_SUSY5.e6972_a875_r10724_p3736
+ nc_grid_filter=*.root*
+
+Running on grid? True
+Submitting mc16_13TeV:mc16_13TeV.396740.MadGraphPythia8EvtGen_A14N23LO_C1N2_Wh_hbb_450p0_200p0_lep.deriv.DAOD_SUSY5.e6972_a875_r10724_p3736...
+Job submitted
+Warning in <TInterpreter::ReadRootmapFile>: class  MyxAODAnalysis found in libMyAnalysisDict.so  is already in libMyAnalysisLib.so 
+[?1034hxAOD::Init                INFO    Environment initialised for data access
+SampleHandler with 1 files
+Sample:name=mc16_13TeV:mc16_13TeV.396814.MadGraphPythia8EvtGen_A14N23LO_C1N2_Wh_hbb_1000p0_250p0_lep.deriv.DAOD_SUSY5.e6972_s3126_r10724_p3736
+ nc_grid=mc16_13TeV:mc16_13TeV.396814.MadGraphPythia8EvtGen_A14N23LO_C1N2_Wh_hbb_1000p0_250p0_lep.deriv.DAOD_SUSY5.e6972_s3126_r10724_p3736
+ nc_grid_filter=*.root*
+
+Running on grid? True
+Submitting mc16_13TeV:mc16_13TeV.396814.MadGraphPythia8EvtGen_A14N23LO_C1N2_Wh_hbb_1000p0_250p0_lep.deriv.DAOD_SUSY5.e6972_s3126_r10724_p3736...
+Job submitted
+Warning in <TInterpreter::ReadRootmapFile>: class  MyxAODAnalysis found in libMyAnalysisDict.so  is already in libMyAnalysisLib.so 
+[?1034hxAOD::Init                INFO    Environment initialised for data access
+SampleHandler with 1 files
+Sample:name=mc16_13TeV:mc16_13TeV.396738.MadGraphPythia8EvtGen_A14N23LO_C1N2_Wh_hbb_450p0_100p0_lep.deriv.DAOD_SUSY5.e6972_a875_r10724_p3736
+ nc_grid=mc16_13TeV:mc16_13TeV.396738.MadGraphPythia8EvtGen_A14N23LO_C1N2_Wh_hbb_450p0_100p0_lep.deriv.DAOD_SUSY5.e6972_a875_r10724_p3736
+ nc_grid_filter=*.root*
+
+Running on grid? True
+Submitting mc16_13TeV:mc16_13TeV.396738.MadGraphPythia8EvtGen_A14N23LO_C1N2_Wh_hbb_450p0_100p0_lep.deriv.DAOD_SUSY5.e6972_a875_r10724_p3736...
+Job submitted
+Warning in <TInterpreter::ReadRootmapFile>: class  MyxAODAnalysis found in libMyAnalysisDict.so  is already in libMyAnalysisLib.so 
+[?1034hxAOD::Init                INFO    Environment initialised for data access
+SampleHandler with 1 files
+Sample:name=mc16_13TeV:mc16_13TeV.396812.MadGraphPythia8EvtGen_A14N23LO_C1N2_Wh_hbb_1000p0_150p0_lep.deriv.DAOD_SUSY5.e6972_s3126_r10724_p3736
+ nc_grid=mc16_13TeV:mc16_13TeV.396812.MadGraphPythia8EvtGen_A14N23LO_C1N2_Wh_hbb_1000p0_150p0_lep.deriv.DAOD_SUSY5.e6972_s3126_r10724_p3736
+ nc_grid_filter=*.root*
+
+Running on grid? True
+Submitting mc16_13TeV:mc16_13TeV.396812.MadGraphPythia8EvtGen_A14N23LO_C1N2_Wh_hbb_1000p0_150p0_lep.deriv.DAOD_SUSY5.e6972_s3126_r10724_p3736...
+Job submitted
+Warning in <TInterpreter::ReadRootmapFile>: class  MyxAODAnalysis found in libMyAnalysisDict.so  is already in libMyAnalysisLib.so 
+[?1034hxAOD::Init                INFO    Environment initialised for data access
+SampleHandler with 1 files
+Sample:name=mc16_13TeV:mc16_13TeV.396808.MadGraphPythia8EvtGen_A14N23LO_C1N2_Wh_hbb_900p0_400p0_lep.deriv.DAOD_SUSY5.e6972_s3126_r10724_p3736
+ nc_grid=mc16_13TeV:mc16_13TeV.396808.MadGraphPythia8EvtGen_A14N23LO_C1N2_Wh_hbb_900p0_400p0_lep.deriv.DAOD_SUSY5.e6972_s3126_r10724_p3736
+ nc_grid_filter=*.root*
+
+Running on grid? True
+Submitting mc16_13TeV:mc16_13TeV.396808.MadGraphPythia8EvtGen_A14N23LO_C1N2_Wh_hbb_900p0_400p0_lep.deriv.DAOD_SUSY5.e6972_s3126_r10724_p3736...
+Job submitted
+Warning in <TInterpreter::ReadRootmapFile>: class  MyxAODAnalysis found in libMyAnalysisDict.so  is already in libMyAnalysisLib.so 
+[?1034hxAOD::Init                INFO    Environment initialised for data access
+SampleHandler with 1 files
+Sample:name=mc16_13TeV:mc16_13TeV.396715.MadGraphPythia8EvtGen_A14N23LO_C1N2_Wh_hbb_300p0_100p0_lep.deriv.DAOD_SUSY5.e6972_a875_r10724_p3736
+ nc_grid=mc16_13TeV:mc16_13TeV.396715.MadGraphPythia8EvtGen_A14N23LO_C1N2_Wh_hbb_300p0_100p0_lep.deriv.DAOD_SUSY5.e6972_a875_r10724_p3736
+ nc_grid_filter=*.root*
+
+Running on grid? True
+Submitting mc16_13TeV:mc16_13TeV.396715.MadGraphPythia8EvtGen_A14N23LO_C1N2_Wh_hbb_300p0_100p0_lep.deriv.DAOD_SUSY5.e6972_a875_r10724_p3736...
+Job submitted
+Warning in <TInterpreter::ReadRootmapFile>: class  MyxAODAnalysis found in libMyAnalysisDict.so  is already in libMyAnalysisLib.so 
+[?1034hxAOD::Init                INFO    Environment initialised for data access
+SampleHandler with 1 files
+Sample:name=mc16_13TeV:mc16_13TeV.396716.MadGraphPythia8EvtGen_A14N23LO_C1N2_Wh_hbb_300p0_150p0_lep.deriv.DAOD_SUSY5.e6972_a875_r10724_p3736
+ nc_grid=mc16_13TeV:mc16_13TeV.396716.MadGraphPythia8EvtGen_A14N23LO_C1N2_Wh_hbb_300p0_150p0_lep.deriv.DAOD_SUSY5.e6972_a875_r10724_p3736
+ nc_grid_filter=*.root*
+
+Running on grid? True
+Submitting mc16_13TeV:mc16_13TeV.396716.MadGraphPythia8EvtGen_A14N23LO_C1N2_Wh_hbb_300p0_150p0_lep.deriv.DAOD_SUSY5.e6972_a875_r10724_p3736...
+Job submitted
+Warning in <TInterpreter::ReadRootmapFile>: class  MyxAODAnalysis found in libMyAnalysisDict.so  is already in libMyAnalysisLib.so 
+[?1034hxAOD::Init                INFO    Environment initialised for data access
+SampleHandler with 1 files
+Sample:name=mc16_13TeV:mc16_13TeV.396719.MadGraphPythia8EvtGen_A14N23LO_C1N2_Wh_hbb_350p0_0p0_lep.deriv.DAOD_SUSY5.e6972_a875_r10724_p3736
+ nc_grid=mc16_13TeV:mc16_13TeV.396719.MadGraphPythia8EvtGen_A14N23LO_C1N2_Wh_hbb_350p0_0p0_lep.deriv.DAOD_SUSY5.e6972_a875_r10724_p3736
+ nc_grid_filter=*.root*
+
+Running on grid? True
+Submitting mc16_13TeV:mc16_13TeV.396719.MadGraphPythia8EvtGen_A14N23LO_C1N2_Wh_hbb_350p0_0p0_lep.deriv.DAOD_SUSY5.e6972_a875_r10724_p3736...
+Job submitted
+Warning in <TInterpreter::ReadRootmapFile>: class  MyxAODAnalysis found in libMyAnalysisDict.so  is already in libMyAnalysisLib.so 
+[?1034hxAOD::Init                INFO    Environment initialised for data access
+SampleHandler with 1 files
+Sample:name=mc16_13TeV:mc16_13TeV.396713.MadGraphPythia8EvtGen_A14N23LO_C1N2_Wh_hbb_300p0_50p0_lep.deriv.DAOD_SUSY5.e6972_a875_r10724_p3736
+ nc_grid=mc16_13TeV:mc16_13TeV.396713.MadGraphPythia8EvtGen_A14N23LO_C1N2_Wh_hbb_300p0_50p0_lep.deriv.DAOD_SUSY5.e6972_a875_r10724_p3736
+ nc_grid_filter=*.root*
+
+Running on grid? True
+Submitting mc16_13TeV:mc16_13TeV.396713.MadGraphPythia8EvtGen_A14N23LO_C1N2_Wh_hbb_300p0_50p0_lep.deriv.DAOD_SUSY5.e6972_a875_r10724_p3736...
+Job submitted
+Warning in <TInterpreter::ReadRootmapFile>: class  MyxAODAnalysis found in libMyAnalysisDict.so  is already in libMyAnalysisLib.so 
+[?1034hxAOD::Init                INFO    Environment initialised for data access
+SampleHandler with 1 files
+Sample:name=mc16_13TeV:mc16_13TeV.396729.MadGraphPythia8EvtGen_A14N23LO_C1N2_Wh_hbb_400p0_25p0_lep.deriv.DAOD_SUSY5.e6972_a875_r10724_p3736
+ nc_grid=mc16_13TeV:mc16_13TeV.396729.MadGraphPythia8EvtGen_A14N23LO_C1N2_Wh_hbb_400p0_25p0_lep.deriv.DAOD_SUSY5.e6972_a875_r10724_p3736
+ nc_grid_filter=*.root*
+
+Running on grid? True
+Submitting mc16_13TeV:mc16_13TeV.396729.MadGraphPythia8EvtGen_A14N23LO_C1N2_Wh_hbb_400p0_25p0_lep.deriv.DAOD_SUSY5.e6972_a875_r10724_p3736...
+Job submitted
+Warning in <TInterpreter::ReadRootmapFile>: class  MyxAODAnalysis found in libMyAnalysisDict.so  is already in libMyAnalysisLib.so 
+[?1034hxAOD::Init                INFO    Environment initialised for data access
+SampleHandler with 1 files
+Sample:name=mc16_13TeV:mc16_13TeV.396711.MadGraphPythia8EvtGen_A14N23LO_C1N2_Wh_hbb_300p0_0p0_lep.deriv.DAOD_SUSY5.e6972_a875_r10724_p3736
+ nc_grid=mc16_13TeV:mc16_13TeV.396711.MadGraphPythia8EvtGen_A14N23LO_C1N2_Wh_hbb_300p0_0p0_lep.deriv.DAOD_SUSY5.e6972_a875_r10724_p3736
+ nc_grid_filter=*.root*
+
+Running on grid? True
+Submitting mc16_13TeV:mc16_13TeV.396711.MadGraphPythia8EvtGen_A14N23LO_C1N2_Wh_hbb_300p0_0p0_lep.deriv.DAOD_SUSY5.e6972_a875_r10724_p3736...
+Job submitted
+Warning in <TInterpreter::ReadRootmapFile>: class  MyxAODAnalysis found in libMyAnalysisDict.so  is already in libMyAnalysisLib.so 
+[?1034hxAOD::Init                INFO    Environment initialised for data access
+SampleHandler with 1 files
+Sample:name=mc16_13TeV:mc16_13TeV.396815.MadGraphPythia8EvtGen_A14N23LO_C1N2_Wh_hbb_1000p0_300p0_lep.deriv.DAOD_SUSY5.e6972_s3126_r10724_p3736
+ nc_grid=mc16_13TeV:mc16_13TeV.396815.MadGraphPythia8EvtGen_A14N23LO_C1N2_Wh_hbb_1000p0_300p0_lep.deriv.DAOD_SUSY5.e6972_s3126_r10724_p3736
+ nc_grid_filter=*.root*
+
+Running on grid? True
+Submitting mc16_13TeV:mc16_13TeV.396815.MadGraphPythia8EvtGen_A14N23LO_C1N2_Wh_hbb_1000p0_300p0_lep.deriv.DAOD_SUSY5.e6972_s3126_r10724_p3736...
+Job submitted
+python submit.py -i mc16_13TeV:mc16_13TeV.396688.MadGraphPythia8EvtGen_A14N23LO_C1N2_Wh_hbb_187p5_12p5_lep.deriv.DAOD_SUSY5.e6972_a875_r10724_p3736 -s /scratch/hteagle/GridSubmissions/396688 -g True -t TYPE
+python submit.py -i mc16_13TeV:mc16_13TeV.396691.MadGraphPythia8EvtGen_A14N23LO_C1N2_Wh_hbb_200p0_0p0_lep.deriv.DAOD_SUSY5.e6972_a875_r10724_p3736 -s /scratch/hteagle/GridSubmissions/396691 -g True -t TYPE
+python submit.py -i mc16_13TeV:mc16_13TeV.396718.MadGraphPythia8EvtGen_A14N23LO_C1N2_Wh_hbb_325p0_50p0_lep.deriv.DAOD_SUSY5.e6972_a875_r10724_p3736 -s /scratch/hteagle/GridSubmissions/396718 -g True -t TYPE
+python submit.py -i mc16_13TeV:mc16_13TeV.396754.MadGraphPythia8EvtGen_A14N23LO_C1N2_Wh_hbb_550p0_100p0_lep.deriv.DAOD_SUSY5.e6972_s3126_r10724_p3736 -s /scratch/hteagle/GridSubmissions/396754 -g True -t TYPE
+python submit.py -i mc16_13TeV:mc16_13TeV.396730.MadGraphPythia8EvtGen_A14N23LO_C1N2_Wh_hbb_400p0_50p0_lep.deriv.DAOD_SUSY5.e6972_a875_r10724_p3736 -s /scratch/hteagle/GridSubmissions/396730 -g True -t TYPE
+python submit.py -i mc16_13TeV:mc16_13TeV.396748.MadGraphPythia8EvtGen_A14N23LO_C1N2_Wh_hbb_500p0_250p0_lep.deriv.DAOD_SUSY5.e6972_a875_r10724_p3736 -s /scratch/hteagle/GridSubmissions/396748 -g True -t TYPE
+python submit.py -i mc16_13TeV:mc16_13TeV.396714.MadGraphPythia8EvtGen_A14N23LO_C1N2_Wh_hbb_300p0_75p0_lep.deriv.DAOD_SUSY5.e6972_a875_r10724_p3736 -s /scratch/hteagle/GridSubmissions/396714 -g True -t TYPE
+python submit.py -i mc16_13TeV:mc16_13TeV.396775.MadGraphPythia8EvtGen_A14N23LO_C1N2_Wh_hbb_700p0_0p0_lep.deriv.DAOD_SUSY5.e6972_s3126_r10724_p3736 -s /scratch/hteagle/GridSubmissions/396775 -g True -t TYPE
+python submit.py -i mc16_13TeV:mc16_13TeV.396809.MadGraphPythia8EvtGen_A14N23LO_C1N2_Wh_hbb_1000p0_0p0_lep.deriv.DAOD_SUSY5.e6972_s3126_r10724_p3736 -s /scratch/hteagle/GridSubmissions/396809 -g True -t TYPE
+python submit.py -i mc16_13TeV:mc16_13TeV.396791.MadGraphPythia8EvtGen_A14N23LO_C1N2_Wh_hbb_800p0_0p0_lep.deriv.DAOD_SUSY5.e6972_s3126_r10724_p3736 -s /scratch/hteagle/GridSubmissions/396791 -g True -t TYPE
+python submit.py -i mc16_13TeV:mc16_13TeV.396736.MadGraphPythia8EvtGen_A14N23LO_C1N2_Wh_hbb_450p0_0p0_lep.deriv.DAOD_SUSY5.e6972_s3126_r10724_p3736 -s /scratch/hteagle/GridSubmissions/396736 -g True -t TYPE
+python submit.py -i mc16_13TeV:mc16_13TeV.396786.MadGraphPythia8EvtGen_A14N23LO_C1N2_Wh_hbb_750p0_100p0_lep.deriv.DAOD_SUSY5.e6972_s3126_r10724_p3736 -s /scratch/hteagle/GridSubmissions/396786 -g True -t TYPE
+python submit.py -i mc16_13TeV:mc16_13TeV.396734.MadGraphPythia8EvtGen_A14N23LO_C1N2_Wh_hbb_400p0_250p0_lep.deriv.DAOD_SUSY5.e6972_a875_r10724_p3736 -s /scratch/hteagle/GridSubmissions/396734 -g True -t TYPE
+python submit.py -i mc16_13TeV:mc16_13TeV.396770.MadGraphPythia8EvtGen_A14N23LO_C1N2_Wh_hbb_650p0_100p0_lep.deriv.DAOD_SUSY5.e6972_s3126_r10724_p3736 -s /scratch/hteagle/GridSubmissions/396770 -g True -t TYPE
+python submit.py -i mc16_13TeV:mc16_13TeV.396778.MadGraphPythia8EvtGen_A14N23LO_C1N2_Wh_hbb_700p0_150p0_lep.deriv.DAOD_SUSY5.e6972_s3126_r10724_p3736 -s /scratch/hteagle/GridSubmissions/396778 -g True -t TYPE
+python submit.py -i mc16_13TeV:mc16_13TeV.396701.MadGraphPythia8EvtGen_A14N23LO_C1N2_Wh_hbb_237p5_62p5_lep.deriv.DAOD_SUSY5.e6972_a875_r10724_p3736 -s /scratch/hteagle/GridSubmissions/396701 -g True -t TYPE
+python submit.py -i mc16_13TeV:mc16_13TeV.396703.MadGraphPythia8EvtGen_A14N23LO_C1N2_Wh_hbb_250p0_25p0_lep.deriv.DAOD_SUSY5.e6972_a875_r10724_p3736 -s /scratch/hteagle/GridSubmissions/396703 -g True -t TYPE
+python submit.py -i mc16_13TeV:mc16_13TeV.396745.MadGraphPythia8EvtGen_A14N23LO_C1N2_Wh_hbb_500p0_100p0_lep.deriv.DAOD_SUSY5.e6972_s3126_r10724_p3736 -s /scratch/hteagle/GridSubmissions/396745 -g True -t TYPE
+python submit.py -i mc16_13TeV:mc16_13TeV.396724.MadGraphPythia8EvtGen_A14N23LO_C1N2_Wh_hbb_350p0_150p0_lep.deriv.DAOD_SUSY5.e6972_a875_r10724_p3736 -s /scratch/hteagle/GridSubmissions/396724 -g True -t TYPE
+python submit.py -i mc16_13TeV:mc16_13TeV.396765.MadGraphPythia8EvtGen_A14N23LO_C1N2_Wh_hbb_600p0_300p0_lep.deriv.DAOD_SUSY5.e6972_a875_r10724_p3736 -s /scratch/hteagle/GridSubmissions/396765 -g True -t TYPE
+python submit.py -i mc16_13TeV:mc16_13TeV.396794.MadGraphPythia8EvtGen_A14N23LO_C1N2_Wh_hbb_800p0_150p0_lep.deriv.DAOD_SUSY5.e6972_s3126_r10724_p3736 -s /scratch/hteagle/GridSubmissions/396794 -g True -t TYPE
+python submit.py -i mc16_13TeV:mc16_13TeV.396744.MadGraphPythia8EvtGen_A14N23LO_C1N2_Wh_hbb_500p0_50p0_lep.deriv.DAOD_SUSY5.e6972_s3126_r10724_p3736 -s /scratch/hteagle/GridSubmissions/396744 -g True -t TYPE
+python submit.py -i mc16_13TeV:mc16_13TeV.396762.MadGraphPythia8EvtGen_A14N23LO_C1N2_Wh_hbb_600p0_150p0_lep.deriv.DAOD_SUSY5.e6972_s3126_r10724_p3736 -s /scratch/hteagle/GridSubmissions/396762 -g True -t TYPE
+python submit.py -i mc16_13TeV:mc16_13TeV.396687.MadGraphPythia8EvtGen_A14N23LO_C1N2_Wh_hbb_177p5_47p5_lep.deriv.DAOD_SUSY5.e6972_a875_r10724_p3736 -s /scratch/hteagle/GridSubmissions/396687 -g True -t TYPE
+python submit.py -i mc16_13TeV:mc16_13TeV.396758.MadGraphPythia8EvtGen_A14N23LO_C1N2_Wh_hbb_550p0_300p0_lep.deriv.DAOD_SUSY5.e6972_a875_r10724_p3736 -s /scratch/hteagle/GridSubmissions/396758 -g True -t TYPE
+python submit.py -i mc16_13TeV:mc16_13TeV.396816.MadGraphPythia8EvtGen_A14N23LO_C1N2_Wh_hbb_1000p0_350p0_lep.deriv.DAOD_SUSY5.e6972_s3126_r10724_p3736 -s /scratch/hteagle/GridSubmissions/396816 -g True -t TYPE
+python submit.py -i mc16_13TeV:mc16_13TeV.396705.MadGraphPythia8EvtGen_A14N23LO_C1N2_Wh_hbb_250p0_75p0_lep.deriv.DAOD_SUSY5.e6972_a875_r10724_p3736 -s /scratch/hteagle/GridSubmissions/396705 -g True -t TYPE
+python submit.py -i mc16_13TeV:mc16_13TeV.396740.MadGraphPythia8EvtGen_A14N23LO_C1N2_Wh_hbb_450p0_200p0_lep.deriv.DAOD_SUSY5.e6972_a875_r10724_p3736 -s /scratch/hteagle/GridSubmissions/396740 -g True -t TYPE
+python submit.py -i mc16_13TeV:mc16_13TeV.396814.MadGraphPythia8EvtGen_A14N23LO_C1N2_Wh_hbb_1000p0_250p0_lep.deriv.DAOD_SUSY5.e6972_s3126_r10724_p3736 -s /scratch/hteagle/GridSubmissions/396814 -g True -t TYPE
+python submit.py -i mc16_13TeV:mc16_13TeV.396738.MadGraphPythia8EvtGen_A14N23LO_C1N2_Wh_hbb_450p0_100p0_lep.deriv.DAOD_SUSY5.e6972_a875_r10724_p3736 -s /scratch/hteagle/GridSubmissions/396738 -g True -t TYPE
+python submit.py -i mc16_13TeV:mc16_13TeV.396812.MadGraphPythia8EvtGen_A14N23LO_C1N2_Wh_hbb_1000p0_150p0_lep.deriv.DAOD_SUSY5.e6972_s3126_r10724_p3736 -s /scratch/hteagle/GridSubmissions/396812 -g True -t TYPE
+python submit.py -i mc16_13TeV:mc16_13TeV.396808.MadGraphPythia8EvtGen_A14N23LO_C1N2_Wh_hbb_900p0_400p0_lep.deriv.DAOD_SUSY5.e6972_s3126_r10724_p3736 -s /scratch/hteagle/GridSubmissions/396808 -g True -t TYPE
+python submit.py -i mc16_13TeV:mc16_13TeV.396715.MadGraphPythia8EvtGen_A14N23LO_C1N2_Wh_hbb_300p0_100p0_lep.deriv.DAOD_SUSY5.e6972_a875_r10724_p3736 -s /scratch/hteagle/GridSubmissions/396715 -g True -t TYPE
+python submit.py -i mc16_13TeV:mc16_13TeV.396716.MadGraphPythia8EvtGen_A14N23LO_C1N2_Wh_hbb_300p0_150p0_lep.deriv.DAOD_SUSY5.e6972_a875_r10724_p3736 -s /scratch/hteagle/GridSubmissions/396716 -g True -t TYPE
+python submit.py -i mc16_13TeV:mc16_13TeV.396719.MadGraphPythia8EvtGen_A14N23LO_C1N2_Wh_hbb_350p0_0p0_lep.deriv.DAOD_SUSY5.e6972_a875_r10724_p3736 -s /scratch/hteagle/GridSubmissions/396719 -g True -t TYPE
+python submit.py -i mc16_13TeV:mc16_13TeV.396713.MadGraphPythia8EvtGen_A14N23LO_C1N2_Wh_hbb_300p0_50p0_lep.deriv.DAOD_SUSY5.e6972_a875_r10724_p3736 -s /scratch/hteagle/GridSubmissions/396713 -g True -t TYPE
+python submit.py -i mc16_13TeV:mc16_13TeV.396729.MadGraphPythia8EvtGen_A14N23LO_C1N2_Wh_hbb_400p0_25p0_lep.deriv.DAOD_SUSY5.e6972_a875_r10724_p3736 -s /scratch/hteagle/GridSubmissions/396729 -g True -t TYPE
+python submit.py -i mc16_13TeV:mc16_13TeV.396711.MadGraphPythia8EvtGen_A14N23LO_C1N2_Wh_hbb_300p0_0p0_lep.deriv.DAOD_SUSY5.e6972_a875_r10724_p3736 -s /scratch/hteagle/GridSubmissions/396711 -g True -t TYPE
+python submit.py -i mc16_13TeV:mc16_13TeV.396815.MadGraphPythia8EvtGen_A14N23LO_C1N2_Wh_hbb_1000p0_300p0_lep.deriv.DAOD_SUSY5.e6972_s3126_r10724_p3736 -s /scratch/hteagle/GridSubmissions/396815 -g True -t TYPE
+python submit.py -i mc16_13TeV:mc16_13TeV.396793.MadGraphPythia8EvtGen_A14N23LO_C1NWarning in <TInterpreter::ReadRootmapFile>: class  MyxAODAnalysis found in libMyAnalysisDict.so  is already in libMyAnalysisLib.so 
+[?1034hxAOD::Init                INFO    Environment initialised for data access
+SampleHandler with 1 files
+Sample:name=mc16_13TeV:mc16_13TeV.396793.MadGraphPythia8EvtGen_A14N23LO_C1N2_Wh_hbb_800p0_100p0_lep.deriv.DAOD_SUSY5.e6972_s3126_r10724_p3736
+ nc_grid=mc16_13TeV:mc16_13TeV.396793.MadGraphPythia8EvtGen_A14N23LO_C1N2_Wh_hbb_800p0_100p0_lep.deriv.DAOD_SUSY5.e6972_s3126_r10724_p3736
+ nc_grid_filter=*.root*
+
+Running on grid? True
+Submitting mc16_13TeV:mc16_13TeV.396793.MadGraphPythia8EvtGen_A14N23LO_C1N2_Wh_hbb_800p0_100p0_lep.deriv.DAOD_SUSY5.e6972_s3126_r10724_p3736...
+Job submitted
+Warning in <TInterpreter::ReadRootmapFile>: class  MyxAODAnalysis found in libMyAnalysisDict.so  is already in libMyAnalysisLib.so 
+[?1034hxAOD::Init                INFO    Environment initialised for data access
+SampleHandler with 1 files
+Sample:name=mc16_13TeV:mc16_13TeV.396732.MadGraphPythia8EvtGen_A14N23LO_C1N2_Wh_hbb_400p0_150p0_lep.deriv.DAOD_SUSY5.e6972_a875_r10724_p3736
+ nc_grid=mc16_13TeV:mc16_13TeV.396732.MadGraphPythia8EvtGen_A14N23LO_C1N2_Wh_hbb_400p0_150p0_lep.deriv.DAOD_SUSY5.e6972_a875_r10724_p3736
+ nc_grid_filter=*.root*
+
+Running on grid? True
+Submitting mc16_13TeV:mc16_13TeV.396732.MadGraphPythia8EvtGen_A14N23LO_C1N2_Wh_hbb_400p0_150p0_lep.deriv.DAOD_SUSY5.e6972_a875_r10724_p3736...
+Job submitted
+Warning in <TInterpreter::ReadRootmapFile>: class  MyxAODAnalysis found in libMyAnalysisDict.so  is already in libMyAnalysisLib.so 
+[?1034hxAOD::Init                INFO    Environment initialised for data access
+SampleHandler with 1 files
+Sample:name=mc16_13TeV:mc16_13TeV.396750.MadGraphPythia8EvtGen_A14N23LO_C1N2_Wh_hbb_500p0_350p0_lep.deriv.DAOD_SUSY5.e6972_a875_r10724_p3736
+ nc_grid=mc16_13TeV:mc16_13TeV.396750.MadGraphPythia8EvtGen_A14N23LO_C1N2_Wh_hbb_500p0_350p0_lep.deriv.DAOD_SUSY5.e6972_a875_r10724_p3736
+ nc_grid_filter=*.root*
+
+Running on grid? True
+Submitting mc16_13TeV:mc16_13TeV.396750.MadGraphPythia8EvtGen_A14N23LO_C1N2_Wh_hbb_500p0_350p0_lep.deriv.DAOD_SUSY5.e6972_a875_r10724_p3736...
+Job submitted
+Warning in <TInterpreter::ReadRootmapFile>: class  MyxAODAnalysis found in libMyAnalysisDict.so  is already in libMyAnalysisLib.so 
+[?1034hxAOD::Init                INFO    Environment initialised for data access
+SampleHandler with 1 files
+Sample:name=mc16_13TeV:mc16_13TeV.396756.MadGraphPythia8EvtGen_A14N23LO_C1N2_Wh_hbb_550p0_200p0_lep.deriv.DAOD_SUSY5.e6972_a875_r10724_p3736
+ nc_grid=mc16_13TeV:mc16_13TeV.396756.MadGraphPythia8EvtGen_A14N23LO_C1N2_Wh_hbb_550p0_200p0_lep.deriv.DAOD_SUSY5.e6972_a875_r10724_p3736
+ nc_grid_filter=*.root*
+
+Running on grid? True
+Submitting mc16_13TeV:mc16_13TeV.396756.MadGraphPythia8EvtGen_A14N23LO_C1N2_Wh_hbb_550p0_200p0_lep.deriv.DAOD_SUSY5.e6972_a875_r10724_p3736...
+Job submitted
+Warning in <TInterpreter::ReadRootmapFile>: class  MyxAODAnalysis found in libMyAnalysisDict.so  is already in libMyAnalysisLib.so 
+[?1034hxAOD::Init                INFO    Environment initialised for data access
+SampleHandler with 1 files
+Sample:name=mc16_13TeV:mc16_13TeV.396804.MadGraphPythia8EvtGen_A14N23LO_C1N2_Wh_hbb_900p0_200p0_lep.deriv.DAOD_SUSY5.e6972_s3126_r10724_p3736
+ nc_grid=mc16_13TeV:mc16_13TeV.396804.MadGraphPythia8EvtGen_A14N23LO_C1N2_Wh_hbb_900p0_200p0_lep.deriv.DAOD_SUSY5.e6972_s3126_r10724_p3736
+ nc_grid_filter=*.root*
+
+Running on grid? True
+Submitting mc16_13TeV:mc16_13TeV.396804.MadGraphPythia8EvtGen_A14N23LO_C1N2_Wh_hbb_900p0_200p0_lep.deriv.DAOD_SUSY5.e6972_s3126_r10724_p3736...
+Job submitted
+Warning in <TInterpreter::ReadRootmapFile>: class  MyxAODAnalysis found in libMyAnalysisDict.so  is already in libMyAnalysisLib.so 
+[?1034hxAOD::Init                INFO    Environment initialised for data access
+SampleHandler with 1 files
+Sample:name=mc16_13TeV:mc16_13TeV.396694.MadGraphPythia8EvtGen_A14N23LO_C1N2_Wh_hbb_202p5_72p5_lep.deriv.DAOD_SUSY5.e6972_a875_r10724_p3736
+ nc_grid=mc16_13TeV:mc16_13TeV.396694.MadGraphPythia8EvtGen_A14N23LO_C1N2_Wh_hbb_202p5_72p5_lep.deriv.DAOD_SUSY5.e6972_a875_r10724_p3736
+ nc_grid_filter=*.root*
+
+Running on grid? True
+Submitting mc16_13TeV:mc16_13TeV.396694.MadGraphPythia8EvtGen_A14N23LO_C1N2_Wh_hbb_202p5_72p5_lep.deriv.DAOD_SUSY5.e6972_a875_r10724_p3736...
+Job submitted
+Warning in <TInterpreter::ReadRootmapFile>: class  MyxAODAnalysis found in libMyAnalysisDict.so  is already in libMyAnalysisLib.so 
+[?1034hxAOD::Init                INFO    Environment initialised for data access
+SampleHandler with 1 files
+Sample:name=mc16_13TeV:mc16_13TeV.396811.MadGraphPythia8EvtGen_A14N23LO_C1N2_Wh_hbb_1000p0_100p0_lep.deriv.DAOD_SUSY5.e6972_s3126_r10724_p3736
+ nc_grid=mc16_13TeV:mc16_13TeV.396811.MadGraphPythia8EvtGen_A14N23LO_C1N2_Wh_hbb_1000p0_100p0_lep.deriv.DAOD_SUSY5.e6972_s3126_r10724_p3736
+ nc_grid_filter=*.root*
+
+Running on grid? True
+Submitting mc16_13TeV:mc16_13TeV.396811.MadGraphPythia8EvtGen_A14N23LO_C1N2_Wh_hbb_1000p0_100p0_lep.deriv.DAOD_SUSY5.e6972_s3126_r10724_p3736...
+Job submitted
+Warning in <TInterpreter::ReadRootmapFile>: class  MyxAODAnalysis found in libMyAnalysisDict.so  is already in libMyAnalysisLib.so 
+[?1034hxAOD::Init                INFO    Environment initialised for data access
+SampleHandler with 1 files
+Sample:name=mc16_13TeV:mc16_13TeV.396725.MadGraphPythia8EvtGen_A14N23LO_C1N2_Wh_hbb_350p0_200p0_lep.deriv.DAOD_SUSY5.e6972_a875_r10724_p3736
+ nc_grid=mc16_13TeV:mc16_13TeV.396725.MadGraphPythia8EvtGen_A14N23LO_C1N2_Wh_hbb_350p0_200p0_lep.deriv.DAOD_SUSY5.e6972_a875_r10724_p3736
+ nc_grid_filter=*.root*
+
+Running on grid? True
+Submitting mc16_13TeV:mc16_13TeV.396725.MadGraphPythia8EvtGen_A14N23LO_C1N2_Wh_hbb_350p0_200p0_lep.deriv.DAOD_SUSY5.e6972_a875_r10724_p3736...
+Job submitted
+Warning in <TInterpreter::ReadRootmapFile>: class  MyxAODAnalysis found in libMyAnalysisDict.so  is already in libMyAnalysisLib.so 
+[?1034hxAOD::Init                INFO    Environment initialised for data access
+SampleHandler with 1 files
+Sample:name=mc16_13TeV:mc16_13TeV.396731.MadGraphPythia8EvtGen_A14N23LO_C1N2_Wh_hbb_400p0_100p0_lep.deriv.DAOD_SUSY5.e6972_a875_r10724_p3736
+ nc_grid=mc16_13TeV:mc16_13TeV.396731.MadGraphPythia8EvtGen_A14N23LO_C1N2_Wh_hbb_400p0_100p0_lep.deriv.DAOD_SUSY5.e6972_a875_r10724_p3736
+ nc_grid_filter=*.root*
+
+Running on grid? True
+Submitting mc16_13TeV:mc16_13TeV.396731.MadGraphPythia8EvtGen_A14N23LO_C1N2_Wh_hbb_400p0_100p0_lep.deriv.DAOD_SUSY5.e6972_a875_r10724_p3736...
+Job submitted
+Warning in <TInterpreter::ReadRootmapFile>: class  MyxAODAnalysis found in libMyAnalysisDict.so  is already in libMyAnalysisLib.so 
+[?1034hxAOD::Init                INFO    Environment initialised for data access
+SampleHandler with 1 files
+Sample:name=mc16_13TeV:mc16_13TeV.396695.MadGraphPythia8EvtGen_A14N23LO_C1N2_Wh_hbb_212p5_37p5_lep.deriv.DAOD_SUSY5.e6972_a875_r10724_p3736
+ nc_grid=mc16_13TeV:mc16_13TeV.396695.MadGraphPythia8EvtGen_A14N23LO_C1N2_Wh_hbb_212p5_37p5_lep.deriv.DAOD_SUSY5.e6972_a875_r10724_p3736
+ nc_grid_filter=*.root*
+
+Running on grid? True
+Submitting mc16_13TeV:mc16_13TeV.396695.MadGraphPythia8EvtGen_A14N23LO_C1N2_Wh_hbb_212p5_37p5_lep.deriv.DAOD_SUSY5.e6972_a875_r10724_p3736...
+Job submitted
+Warning in <TInterpreter::ReadRootmapFile>: class  MyxAODAnalysis found in libMyAnalysisDict.so  is already in libMyAnalysisLib.so 
+[?1034hxAOD::Init                INFO    Environment initialised for data access
+SampleHandler with 1 files
+Sample:name=mc16_13TeV:mc16_13TeV.396802.MadGraphPythia8EvtGen_A14N23LO_C1N2_Wh_hbb_900p0_100p0_lep.deriv.DAOD_SUSY5.e6972_s3126_r10724_p3736
+ nc_grid=mc16_13TeV:mc16_13TeV.396802.MadGraphPythia8EvtGen_A14N23LO_C1N2_Wh_hbb_900p0_100p0_lep.deriv.DAOD_SUSY5.e6972_s3126_r10724_p3736
+ nc_grid_filter=*.root*
+
+Running on grid? True
+Submitting mc16_13TeV:mc16_13TeV.396802.MadGraphPythia8EvtGen_A14N23LO_C1N2_Wh_hbb_900p0_100p0_lep.deriv.DAOD_SUSY5.e6972_s3126_r10724_p3736...
+Job submitted
+Warning in <TInterpreter::ReadRootmapFile>: class  MyxAODAnalysis found in libMyAnalysisDict.so  is already in libMyAnalysisLib.so 
+[?1034hxAOD::Init                INFO    Environment initialised for data access
+SampleHandler with 1 files
+Sample:name=mc16_13TeV:mc16_13TeV.396773.MadGraphPythia8EvtGen_A14N23LO_C1N2_Wh_hbb_650p0_250p0_lep.deriv.DAOD_SUSY5.e6972_s3126_r10724_p3736
+ nc_grid=mc16_13TeV:mc16_13TeV.396773.MadGraphPythia8EvtGen_A14N23LO_C1N2_Wh_hbb_650p0_250p0_lep.deriv.DAOD_SUSY5.e6972_s3126_r10724_p3736
+ nc_grid_filter=*.root*
+
+Running on grid? True
+Submitting mc16_13TeV:mc16_13TeV.396773.MadGraphPythia8EvtGen_A14N23LO_C1N2_Wh_hbb_650p0_250p0_lep.deriv.DAOD_SUSY5.e6972_s3126_r10724_p3736...
+Job submitted
+Warning in <TInterpreter::ReadRootmapFile>: class  MyxAODAnalysis found in libMyAnalysisDict.so  is already in libMyAnalysisLib.so 
+[?1034hxAOD::Init                INFO    Environment initialised for data access
+SampleHandler with 1 files
+Sample:name=mc16_13TeV:mc16_13TeV.396805.MadGraphPythia8EvtGen_A14N23LO_C1N2_Wh_hbb_900p0_250p0_lep.deriv.DAOD_SUSY5.e6972_s3126_r10724_p3736
+ nc_grid=mc16_13TeV:mc16_13TeV.396805.MadGraphPythia8EvtGen_A14N23LO_C1N2_Wh_hbb_900p0_250p0_lep.deriv.DAOD_SUSY5.e6972_s3126_r10724_p3736
+ nc_grid_filter=*.root*
+
+Running on grid? True
+Submitting mc16_13TeV:mc16_13TeV.396805.MadGraphPythia8EvtGen_A14N23LO_C1N2_Wh_hbb_900p0_250p0_lep.deriv.DAOD_SUSY5.e6972_s3126_r10724_p3736...
+Job submitted
+Warning in <TInterpreter::ReadRootmapFile>: class  MyxAODAnalysis found in libMyAnalysisDict.so  is already in libMyAnalysisLib.so 
+[?1034hxAOD::Init                INFO    Environment initialised for data access
+SampleHandler with 1 files
+Sample:name=mc16_13TeV:mc16_13TeV.396757.MadGraphPythia8EvtGen_A14N23LO_C1N2_Wh_hbb_550p0_250p0_lep.deriv.DAOD_SUSY5.e6972_a875_r10724_p3736
+ nc_grid=mc16_13TeV:mc16_13TeV.396757.MadGraphPythia8EvtGen_A14N23LO_C1N2_Wh_hbb_550p0_250p0_lep.deriv.DAOD_SUSY5.e6972_a875_r10724_p3736
+ nc_grid_filter=*.root*
+
+Running on grid? True
+Submitting mc16_13TeV:mc16_13TeV.396757.MadGraphPythia8EvtGen_A14N23LO_C1N2_Wh_hbb_550p0_250p0_lep.deriv.DAOD_SUSY5.e6972_a875_r10724_p3736...
+Job submitted
+Warning in <TInterpreter::ReadRootmapFile>: class  MyxAODAnalysis found in libMyAnalysisDict.so  is already in libMyAnalysisLib.so 
+[?1034hxAOD::Init                INFO    Environment initialised for data access
+SampleHandler with 1 files
+Sample:name=mc16_13TeV:mc16_13TeV.396704.MadGraphPythia8EvtGen_A14N23LO_C1N2_Wh_hbb_250p0_50p0_lep.deriv.DAOD_SUSY5.e6972_a875_r10724_p3736
+ nc_grid=mc16_13TeV:mc16_13TeV.396704.MadGraphPythia8EvtGen_A14N23LO_C1N2_Wh_hbb_250p0_50p0_lep.deriv.DAOD_SUSY5.e6972_a875_r10724_p3736
+ nc_grid_filter=*.root*
+
+Running on grid? True
+Submitting mc16_13TeV:mc16_13TeV.396704.MadGraphPythia8EvtGen_A14N23LO_C1N2_Wh_hbb_250p0_50p0_lep.deriv.DAOD_SUSY5.e6972_a875_r10724_p3736...
+Job submitted
+Warning in <TInterpreter::ReadRootmapFile>: class  MyxAODAnalysis found in libMyAnalysisDict.so  is already in libMyAnalysisLib.so 
+[?1034hxAOD::Init                INFO    Environment initialised for data access
+SampleHandler with 1 files
+Sample:name=mc16_13TeV:mc16_13TeV.396706.MadGraphPythia8EvtGen_A14N23LO_C1N2_Wh_hbb_250p0_100p0_lep.deriv.DAOD_SUSY5.e6972_a875_r10724_p3736
+ nc_grid=mc16_13TeV:mc16_13TeV.396706.MadGraphPythia8EvtGen_A14N23LO_C1N2_Wh_hbb_250p0_100p0_lep.deriv.DAOD_SUSY5.e6972_a875_r10724_p3736
+ nc_grid_filter=*.root*
+
+Running on grid? True
+Submitting mc16_13TeV:mc16_13TeV.396706.MadGraphPythia8EvtGen_A14N23LO_C1N2_Wh_hbb_250p0_100p0_lep.deriv.DAOD_SUSY5.e6972_a875_r10724_p3736...
+Job submitted
+Warning in <TInterpreter::ReadRootmapFile>: class  MyxAODAnalysis found in libMyAnalysisDict.so  is already in libMyAnalysisLib.so 
+[?1034hxAOD::Init                INFO    Environment initialised for data access
+SampleHandler with 1 files
+Sample:name=mc16_13TeV:mc16_13TeV.396692.MadGraphPythia8EvtGen_A14N23LO_C1N2_Wh_hbb_200p0_25p0_lep.deriv.DAOD_SUSY5.e6972_a875_r10724_p3736
+ nc_grid=mc16_13TeV:mc16_13TeV.396692.MadGraphPythia8EvtGen_A14N23LO_C1N2_Wh_hbb_200p0_25p0_lep.deriv.DAOD_SUSY5.e6972_a875_r10724_p3736
+ nc_grid_filter=*.root*
+
+Running on grid? True
+Submitting mc16_13TeV:mc16_13TeV.396692.MadGraphPythia8EvtGen_A14N23LO_C1N2_Wh_hbb_200p0_25p0_lep.deriv.DAOD_SUSY5.e6972_a875_r10724_p3736...
+Job submitted
+Warning in <TInterpreter::ReadRootmapFile>: class  MyxAODAnalysis found in libMyAnalysisDict.so  is already in libMyAnalysisLib.so 
+[?1034hxAOD::Init                INFO    Environment initialised for data access
+SampleHandler with 1 files
+Sample:name=mc16_13TeV:mc16_13TeV.396684.MadGraphPythia8EvtGen_A14N23LO_C1N2_Wh_hbb_165p0_35p0_lep.deriv.DAOD_SUSY5.e6972_a875_r10724_p3736
+ nc_grid=mc16_13TeV:mc16_13TeV.396684.MadGraphPythia8EvtGen_A14N23LO_C1N2_Wh_hbb_165p0_35p0_lep.deriv.DAOD_SUSY5.e6972_a875_r10724_p3736
+ nc_grid_filter=*.root*
+
+Running on grid? True
+Submitting mc16_13TeV:mc16_13TeV.396684.MadGraphPythia8EvtGen_A14N23LO_C1N2_Wh_hbb_165p0_35p0_lep.deriv.DAOD_SUSY5.e6972_a875_r10724_p3736...
+Job submitted
+Warning in <TInterpreter::ReadRootmapFile>: class  MyxAODAnalysis found in libMyAnalysisDict.so  is already in libMyAnalysisLib.so 
+[?1034hxAOD::Init                INFO    Environment initialised for data access
+SampleHandler with 1 files
+Sample:name=mc16_13TeV:mc16_13TeV.396788.MadGraphPythia8EvtGen_A14N23LO_C1N2_Wh_hbb_750p0_200p0_lep.deriv.DAOD_SUSY5.e6972_s3126_r10724_p3736
+ nc_grid=mc16_13TeV:mc16_13TeV.396788.MadGraphPythia8EvtGen_A14N23LO_C1N2_Wh_hbb_750p0_200p0_lep.deriv.DAOD_SUSY5.e6972_s3126_r10724_p3736
+ nc_grid_filter=*.root*
+
+Running on grid? True
+Submitting mc16_13TeV:mc16_13TeV.396788.MadGraphPythia8EvtGen_A14N23LO_C1N2_Wh_hbb_750p0_200p0_lep.deriv.DAOD_SUSY5.e6972_s3126_r10724_p3736...
+Job submitted
+Warning in <TInterpreter::ReadRootmapFile>: class  MyxAODAnalysis found in libMyAnalysisDict.so  is already in libMyAnalysisLib.so 
+[?1034hxAOD::Init                INFO    Environment initialised for data access
+SampleHandler with 1 files
+Sample:name=mc16_13TeV:mc16_13TeV.396699.MadGraphPythia8EvtGen_A14N23LO_C1N2_Wh_hbb_225p0_50p0_lep.deriv.DAOD_SUSY5.e6972_a875_r10724_p3736
+ nc_grid=mc16_13TeV:mc16_13TeV.396699.MadGraphPythia8EvtGen_A14N23LO_C1N2_Wh_hbb_225p0_50p0_lep.deriv.DAOD_SUSY5.e6972_a875_r10724_p3736
+ nc_grid_filter=*.root*
+
+Running on grid? True
+Submitting mc16_13TeV:mc16_13TeV.396699.MadGraphPythia8EvtGen_A14N23LO_C1N2_Wh_hbb_225p0_50p0_lep.deriv.DAOD_SUSY5.e6972_a875_r10724_p3736...
+Job submitted
+Warning in <TInterpreter::ReadRootmapFile>: class  MyxAODAnalysis found in libMyAnalysisDict.so  is already in libMyAnalysisLib.so 
+[?1034hxAOD::Init                INFO    Environment initialised for data access
+SampleHandler with 1 files
+Sample:name=mc16_13TeV:mc16_13TeV.396733.MadGraphPythia8EvtGen_A14N23LO_C1N2_Wh_hbb_400p0_200p0_lep.deriv.DAOD_SUSY5.e6972_a875_r10724_p3736
+ nc_grid=mc16_13TeV:mc16_13TeV.396733.MadGraphPythia8EvtGen_A14N23LO_C1N2_Wh_hbb_400p0_200p0_lep.deriv.DAOD_SUSY5.e6972_a875_r10724_p3736
+ nc_grid_filter=*.root*
+
+Running on grid? True
+Submitting mc16_13TeV:mc16_13TeV.396733.MadGraphPythia8EvtGen_A14N23LO_C1N2_Wh_hbb_400p0_200p0_lep.deriv.DAOD_SUSY5.e6972_a875_r10724_p3736...
+Job submitted
+Warning in <TInterpreter::ReadRootmapFile>: class  MyxAODAnalysis found in libMyAnalysisDict.so  is already in libMyAnalysisLib.so 
+[?1034hxAOD::Init                INFO    Environment initialised for data access
+SampleHandler with 1 files
+Sample:name=mc16_13TeV:mc16_13TeV.396753.MadGraphPythia8EvtGen_A14N23LO_C1N2_Wh_hbb_550p0_50p0_lep.deriv.DAOD_SUSY5.e6972_s3126_r10724_p3736
+ nc_grid=mc16_13TeV:mc16_13TeV.396753.MadGraphPythia8EvtGen_A14N23LO_C1N2_Wh_hbb_550p0_50p0_lep.deriv.DAOD_SUSY5.e6972_s3126_r10724_p3736
+ nc_grid_filter=*.root*
+
+Running on grid? True
+Submitting mc16_13TeV:mc16_13TeV.396753.MadGraphPythia8EvtGen_A14N23LO_C1N2_Wh_hbb_550p0_50p0_lep.deriv.DAOD_SUSY5.e6972_s3126_r10724_p3736...
+Job submitted
+Warning in <TInterpreter::ReadRootmapFile>: class  MyxAODAnalysis found in libMyAnalysisDict.so  is already in libMyAnalysisLib.so 
+[?1034hxAOD::Init                INFO    Environment initialised for data access
+SampleHandler with 1 files
+Sample:name=mc16_13TeV:mc16_13TeV.396813.MadGraphPythia8EvtGen_A14N23LO_C1N2_Wh_hbb_1000p0_200p0_lep.deriv.DAOD_SUSY5.e6972_s3126_r10724_p3736
+ nc_grid=mc16_13TeV:mc16_13TeV.396813.MadGraphPythia8EvtGen_A14N23LO_C1N2_Wh_hbb_1000p0_200p0_lep.deriv.DAOD_SUSY5.e6972_s3126_r10724_p3736
+ nc_grid_filter=*.root*
+
+Running on grid? True
+Submitting mc16_13TeV:mc16_13TeV.396813.MadGraphPythia8EvtGen_A14N23LO_C1N2_Wh_hbb_1000p0_200p0_lep.deriv.DAOD_SUSY5.e6972_s3126_r10724_p3736...
+Job submitted
+Warning in <TInterpreter::ReadRootmapFile>: class  MyxAODAnalysis found in libMyAnalysisDict.so  is already in libMyAnalysisLib.so 
+[?1034hxAOD::Init                INFO    Environment initialised for data access
+SampleHandler with 1 files
+Sample:name=mc16_13TeV:mc16_13TeV.396810.MadGraphPythia8EvtGen_A14N23LO_C1N2_Wh_hbb_1000p0_50p0_lep.deriv.DAOD_SUSY5.e6972_s3126_r10724_p3736
+ nc_grid=mc16_13TeV:mc16_13TeV.396810.MadGraphPythia8EvtGen_A14N23LO_C1N2_Wh_hbb_1000p0_50p0_lep.deriv.DAOD_SUSY5.e6972_s3126_r10724_p3736
+ nc_grid_filter=*.root*
+
+Running on grid? True
+Submitting mc16_13TeV:mc16_13TeV.396810.MadGraphPythia8EvtGen_A14N23LO_C1N2_Wh_hbb_1000p0_50p0_lep.deriv.DAOD_SUSY5.e6972_s3126_r10724_p3736...
+Job submitted
+Warning in <TInterpreter::ReadRootmapFile>: class  MyxAODAnalysis found in libMyAnalysisDict.so  is already in libMyAnalysisLib.so 
+[?1034hxAOD::Init                INFO    Environment initialised for data access
+SampleHandler with 1 files
+Sample:name=mc16_13TeV:mc16_13TeV.396710.MadGraphPythia8EvtGen_A14N23LO_C1N2_Wh_hbb_275p0_75p0_lep.deriv.DAOD_SUSY5.e6972_a875_r10724_p3736
+ nc_grid=mc16_13TeV:mc16_13TeV.396710.MadGraphPythia8EvtGen_A14N23LO_C1N2_Wh_hbb_275p0_75p0_lep.deriv.DAOD_SUSY5.e6972_a875_r10724_p3736
+ nc_grid_filter=*.root*
+
+Running on grid? True
+Submitting mc16_13TeV:mc16_13TeV.396710.MadGraphPythia8EvtGen_A14N23LO_C1N2_Wh_hbb_275p0_75p0_lep.deriv.DAOD_SUSY5.e6972_a875_r10724_p3736...
+Job submitted
+Warning in <TInterpreter::ReadRootmapFile>: class  MyxAODAnalysis found in libMyAnalysisDict.so  is already in libMyAnalysisLib.so 
+[?1034hxAOD::Init                INFO    Environment initialised for data access
+SampleHandler with 1 files
+Sample:name=mc16_13TeV:mc16_13TeV.396712.MadGraphPythia8EvtGen_A14N23LO_C1N2_Wh_hbb_300p0_25p0_lep.deriv.DAOD_SUSY5.e6972_a875_r10724_p3736
+ nc_grid=mc16_13TeV:mc16_13TeV.396712.MadGraphPythia8EvtGen_A14N23LO_C1N2_Wh_hbb_300p0_25p0_lep.deriv.DAOD_SUSY5.e6972_a875_r10724_p3736
+ nc_grid_filter=*.root*
+
+Running on grid? True
+Submitting mc16_13TeV:mc16_13TeV.396712.MadGraphPythia8EvtGen_A14N23LO_C1N2_Wh_hbb_300p0_25p0_lep.deriv.DAOD_SUSY5.e6972_a875_r10724_p3736...
+Job submitted
+Warning in <TInterpreter::ReadRootmapFile>: class  MyxAODAnalysis found in libMyAnalysisDict.so  is already in libMyAnalysisLib.so 
+[?1034hxAOD::Init                INFO    Environment initialised for data access
+SampleHandler with 1 files
+Sample:name=mc16_13TeV:mc16_13TeV.396806.MadGraphPythia8EvtGen_A14N23LO_C1N2_Wh_hbb_900p0_300p0_lep.deriv.DAOD_SUSY5.e6972_s3126_r10724_p3736
+ nc_grid=mc16_13TeV:mc16_13TeV.396806.MadGraphPythia8EvtGen_A14N23LO_C1N2_Wh_hbb_900p0_300p0_lep.deriv.DAOD_SUSY5.e6972_s3126_r10724_p3736
+ nc_grid_filter=*.root*
+
+Running on grid? True
+Submitting mc16_13TeV:mc16_13TeV.396806.MadGraphPythia8EvtGen_A14N23LO_C1N2_Wh_hbb_900p0_300p0_lep.deriv.DAOD_SUSY5.e6972_s3126_r10724_p3736...
+Job submitted
+Warning in <TInterpreter::ReadRootmapFile>: class  MyxAODAnalysis found in libMyAnalysisDict.so  is already in libMyAnalysisLib.so 
+[?1034hxAOD::Init                INFO    Environment initialised for data access
+SampleHandler with 1 files
+Sample:name=mc16_13TeV:mc16_13TeV.396800.MadGraphPythia8EvtGen_A14N23LO_C1N2_Wh_hbb_900p0_0p0_lep.deriv.DAOD_SUSY5.e6972_s3126_r10724_p3736
+ nc_grid=mc16_13TeV:mc16_13TeV.396800.MadGraphPythia8EvtGen_A14N23LO_C1N2_Wh_hbb_900p0_0p0_lep.deriv.DAOD_SUSY5.e6972_s3126_r10724_p3736
+ nc_grid_filter=*.root*
+
+Running on grid? True
+Submitting mc16_13TeV:mc16_13TeV.396800.MadGraphPythia8EvtGen_A14N23LO_C1N2_Wh_hbb_900p0_0p0_lep.deriv.DAOD_SUSY5.e6972_s3126_r10724_p3736...
+Job submitted
+Warning in <TInterpreter::ReadRootmapFile>: class  MyxAODAnalysis found in libMyAnalysisDict.so  is already in libMyAnalysisLib.so 
+[?1034hxAOD::Init                INFO    Environment initialised for data access
+SampleHandler with 1 files
+Sample:name=mc16_13TeV:mc16_13TeV.396771.MadGraphPythia8EvtGen_A14N23LO_C1N2_Wh_hbb_650p0_150p0_lep.deriv.DAOD_SUSY5.e6972_s3126_r10724_p3736
+ nc_grid=mc16_13TeV:mc16_13TeV.396771.MadGraphPythia8EvtGen_A14N23LO_C1N2_Wh_hbb_650p0_150p0_lep.deriv.DAOD_SUSY5.e6972_s3126_r10724_p3736
+ nc_grid_filter=*.root*
+
+Running on grid? True
+Submitting mc16_13TeV:mc16_13TeV.396771.MadGraphPythia8EvtGen_A14N23LO_C1N2_Wh_hbb_650p0_150p0_lep.deriv.DAOD_SUSY5.e6972_s3126_r10724_p3736...
+Job submitted
+Warning in <TInterpreter::ReadRootmapFile>: class  MyxAODAnalysis found in libMyAnalysisDict.so  is already in libMyAnalysisLib.so 
+[?1034hxAOD::Init                INFO    Environment initialised for data access
+SampleHandler with 1 files
+Sample:name=mc16_13TeV:mc16_13TeV.396803.MadGraphPythia8EvtGen_A14N23LO_C1N2_Wh_hbb_900p0_150p0_lep.deriv.DAOD_SUSY5.e6972_s3126_r10724_p3736
+ nc_grid=mc16_13TeV:mc16_13TeV.396803.MadGraphPythia8EvtGen_A14N23LO_C1N2_Wh_hbb_900p0_150p0_lep.deriv.DAOD_SUSY5.e6972_s3126_r10724_p3736
+ nc_grid_filter=*.root*
+
+Running on grid? True
+Submitting mc16_13TeV:mc16_13TeV.396803.MadGraphPythia8EvtGen_A14N23LO_C1N2_Wh_hbb_900p0_150p0_lep.deriv.DAOD_SUSY5.e6972_s3126_r10724_p3736...
+Job submitted
+Warning in <TInterpreter::ReadRootmapFile>: class  MyxAODAnalysis found in libMyAnalysisDict.so  is already in libMyAnalysisLib.so 
+[?1034hxAOD::Init                INFO    Environment initialised for data access
+SampleHandler with 1 files
+Sample:name=mc16_13TeV:mc16_13TeV.396693.MadGraphPythia8EvtGen_A14N23LO_C1N2_Wh_hbb_200p0_50p0_lep.deriv.DAOD_SUSY5.e6972_a875_r10724_p3736
+ nc_grid=mc16_13TeV:mc16_13TeV.396693.MadGraphPythia8EvtGen_A14N23LO_C1N2_Wh_hbb_200p0_50p0_lep.deriv.DAOD_SUSY5.e6972_a875_r10724_p3736
+ nc_grid_filter=*.root*
+
+Running on grid? True
+Submitting mc16_13TeV:mc16_13TeV.396693.MadGraphPythia8EvtGen_A14N23LO_C1N2_Wh_hbb_200p0_50p0_lep.deriv.DAOD_SUSY5.e6972_a875_r10724_p3736...
+Job submitted
+Warning in <TInterpreter::ReadRootmapFile>: class  MyxAODAnalysis found in libMyAnalysisDict.so  is already in libMyAnalysisLib.so 
+[?1034hxAOD::Init                INFO    Environment initialised for data access
+SampleHandler with 1 files
+Sample:name=mc16_13TeV:mc16_13TeV.396774.MadGraphPythia8EvtGen_A14N23LO_C1N2_Wh_hbb_650p0_300p0_lep.deriv.DAOD_SUSY5.e6972_a875_r10724_p3736
+ nc_grid=mc16_13TeV:mc16_13TeV.396774.MadGraphPythia8EvtGen_A14N23LO_C1N2_Wh_hbb_650p0_300p0_lep.deriv.DAOD_SUSY5.e6972_a875_r10724_p3736
+ nc_grid_filter=*.root*
+
+Running on grid? True
+Submitting mc16_13TeV:mc16_13TeV.396774.MadGraphPythia8EvtGen_A14N23LO_C1N2_Wh_hbb_650p0_300p0_lep.deriv.DAOD_SUSY5.e6972_a875_r10724_p3736...
+Job submitted
+Warning in <TInterpreter::ReadRootmapFile>: class  MyxAODAnalysis found in libMyAnalysisDict.so  is already in libMyAnalysisLib.so 
+[?1034hxAOD::Init                INFO    Environment initialised for data access
+SampleHandler with 1 files
+Sample:name=mc16_13TeV:mc16_13TeV.396747.MadGraphPythia8EvtGen_A14N23LO_C1N2_Wh_hbb_500p0_200p0_lep.deriv.DAOD_SUSY5.e6972_a875_r10724_p3736
+ nc_grid=mc16_13TeV:mc16_13TeV.396747.MadGraphPythia8EvtGen_A14N23LO_C1N2_Wh_hbb_500p0_200p0_lep.deriv.DAOD_SUSY5.e6972_a875_r10724_p3736
+ nc_grid_filter=*.root*
+
+Running on grid? True
+Submitting mc16_13TeV:mc16_13TeV.396747.MadGraphPythia8EvtGen_A14N23LO_C1N2_Wh_hbb_500p0_200p0_lep.deriv.DAOD_SUSY5.e6972_a875_r10724_p3736...
+Job submitted
+Warning in <TInterpreter::ReadRootmapFile>: class  MyxAODAnalysis found in libMyAnalysisDict.so  is already in libMyAnalysisLib.so 
+[?1034hxAOD::Init                INFO    Environment initialised for data access
+SampleHandler with 1 files
+Sample:name=mc16_13TeV:mc16_13TeV.396767.MadGraphPythia8EvtGen_A14N23LO_C1N2_Wh_hbb_600p0_400p0_lep.deriv.DAOD_SUSY5.e6972_a875_r10724_p3736
+ nc_grid=mc16_13TeV:mc16_13TeV.396767.MadGraphPythia8EvtGen_A14N23LO_C1N2_Wh_hbb_600p0_400p0_lep.deriv.DAOD_SUSY5.e6972_a875_r10724_p3736
+ nc_grid_filter=*.root*
+
+Running on grid? True
+Submitting mc16_13TeV:mc16_13TeV.396767.MadGraphPythia8EvtGen_A14N23LO_C1N2_Wh_hbb_600p0_400p0_lep.deriv.DAOD_SUSY5.e6972_a875_r10724_p3736...
+Job submitted
+Warning in <TInterpreter::ReadRootmapFile>: class  MyxAODAnalysis found in libMyAnalysisDict.so  is already in libMyAnalysisLib.so 
+[?1034hxAOD::Init                INFO    Environment initialised for data access
+SampleHandler with 1 files
+Sample:name=mc16_13TeV:mc16_13TeV.396760.MadGraphPythia8EvtGen_A14N23LO_C1N2_Wh_hbb_600p0_50p0_lep.deriv.DAOD_SUSY5.e6972_s3126_r10724_p3736
+ nc_grid=mc16_13TeV:mc16_13TeV.396760.MadGraphPythia8EvtGen_A14N23LO_C1N2_Wh_hbb_600p0_50p0_lep.deriv.DAOD_SUSY5.e6972_s3126_r10724_p3736
+ nc_grid_filter=*.root*
+
+Running on grid? True
+Submitting mc16_13TeV:mc16_13TeV.396760.MadGraphPythia8EvtGen_A14N23LO_C1N2_Wh_hbb_600p0_50p0_lep.deriv.DAOD_SUSY5.e6972_s3126_r10724_p3736...
+Job submitted
+Warning in <TInterpreter::ReadRootmapFile>: class  MyxAODAnalysis found in libMyAnalysisDict.so  is already in libMyAnalysisLib.so 
+[?1034hxAOD::Init                INFO    Environment initialised for data access
+SampleHandler with 1 files
+Sample:name=mc16_13TeV:mc16_13TeV.396789.MadGraphPythia8EvtGen_A14N23LO_C1N2_Wh_hbb_750p0_250p0_lep.deriv.DAOD_SUSY5.e6972_s3126_r10724_p3736
+ nc_grid=mc16_13TeV:mc16_13TeV.396789.MadGraphPythia8EvtGen_A14N23LO_C1N2_Wh_hbb_750p0_250p0_lep.deriv.DAOD_SUSY5.e6972_s3126_r10724_p3736
+ nc_grid_filter=*.root*
+
+Running on grid? True
+Submitting mc16_13TeV:mc16_13TeV.396789.MadGraphPythia8EvtGen_A14N23LO_C1N2_Wh_hbb_750p0_250p0_lep.deriv.DAOD_SUSY5.e6972_s3126_r10724_p3736...
+Job submitted
+Warning in <TInterpreter::ReadRootmapFile>: class  MyxAODAnalysis found in libMyAnalysisDict.so  is already in libMyAnalysisLib.so 
+[?1034hxAOD::Init                INFO    Environment initialised for data access
+SampleHandler with 1 files
+Sample:name=mc16_13TeV:mc16_13TeV.396764.MadGraphPythia8EvtGen_A14N23LO_C1N2_Wh_hbb_600p0_250p0_lep.deriv.DAOD_SUSY5.e6972_a875_r10724_p3736
+ nc_grid=mc16_13TeV:mc16_13TeV.396764.MadGraphPythia8EvtGen_A14N23LO_C1N2_Wh_hbb_600p0_250p0_lep.deriv.DAOD_SUSY5.e6972_a875_r10724_p3736
+ nc_grid_filter=*.root*
+
+Running on grid? True
+Submitting mc16_13TeV:mc16_13TeV.396764.MadGraphPythia8EvtGen_A14N23LO_C1N2_Wh_hbb_600p0_250p0_lep.deriv.DAOD_SUSY5.e6972_a875_r10724_p3736...
+Job submitted
+Warning in <TInterpreter::ReadRootmapFile>: class  MyxAODAnalysis found in libMyAnalysisDict.so  is already in libMyAnalysisLib.so 
+[?1034hxAOD::Init                INFO    Environment initialised for data access
+SampleHandler with 1 files
+Sample:name=mc16_13TeV:mc16_13TeV.396781.MadGraphPythia8EvtGen_A14N23LO_C1N2_Wh_hbb_700p0_300p0_lep.deriv.DAOD_SUSY5.e6972_s3126_r10724_p3736
+ nc_grid=mc16_13TeV:mc16_13TeV.396781.MadGraphPythia8EvtGen_A14N23LO_C1N2_Wh_hbb_700p0_300p0_lep.deriv.DAOD_SUSY5.e6972_s3126_r10724_p3736
+ nc_grid_filter=*.root*
+
+Running on grid? True
+Submitting mc16_13TeV:mc16_13TeV.396781.MadGraphPythia8EvtGen_A14N23LO_C1N2_Wh_hbb_700p0_300p0_lep.deriv.DAOD_SUSY5.e6972_s3126_r10724_p3736...
+Job submitted
+Warning in <TInterpreter::ReadRootmapFile>: class  MyxAODAnalysis found in libMyAnalysisDict.so  is already in libMyAnalysisLib.so 
+[?1034hxAOD::Init                INFO    Environment initialised for data access
+SampleHandler with 1 files
+Sample:name=mc16_13TeV:mc16_13TeV.396749.MadGraphPythia8EvtGen_A14N23LO_C1N2_Wh_hbb_500p0_300p0_lep.deriv.DAOD_SUSY5.e6972_a875_r10724_p3736
+ nc_grid=mc16_13TeV:mc16_13TeV.396749.MadGraphPythia8EvtGen_A14N23LO_C1N2_Wh_hbb_500p0_300p0_lep.deriv.DAOD_SUSY5.e6972_a875_r10724_p3736
+ nc_grid_filter=*.root*
+
+Running on grid? True
+Submitting mc16_13TeV:mc16_13TeV.396749.MadGraphPythia8EvtGen_A14N23LO_C1N2_Wh_hbb_500p0_300p0_lep.deriv.DAOD_SUSY5.e6972_a875_r10724_p3736...
+Job submitted
+2_Wh_hbb_800p0_100p0_lep.deriv.DAOD_SUSY5.e6972_s3126_r10724_p3736 -s /scratch/hteagle/GridSubmissions/396793 -g True -t TYPE
+python submit.py -i mc16_13TeV:mc16_13TeV.396732.MadGraphPythia8EvtGen_A14N23LO_C1N2_Wh_hbb_400p0_150p0_lep.deriv.DAOD_SUSY5.e6972_a875_r10724_p3736 -s /scratch/hteagle/GridSubmissions/396732 -g True -t TYPE
+python submit.py -i mc16_13TeV:mc16_13TeV.396750.MadGraphPythia8EvtGen_A14N23LO_C1N2_Wh_hbb_500p0_350p0_lep.deriv.DAOD_SUSY5.e6972_a875_r10724_p3736 -s /scratch/hteagle/GridSubmissions/396750 -g True -t TYPE
+python submit.py -i mc16_13TeV:mc16_13TeV.396756.MadGraphPythia8EvtGen_A14N23LO_C1N2_Wh_hbb_550p0_200p0_lep.deriv.DAOD_SUSY5.e6972_a875_r10724_p3736 -s /scratch/hteagle/GridSubmissions/396756 -g True -t TYPE
+python submit.py -i mc16_13TeV:mc16_13TeV.396804.MadGraphPythia8EvtGen_A14N23LO_C1N2_Wh_hbb_900p0_200p0_lep.deriv.DAOD_SUSY5.e6972_s3126_r10724_p3736 -s /scratch/hteagle/GridSubmissions/396804 -g True -t TYPE
+python submit.py -i mc16_13TeV:mc16_13TeV.396694.MadGraphPythia8EvtGen_A14N23LO_C1N2_Wh_hbb_202p5_72p5_lep.deriv.DAOD_SUSY5.e6972_a875_r10724_p3736 -s /scratch/hteagle/GridSubmissions/396694 -g True -t TYPE
+python submit.py -i mc16_13TeV:mc16_13TeV.396811.MadGraphPythia8EvtGen_A14N23LO_C1N2_Wh_hbb_1000p0_100p0_lep.deriv.DAOD_SUSY5.e6972_s3126_r10724_p3736 -s /scratch/hteagle/GridSubmissions/396811 -g True -t TYPE
+python submit.py -i mc16_13TeV:mc16_13TeV.396725.MadGraphPythia8EvtGen_A14N23LO_C1N2_Wh_hbb_350p0_200p0_lep.deriv.DAOD_SUSY5.e6972_a875_r10724_p3736 -s /scratch/hteagle/GridSubmissions/396725 -g True -t TYPE
+python submit.py -i mc16_13TeV:mc16_13TeV.396731.MadGraphPythia8EvtGen_A14N23LO_C1N2_Wh_hbb_400p0_100p0_lep.deriv.DAOD_SUSY5.e6972_a875_r10724_p3736 -s /scratch/hteagle/GridSubmissions/396731 -g True -t TYPE
+python submit.py -i mc16_13TeV:mc16_13TeV.396695.MadGraphPythia8EvtGen_A14N23LO_C1N2_Wh_hbb_212p5_37p5_lep.deriv.DAOD_SUSY5.e6972_a875_r10724_p3736 -s /scratch/hteagle/GridSubmissions/396695 -g True -t TYPE
+python submit.py -i mc16_13TeV:mc16_13TeV.396802.MadGraphPythia8EvtGen_A14N23LO_C1N2_Wh_hbb_900p0_100p0_lep.deriv.DAOD_SUSY5.e6972_s3126_r10724_p3736 -s /scratch/hteagle/GridSubmissions/396802 -g True -t TYPE
+python submit.py -i mc16_13TeV:mc16_13TeV.396773.MadGraphPythia8EvtGen_A14N23LO_C1N2_Wh_hbb_650p0_250p0_lep.deriv.DAOD_SUSY5.e6972_s3126_r10724_p3736 -s /scratch/hteagle/GridSubmissions/396773 -g True -t TYPE
+python submit.py -i mc16_13TeV:mc16_13TeV.396805.MadGraphPythia8EvtGen_A14N23LO_C1N2_Wh_hbb_900p0_250p0_lep.deriv.DAOD_SUSY5.e6972_s3126_r10724_p3736 -s /scratch/hteagle/GridSubmissions/396805 -g True -t TYPE
+python submit.py -i mc16_13TeV:mc16_13TeV.396757.MadGraphPythia8EvtGen_A14N23LO_C1N2_Wh_hbb_550p0_250p0_lep.deriv.DAOD_SUSY5.e6972_a875_r10724_p3736 -s /scratch/hteagle/GridSubmissions/396757 -g True -t TYPE
+python submit.py -i mc16_13TeV:mc16_13TeV.396704.MadGraphPythia8EvtGen_A14N23LO_C1N2_Wh_hbb_250p0_50p0_lep.deriv.DAOD_SUSY5.e6972_a875_r10724_p3736 -s /scratch/hteagle/GridSubmissions/396704 -g True -t TYPE
+python submit.py -i mc16_13TeV:mc16_13TeV.396706.MadGraphPythia8EvtGen_A14N23LO_C1N2_Wh_hbb_250p0_100p0_lep.deriv.DAOD_SUSY5.e6972_a875_r10724_p3736 -s /scratch/hteagle/GridSubmissions/396706 -g True -t TYPE
+python submit.py -i mc16_13TeV:mc16_13TeV.396692.MadGraphPythia8EvtGen_A14N23LO_C1N2_Wh_hbb_200p0_25p0_lep.deriv.DAOD_SUSY5.e6972_a875_r10724_p3736 -s /scratch/hteagle/GridSubmissions/396692 -g True -t TYPE
+python submit.py -i mc16_13TeV:mc16_13TeV.396684.MadGraphPythia8EvtGen_A14N23LO_C1N2_Wh_hbb_165p0_35p0_lep.deriv.DAOD_SUSY5.e6972_a875_r10724_p3736 -s /scratch/hteagle/GridSubmissions/396684 -g True -t TYPE
+python submit.py -i mc16_13TeV:mc16_13TeV.396788.MadGraphPythia8EvtGen_A14N23LO_C1N2_Wh_hbb_750p0_200p0_lep.deriv.DAOD_SUSY5.e6972_s3126_r10724_p3736 -s /scratch/hteagle/GridSubmissions/396788 -g True -t TYPE
+python submit.py -i mc16_13TeV:mc16_13TeV.396699.MadGraphPythia8EvtGen_A14N23LO_C1N2_Wh_hbb_225p0_50p0_lep.deriv.DAOD_SUSY5.e6972_a875_r10724_p3736 -s /scratch/hteagle/GridSubmissions/396699 -g True -t TYPE
+python submit.py -i mc16_13TeV:mc16_13TeV.396733.MadGraphPythia8EvtGen_A14N23LO_C1N2_Wh_hbb_400p0_200p0_lep.deriv.DAOD_SUSY5.e6972_a875_r10724_p3736 -s /scratch/hteagle/GridSubmissions/396733 -g True -t TYPE
+python submit.py -i mc16_13TeV:mc16_13TeV.396753.MadGraphPythia8EvtGen_A14N23LO_C1N2_Wh_hbb_550p0_50p0_lep.deriv.DAOD_SUSY5.e6972_s3126_r10724_p3736 -s /scratch/hteagle/GridSubmissions/396753 -g True -t TYPE
+python submit.py -i mc16_13TeV:mc16_13TeV.396813.MadGraphPythia8EvtGen_A14N23LO_C1N2_Wh_hbb_1000p0_200p0_lep.deriv.DAOD_SUSY5.e6972_s3126_r10724_p3736 -s /scratch/hteagle/GridSubmissions/396813 -g True -t TYPE
+python submit.py -i mc16_13TeV:mc16_13TeV.396810.MadGraphPythia8EvtGen_A14N23LO_C1N2_Wh_hbb_1000p0_50p0_lep.deriv.DAOD_SUSY5.e6972_s3126_r10724_p3736 -s /scratch/hteagle/GridSubmissions/396810 -g True -t TYPE
+python submit.py -i mc16_13TeV:mc16_13TeV.396710.MadGraphPythia8EvtGen_A14N23LO_C1N2_Wh_hbb_275p0_75p0_lep.deriv.DAOD_SUSY5.e6972_a875_r10724_p3736 -s /scratch/hteagle/GridSubmissions/396710 -g True -t TYPE
+python submit.py -i mc16_13TeV:mc16_13TeV.396712.MadGraphPythia8EvtGen_A14N23LO_C1N2_Wh_hbb_300p0_25p0_lep.deriv.DAOD_SUSY5.e6972_a875_r10724_p3736 -s /scratch/hteagle/GridSubmissions/396712 -g True -t TYPE
+python submit.py -i mc16_13TeV:mc16_13TeV.396806.MadGraphPythia8EvtGen_A14N23LO_C1N2_Wh_hbb_900p0_300p0_lep.deriv.DAOD_SUSY5.e6972_s3126_r10724_p3736 -s /scratch/hteagle/GridSubmissions/396806 -g True -t TYPE
+python submit.py -i mc16_13TeV:mc16_13TeV.396800.MadGraphPythia8EvtGen_A14N23LO_C1N2_Wh_hbb_900p0_0p0_lep.deriv.DAOD_SUSY5.e6972_s3126_r10724_p3736 -s /scratch/hteagle/GridSubmissions/396800 -g True -t TYPE
+python submit.py -i mc16_13TeV:mc16_13TeV.396771.MadGraphPythia8EvtGen_A14N23LO_C1N2_Wh_hbb_650p0_150p0_lep.deriv.DAOD_SUSY5.e6972_s3126_r10724_p3736 -s /scratch/hteagle/GridSubmissions/396771 -g True -t TYPE
+python submit.py -i mc16_13TeV:mc16_13TeV.396803.MadGraphPythia8EvtGen_A14N23LO_C1N2_Wh_hbb_900p0_150p0_lep.deriv.DAOD_SUSY5.e6972_s3126_r10724_p3736 -s /scratch/hteagle/GridSubmissions/396803 -g True -t TYPE
+python submit.py -i mc16_13TeV:mc16_13TeV.396693.MadGraphPythia8EvtGen_A14N23LO_C1N2_Wh_hbb_200p0_50p0_lep.deriv.DAOD_SUSY5.e6972_a875_r10724_p3736 -s /scratch/hteagle/GridSubmissions/396693 -g True -t TYPE
+python submit.py -i mc16_13TeV:mc16_13TeV.396774.MadGraphPythia8EvtGen_A14N23LO_C1N2_Wh_hbb_650p0_300p0_lep.deriv.DAOD_SUSY5.e6972_a875_r10724_p3736 -s /scratch/hteagle/GridSubmissions/396774 -g True -t TYPE
+python submit.py -i mc16_13TeV:mc16_13TeV.396747.MadGraphPythia8EvtGen_A14N23LO_C1N2_Wh_hbb_500p0_200p0_lep.deriv.DAOD_SUSY5.e6972_a875_r10724_p3736 -s /scratch/hteagle/GridSubmissions/396747 -g True -t TYPE
+python submit.py -i mc16_13TeV:mc16_13TeV.396767.MadGraphPythia8EvtGen_A14N23LO_C1N2_Wh_hbb_600p0_400p0_lep.deriv.DAOD_SUSY5.e6972_a875_r10724_p3736 -s /scratch/hteagle/GridSubmissions/396767 -g True -t TYPE
+python submit.py -i mc16_13TeV:mc16_13TeV.396760.MadGraphPythia8EvtGen_A14N23LO_C1N2_Wh_hbb_600p0_50p0_lep.deriv.DAOD_SUSY5.e6972_s3126_r10724_p3736 -s /scratch/hteagle/GridSubmissions/396760 -g True -t TYPE
+python submit.py -i mc16_13TeV:mc16_13TeV.396789.MadGraphPythia8EvtGen_A14N23LO_C1N2_Wh_hbb_750p0_250p0_lep.deriv.DAOD_SUSY5.e6972_s3126_r10724_p3736 -s /scratch/hteagle/GridSubmissions/396789 -g True -t TYPE
+python submit.py -i mc16_13TeV:mc16_13TeV.396764.MadGraphPythia8EvtGen_A14N23LO_C1N2_Wh_hbb_600p0_250p0_lep.deriv.DAOD_SUSY5.e6972_a875_r10724_p3736 -s /scratch/hteagle/GridSubmissions/396764 -g True -t TYPE
+python submit.py -i mc16_13TeV:mc16_13TeV.396781.MadGraphPythia8EvtGen_A14N23LO_C1N2_Wh_hbb_700p0_300p0_lep.deriv.DAOD_SUSY5.e6972_s3126_r10724_p3736 -s /scratch/hteagle/GridSubmissions/396781 -g True -t TYPE
+python submit.py -i mc16_13TeV:mc16_13TeV.396749.MadGraphPythia8EvtGen_A14N23LO_C1N2_Wh_hbb_500p0_300p0_lep.deriv.DAOD_SUSY5.e6972_a875_r10724_p3736 -s /scratch/hteagle/GridSubmissions/396749 -g True -t TYPE
+python submit.py -i mc16_13TeV:mc16_13TeV.396742.MadGraphPythia8EvtGen_A14N23LO_C1N2_Wh_hbb_450p0_300p0_lep.deriv.DAOD_SUSY5.e6972_a875_r10724_p3736 -s /scraWarning in <TInterpreter::ReadRootmapFile>: class  MyxAODAnalysis found in libMyAnalysisDict.so  is already in libMyAnalysisLib.so 
+[?1034hxAOD::Init                INFO    Environment initialised for data access
+SampleHandler with 1 files
+Sample:name=mc16_13TeV:mc16_13TeV.396742.MadGraphPythia8EvtGen_A14N23LO_C1N2_Wh_hbb_450p0_300p0_lep.deriv.DAOD_SUSY5.e6972_a875_r10724_p3736
+ nc_grid=mc16_13TeV:mc16_13TeV.396742.MadGraphPythia8EvtGen_A14N23LO_C1N2_Wh_hbb_450p0_300p0_lep.deriv.DAOD_SUSY5.e6972_a875_r10724_p3736
+ nc_grid_filter=*.root*
+
+Running on grid? True
+Submitting mc16_13TeV:mc16_13TeV.396742.MadGraphPythia8EvtGen_A14N23LO_C1N2_Wh_hbb_450p0_300p0_lep.deriv.DAOD_SUSY5.e6972_a875_r10724_p3736...
+Job submitted
+Warning in <TInterpreter::ReadRootmapFile>: class  MyxAODAnalysis found in libMyAnalysisDict.so  is already in libMyAnalysisLib.so 
+[?1034hxAOD::Init                INFO    Environment initialised for data access
+SampleHandler with 1 files
+Sample:name=mc16_13TeV:mc16_13TeV.396797.MadGraphPythia8EvtGen_A14N23LO_C1N2_Wh_hbb_800p0_300p0_lep.deriv.DAOD_SUSY5.e6972_s3126_r10724_p3736
+ nc_grid=mc16_13TeV:mc16_13TeV.396797.MadGraphPythia8EvtGen_A14N23LO_C1N2_Wh_hbb_800p0_300p0_lep.deriv.DAOD_SUSY5.e6972_s3126_r10724_p3736
+ nc_grid_filter=*.root*
+
+Running on grid? True
+Submitting mc16_13TeV:mc16_13TeV.396797.MadGraphPythia8EvtGen_A14N23LO_C1N2_Wh_hbb_800p0_300p0_lep.deriv.DAOD_SUSY5.e6972_s3126_r10724_p3736...
+Job submitted
+Warning in <TInterpreter::ReadRootmapFile>: class  MyxAODAnalysis found in libMyAnalysisDict.so  is already in libMyAnalysisLib.so 
+[?1034hxAOD::Init                INFO    Environment initialised for data access
+SampleHandler with 1 files
+Sample:name=mc16_13TeV:mc16_13TeV.396746.MadGraphPythia8EvtGen_A14N23LO_C1N2_Wh_hbb_500p0_150p0_lep.deriv.DAOD_SUSY5.e6989_a875_r10724_p3736
+ nc_grid=mc16_13TeV:mc16_13TeV.396746.MadGraphPythia8EvtGen_A14N23LO_C1N2_Wh_hbb_500p0_150p0_lep.deriv.DAOD_SUSY5.e6989_a875_r10724_p3736
+ nc_grid_filter=*.root*
+
+Running on grid? True
+Submitting mc16_13TeV:mc16_13TeV.396746.MadGraphPythia8EvtGen_A14N23LO_C1N2_Wh_hbb_500p0_150p0_lep.deriv.DAOD_SUSY5.e6989_a875_r10724_p3736...
+Job submitted
+Warning in <TInterpreter::ReadRootmapFile>: class  MyxAODAnalysis found in libMyAnalysisDict.so  is already in libMyAnalysisLib.so 
+[?1034hxAOD::Init                INFO    Environment initialised for data access
+SampleHandler with 1 files
+Sample:name=mc16_13TeV:mc16_13TeV.396801.MadGraphPythia8EvtGen_A14N23LO_C1N2_Wh_hbb_900p0_50p0_lep.deriv.DAOD_SUSY5.e6972_s3126_r10724_p3736
+ nc_grid=mc16_13TeV:mc16_13TeV.396801.MadGraphPythia8EvtGen_A14N23LO_C1N2_Wh_hbb_900p0_50p0_lep.deriv.DAOD_SUSY5.e6972_s3126_r10724_p3736
+ nc_grid_filter=*.root*
+
+Running on grid? True
+Submitting mc16_13TeV:mc16_13TeV.396801.MadGraphPythia8EvtGen_A14N23LO_C1N2_Wh_hbb_900p0_50p0_lep.deriv.DAOD_SUSY5.e6972_s3126_r10724_p3736...
+Job submitted
+Warning in <TInterpreter::ReadRootmapFile>: class  MyxAODAnalysis found in libMyAnalysisDict.so  is already in libMyAnalysisLib.so 
+[?1034hxAOD::Init                INFO    Environment initialised for data access
+SampleHandler with 1 files
+Sample:name=mc16_13TeV:mc16_13TeV.396784.MadGraphPythia8EvtGen_A14N23LO_C1N2_Wh_hbb_750p0_0p0_lep.deriv.DAOD_SUSY5.e6972_s3126_r10724_p3736
+ nc_grid=mc16_13TeV:mc16_13TeV.396784.MadGraphPythia8EvtGen_A14N23LO_C1N2_Wh_hbb_750p0_0p0_lep.deriv.DAOD_SUSY5.e6972_s3126_r10724_p3736
+ nc_grid_filter=*.root*
+
+Running on grid? True
+Submitting mc16_13TeV:mc16_13TeV.396784.MadGraphPythia8EvtGen_A14N23LO_C1N2_Wh_hbb_750p0_0p0_lep.deriv.DAOD_SUSY5.e6972_s3126_r10724_p3736...
+Job submitted
+Warning in <TInterpreter::ReadRootmapFile>: class  MyxAODAnalysis found in libMyAnalysisDict.so  is already in libMyAnalysisLib.so 
+[?1034hxAOD::Init                INFO    Environment initialised for data access
+SampleHandler with 1 files
+Sample:name=mc16_13TeV:mc16_13TeV.396741.MadGraphPythia8EvtGen_A14N23LO_C1N2_Wh_hbb_450p0_250p0_lep.deriv.DAOD_SUSY5.e6972_a875_r10724_p3736
+ nc_grid=mc16_13TeV:mc16_13TeV.396741.MadGraphPythia8EvtGen_A14N23LO_C1N2_Wh_hbb_450p0_250p0_lep.deriv.DAOD_SUSY5.e6972_a875_r10724_p3736
+ nc_grid_filter=*.root*
+
+Running on grid? True
+Submitting mc16_13TeV:mc16_13TeV.396741.MadGraphPythia8EvtGen_A14N23LO_C1N2_Wh_hbb_450p0_250p0_lep.deriv.DAOD_SUSY5.e6972_a875_r10724_p3736...
+Job submitted
+Warning in <TInterpreter::ReadRootmapFile>: class  MyxAODAnalysis found in libMyAnalysisDict.so  is already in libMyAnalysisLib.so 
+[?1034hxAOD::Init                INFO    Environment initialised for data access
+SampleHandler with 1 files
+Sample:name=mc16_13TeV:mc16_13TeV.396698.MadGraphPythia8EvtGen_A14N23LO_C1N2_Wh_hbb_225p0_25p0_lep.deriv.DAOD_SUSY5.e6972_a875_r10724_p3736
+ nc_grid=mc16_13TeV:mc16_13TeV.396698.MadGraphPythia8EvtGen_A14N23LO_C1N2_Wh_hbb_225p0_25p0_lep.deriv.DAOD_SUSY5.e6972_a875_r10724_p3736
+ nc_grid_filter=*.root*
+
+Running on grid? True
+Submitting mc16_13TeV:mc16_13TeV.396698.MadGraphPythia8EvtGen_A14N23LO_C1N2_Wh_hbb_225p0_25p0_lep.deriv.DAOD_SUSY5.e6972_a875_r10724_p3736...
+Job submitted
+Warning in <TInterpreter::ReadRootmapFile>: class  MyxAODAnalysis found in libMyAnalysisDict.so  is already in libMyAnalysisLib.so 
+[?1034hxAOD::Init                INFO    Environment initialised for data access
+SampleHandler with 1 files
+Sample:name=mc16_13TeV:mc16_13TeV.396795.MadGraphPythia8EvtGen_A14N23LO_C1N2_Wh_hbb_800p0_200p0_lep.deriv.DAOD_SUSY5.e6972_s3126_r10724_p3736
+ nc_grid=mc16_13TeV:mc16_13TeV.396795.MadGraphPythia8EvtGen_A14N23LO_C1N2_Wh_hbb_800p0_200p0_lep.deriv.DAOD_SUSY5.e6972_s3126_r10724_p3736
+ nc_grid_filter=*.root*
+
+Running on grid? True
+Submitting mc16_13TeV:mc16_13TeV.396795.MadGraphPythia8EvtGen_A14N23LO_C1N2_Wh_hbb_800p0_200p0_lep.deriv.DAOD_SUSY5.e6972_s3126_r10724_p3736...
+Job submitted
+Warning in <TInterpreter::ReadRootmapFile>: class  MyxAODAnalysis found in libMyAnalysisDict.so  is already in libMyAnalysisLib.so 
+[?1034hxAOD::Init                INFO    Environment initialised for data access
+SampleHandler with 1 files
+Sample:name=mc16_13TeV:mc16_13TeV.396792.MadGraphPythia8EvtGen_A14N23LO_C1N2_Wh_hbb_800p0_50p0_lep.deriv.DAOD_SUSY5.e6972_s3126_r10724_p3736
+ nc_grid=mc16_13TeV:mc16_13TeV.396792.MadGraphPythia8EvtGen_A14N23LO_C1N2_Wh_hbb_800p0_50p0_lep.deriv.DAOD_SUSY5.e6972_s3126_r10724_p3736
+ nc_grid_filter=*.root*
+
+Running on grid? True
+Submitting mc16_13TeV:mc16_13TeV.396792.MadGraphPythia8EvtGen_A14N23LO_C1N2_Wh_hbb_800p0_50p0_lep.deriv.DAOD_SUSY5.e6972_s3126_r10724_p3736...
+Job submitted
+Warning in <TInterpreter::ReadRootmapFile>: class  MyxAODAnalysis found in libMyAnalysisDict.so  is already in libMyAnalysisLib.so 
+[?1034hxAOD::Init                INFO    Environment initialised for data access
+SampleHandler with 1 files
+Sample:name=mc16_13TeV:mc16_13TeV.396766.MadGraphPythia8EvtGen_A14N23LO_C1N2_Wh_hbb_600p0_350p0_lep.deriv.DAOD_SUSY5.e6972_a875_r10724_p3736
+ nc_grid=mc16_13TeV:mc16_13TeV.396766.MadGraphPythia8EvtGen_A14N23LO_C1N2_Wh_hbb_600p0_350p0_lep.deriv.DAOD_SUSY5.e6972_a875_r10724_p3736
+ nc_grid_filter=*.root*
+
+Running on grid? True
+Submitting mc16_13TeV:mc16_13TeV.396766.MadGraphPythia8EvtGen_A14N23LO_C1N2_Wh_hbb_600p0_350p0_lep.deriv.DAOD_SUSY5.e6972_a875_r10724_p3736...
+Job submitted
+Warning in <TInterpreter::ReadRootmapFile>: class  MyxAODAnalysis found in libMyAnalysisDict.so  is already in libMyAnalysisLib.so 
+[?1034hxAOD::Init                INFO    Environment initialised for data access
+SampleHandler with 1 files
+Sample:name=mc16_13TeV:mc16_13TeV.396755.MadGraphPythia8EvtGen_A14N23LO_C1N2_Wh_hbb_550p0_150p0_lep.deriv.DAOD_SUSY5.e6972_s3126_r10724_p3736
+ nc_grid=mc16_13TeV:mc16_13TeV.396755.MadGraphPythia8EvtGen_A14N23LO_C1N2_Wh_hbb_550p0_150p0_lep.deriv.DAOD_SUSY5.e6972_s3126_r10724_p3736
+ nc_grid_filter=*.root*
+
+Running on grid? True
+Submitting mc16_13TeV:mc16_13TeV.396755.MadGraphPythia8EvtGen_A14N23LO_C1N2_Wh_hbb_550p0_150p0_lep.deriv.DAOD_SUSY5.e6972_s3126_r10724_p3736...
+Job submitted
+Warning in <TInterpreter::ReadRootmapFile>: class  MyxAODAnalysis found in libMyAnalysisDict.so  is already in libMyAnalysisLib.so 
+[?1034hxAOD::Init                INFO    Environment initialised for data access
+SampleHandler with 1 files
+Sample:name=mc16_13TeV:mc16_13TeV.396700.MadGraphPythia8EvtGen_A14N23LO_C1N2_Wh_hbb_225p0_75p0_lep.deriv.DAOD_SUSY5.e6972_a875_r10724_p3736
+ nc_grid=mc16_13TeV:mc16_13TeV.396700.MadGraphPythia8EvtGen_A14N23LO_C1N2_Wh_hbb_225p0_75p0_lep.deriv.DAOD_SUSY5.e6972_a875_r10724_p3736
+ nc_grid_filter=*.root*
+

@@ -748,7 +748,7 @@ StatusCode MyxAODAnalysis :: execute ()
     if (isMC) passGRL = true;
 
     // get the truth MET info for OR removals between ttbar/single top samples
-    if (mcChannel == 410470 || (mcChannel >= 407342 && mcChannel <= 407347) || mcChannel == 410646 || mcChannel == 410647){
+    if (mcChannel == 410470 || (mcChannel >= 407342 && mcChannel <= 407347) || mcChannel == 410646 || mcChannel == 410647 || (mcChannel >= 407018 && mcChannel <= 407021) || mcChannel== 345935){
     truthfilt_MET = 0.001*eventInfo->auxdata< float >("GenFiltMET");
     truthfilt_HT = 0.001*eventInfo->auxdata< float>("GenFiltHT");
     HTruthMETFilt->Fill(truthfilt_MET);
