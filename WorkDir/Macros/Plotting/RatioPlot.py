@@ -258,7 +258,8 @@ def RatioPlot(variable, xaxislabel, xmin, xmax, rebin, ymax, selection, director
     if rebinvalue > 1 and not phiplot and not etaplot:
         xaxislabel = xaxislabel+" [GeV]"
 
-    numberofbins = int(xmax-xmin)
+    #numberofbins = int(xmax-xmin)
+    numberofbins = int(rebinvalue)
     print( "Number of bins: ", numberofbins)
     
     if rebinvalue == 0 and "jet_imbalance" in variabletoplot:
@@ -379,21 +380,21 @@ def RatioPlot(variable, xaxislabel, xmin, xmax, rebin, ymax, selection, director
     dology = True
 
 
-    if not phiplot and not etaplot and rebinvalue!=0:
-        if not sigOnly:
-            ttbarPlot.Rebin(rebinvalue)
-            ttVPlot.Rebin(rebinvalue)
-            SingleTopPlot.Rebin(rebinvalue)
-            DiBosonPlot.Rebin(rebinvalue)
-            WjetsPlot.Rebin(rebinvalue)
-            ZjetsPlot.Rebin(rebinvalue)
-            SMBkgPlot.Rebin(rebinvalue)
-            DataPlot.Rebin(rebinvalue)
-            HiggsPlot.Rebin(rebinvalue)
-            DiJetPlot.Rebin(rebinvalue)
-        for string,Plot in signalPlots.items():
-            print( "Plot; type ="+str(type(Plot)))
-            Plot.Rebin(rebinvalue)
+    #if not phiplot and not etaplot and rebinvalue!=0:
+        # if not sigOnly:
+        #     ttbarPlot.Rebin(rebinvalue)
+        #     ttVPlot.Rebin(rebinvalue)
+        #     SingleTopPlot.Rebin(rebinvalue)
+        #     DiBosonPlot.Rebin(rebinvalue)
+        #     WjetsPlot.Rebin(rebinvalue)
+        #     ZjetsPlot.Rebin(rebinvalue)
+        #     SMBkgPlot.Rebin(rebinvalue)
+        #     DataPlot.Rebin(rebinvalue)
+        #     HiggsPlot.Rebin(rebinvalue)
+        #     DiJetPlot.Rebin(rebinvalue)
+        # for string,Plot in signalPlots.items():
+        #     print( "Plot; type ="+str(type(Plot)))
+        #     Plot.Rebin(rebinvalue)
 
 
 
@@ -579,9 +580,11 @@ def RatioPlot(variable, xaxislabel, xmin, xmax, rebin, ymax, selection, director
     j=0
     for inputSignalFile in inputSignalFiles:
         TruthBool = False
+        UnsmearedBool = False
         if (inputSignalFile.find("TRUTH") != -1):
             TruthBool = True
-
+            if (inputSignalFile.find("Unsmeared")!=-1):
+                UnsmearedBool = True
         if (inputSignalFile.find("C1N2") != -1):
             print ('inputSignalFile has type:'+str(type(inputSignalFile)))
             print ('inputSignalFile is:'+str(inputSignalFile))
@@ -589,6 +592,8 @@ def RatioPlot(variable, xaxislabel, xmin, xmax, rebin, ymax, selection, director
             signalmass = (inputSignalFile[1].split("_")[0])+","+(inputSignalFile[1].split("_")[1])
             if TruthBool:
                 signalmass = signalmass+"TRUTH"
+                if UnsmearedBool:
+                    signalmass = signalmass+"Unsmeared"
             Legend.AddEntry(signalPlots["signalPlot_"+str(j)],"(m_{#tilde{#chi}_{2}^{0}}/m_{#tilde{#chi}_{1}^{#pm}}, m_{#tilde{#chi}_{1}^{0}}) = ("+signalmass+")GeV", "L")
 
         else:
@@ -647,7 +652,7 @@ def RatioPlot(variable, xaxislabel, xmin, xmax, rebin, ymax, selection, director
             if sigOnly:
                 if i==0 :
                     signalPlots[signalPlot].GetXaxis().SetTitle(xaxislabel)
-                    signalPlots[signalPlot].SetLabelSize(0.12,"X")
+                    signalPlots[signalPlot].SetLabelSize(0.04,"X")
                     signalPlots[signalPlot].SetMaximum(signalPlots[signalPlot].GetMaximum()*10)
                     signalPlots[signalPlot].Draw("HIST;E")
                     print ("number of events: "+str(signalPlots[signalPlot].GetEntries()))

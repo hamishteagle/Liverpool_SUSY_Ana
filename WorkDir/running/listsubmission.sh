@@ -1,8 +1,17 @@
 #!bin/bash
 
-##ttbar_sliced
+
 function runmissing_a(){
     file="SampleLists_SUSY5/mc16a/missing.txt"
+    if [  -f $file ]; then
+	python listsubmission.py -i $file
+	echo "fine"
+    else 
+    echo $file 'does not exist!!'
+    fi
+}
+function runmissing_e(){
+    file="SampleLists_SUSY5/mc16e/missing.txt"
     if [  -f $file ]; then
 	python listsubmission.py -i $file
 	echo "fine"
@@ -395,7 +404,10 @@ wait
 
 
 
-runsignal_e
+
+# rundiJet_e
+# wait
+runmissing_e
 wait
 #runmc16a
 #wait
