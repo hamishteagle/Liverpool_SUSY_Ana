@@ -4,7 +4,7 @@
 function runmissing_a(){
     file="SampleLists_SUSY5/mc16a/missing.txt"
     if [  -f $file ]; then
-	python listsubmission.py -i $file
+	python listsubmission.py -i $file -t TTBAR
 	echo "fine"
     else 
     echo $file 'does not exist!!'
@@ -407,7 +407,7 @@ wait
 
 # rundiJet_e
 # wait
-runmissing_e
+runmissing_a
 wait
 #runmc16a
 #wait

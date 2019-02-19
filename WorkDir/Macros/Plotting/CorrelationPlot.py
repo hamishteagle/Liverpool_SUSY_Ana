@@ -91,7 +91,7 @@ def CorrelationPlot(variable1, variable2, xaxislabel, yaxislabel, xmin, xmax, xb
     
 
     scatterPlot1.Draw("colz")
-    latex_draw("Reco_Signal")
+    latex_draw("Reco_ttbar")
     
     Canvas2 = ROOT.TCanvas("Canvas2","Canvas2",0,0,900,900)
     
@@ -102,7 +102,7 @@ def CorrelationPlot(variable1, variable2, xaxislabel, yaxislabel, xmin, xmax, xb
     scatterPlot2.GetYaxis().SetLabelOffset(0.012)
     scatterPlot2.SetMarkerColor(ROOT.kGray+1)
     scatterPlot2.Draw("colz")
-    latex_draw("TRUTHSmeared_Signal")
+    latex_draw("TRUTHSmeared_ttbar")
 
 
 

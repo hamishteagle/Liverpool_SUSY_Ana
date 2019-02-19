@@ -151,7 +151,7 @@ def latex_draw(label):
     Tl.SetTextSize(0.035)
     Tl.SetTextAlign(13)
     Tl.SetNDC(True)
-    Tl.DrawLatex(0.195, 0.87,"#sqrt{s} = 13 TeV, 140.5 fb^{-1}")
+    Tl.DrawLatex(0.195, 0.87,"#sqrt{s} = 13 TeV, 36.1 fb^{-1}")
     Tl.DrawLatex(0.195, 0.92,"#it{#bf{ATLAS}} Internal")
     Tl.DrawLatex(0.195, 0.82,label)
    
@@ -599,9 +599,9 @@ def RatioPlot(variable, xaxislabel, xmin, xmax, rebin, ymax, selection, director
         else:
             #Legend.AddEntry(signalPlots["signalPlot_"+str(j)],"(m_{#tilde{b}}, m_{#tilde{#chi}}_{1}^{0}) = (800,1)GeV", "L")
             if TruthBool:
-                Legend.AddEntry(signalPlots["signalPlot_"+str(j)],"singleTop_Truth", "L")
+                Legend.AddEntry(signalPlots["signalPlot_"+str(j)],"ttbar_Truth", "L")
             else:
-                Legend.AddEntry(signalPlots["signalPlot_"+str(j)],"singleTop", "L")
+                Legend.AddEntry(signalPlots["signalPlot_"+str(j)],"ttbar", "L")
         j+=1
     Legend.SetTextSize(0.02)
     #Legend.SetTextFont(2)

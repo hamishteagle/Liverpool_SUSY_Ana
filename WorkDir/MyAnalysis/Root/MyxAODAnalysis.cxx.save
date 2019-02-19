@@ -1,5 +1,4 @@
 #include <EventLoop/Job.h>
-#include <EventLoop/IWorker.h>//Try this maybe
 #include <EventLoop/Worker.h>
 #include <MyAnalysis/MyxAODAnalysis.h>
 #include "CPAnalysisExamples/errorcheck.h"
@@ -19,6 +18,7 @@
 #include <string.h>
 #include <fstream>
 #include <TTreeFormula.h>
+#include "xAODEventInfo/EventInfo.h"
 #include "MyAnalysis/TruthObjectDef.h"
 #include "MyAnalysis/ObjectDef.h"
 #include "MyAnalysis/AddPileUp.h"
@@ -67,6 +67,8 @@ StatusCode MyxAODAnalysis :: fileExecute ()
 {
   // Here you do everything that needs to be done exactly once for every
   // single file, e.g. collect a list of all lumi-blocks processed
+
+
 
   const char* APP_NAME = "MyxAODAnalysis";
 
@@ -322,7 +324,7 @@ StatusCode MyxAODAnalysis :: initialize ()
   //Assigning the lumicalc files
   std::vector<std::string> lumicalcFiles;
 
-  //Getting the run number of the file to determine MC16a vs MC16c vs MC16e
+  //Getting the run number of the file to determine MC16a vs MC16c
   const xAOD::EventInfo* eventInfo_init =0;
   if (! evtStore()->retrieve(eventInfo_init, "EventInfo").isSuccess() ){
     Error("execute()","Failed to retrieve event info collection, exiting!!");
