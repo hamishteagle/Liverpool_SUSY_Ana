@@ -94,7 +94,7 @@ int main( int argc, char* argv[]) {
   alg->doSyst = RunningWithSyst;
   alg->doPhotons = RunningWithPhotons;
   // If you want to check that the filtering is working correctly, then set this to false
-  alg->RunningLocally = true;
+  alg->RunningLocally = RunningLocally;
   alg->setMsgLevel(MSG::VERBOSE);
 
   // Run the job using the local/direct driver:
