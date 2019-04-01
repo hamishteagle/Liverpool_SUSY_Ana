@@ -10,7 +10,7 @@ class ObjectDef: public virtual IObjectDef
 {
 
  public:
-  ObjectDef(asg::SgTEvent* event, ST::SUSYObjDef_xAOD* SUSYTool, xAOD::TStore* store, double mcChannelNumber, double eventN, double mcEventWgt, double m_lumiScaled, std::string systName, bool doPhotons, asg::AnaToolHandle<IMETSignificance> Tool_METSig, double m_averageIntPerX);
+  ObjectDef(asg::SgTEvent* event, asg::AnaToolHandle<ST::SUSYObjDef_xAOD>& SUSYTool, xAOD::TStore* store, double mcChannelNumber, double eventN, double mcEventWgt, double m_lumiScaled, std::string systName, bool doPhotons, double m_averageIntPerX);
 
   ~ObjectDef(){};
 
@@ -136,9 +136,6 @@ class ObjectDef: public virtual IObjectDef
   //  double MuonRecoSF;
   //  double MuonTriggerSF;
   int nVertex;
-
-
-  asg::AnaToolHandle<IMETSignificance> METSig_tool;
 
   std::vector<double> metSignificances;
 

@@ -39,8 +39,13 @@ def CorrelationPlot(variable1, variable2, xaxislabel, yaxislabel, xmin, xmax, xb
 
     print ("input files read in")
 
-
-
+    #output_dir = "Histograms/CorrelationPlots/"
+    
+    change_me = "Histograms/"+directory+"Correlations/"
+#    change_me = directory+"/"+label+"/Tight/"
+    #output_dir = output_dir + change_me
+    print ("Directory is:", str(change_me))
+    ensure_dir(change_me)
     xvariabletoplot = variable1
     xminvalue = xmin
     xmaxvalue = xmax
@@ -72,7 +77,7 @@ def CorrelationPlot(variable1, variable2, xaxislabel, yaxislabel, xmin, xmax, xb
     Canvas = ROOT.TCanvas("Canvas1","Canvas1",0,0,900,900)
     
     Canvas.SetRightMargin(0.2)
-    #Canvas.SetLogz()
+    Canvas.SetLogz()
 
     scatterPlot1.GetXaxis().SetTitle(xaxislabel);
     scatterPlot1.GetZaxis().SetTitle("n_{Events}");
@@ -90,8 +95,8 @@ def CorrelationPlot(variable1, variable2, xaxislabel, yaxislabel, xmin, xmax, xb
     scatterPlot1.SetLabelSize(0.03,"Z")
     
 
-    scatterPlot1.Draw("colz")
-    latex_draw("Reco_ttbar")
+    scatterPlot1.Draw("colz text")
+    latex_draw("t#bar{t}")
     
     Canvas2 = ROOT.TCanvas("Canvas2","Canvas2",0,0,900,900)
     
@@ -101,27 +106,21 @@ def CorrelationPlot(variable1, variable2, xaxislabel, yaxislabel, xmin, xmax, xb
     scatterPlot2.GetYaxis().SetTitle(yaxislabel);
     scatterPlot2.GetYaxis().SetLabelOffset(0.012)
     scatterPlot2.SetMarkerColor(ROOT.kGray+1)
-    scatterPlot2.Draw("colz")
-    latex_draw("TRUTHSmeared_ttbar")
+    scatterPlot2.Draw("colz text")
+    latex_draw("Signal")
 
+    if yvariabletoplot == "min( (sqrt(2*(pTb1*ETMiss*(1 - cos(fabs(TVector2::Phi_mpi_pi( (phib1  - ETMissPhi))))))) ), (sqrt(2*(pTb2*ETMiss*(1 - cos(fabs(TVector2::Phi_mpi_pi( (phib2  - ETMissPhi)))))))))":
+        yvariabletoplot = "min_m_TbMET"
 
+    ensure_dir("Histograms/Correlation/")
 
+    Canvas.SaveAs("Histograms/Correlation/ttbar.png")
+    #Canvas.SaveAs()
+    #Canvas.SaveAs()
+    Canvas2.SaveAs("Histograms/Correlation/signal.png")
+    #Canvas2.SaveAs("Histograms/" +change_me + xvariabletoplot+"_"+yvariabletoplot +"Signal.eps")
 
-
-    output_dir = "/user/hteagle//SummerAnalysis/Summer_Student_Analysis/histograms/CorrelationPlots/"
-   
-    change_me = directory+"/"+label+"/"
-    output_dir = output_dir + change_me
-    print("Directory is :"+str(output_dir))
-    ensure_dir(output_dir)
-
-
-
-
-    Canvas.SaveAs(output_dir+"_"+variable1+"_"+variable2+"reco.eps")
-    Canvas2.SaveAs(output_dir+"_"+variable1+"_"+variable2+"truth.eps")
-
-
+    print ("Directory is:", str(change_me))
 
 
     return

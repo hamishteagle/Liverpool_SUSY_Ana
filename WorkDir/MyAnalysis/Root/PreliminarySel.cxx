@@ -9,12 +9,12 @@
 PreliminarySel::PreliminarySel(CalculateVariables &variables){
 
   interestingRegion = this->whichPreliminaryRegion(variables);
- 
+
 }
 
 
 bool PreliminarySel::whichPreliminaryRegion(CalculateVariables &variables){
-  
+
   bool passesPresel = false;
 
   if (variables.nJets>=2 && variables.nbJets >=1 && variables.nLepton >0 && variables.eTMiss>100){

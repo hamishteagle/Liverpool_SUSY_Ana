@@ -7,10 +7,8 @@ bool ptSorter( const xAOD::IParticle* j1, const xAOD::IParticle* j2 ) {
 }
 
 //ObjectDef with FatJets (Crashes on PseudoJetGetter when running on systematics)
-ObjectDef::ObjectDef(asg::SgTEvent* event, ST::SUSYObjDef_xAOD* SUSYTool, xAOD::TStore* store, double mcChannelNumber, double eventN, double mcEventWgt, double m_lumiScaled, std::string systName, bool doPhotons, asg::AnaToolHandle<IMETSignificance> Tool_METSig, double m_averageIntPerX):IObjectDef(event, SUSYTool, store, mcChannelNumber, eventN, mcEventWgt, m_lumiScaled, systName, doPhotons, m_averageIntPerX)
+ObjectDef::ObjectDef(asg::SgTEvent* event, asg::AnaToolHandle<ST::SUSYObjDef_xAOD>& SUSYTool, xAOD::TStore* store, double mcChannelNumber, double eventN, double mcEventWgt, double m_lumiScaled, std::string systName, bool doPhotons, double m_averageIntPerX):IObjectDef(event, SUSYTool, store, mcChannelNumber, eventN, mcEventWgt, m_lumiScaled, systName, doPhotons, m_averageIntPerX)
 {
-
-  METSig_tool = Tool_METSig;
 
   baselineElectronsBeforeOR = new xAOD::ElectronContainer(SG::VIEW_ELEMENTS);
   signalElectronsBeforeOR = new xAOD::ElectronContainer(SG::VIEW_ELEMENTS);
@@ -373,13 +371,18 @@ void ObjectDef::FillMET(){
   //std::cout << "In MET" << std::endl;
 
 
-  xAOD::MissingETContainer met;
-  xAOD::MissingETAuxContainer metAux;
+  xAOD::MissingETContainer* met = new xAOD::MissingETContainer;
+  xAOD::MissingETAuxContainer* metAux = new xAOD::MissingETAuxContainer;
 
-  met.setStore(&metAux);
+  //auto metSig = std::make_unique<xAOD::MissingETContainer>();
+  //auto metSigAux = std::make_unique<xAOD::MissingETAuxContainer>();
+
+  met->setStore(metAux);
+
+  //metSig->setStore(metSigAux.get());
 
 
-  xAOD::MissingETContainer::const_iterator met_it = met.find("Final");
+  xAOD::MissingETContainer::const_iterator met_it = met->find("Final");
 
  const xAOD::JetContainer* jets = 0;
  currentEvent->retrieve( jets, "AntiKt4EMTopoJets");
@@ -414,13 +417,14 @@ const xAOD::ElectronContainer* electrons = 0;
 
 
 
-  objTool->GetMET(met, METjets, METelectrons,METmuonsAll, METphotons,NULL,true);
+  objTool->GetMET(*met, METjets, METelectrons,METmuonsAll, METphotons,NULL,true);
 
-  met_it = met.find("Final");
+  met_it = met->find("Final");
+  //metSig->find("Final");
 
 
 
-  if (met_it == met.end())
+  if (met_it == met->end())
     {
       std::cout << "No RefFinal inside MET container" << std::endl;
     }
@@ -435,10 +439,19 @@ const xAOD::ElectronContainer* electrons = 0;
   MET = (*met_it)->met();
   METphi = (*met_it)->phi();
 
-  METSig_tool->varianceMET(&met, m_averageIntPerX, "RefJet", "PVSoftTrk","Final");
-  double m_metsigET = METSig_tool->GetMETOverSqrtSumET();
-  double m_metsigHT = METSig_tool->GetMETOverSqrtHT();
-  double m_metsig = METSig_tool->GetSignificance();
+  //METSig_tool->varianceMET(met, (float)30., "RefJet", "PVSoftTrk","Final");
+  //double m_metsigET = METSig_tool->GetMETOverSqrtSumET();
+  //double m_metsigHT = METSig_tool->GetMETOverSqrtHT();
+  //double m_metsig = METSig_tool->GetSignificance();
+  double m_metsigET = 1.;
+  double m_metsigHT = 1.;
+  double m_metsig = -99.;
+
+  objTool->GetMETSig(*met, m_metsig, false, false);
+
+  //double m_metsigET = 1.;
+  //double m_metsigHT = 1.;
+  //double m_metsig = 1.;
 
   metSignificances.push_back(m_metsigET);
   metSignificances.push_back(m_metsigHT);

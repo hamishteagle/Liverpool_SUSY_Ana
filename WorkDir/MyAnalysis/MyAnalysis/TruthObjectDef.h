@@ -13,7 +13,7 @@ class TruthObjectDef: public virtual IObjectDef
 
  public:
   //TruthObjectDef with fat jets fails on PsuedoJetGetter
-  TruthObjectDef(asg::SgTEvent* event, ST::SUSYObjDef_xAOD* SUSYTool, xAOD::TStore* store, double mcChannelNumber, double eventN, double mcEventWgt, double crosssect, std::string systName, bool doPhotons, asg::AnaToolHandle<IMETSignificance> Tool_METSig, double m_averageIntPerX); //, JetToolRunner* Tool_FatJets_kt12, JetToolRunner* Tool_FatJets_kt8
+  TruthObjectDef(asg::SgTEvent* event, asg::AnaToolHandle<ST::SUSYObjDef_xAOD>& SUSYTool, xAOD::TStore* store, double mcChannelNumber, double eventN, double mcEventWgt, double crosssect, std::string systName, bool doPhotons, double m_averageIntPerX); //, JetToolRunner* Tool_FatJets_kt12, JetToolRunner* Tool_FatJets_kt8
 
   ~TruthObjectDef(){};
 
@@ -125,8 +125,6 @@ class TruthObjectDef: public virtual IObjectDef
   int nVertex;
 
   bool doPhotonOR;
-
-  asg::AnaToolHandle<IMETSignificance> METSig_tool;
 
   //JetToolRunner* fatjet_kt12_tool;
   //JetToolRunner* fatjet_kt8_tool;

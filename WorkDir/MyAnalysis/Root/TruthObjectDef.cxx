@@ -21,7 +21,7 @@ bool ptTruthSorter( const xAOD::IParticle* j1, const xAOD::IParticle* j2 ) {
 }
 
 //TruthObject Def with FatJets fails on PseudoJetGetter
-TruthObjectDef::TruthObjectDef(asg::SgTEvent* event, ST::SUSYObjDef_xAOD* SUSYTool, xAOD::TStore* store, double mcChannelNumber, double eventN, double mcEventWgt, double crossSect, std::string systName, bool doPhotons, asg::AnaToolHandle<IMETSignificance> Tool_METSig, double  m_averageIntPerX):IObjectDef(event, SUSYTool, store, mcChannelNumber, eventN, mcEventWgt, crossSect, systName, doPhotons, m_averageIntPerX) //, JetToolRunner* Tool_FatJets_kt12, JetToolRunner* Tool_FatJets_kt8
+TruthObjectDef::TruthObjectDef(asg::SgTEvent* event, asg::AnaToolHandle<ST::SUSYObjDef_xAOD>& SUSYTool, xAOD::TStore* store, double mcChannelNumber, double eventN, double mcEventWgt, double crossSect, std::string systName, bool doPhotons, double  m_averageIntPerX):IObjectDef(event, SUSYTool, store, mcChannelNumber, eventN, mcEventWgt, crossSect, systName, doPhotons, m_averageIntPerX) //, JetToolRunner* Tool_FatJets_kt12, JetToolRunner* Tool_FatJets_kt8
 
 {
 

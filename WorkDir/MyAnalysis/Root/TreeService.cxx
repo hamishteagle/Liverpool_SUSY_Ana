@@ -46,6 +46,12 @@ TreeService::TreeService(TTree *outputTree, TDirectory *OutDir){
   tree->Branch("passedElTrigger", &passedElTrigger);
   tree->Branch("passedGammaTrigger", &passedGammaTrigger);
 
+  tree->Branch("muon_triggers",&mu_triggers);
+  tree->Branch("muon_decisions", &mu_decisions);
+  tree->Branch("electron_triggers",&el_triggers);
+  tree->Branch("electron_decisions", &el_decisions);
+  tree->Branch("MET_triggers",&MET_triggers);
+  tree->Branch("MET_decisions", &MET_decisions);
 
 
   //Trigger matching
@@ -78,13 +84,14 @@ TreeService::TreeService(TTree *outputTree, TDirectory *OutDir){
   tree->Branch("pTj7",&pTj7);
   tree->Branch("pTj8",&pTj8);
 
-
   tree->Branch("pTl1",&pTl1);
   tree->Branch("pTl2",&pTl2);
   tree->Branch("etal1",&etal1);
   tree->Branch("etal2",&etal2);
   tree->Branch("phil1",&phil1);
   tree->Branch("phil2",&phil2);
+  tree->Branch("lep1flavour",&lep1flavour);
+  tree->Branch("lep2flavour",&lep2flavour);
 
 
   tree->Branch("pTel1",&pTel1);
@@ -146,7 +153,6 @@ TreeService::TreeService(TTree *outputTree, TDirectory *OutDir){
   // Scale Factors
 
   tree->Branch("muonSF", &muonSF);
-  tree->Branch("oldMuonSF", &oldMuonSF);
   tree->Branch("electronSF", &electronSF);
   tree->Branch("electronTriggerSF", &electronTriggerSF);
   tree->Branch("tauSF", &tauSF);
@@ -156,7 +162,7 @@ TreeService::TreeService(TTree *outputTree, TDirectory *OutDir){
   tree->Branch("JVTSF", &JVTSF);
   tree->Branch("puWgt", &puWgt);
   //tree->Branch("muonRecoSF", &muonRecoSF);
-  //tree->Branch("muonTriggerSF", &muonTriggerSF);
+  tree->Branch("muonTriggerSF", &muonTriggerSF);
 
 
 
@@ -182,7 +188,6 @@ TreeService::TreeService(TTree *outputTree, TDirectory *OutDir){
   tree->Branch("metsig_New", &metsig_New);
 
   //Additional variables for WH 1Lbb
-  tree->Branch("triggerDecisions", &triggerDecisions);
   tree->Branch("dRb1b2", &dRb1b2);
   tree->Branch("dRL1b1", &dRL1b1);
   tree->Branch("dRL1b2", &dRL1b2);
@@ -196,9 +201,8 @@ TreeService::TreeService(TTree *outputTree, TDirectory *OutDir){
 }
 
 
-void TreeService::fillTree(IObjectDef *objects ,PreliminarySel &region, CalculateVariables &variables, MCChecks MCTruthInfo, double mFinalWeight, double mInitialWeight, double puWeight, double SFmCTbbll, bool TrigMET, bool TrigMu, bool TrigEl, bool TrigGamma, bool Trig6j, std::vector<int> triggers, double puSumWeights, double TRUTHMET, double TRUTHHT, bool CoreFlags, bool SCTFlag,bool LArTileFlags, bool passGRL, bool passedPrimVertexes, bool passedJetCleans, bool passedCosmicMus, bool passedMuonCleans, double RNo,  double RenormedMCWgt, int LumiYear, double m_averageIntPerCrossing, double m_actualIntPerCrossing, double m_xsec, double m_filteff, double m_kfactor){
+void TreeService::fillTree(NewObjectDef *objects ,PreliminarySel &region, CalculateVariables &variables, MCChecks MCTruthInfo, double mFinalWeight, double mInitialWeight, double puWeight, double SFmCTbbll, bool TrigMET, bool TrigMu, bool TrigEl, bool TrigGamma, bool Trig6j, std::vector<std::string> muon_triggers, std::vector<int> muon_decisions, std::vector<std::string> electron_triggers, std::vector<int> electron_decisions, std::vector<std::string> met_triggers, std::vector<int> met_decisions, double puSumWeights, double TRUTHMET, double TRUTHHT, bool CoreFlags, bool SCTFlag,bool LArTileFlags, bool passGRL, bool passedPrimVertexes, bool passedJetCleans, bool passedCosmicMus, bool passedMuonCleans, double RNo,  double RenormedMCWgt, int LumiYear, double m_averageIntPerCrossing, double m_actualIntPerCrossing, double m_xsec, double m_filteff, double m_kfactor){
 
-  //  std::cout << "Filling the Tree" << std::endl;
   CutsRegion = region.region;
 
   coreFlag = CoreFlags;
@@ -208,7 +212,7 @@ void TreeService::fillTree(IObjectDef *objects ,PreliminarySel &region, Calculat
   passedJetClean=passedJetCleans;
   passedCosmicMu=passedCosmicMus;
   passedMuonClean=passedMuonCleans;
-  triggerDecisions = triggers;
+  //triggerDecisions = triggers;
   passedGRL = passGRL;
 
   m_finalWeightSum = mFinalWeight;
@@ -257,8 +261,6 @@ void TreeService::fillTree(IObjectDef *objects ,PreliminarySel &region, Calculat
   ttbar_tau2_decay = MCTruthInfo.ttbar_tau2_decay;
   tau_1_prongs = MCTruthInfo.tau_1_prongs;
   tau_2_prongs = MCTruthInfo.tau_2_prongs;
-
-
 
 
   Asymmetry = variables.Asymmetry;
@@ -314,9 +316,6 @@ void TreeService::fillTree(IObjectDef *objects ,PreliminarySel &region, Calculat
   MUR2_MUF2_PDF261000 = MCTruthInfo.MUR2_MUF2_PDF261000;
   MUR1_MUF1_PDF261001 = MCTruthInfo.MUR1_MUF1_PDF261001;
   MUR1_MUF1_PDF261002 = MCTruthInfo.MUR1_MUF1_PDF261002;
-
-
-
 
 
   pTj1 = variables.pTj1;
@@ -389,10 +388,12 @@ void TreeService::fillTree(IObjectDef *objects ,PreliminarySel &region, Calculat
   phitj1 = variables.phitj1;
   phitj2 = variables.phitj2;
 
+  lep1flavour = variables.lep1flavour;
+  lep2flavour = variables.lep2flavour;
+
   pTgamma = variables.pTgamma;
   etagamma = variables.etagamma;
   phigamma = variables.phigamma;
-
 
   nJets = variables.nJets;
   nJets_beforeOR = variables.nJets_beforeOR;
@@ -525,9 +526,9 @@ void TreeService::fillTree(IObjectDef *objects ,PreliminarySel &region, Calculat
   // Scale Factors:
 
   muonSF = objects->getMuonSF();
-  //  muonTrigSF = objects->getMuonTriggerSF();
+  muonTriggerSF = objects->getMuonTriggerSF();
   //  muonRecoSF = objects->getMuonRecoSF();
-    oldMuonSF = objects->getOldMuonSF();
+  //  oldMuonSF = objects->getOldMuonSF();
   electronSF = objects->getElectronSF();
   electronTriggerSF = objects->getElectronTriggerSF();
   tauSF = objects->getTauSF();
@@ -545,6 +546,13 @@ void TreeService::fillTree(IObjectDef *objects ,PreliminarySel &region, Calculat
   elTriggerMatch = objects->elTriggerMatch();
   muTriggerMatch = objects->muTriggerMatch();
   phTriggerMatch = objects->phTriggerMatch();
+
+  mu_triggers = muon_triggers;
+  mu_decisions = muon_decisions;
+  el_triggers = electron_triggers;
+  el_decisions = electron_decisions;
+  MET_triggers = met_triggers;
+  MET_decisions = met_decisions;
 
   b1m = variables.b1m;
   b2m = variables.b2m;
@@ -704,9 +712,9 @@ void TreeService::fillTree(IObjectDef *objects ,PreliminarySel &region, Calculat
 
 
 
-  metsig_SumET = ((objects->getMETSignificance()))[0];
-  metsig_SumHT = ((objects->getMETSignificance()))[1];
-  metsig_New = ((objects->getMETSignificance()))[2];
+  //metsig_SumET = ((objects->getMETSignificance()))[0];
+  //metsig_SumHT = ((objects->getMETSignificance()))[1];
+  metsig_New = objects->getMETsig();
 
   multiJetTriggerPlateau = variables.inMultiJetTriggerPlateau;
   multiJetTriggerPassed = Trig6j;

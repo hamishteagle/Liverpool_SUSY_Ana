@@ -124,7 +124,7 @@ class IObjectDef
 
  public:
 
-  IObjectDef(asg::SgTEvent* event, ST::SUSYObjDef_xAOD* SUSYTool, xAOD::TStore* store, double mcChannelNumber, double eventN, double mcEventWgt, double m_lumiScaled, std::string systName, bool doPhotons, double m_averageIntPerX){
+  IObjectDef(asg::SgTEvent* event, asg::AnaToolHandle<ST::SUSYObjDef_xAOD>& SUSYTool, xAOD::TStore* store, double mcChannelNumber, double eventN, double mcEventWgt, double m_lumiScaled, std::string systName, bool doPhotons, double m_averageIntPerX){
 
 
     currentEvent = event;
@@ -192,7 +192,7 @@ class IObjectDef
   virtual double getLeptonSF() = 0;
   virtual int getPrimVertex() = 0;
   //  virtual double getMuonRecoSF() = 0;
-  //  virtual double getMuonTriggerSF() = 0;
+  //virtual double getMuonTriggerSF() = 0;
   virtual bool elTriggerMatch() = 0;
   virtual bool muTriggerMatch() = 0;
   virtual bool taTriggerMatch() = 0;
@@ -203,7 +203,7 @@ class IObjectDef
 
  public:
   asg::SgTEvent* currentEvent;
-  ST::SUSYObjDef_xAOD* objTool;
+  asg::AnaToolHandle<ST::SUSYObjDef_xAOD> objTool;
   xAOD::TStore* eventStore;
 
 

@@ -7,7 +7,7 @@
 #include "EventLoop/DirectDriver.h"
 #include "SampleHandler/DiskListLocal.h"
 #include <TSystem.h>
-#include <EventLoopAlgs/NTupleSvc.h> 
+#include <EventLoopAlgs/NTupleSvc.h>
 #include <EventLoop/OutputStream.h>
 #include "testRun.h"
 
@@ -16,134 +16,92 @@
 #include <SampleHandler/SampleGrid.h>
 #include <SampleHandler/SampleHandler.h>
 
-
 #include "MyAnalysis/MyxAODAnalysis.h"
 
 int main( int argc, char* argv[]) {
 
   // Take the submit directory from the input if provided:
-  std::string submitDir = "submitDir2";
-  std::string inputDir;
-  std::string inputFile = "replaceMeSomewhere";
-  
-  bool RunningWithSyst;
-  bool RunningWithPhotons;
-  
+  std::string submitDir = "";
+  std::string inputDir = "";
+  std::string inputFile = "";
+  bool RunningWithSyst = false;
+  bool RunningWithPhotons = false;
+  bool RunningOnGrid = false;
+  bool RunningLocally = true;
+
+  //if (argc != 8)
+
+  if (argc > 3) {
+    inputDir = argv[1];
+    inputFile = argv[2];
+    submitDir = argv[3];
+    RunningWithSyst = (bool) atoi(argv[4]);
+    RunningWithPhotons = (bool) atoi(argv[5]);
+    RunningOnGrid = (bool) atoi(argv[6]);
+    RunningLocally = (bool) atoi(argv[7]);
+    std::cout << "Input dir: " << argv[1] << std::endl;
+    std::cout << "Input file: " << argv[2] << std::endl;
+    std::cout << "Submission file: " << argv[3] << std::endl;
+    std::cout << "RunningWithSyst: " << RunningWithSyst << std::endl;
+    std::cout << "RunningWithPhotons: " << RunningWithPhotons << std::endl;
+    std::cout << "RunningOnGrid: " << RunningOnGrid << std::endl;
+    std::cout << "RunningLocally: " << RunningLocally << std::endl;
+  }
+
   std::string gridoption = "n";//Option for running on the grid
-  
-
-    if (gridoption == "y")
-      {
-	std::cout<<"Running on the grid (y)"<<std::endl;
-	gridmain(argc, argv);
-	return 0;
-      }
 
 
-  submitDir = "/hepstore/msullivan/SubmissionOutputs/";  
-  inputDir = "/hepstore/hteagle/";
+  if (gridoption == "y")
+  {
+  	std::cout<<"Running on the grid (y)"<<std::endl;
+  	gridmain(argc, argv);
+  	return 0;
+  }
 
-  if( argc > 1 ) 
-      {
-	//submitDir = argv[ 1 ];
-	inputFile = argv[ 1 ];
-	if (argc > 2){
-	  std::cout << "Passes argc > 2, with: " << argv[2]  << std::endl;
-	  if ( (std::string(argv[2]) == "1") || (std::string(argv[2]) == "true") || (std::string(argv[2]) == "True")  ) {
-	    RunningWithSyst = true;
-	  }
-	  else{
-	    RunningWithSyst = false;
-	  }
-	  
-	}
-	else{
-	  RunningWithSyst = false;
-	}
-	
-	if (argc > 3){
-	  
-	  std::cout << "Passes argc > 3, with: " << argv[3] <<std::endl;
-	  if ( (std::string(argv[3]) == "1") || (std::string(argv[3]) == "true") || (std::string(argv[3]) == "True")  ) {
-	    RunningWithPhotons = true;
-	  }
-	  else{
-	    RunningWithPhotons = false;
-	  }
-	  
-	}
-	else{
-	  RunningWithPhotons = false;
-	}
-	RunningWithSyst=false;
-	std::cout << "Running with Syst = " << RunningWithSyst << std::endl;
-	std::cout << "Running with Photons = " << RunningWithPhotons << std::endl;
-	std::cout << "The Submission Directory: " << submitDir << std::endl;
-      }
-    // Set up the job for xAOD access:
-    xAOD::Init().ignore();
-    // Construct the samples to run on:
-    SH::SampleHandler sh;
-    
-    
-    
-    // this is the cutflow file, please do not delete
-    //inputFile = "Sbot_multiB/recoSamples/signal/mc16_13TeV.390219.MGPy8EG_A14N23LO_BB_onestepN2hN1_800_795_60.deriv.DAOD_SUSY1.e5671_e5984_a875_r9364_r9315_p3404/";
-    //inputFile = "Wh/recoSamples/mc16_13TeV.410470.PhPy8EG_A14_ttbar_hdamp258p75_nonallhad.deriv.DAOD_SUSY5.e6337_e5984_s3126_r9364_r9315_p3563/";
+  // Set up the job for xAOD access:
+  xAOD::Init().ignore();
+  // Construct the samples to run on:
+  SH::SampleHandler sh;
 
-    //Cutflow file
-    //inputFile = "Wh/recoSamples/mc16_13TeV.410471.PhPy8EG_A14_ttbar_hdamp258p75_allhad.deriv.DAOD_SUSY5.e6337_e5984_s3126_r10724_r10726_p3652/";
-    //Checking for pTl1
-    //inputFile = "Wh/recoSamples/mc16_13TeV.410470.PhPy8EG_A14_ttbar_hdamp258p75_nonallhad.deriv.DAOD_SUSY5.e6337_s3126_r10724_p3613/";
-    inputFile = "Wh/recoSamples/mc16_13TeV.410470.PhPy8EG_A14_ttbar_hdamp258p75_nonallhad.deriv.DAOD_SUSY5.e6337_s3126_r10724_p3652/";
-    //inputFile = "Wh/recoSamples/Signals/mc16_13TeV.396727.MadGraphPythia8EvtGen_A14N23LO_C1N2_Wh_hbb_375p0_50p0_lep.deriv.DAOD_SUSY5.e6972_a875_r9364_p3736/";
+  submitDir = submitDir + inputFile;
+  inputFile = inputDir + inputFile;
 
-    //inputFile = "Wh/dataSamples/data15_13TeV.periodD.physics_Main.PhysCont.DAOD_SUSY5.grp15_v01_p3372/"; 
-    //inputFile = "Sbot_multiB/recoSamples/mc16_13TeV.363355.Sherpa_221_NNPDF30NNLO_ZqqZvv.deriv.DAOD_SUSY5.e5525_s3126_r9364_r9315_p3563/";
-    //inputFile = "Wh/dataSamples/data18_13TeV.periodB.physics_Main.PhysCont.DAOD_SUSY5.grp18_v01_p3544/";
+  SH::DiskListLocal list (inputFile);
+  SH::scanFiles(sh, list); // specifying one
 
-    submitDir = submitDir+inputFile;
-    inputFile = inputDir+inputFile;
-    std::cout<<"The output file directory is; "<<submitDir<<std::endl;
-    
-    SH::DiskListLocal list (inputFile);
-    SH::scanFiles(sh, list); // specifying one 
+  sh.setMetaString ("nc_tree", "CollectionTree");
 
-    sh.setMetaString ("nc_tree", "CollectionTree");
-
-    sh.print();
+  sh.print();
 
 
-    // Create an EventLoop job:
-    EL::Job job;
-    job.sampleHandler( sh );
-    //job.options()->setString(EL::Job::optXaodAccessMode,EL::Job::optXaodAccessMode_branch);
-    job.options()->setString(EL::Job::optXaodAccessMode,EL::Job::optXaodAccessMode_class);
-    
-    // Add our analysis to the job:
+  // Create an EventLoop job:
+  EL::Job job;
+  job.sampleHandler( sh );
+  //job.options()->setString(EL::Job::optXaodAccessMode,EL::Job::optXaodAccessMode_branch);
+  job.options()->setString(EL::Job::optXaodAccessMode,EL::Job::optXaodAccessMode_class);
+  job.options()->setDouble(EL::Job::optMaxEvents, 500);
 
-    MyxAODAnalysis* alg = new MyxAODAnalysis();
- 
-  
-    EL::OutputStream output  ("output");
+  // Add our analysis to the job:
+  MyxAODAnalysis* alg = new MyxAODAnalysis();
 
-    job.outputAdd (output);
-    job.algsAdd( alg );
+  EL::OutputStream output  ("output");
 
-    alg->outputName = "outputLabel"; // give the name of the output to our algorithm
-    alg->inputFile = inputFile;
-    alg->doSyst = RunningWithSyst;
-    alg->doPhotons = RunningWithPhotons;
-    //alg->setMsgLevel(MSG::ERROR);
-    // If you want to check that the filtering is working correctly, then set this to false
-    alg->RunningLocally = true;
-    alg->setMsgLevel(MSG::VERBOSE);
-  
-    // Run the job using the local/direct driver:
-    EL::DirectDriver driver;
-    
-    job.options()->setDouble (EL::Job::optRemoveSubmitDir, 1);
+  job.outputAdd (output);
+  job.algsAdd( alg );
 
-    driver.submit( job, submitDir );
-    return 0;
+  alg->outputName = "outputLabel"; // give the name of the output to our algorithm
+  alg->inputFile = inputFile;
+  alg->doSyst = RunningWithSyst;
+  alg->doPhotons = RunningWithPhotons;
+  // If you want to check that the filtering is working correctly, then set this to false
+  alg->RunningLocally = true;
+  alg->setMsgLevel(MSG::VERBOSE);
+
+  // Run the job using the local/direct driver:
+  EL::DirectDriver driver;
+  job.options()->setDouble (EL::Job::optRemoveSubmitDir, 1);
+
+  driver.submit( job, submitDir );
+  return 0;
+
 }

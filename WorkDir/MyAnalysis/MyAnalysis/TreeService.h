@@ -5,7 +5,7 @@
 #define TreeService_h
 
 
-#include "IObjectDef.h"
+#include "NewObjectDef.h"
 #include "PreliminarySel.h"
 #include "CalculateVariables.h"
 #include "MapVariables.h"
@@ -23,7 +23,7 @@ class TreeService
  public:
   TreeService(TTree *outputTree, TDirectory *OutDir);
 
-  void fillTree(IObjectDef *objects, PreliminarySel &region, CalculateVariables &variables, MCChecks MCTruthInfo , double mFinalWeight, double mInitialWeight, double puWeight, double SFmCTbbll, bool TrigMET, bool TrigMu, bool TrigEl, bool TrigGamma, bool Trig6j, std::vector<int> triggers, double puSumWeights, double TRUTHMET, double TRUTHHT ,bool CoreFlags, bool SCTFlag, bool LArTileFlag, bool passGRL, bool passedPrimVertex, bool passedJetClean, bool passedCosmicMu, bool passedMuonClean, double RNo, double RenormedMCWgt, int LumiYear, double m_averageIntPerCrossing, double m_actualIntPerCrossing, double m_xsec, double m_filteff, double m_kfactor);
+  void fillTree(NewObjectDef *objects, PreliminarySel &region, CalculateVariables &variables, MCChecks MCTruthInfo , double mFinalWeight, double mInitialWeight, double puWeight, double SFmCTbbll, bool TrigMET, bool TrigMu, bool TrigEl, bool TrigGamma, bool Trig6j, std::vector<std::string> muon_triggers, std::vector<int> muon_decisions, std::vector<std::string> electron_triggers, std::vector<int> electron_decisions, std::vector<std::string> met_triggers, std::vector<int> met_decisions, double puSumWeights, double TRUTHMET, double TRUTHHT ,bool CoreFlags, bool SCTFlag, bool LArTileFlag, bool passGRL, bool passedPrimVertex, bool passedJetClean, bool passedCosmicMu, bool passedMuonClean, double RNo, double RenormedMCWgt, int LumiYear, double m_averageIntPerCrossing, double m_actualIntPerCrossing, double m_xsec, double m_filteff, double m_kfactor);
 
   void writeTree();
 
@@ -72,7 +72,7 @@ class TreeService
 
   //Triggers
 
-  std::vector<int> triggerDecisions;
+  //std::vector<int> triggerDecisions;
   bool passedMETTrigger;
   bool passedMuTrigger;
   bool passedElTrigger;
@@ -82,6 +82,12 @@ class TreeService
   bool phTriggerMatch;
   bool muTriggerMatch;
 
+  std::vector<std::string> mu_triggers;
+  std::vector<std::string> el_triggers;
+  std::vector<std::string> MET_triggers;
+  std::vector<int> mu_decisions;
+  std::vector<int> el_decisions;
+  std::vector<int> MET_decisions;
 
   double pileUpSumOfWeights;
   double truthFilterMET;
@@ -224,6 +230,8 @@ class TreeService
   double phil1;
   double phil2;
   double m_taulep;
+  double lep1flavour;
+  double lep2flavour;
 
   double pTgamma;
   double etagamma;
@@ -346,7 +354,7 @@ class TreeService
   double electronSF;
   double electronTriggerSF;
   //  double muonRecoSF;
-  //  double muonTrigSF;
+  double muonTriggerSF;
   double tauSF;
   double tauTriggerSF;
   double bJetSF;
