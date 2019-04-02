@@ -21,9 +21,10 @@ class NewObjectDef
 
   public:
 
-    asg::AnaToolHandle<ST::SUSYObjDef_xAOD> objTool;
+    /*asg::AnaToolHandle<ST::SUSYObjDef_xAOD> objTool;*/
+    ST::SUSYObjDef_xAOD* objTool;
 
-    NewObjectDef(asg::SgTEvent* event, asg::AnaToolHandle<ST::SUSYObjDef_xAOD>& SUSYTool, xAOD::TStore* store, double mcChannel, double EventNumber, double mcWgt, double m_lumiScaled, std::string systematic);
+    NewObjectDef(asg::SgTEvent* event, ST::SUSYObjDef_xAOD* SUSYTool,/*asg::AnaToolHandle<ST::SUSYObjDef_xAOD>& SUSYTool,*/ xAOD::TStore* store, double mcChannel, double EventNumber, double mcWgt, double m_lumiScaled, std::string systematic);
 
     ~NewObjectDef(){};
 

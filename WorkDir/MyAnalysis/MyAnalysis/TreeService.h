@@ -477,8 +477,6 @@ class TreeService
   std::vector<double> fatJet12_E;
   std::vector<double> fatJet12_M;
 
-  double metsig_SumET;
-  double metsig_SumHT;
   double metsig_New;
 
   int multiJetTriggerPlateau;

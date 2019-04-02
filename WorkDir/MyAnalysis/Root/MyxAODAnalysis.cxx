@@ -246,15 +246,17 @@ EL::StatusCode MyxAODAnalysis :: initialize ()
     confFiles.push_back(PathResolverFindCalibFile("MyAnalysis/MyAnalysis/mc15c_v2_defaults.NotRecommended.prw.root"));
   }
 
-  objTool.setTypeAndName("ST::SUSYObjDef_xAOD/objTool");
+  objTool = new ST::SUSYObjDef_xAOD("SUSYObjDef_xAOD");
+  //objTool.setTypeAndName("ST::SUSYObjDef_xAOD/objTool");
   ST::ISUSYObjDef_xAODTool::DataSource datasource = (isData ? ST::ISUSYObjDef_xAODTool::Data : (isAtlfast ? ST::ISUSYObjDef_xAODTool::AtlfastII : ST::ISUSYObjDef_xAODTool::FullSim));
-  ANA_CHECK(objTool.setProperty("DataSource",datasource) ) ;
-  ANA_CHECK( objTool.setProperty("ConfigFile", PathResolverFindCalibFile("MyAnalysis/MyAnalysis/SUSYToolsDefault_21_2_66.conf")));
-  ANA_CHECK(objTool.setProperty("UseBtagging", true));
+  ANA_CHECK(objTool->setProperty("DataSource",datasource) ) ;
+  //ANA_CHECK( objTool.setProperty("ConfigFile", PathResolverFindCalibFile("MyAnalysis/MyAnalysis/SUSYToolsDefault_21_2_66.conf")));
+  ANA_CHECK(objTool->setProperty("UseBtagging", true));
 
   if (!isTruth){
-    ANA_CHECK(objTool.setProperty("PRWLumiCalcFiles",lumicalcFiles));
-    ANA_CHECK(objTool.setProperty("AutoconfigurePRWTool",true));
+    ANA_CHECK(objTool->setProperty("PRWLumiCalcFiles",lumicalcFiles));
+    ANA_CHECK(objTool->setProperty("AutoconfigurePRWTool",true));
+    ANA_CHECK(objTool->initialize());
   }
 
   if(!doSyst) {
@@ -297,9 +299,9 @@ EL::StatusCode MyxAODAnalysis :: initialize ()
   ANA_CHECK(m_PMGCrossSectionTool.retrieve());
   m_PMGCrossSectionTool->readInfosFromDir("/cvmfs/atlas.cern.ch/repo/sw/database/GroupData/dev/PMGTools/");
 
-  m_muonCalibrationAndSmearingTool.setTypeAndName("CP::MuonCalibrationAndSmearingTool/MuonCorrectionTool");
-  ANA_CHECK (m_muonCalibrationAndSmearingTool.initialize());
-  ANA_CHECK(objTool.setProperty("MuonCalibrationAndSmearingTool", m_muonCalibrationAndSmearingTool.getHandle()));
+  //m_muonCalibrationAndSmearingTool.setTypeAndName("CP::MuonCalibrationAndSmearingTool/MuonCorrectionTool");
+  //ANA_CHECK (m_muonCalibrationAndSmearingTool.initialize());
+  //ANA_CHECK(objTool->setProperty("MuonCalibrationAndSmearingTool", m_muonCalibrationAndSmearingTool.getHandle()));
 
   return StatusCode::SUCCESS;
 }
@@ -562,8 +564,6 @@ EL::StatusCode MyxAODAnalysis :: execute ()
     bool passedSingleMuTrigger = false;
     bool passedSingleElTrigger = false;
 
-    //std::cout << "In analysis execute, before the trigger" << std::endl;
-
     int mu_triggers = 0;
     int el_triggers = 0;
     int met_triggers = 0;
@@ -742,6 +742,11 @@ EL::StatusCode MyxAODAnalysis :: execute ()
     if(m_objs){
       delete m_objs;
     }
+    electron_triggers.clear();
+    electron_decisions.clear();
+    muon_triggers.clear();
+    muon_decisions.clear();
+    met_decisions.clear();
 
   }
 

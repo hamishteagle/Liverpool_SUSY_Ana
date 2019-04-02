@@ -1,6 +1,6 @@
 #include "MyAnalysis/NewObjectDef.h"
 
-NewObjectDef::NewObjectDef(asg::SgTEvent* event, asg::AnaToolHandle<ST::SUSYObjDef_xAOD>& SUSYTool, xAOD::TStore* store, double mcChannel, double EventNumber, double mcWgt, double m_lumiScaled, std::string syst) {
+NewObjectDef::NewObjectDef(asg::SgTEvent* event, ST::SUSYObjDef_xAOD* SUSYTool,/*asg::AnaToolHandle<ST::SUSYObjDef_xAOD>& SUSYTool,*/ xAOD::TStore* store, double mcChannel, double EventNumber, double mcWgt, double m_lumiScaled, std::string syst) {
 
   objTool = SUSYTool;
   eventStore = store;

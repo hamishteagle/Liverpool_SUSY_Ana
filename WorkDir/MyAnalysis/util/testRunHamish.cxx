@@ -26,10 +26,8 @@ int main( int argc, char* argv[]) {
   std::string inputFile = "";
   bool RunningWithSyst = false;
   bool RunningWithPhotons = false;
-  bool RunningOnGrid = false;
   bool RunningLocally = true;
-
-  //if (argc != 8)
+  int NoEvents = -1;
 
   if (argc > 3) {
     inputDir = argv[1];
@@ -37,25 +35,15 @@ int main( int argc, char* argv[]) {
     submitDir = argv[3];
     RunningWithSyst = (bool) atoi(argv[4]);
     RunningWithPhotons = (bool) atoi(argv[5]);
-    RunningOnGrid = (bool) atoi(argv[6]);
-    RunningLocally = (bool) atoi(argv[7]);
+    RunningLocally = (bool) atoi(argv[6]);
+    NoEvents = atoi(argv[7]);
     std::cout << "Input dir: " << argv[1] << std::endl;
     std::cout << "Input file: " << argv[2] << std::endl;
     std::cout << "Submission file: " << argv[3] << std::endl;
     std::cout << "RunningWithSyst: " << RunningWithSyst << std::endl;
     std::cout << "RunningWithPhotons: " << RunningWithPhotons << std::endl;
-    std::cout << "RunningOnGrid: " << RunningOnGrid << std::endl;
     std::cout << "RunningLocally: " << RunningLocally << std::endl;
-  }
-
-  std::string gridoption = "n";//Option for running on the grid
-
-
-  if (gridoption == "y")
-  {
-  	std::cout<<"Running on the grid (y)"<<std::endl;
-  	gridmain(argc, argv);
-  	return 0;
+    std::cout << "Running on: " << NoEvents << " events" << std::endl;
   }
 
   // Set up the job for xAOD access:
@@ -79,7 +67,7 @@ int main( int argc, char* argv[]) {
   job.sampleHandler( sh );
   //job.options()->setString(EL::Job::optXaodAccessMode,EL::Job::optXaodAccessMode_branch);
   job.options()->setString(EL::Job::optXaodAccessMode,EL::Job::optXaodAccessMode_class);
-  job.options()->setDouble(EL::Job::optMaxEvents, 500);
+  if (NoEvents != -1) job.options()->setDouble(EL::Job::optMaxEvents, NoEvents);
 
   // Add our analysis to the job:
   MyxAODAnalysis* alg = new MyxAODAnalysis();

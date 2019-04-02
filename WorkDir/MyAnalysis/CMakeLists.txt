@@ -73,11 +73,8 @@ atlas_add_dictionary (MyAnalysisDict
 atlas_install_data( data/* )
 
 
-atlas_add_executable( testRun util/testRunHamish.cxx util/testRunGrid.cxx ${testRun.h}
-		      LINK_LIBRARIES MyAnalysisLib ${Boost_LIBRARIES}
-)
-
-
+atlas_add_executable( testRun util/testRunHamish.cxx LINK_LIBRARIES MyAnalysisLib ${Boost_LIBRARIES} )
+atlas_add_executable( testRunGrid util/testRunGrid.cxx LINK_LIBRARIES MyAnalysisLib ${Boost_LIBRARIES} )
 
 # Install files from the package:
 atlas_install_joboptions( share/*.py )

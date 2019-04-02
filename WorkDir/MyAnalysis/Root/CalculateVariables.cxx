@@ -148,13 +148,6 @@ CalculateVariables::CalculateVariables(NewObjectDef *objects, bool isTruth, bool
   all_METSig = eTMiss/std::sqrt(all_HT);
   all_Meff = all_HT + eTMiss;
 
-  //std::cout << "all_HT " << all_HT  << std::endl;
-  //std::cout << "all_METSig " << all_METSig << std::endl;
-  //std::cout << "all_Meff "<< all_Meff << std::endl;
-  //std::cout << "ETMiss "<< eTMiss << std::endl;
-  //std::cout << "Min DelPhiB " << delPhiMinb << std::endl;
-  //std::cout << "    " << std::endl;
-
 
 
   nNonBJets = objects->getNonBJets()->size();
@@ -986,6 +979,7 @@ CalculateVariables::CalculateVariables(NewObjectDef *objects, bool isTruth, bool
   TLorentzVector m_CT_vds(0,0,0,0);
   m_CT_corr = mctTool->mctcorr(b1v, b2v, m_CT_vds, 0.001*(*(objects->getMETvector())));
 
+  delete mctTool;
 
 
   //do aplanarity/extra calculations here

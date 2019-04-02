@@ -45,12 +45,12 @@ class PileupReweightingTool;
 }
 
 namespace ST{
-  class SUSYObjDef_xAOD; // SUSYToolsObjectDefinition forward declaration
+  class SUSYObjDef_xAOD; //! // SUSYToolsObjectDefinition forward declaration
   //class CrossSectionDB; // SUSYToolsCrossSectionDataBase forward declaration
 }
 
 namespace SUSY{
-  class CrossSectionDB; // Forward Declaration of Cross Section Database
+  class CrossSectionDB; //! // Forward Declaration of Cross Section Database
 }
 
 
@@ -61,7 +61,7 @@ namespace SUSY{
 class MyxAODAnalysis : public EL::Algorithm
 {
 #ifndef __CINT__
-  //ST::SUSYObjDef_xAOD *objTool;
+  ST::SUSYObjDef_xAOD *objTool; //!
 #endif // not __CINT__
 
 #ifndef __CINT__
@@ -202,7 +202,7 @@ public:
    asg::AnaToolHandle<PMGTools::IPMGCrossSectionTool> m_PMGCrossSectionTool; //!
    asg::AnaToolHandle<CP::IPileupReweightingTool> m_prw_tool; //!
    asg::AnaToolHandle<CP::IMuonCalibrationAndSmearingTool> m_muonCalibrationAndSmearingTool; //!
-   asg::AnaToolHandle<ST::SUSYObjDef_xAOD> objTool; //!
+   /*asg::AnaToolHandle<ST::SUSYObjDef_xAOD> objTool; //!*/
    asg::AnaToolHandle<IGoodRunsListSelectionTool> m_grl; //!
 
   // put functions here?

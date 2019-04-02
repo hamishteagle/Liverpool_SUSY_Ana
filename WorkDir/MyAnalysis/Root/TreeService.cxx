@@ -20,7 +20,6 @@ TreeService::TreeService(TTree *outputTree, TDirectory *OutDir){
   tree->Branch("mcEventWeight", &mcEventWeight);
   tree->Branch("RenormedMcEventWeight", &RenormedMcEventWeight);
   tree->Branch("weightsVector", &weightsVector);
-  tree->Branch("lumiWgt", &lumiScaled);
   tree->Branch("sampleSFmCTbbll",&sampleSFmCTbbll);
   tree->Branch("pileUpSumOfWeights",&pileUpSumOfWeights);
   tree->Branch("m_averageIntPerX",&m_averageIntPerX);
@@ -182,9 +181,6 @@ TreeService::TreeService(TTree *outputTree, TDirectory *OutDir){
   tree->Branch("all_METSig",&all_METSig);
   tree->Branch("all_Meff",&all_Meff);
   tree->Branch("amT2",&amT2);
-
-  tree->Branch("metsig_SumET", &metsig_SumET);
-  tree->Branch("metsig_SumHT", &metsig_SumHT);
   tree->Branch("metsig_New", &metsig_New);
 
   //Additional variables for WH 1Lbb
@@ -710,10 +706,6 @@ void TreeService::fillTree(NewObjectDef *objects ,PreliminarySel &region, Calcul
 
   }
 
-
-
-  //metsig_SumET = ((objects->getMETSignificance()))[0];
-  //metsig_SumHT = ((objects->getMETSignificance()))[1];
   metsig_New = objects->getMETsig();
 
   multiJetTriggerPlateau = variables.inMultiJetTriggerPlateau;
