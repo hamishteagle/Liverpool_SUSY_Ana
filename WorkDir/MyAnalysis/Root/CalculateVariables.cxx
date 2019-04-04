@@ -1552,8 +1552,6 @@ void CalculateVariables::CalculateTwoLepVariables(NewObjectDef *objects, TLorent
 
 }
 
-
-
 void CalculateVariables::CalculateShapeVariables(NewObjectDef *objects)
 {
   // calculate transverse aplanarity and that
@@ -1955,4 +1953,5 @@ void CalculateVariables::CalculateRazorVariables(NewObjectDef *objects)
 	cosD[h][d] = prod_frame->GetCosDecayAngle(frame);
       }
     }
-}
+
+  }  

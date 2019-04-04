@@ -11,6 +11,7 @@ TreeService::TreeService(TTree *outputTree, TDirectory *OutDir){
   tree = outputTree;
 
   tree->SetDirectory(OutDir);
+  tree->SetAutoFlush(500);
   //gDirectory->cd(OutDir.c_str());
 
   tree->Branch("mcID", &mcID);
