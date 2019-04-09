@@ -356,6 +356,7 @@ class TreeService
   //  double muonRecoSF;
   double muonTriggerSF;
   double dilepTriggerSF;
+  double multilepTriggerSF;
   double tauSF;
   double tauTriggerSF;
   double bJetSF;

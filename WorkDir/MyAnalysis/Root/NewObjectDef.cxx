@@ -172,6 +172,7 @@ void NewObjectDef::GetObjects() {
   electronTriggerSF = 1;
   muonTriggerSF = 1;
   dilepTriggerSF = 1;
+  multilepTriggerSF = 1;
 
   if (objTool->isData() == 0) {
     if (goodElectrons->size() == 1) {
@@ -186,7 +187,21 @@ void NewObjectDef::GetObjects() {
         muonTriggerSF = objTool->GetTotalMuonSF(*muons,false,false, "HLT_mu26_ivarmedium_OR_HLT_mu50");
       }
     }
-    if ((goodElectrons->size() + goodMuons->size()) == 2) dilepTriggerSF = objTool->GetTriggerGlobalEfficiencySF(*electrons, *muons, "diLepton");
+    if ((goodElectrons->size() + goodMuons->size()) >= 2) {
+
+      if ((goodElectrons->size() + goodMuons->size()) >= 2) dilepTriggerSF = objTool->GetTriggerGlobalEfficiencySF(*electrons, *muons, "diLepton");
+      else multilepTriggerSF = objTool->GetTriggerGlobalEfficiencySF(*electrons, *muons, "multiLepton");
+      if (goodElectrons->size() == 1) electronTriggerSF = objTool->GetTotalElectronSF(*electrons,false,false,true,false,"singleLepton", false);
+      if (goodMuons->size() == 1) {
+        int year = objTool->treatAsYear();
+        if (year == 2015) {
+          muonTriggerSF = objTool->GetTotalMuonSF(*muons,false, false, "HLT_mu20_iloose_L1MU15_OR_HLT_mu50");
+        }
+        else {
+          muonTriggerSF = objTool->GetTotalMuonSF(*muons,false,false, "HLT_mu26_ivarmedium_OR_HLT_mu50");
+        }
+      }
+    }
   }
 
   delete met_nominal;
