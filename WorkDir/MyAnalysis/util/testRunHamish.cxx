@@ -21,7 +21,6 @@
 int main( int argc, char* argv[]) {
 
   // Take the submit directory from the input if provided:
-<<<<<<< .merge_file_mFc8X2
   std::string submitDir = "";
   std::string inputDir = "";
   std::string inputFile = "";
@@ -189,13 +188,12 @@ int main( int argc, char* argv[]) {
     alg->doPhotons = RunningWithPhotons;
     alg->RunningLocally = false;
     alg->setMsgLevel(MSG::ERROR);
-    // Run the job using the griddriver:
-  EL::PrunDriver driver;
-  
-  driver.options()->setString("nc_outputSampleName", "user."+username+"."+CurrentDate+"_"+fileType+"%in:name[2]%.%in:name[3]%"+release);
-  driver.options()->setString(EL::Job::optGridNFilesPerJob, "5");
-  // Use submit if you want to see all of the info about the submitted jobs. Use submitOnly if you want to send the jobs then Monitor online with panda
-  driver.submitOnly( job, submitDir );
+
+    // Run the job using the local/direct driver:
+    EL::DirectDriver driver;
+    job.options()->setDouble (EL::Job::optRemoveSubmitDir, 1);
+
+    driver.submit( job, submitDir );
   }
   return 0;
 

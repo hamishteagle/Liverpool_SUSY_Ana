@@ -33,7 +33,6 @@ int main( int argc, char* argv[] ) {
 
   int Month = now->tm_mon;
   std::string CurrentDate = std::to_string(now->tm_mday)+Months[Month];
-<<<<<<< .merge_file_wDTAAT
   std::string fileType = "";
 
   int found_TRUTH1 = inputFile.find("TRUTH1");
@@ -89,7 +88,7 @@ int main( int argc, char* argv[] ) {
 
   submitDir = CurrentDate+fileType;
 
-  std::string CreateDir = "/scratch/msullivan/GridSubmissions/"+submitDir;
+  std::string CreateDir = "/scratch/hteagle/GridSubmissions/"+submitDir;
   std::string Command = "[ ! -d "+CreateDir+" ] && mkdir "+CreateDir+" || echo \"Directory Exists\"";
   std::system(Command.c_str());
 
