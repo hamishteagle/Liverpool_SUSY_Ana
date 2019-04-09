@@ -9,7 +9,7 @@
 #include <fstream>
 #include <unistd.h>
 
-// restframes crap
+// restframes crap 
 #include "RestFrames/RestFrame.h"
 #include "RestFrames/RFrame.h"
 #include "RestFrames/RLabFrame.h"
@@ -39,9 +39,9 @@ using namespace RestFrames;
 bool btag_wgt_Sorter( const xAOD::Jet* j1, const xAOD::Jet* j2 ) {
   double b1 = 0;
   double b2 = 0;
-  // need to change this to the new discriminant
-  j1->btagging()->MVx_discriminant("MV2c20", b1);
-  j2->btagging()->MVx_discriminant("MV2c20", b2);
+  // need to change this to the new discriminant 
+  j1->btagging()->MVx_discriminant("MV2c10", b1);
+  j2->btagging()->MVx_discriminant("MV2c10", b2);
   return ( b1 > b2 );
 }
 
@@ -50,7 +50,7 @@ bool btag_wgt_Sorter( const xAOD::Jet* j1, const xAOD::Jet* j2 ) {
 CalculateVariables::CalculateVariables(NewObjectDef *objects, bool isTruth, bool doPhotons){
 
   // Initialise the variables to sensible numbers
-
+  
   TruthFile = isTruth;
   calculatePhotons = doPhotons;
 
@@ -64,7 +64,7 @@ CalculateVariables::CalculateVariables(NewObjectDef *objects, bool isTruth, bool
   nBaselineLepton = nBaselineMuon + nBaselineElectron;
   nPhoton = objects->getGoodPhotons()->size();
 
-
+  
   eTMiss = objects->getMET()*0.001;
   eTMissPhi = objects->getMETPhi();
   // This is the ETMiss in the regions with the electron added to the MET
@@ -77,6 +77,7 @@ CalculateVariables::CalculateVariables(NewObjectDef *objects, bool isTruth, bool
   nJets_beforeOR = objects->getGoodJets_beforeOR()->size();
   nbJets = objects->getBJets()->size();
 
+
   njet20 = 0;
   njet25 = 0;
   njet30 = 0;
@@ -85,7 +86,7 @@ CalculateVariables::CalculateVariables(NewObjectDef *objects, bool isTruth, bool
 
   // This will only work for truth files. For Reco we require pt 35
   njet20 = objects->getGoodJets()->size();
-
+  
   for (int iJet = 0; iJet < nJets; iJet++){
     TLorentzVector tempJet = (*objects->getGoodJets())[iJet]->p4()*0.001;
     if (tempJet.Pt() > 25){
@@ -104,38 +105,34 @@ CalculateVariables::CalculateVariables(NewObjectDef *objects, bool isTruth, bool
 
   // tbMET Analysis variables
   delPhiMinb = 99;
-  all_HT = 0;
-  all_METSig = 0;
-  all_Meff = 0;
-  amT2 = 0;
+  all_HT = -99;
+  all_METSig = -99;
+  all_Meff = -99;
+  amT2 = -99;
   minDelPhi = 99;
   minDelPhi_4 = 99;
   inMultiJetTriggerPlateau = false;
   int multiJetTriggerCounter = 0;
-
+  
+  if (nJets>0) all_HT=0;//start this at zero properly if we are going to calculate it.
   for (int iJet = 0; iJet < nJets; iJet++){
     auto tempJet = (*objects->getGoodJets())[iJet];
-    // add the number of jets here with pT > 55 and |eta| , 2.4 to check the multijet trigger plateau
-    if (tempJet->pt()*0.001 > 55 && std::fabs(tempJet->eta()) < 2.4){
-      multiJetTriggerCounter = multiJetTriggerCounter+1;
-    }
 
     all_HT += tempJet->pt()*0.001;
     delPhi1 = fabs(TVector2::Phi_mpi_pi((*(objects->getGoodJets()))[iJet]->phi()  - eTMissPhi));
-
-
+    
     if (delPhi1 < minDelPhi){
       if (iJet<4)
 	{minDelPhi_4=delPhi1;}
       minDelPhi = delPhi1;
     }
-
+    
     if (tempJet->auxdata< char >("bjet")==0){
       if (tempJet->pt()*0.001 > 50){
 	nextrajets50++;
       }
     }
-    if (tempJet->auxdata< char >("bjet")==1){
+    if (tempJet->auxdata< char >("bjet")==1){ 
       double tempMETb = fabs(TVector2::Phi_mpi_pi( tempJet->phi()  - eTMissPhi));
       //std::cout << "mindelphib " << tempMETb << std::endl;
       if (tempMETb < delPhiMinb){
@@ -147,9 +144,16 @@ CalculateVariables::CalculateVariables(NewObjectDef *objects, bool isTruth, bool
 
   all_METSig = eTMiss/std::sqrt(all_HT);
   all_Meff = all_HT + eTMiss;
+  
+  //std::cout << "all_HT " << all_HT  << std::endl;
+  //std::cout << "all_METSig " << all_METSig << std::endl;
+  //std::cout << "all_Meff "<< all_Meff << std::endl;
+  //std::cout << "ETMiss "<< eTMiss << std::endl;
+  //std::cout << "Min DelPhiB " << delPhiMinb << std::endl;
+  //std::cout << "    " << std::endl;
 
 
-
+  
   nNonBJets = objects->getNonBJets()->size();
   // Scale Factors
   muonSF = objects->getMuonSF();
@@ -166,9 +170,9 @@ CalculateVariables::CalculateVariables(NewObjectDef *objects, bool isTruth, bool
   muTriggerMatch = objects->muTriggerMatch();
   phTriggerMatch = objects->phTriggerMatch();
 
-
+  
   // Mass related variables
-
+  
   m_bb = -99;
   m_tautau = -99;
   m_CT = -99;
@@ -191,7 +195,7 @@ CalculateVariables::CalculateVariables(NewObjectDef *objects, bool isTruth, bool
   adjustedmEff2j = 0;
   adjustedmEff3j = 0;
   // Jet and Lepton properties:
-
+  
   pTj1 = -99;
   pTj2 = -99;
   pTj3 = -99;
@@ -228,7 +232,7 @@ CalculateVariables::CalculateVariables(NewObjectDef *objects, bool isTruth, bool
   DEta_Zb1 = -99;
   DEta_Zb2 = -99;
 
-
+  
   pTmu1 = -99;
   pTmu2 = -99;
   pTel1 = -99;
@@ -236,15 +240,13 @@ CalculateVariables::CalculateVariables(NewObjectDef *objects, bool isTruth, bool
   pTtj1 = -99;
   pTtj2 = -99;
   pTtj1tj2 = -99;
-  lep1flavour = -99;
-  lep2flavour = -99;
 
   etatj1 = -99;
   etatj2 = -99;
   etatj1tj2 = -99;
   phitj1 = -99;
-  phitj2 = -99;
-  phitj1tj2 = -99;
+  phitj2 = -99;  
+  phitj1tj2 = -99;  
 
   pTl1 = -99;
   pTl2 = -99;
@@ -264,7 +266,7 @@ CalculateVariables::CalculateVariables(NewObjectDef *objects, bool isTruth, bool
 
 
   // Mass related variables:
-
+  
   m_ll = -99;
   m_bb = -99;
   m_T = -99;
@@ -272,12 +274,12 @@ CalculateVariables::CalculateVariables(NewObjectDef *objects, bool isTruth, bool
   leadingBs = false;
   primaryB = false;
   secondB = false;
-
+ 
   ratioMETmEff2j = -99;
   ratioMETmEff3j = -99;
   adjustedRatio2j = -99;
   adjustedRatio3j = -99;
-
+  
   // Azimuthal Angle Variables
 
 
@@ -287,42 +289,39 @@ CalculateVariables::CalculateVariables(NewObjectDef *objects, bool isTruth, bool
   delPhi4 = -99;
   //minDelPhi = -99;
 
-  lep1flavour = -99;
-  lep2flavour = -99;
-
   dPhiL1MET = 2*M_PI;
   dPhiL2MET = 2*M_PI;
-
+  
   dPhib1b2 = 2*M_PI;
   dPhi_bMET = 2*M_PI;
   dPhiL1L2 = 2*M_PI;
-
+  
   dPhiL1MET = 2*M_PI;
   dPhiL2MET = 2*M_PI;
-
+  
   dPhiL1b1 = 2*M_PI;
   dPhiL1b2 = 2*M_PI;
   dPhiL2b1 = 2*M_PI;
   dPhiL2b2 = 2*M_PI;
-
+  
   minDPhiLb = 2*M_PI;
-
+  
   // delta eta variables should be initialised to something sensible too, 99 seems reasonable
   dEtab1b2 = -99;
   dEtaL1L2 = -99;
-
+  
   dEtaL1bSystem = -99;
   dEtaL1b1 = -99;
   dEtaL1b2 = -99;
-
+  
   dEtaL2bSystem = -99;
   dEtaL2b1 = -99;
   dEtaL2b2 = -99;
-
+  
   minDEtaLb = -99;
-
+  
   // delta R variables should also be sensible, again go with 99
-
+  
   dRtj1tj2 = -99;
 
   dRb1b2 = -99;
@@ -339,53 +338,53 @@ CalculateVariables::CalculateVariables(NewObjectDef *objects, bool isTruth, bool
   DRj2j3 = -99;
   DRj2j4 = -99;
   DRj3j4 = -99;
-
-
+  
+   
   dRjjb1 = -99;
   dRjjb2 = -99;
   minDRjjb = -99;
   maxDRjjb = -99;
-
+  
   ratioDRbbHt = -99;
-
+  
   // Razor Variable Crap
-
+  
   RJVars_QCD_Delta = -99;
   RJVarsSS_invGamma = -99;
   RJVarsSS_s_hat = -99;
   RJVarsSS_MDelR = -99;
   RJVarsSS_wrongMDelR = -99;
-
+  
   // Aplanarity stuff
-
+  
   Aplanarity = -99;
   transformedAplan = -99;
   Sphericity = -99;
+  
 
-
-
-
+  
+  
   // Now require at least two jets in the event, one b-tagged, or else there's no point in calculating anything
-
+  
   //  if (nbJets == 0 || nbJets > 2 || nLepton > 2 || nJets < 2){
   //  return;
   // }
-
-
+  
+  
   // do initial jet things here:
-
+  
   mctTool = new TMctLib();
-
+  
   if (nJets > 0 &&  nbJets >= 1 && (  ((*(objects->getGoodJets()))[0]->auxdata< char >("bjet")) )) {
   //if ( nbJets >= 1 &&  {
     primaryB = true;
   }
-
-
+  
+  
   if(nJets > 1 && nbJets >= 2 &&  ((*(objects->getGoodJets()))[1]->auxdata< char >("bjet")) ){
     secondB = true;
   }
-
+  
   if (primaryB && secondB){
     leadingBs = true;
   }
@@ -395,7 +394,7 @@ CalculateVariables::CalculateVariables(NewObjectDef *objects, bool isTruth, bool
   TLorentzVector jet2v(0,0,0,0);
   TLorentzVector jet3v(0,0,0,0);
   TLorentzVector jet4v(0,0,0,0);
-
+  
   xAOD::JetContainer* jetVector = new xAOD::JetContainer(SG::VIEW_ELEMENTS);
   if (nJets >= 1){
     pTj1 = (*(objects->getGoodJets()))[0]->pt()*0.001;
@@ -404,7 +403,7 @@ CalculateVariables::CalculateVariables(NewObjectDef *objects, bool isTruth, bool
     delPhi1 = fabs(TVector2::Phi_mpi_pi( (*(objects->getGoodJets()))[0]->phi()  - eTMissPhi));
     if (TruthFile == 0){
       jetVector->push_back((*objects->getGoodJets())[0]);
-    }
+    } 
     mEff2j= mEff2j + pTj1;
     h_T = pTj1;
     //minDelPhi = delPhi1;
@@ -420,9 +419,9 @@ CalculateVariables::CalculateVariables(NewObjectDef *objects, bool isTruth, bool
       mEff2j = mEff2j + pTj2;
       h_T = h_T + pTj2;
       jet2v = (*objects->getGoodJets())[1]->p4()*0.001;
-      DRj1j2 = jet1v.DeltaR(jet2v);
-
-
+      DRj1j2 = jet1v.DeltaR(jet2v); 
+      
+      
       if (nJets >= 3){
 	pTj3 = (*(objects->getGoodJets()))[2]->pt()*0.001;
 	etaj3 = (*(objects->getGoodJets()))[2]->eta();
@@ -432,24 +431,24 @@ CalculateVariables::CalculateVariables(NewObjectDef *objects, bool isTruth, bool
 	if (TruthFile == 0){
 	  jetVector->push_back((*objects->getGoodJets())[2]);
 	}
-	DRj1j3 = jet1v.DeltaR(jet3v);
+	DRj1j3 = jet1v.DeltaR(jet3v); 
 	DRj2j3 = jet2v.DeltaR(jet3v);
 	mEff3j = mEff2j + pTj3;
 	h_T = h_T + pTj3;
-
-
+	
+	
 	if (nJets >= 4){
 	  pTj4 = (*(objects->getGoodJets()))[3]->pt()*0.001;
 	  etaj4 = (*(objects->getGoodJets()))[3]->eta();
 	  phij4 = (*(objects->getGoodJets()))[3]->phi();
 	  delPhi4 = fabs(TVector2::Phi_mpi_pi( (*(objects->getGoodJets()))[3]->phi()  - eTMissPhi));
 	  jet4v = (*objects->getGoodJets())[3]->p4()*0.001;
-	  DRj1j4 = jet1v.DeltaR(jet4v);
+	  DRj1j4 = jet1v.DeltaR(jet4v); 
 	  DRj2j4 = jet2v.DeltaR(jet4v);
 	  DRj3j4 = jet3v.DeltaR(jet4v);
-
+	  
 	  h_T = h_T + pTj4;
-
+	  
 	}
 	if(nJets>=5) pTj5 =(*(objects->getGoodJets()))[4]->pt()*0.001;
 	if(nJets>=6) pTj6 =(*(objects->getGoodJets()))[5]->pt()*0.001;
@@ -459,7 +458,7 @@ CalculateVariables::CalculateVariables(NewObjectDef *objects, bool isTruth, bool
     }
   }
 
-
+  
 
   if (TruthFile == 0){
     jetVector->sort(btag_wgt_Sorter);
@@ -475,7 +474,7 @@ CalculateVariables::CalculateVariables(NewObjectDef *objects, bool isTruth, bool
 
   TLorentzVector jet_wgt1(0,0,0,0);
   TLorentzVector jet_wgt2(0,0,0,0);
-
+  
   jet_imbalance = 0;
 
   if (jetVector->size() >= 2){
@@ -497,8 +496,8 @@ CalculateVariables::CalculateVariables(NewObjectDef *objects, bool isTruth, bool
   x1b = M_PI - std::min(DM_Temp_dPhib1b2, DM_Temp_dPhibMET);
   y1 = fabs(M_PI - std::min(DM_Temp_dPhib1b2, DM_Temp_dPhiJMET));
   ctanh_bb = tanh((DM_dEtab1b2)/2 );
-
-
+  
+  
   // calculate all of the jet properties now:
 
   // set up the vectors here
@@ -519,45 +518,66 @@ CalculateVariables::CalculateVariables(NewObjectDef *objects, bool isTruth, bool
 
   b1m = 0;
   b2m = 0;
-
+  
   b1MV2wgt = 0;
   b2MV2wgt = 0;
   minbMV2weight = 0;
-
+  
   b1_ntrk = 0;
   b2_ntrk = 0;
 
+  if (nbJets>=1){
+    b1v = (*objects->getBJets())[0]->p4()*0.001;  
+    pTb1 = b1v.Pt();    
+    etab1 = b1v.Eta();    
+    phib1 = b1v.Phi();    
+  }
+  if (nbJets >= 2){
+    b2v = (*objects->getBJets())[1]->p4()*0.001;
+    pTb2 = b2v.Pt();
+    etab2 = b2v.Eta();
+    phib2 = b2v.Phi();
+  }    
+  if (nbJets >= 3){
+    b3v = (*objects->getBJets())[2]->p4()*0.001;
+    pTb3 = b3v.Pt();
+    etab3 = b3v.Eta();
+    phib3 = b3v.Phi();
+  }    
 
-
+  if(nbJets>=4){
+    b4v = (*objects->getBJets())[3]->p4()*0.001;
+    pTb4 = b4v.Pt();
+    etab4 = b4v.Eta();
+    phib4 = b4v.Phi();
+    }
+  
+  
   if (nbJets == 0 && nJets >= 2){
-    b1v = (*objects->getNonBJets())[0]->p4()*0.001;
-    b2v = (*objects->getNonBJets())[1]->p4()*0.001;
-
+    
     if (!TruthFile){
-      (*objects->getNonBJets())[0]->btagging()->MVx_discriminant("MV2c20", b1MV2wgt);
-      (*objects->getNonBJets())[1]->btagging()->MVx_discriminant("MV2c20", b2MV2wgt);
-
+      (*objects->getNonBJets())[0]->btagging()->MVx_discriminant("MV2c10", b1MV2wgt);
+      (*objects->getNonBJets())[1]->btagging()->MVx_discriminant("MV2c10", b2MV2wgt);
+      
       b1_ntrk = (*objects->getNonBJets())[0]->btagging()->nSV0_TrackParticles();
       b2_ntrk = (*objects->getNonBJets())[1]->btagging()->nSV0_TrackParticles();
     }
-
+    
   }
 
   else if (nbJets != 0 && nJets >= 2){
-
     if (nbJets >= 2){
-      b1v = (*objects->getBJets())[0]->p4()*0.001;
       b2v = (*objects->getBJets())[1]->p4()*0.001;
 
       if (!TruthFile){
-
-	(*objects->getBJets())[0]->btagging()->MVx_discriminant("MV2c20", b1MV2wgt);
-	(*objects->getBJets())[1]->btagging()->MVx_discriminant("MV2c20", b2MV2wgt);
+    
+	(*objects->getBJets())[0]->btagging()->MVx_discriminant("MV2c10", b1MV2wgt);
+	(*objects->getBJets())[1]->btagging()->MVx_discriminant("MV2c10", b2MV2wgt);
 
 	b1_ntrk = (*objects->getBJets())[0]->btagging()->nSV0_TrackParticles();
 	b2_ntrk = (*objects->getBJets())[1]->btagging()->nSV0_TrackParticles();
       }
-
+      
       if (nNonBJets > 1){
 	lj1v = (*objects->getNonBJets())[0]->p4()*0.001;
 	lj2v = (*objects->getNonBJets())[1]->p4()*0.001;
@@ -584,21 +604,17 @@ CalculateVariables::CalculateVariables(NewObjectDef *objects, bool isTruth, bool
 	maxDRjjb = std::max(dRjjb1,dRjjb2);
       }
     }
-
+    
     if (nbJets == 1){
-      b1v = (*objects->getBJets())[0]->p4()*0.001;
-      b2v = (*objects->getNonBJets())[0]->p4()*0.001;
-
       if (!TruthFile){
-
-	(*objects->getBJets())[0]->btagging()->MVx_discriminant("MV2c20", b1MV2wgt);
-	(*objects->getNonBJets())[0]->btagging()->MVx_discriminant("MV2c20", b2MV2wgt);
-
+    
+	(*objects->getBJets())[0]->btagging()->MVx_discriminant("MV2c10", b1MV2wgt);
+	(*objects->getNonBJets())[0]->btagging()->MVx_discriminant("MV2c10", b2MV2wgt);
 	b1_ntrk = (*objects->getBJets())[0]->btagging()->nSV0_TrackParticles();
 	b2_ntrk = (*objects->getNonBJets())[0]->btagging()->nSV0_TrackParticles();
       }
 
-
+      
       if (nNonBJets > 2){
 	lj1v = (*objects->getNonBJets())[1]->p4()*0.001;
 	lj2v = (*objects->getNonBJets())[2]->p4()*0.001;
@@ -625,24 +641,17 @@ CalculateVariables::CalculateVariables(NewObjectDef *objects, bool isTruth, bool
 	maxDRjjb = std::max(dRjjb1,dRjjb2);
       }
     }
-
-    if(nbJets > 3){
-      b1v = (*objects->getBJets())[0]->p4()*0.001;
-      b2v = (*objects->getBJets())[1]->p4()*0.001;
-      b3v = (*objects->getBJets())[2]->p4()*0.001;
-      b4v = (*objects->getBJets())[3]->p4()*0.001;
-    }
   }
 
 
   if (nTau == 1){
     tj1v = (*objects->getGoodTaus())[0]->p4()*0.001;
-
+        
   }
   if (nTau >= 2){
     tj1v = (*objects->getGoodTaus())[0]->p4()*0.001;
     tj2v = (*objects->getGoodTaus())[1]->p4()*0.001;
-
+        
   }
 
   // count the taus to check the multi jet trigger plateau requirements
@@ -657,8 +666,8 @@ CalculateVariables::CalculateVariables(NewObjectDef *objects, bool isTruth, bool
     inMultiJetTriggerPlateau = true;
   }
 
-
-
+  
+  
 
 
   // Calculate Tau related stuff here
@@ -676,7 +685,7 @@ CalculateVariables::CalculateVariables(NewObjectDef *objects, bool isTruth, bool
   dRtj2b2 = -99;
   dRtj2b3 = -99;
   dRtj2b4 = -99;
-
+   
   m_Ttj1 = -99;
   m_Ttj2 = -99;
   m_Ttj1tj2 = -99;
@@ -702,12 +711,12 @@ CalculateVariables::CalculateVariables(NewObjectDef *objects, bool isTruth, bool
 	    }
 	}
     }
-
-
-
-
-
-
+  
+  
+      
+      
+      
+  
   if (nTau >= 1){
     pTtj1 = tj1v.Pt();
     etatj1 = tj1v.Eta();
@@ -719,12 +728,12 @@ CalculateVariables::CalculateVariables(NewObjectDef *objects, bool isTruth, bool
     dRtj1b2 = tj1v.DeltaR(b2v);
     dRtj1b3 = tj1v.DeltaR(b3v);
     dRtj1b4 = tj1v.DeltaR(b4v);
-
+    
     dRtj1v.push_back(dRtj1b1);
     dRtj1v.push_back(dRtj1b2);
     dRtj1v.push_back(dRtj1b3);
     dRtj1v.push_back(dRtj1b4);
-
+    
   }
 
   if (nTau >= 2){
@@ -733,7 +742,7 @@ CalculateVariables::CalculateVariables(NewObjectDef *objects, bool isTruth, bool
     etatj1tj2 = tj1tj2v.Eta();
     phitj1tj2 = tj1tj2v.Phi();
     dRtj1tj2 = tj1v.DeltaR(tj2v);
-
+    
     pTtj2 = tj2v.Pt();
     etatj2 = tj2v.Eta();
     phitj2 = tj2v.Phi();
@@ -759,7 +768,7 @@ CalculateVariables::CalculateVariables(NewObjectDef *objects, bool isTruth, bool
 
 
   }
-
+  
     // Calculate mindR for tau 1 and 2 here
 
   mindRtj1b = 101;
@@ -768,7 +777,7 @@ CalculateVariables::CalculateVariables(NewObjectDef *objects, bool isTruth, bool
   nb2 = -99;
 
   for(int i = 0; i < 4; i++){
-
+    
     if(nTau >= 1 && dRtj1v[i] < mindRtj1b){
       mindRtj1b = dRtj1v[i];
       nb1 = i;
@@ -780,61 +789,53 @@ CalculateVariables::CalculateVariables(NewObjectDef *objects, bool isTruth, bool
     }
   }
 
-  // selecting the second mininum to not match with first b-jet
+  // selecting the second mininum to not match with first b-jet  
 
   if(nTau >= 2){
     if (nb1 == nb2){
-
+      
       if(dRtj1v[nb1] < dRtj2v[nb2]){
-
+	
 	mindRtj2b = 101;
-
+	
 	for(int j = 0; j < 4; j++){
 	  if (j == nb2) continue;
-
+	  
 	  if(dRtj2v[j] < mindRtj2b){
 	    mindRtj2b = dRtj2v[j];
 	    nb2 = j;
-	  }
+	  }	   
 	}
       }
-
+      
       if(dRtj2v[nb2] < dRtj1v[nb1]){
-
+	
 	mindRtj1b = 101;
-
+	
 	for(int k = 0; k < 4; k++){
 	  if (k == nb1) continue;
-
+	  
 	  if(dRtj1v[k] < mindRtj1b){
 	    mindRtj1b = dRtj1v[k];
 	    nb1 = k;
-	  }
+	  }	   
 	}
       }
-
+      
     }
   }
-
+  
   m_bb = (b1v+b2v).M();
-  m_CT = mctTool->mct(b1v, b2v);
-
-
+  m_CT = mctTool->mct(b1v, b2v); 
+ 
+    
   dPhib1b2 =  fabs(b1v.DeltaPhi(b2v));
   dEtab1b2 = fabs(b1v.Eta() - b2v.Eta());
   dRb1b2 = b1v.DeltaR(b2v);
-
+  
   ratioDRbbHt = dRb1b2/h_T;
 
-  if (nJets >= 2){
-    pTb1 = b1v.Pt();
-    pTb2 = b2v.Pt();
-    etab1 = b1v.Eta();
-    etab2 = b2v.Eta();
-    phib1 = b1v.Phi();
-    phib2 = b2v.Phi();
-  }
-
+  
   Asymmetry = 0;
 
   m_Tjmin = 0;
@@ -862,32 +863,18 @@ CalculateVariables::CalculateVariables(NewObjectDef *objects, bool isTruth, bool
 
     }
 
-  if(nbJets>=4){
-      pTb1 = b1v.Pt();
-      pTb2 = b2v.Pt();
-      pTb3 = b3v.Pt();
-      pTb4 = b4v.Pt();
-      etab1 = b1v.Eta();
-      etab2 = b2v.Eta();
-      etab3 = b3v.Eta();
-      etab4 = b4v.Eta();
-      phib1 = b1v.Phi();
-      phib2 = b2v.Phi();
-      phib3 = b3v.Phi();
-      phib4 = b4v.Phi();
-    }
 
-
-
+ 
+  
   m_Tbmin = 0;
   m_Tb1 = 0;
   m_Tb2 = 0;
   dPhib1_MET = 0;
   dPhib2_MET = 0;
   mindPhib_MET = 0;
-
-  if(nJets>=2)
-    {
+    
+  if(nbJets>=2)
+    {      
       m_Tb1 = sqrt(2*(pTb1*eTMiss*(1 - cos(fabs(TVector2::Phi_mpi_pi( (phib1  - eTMissPhi)))))));
       m_Tb2 = sqrt(2*(pTb2*eTMiss*(1 - cos(fabs(TVector2::Phi_mpi_pi( (phib2  - eTMissPhi)))))));
       m_Tbmin = std::min(m_Tb1,m_Tb2);
@@ -895,26 +882,26 @@ CalculateVariables::CalculateVariables(NewObjectDef *objects, bool isTruth, bool
       dPhib2_MET = fabs(TVector2::Phi_mpi_pi( (phib2  - eTMissPhi)));
       mindPhib_MET = std::min(dPhib1_MET, dPhib2_MET);
     }
-
-
+  
+  
   // put all extra b-variables here
-
+  
   b1m = b1v.M();
   b2m = b2v.M();
 
   minbMV2weight = std::min(b1MV2wgt, b2MV2wgt);
 
-
+    
   if (nLepton >= 1){
     this->CalculateOneLepVariables(objects, b1v, b2v, tj1v);
 
     //    if(nTau == 1 && nElectron == 1){
-    // m_taulep = (tj1v+l1v).M();
-    //}
+    // m_taulep = (tj1v+l1v).M();    
+    //}  
 
     //else if(nTau == 1 && nMuon == 1){
-    // m_taulep = (tj1v+l1v).M();
-    //}
+    // m_taulep = (tj1v+l1v).M();    
+    //}    
   }
 
   if (nLepton >= 2){
@@ -925,8 +912,8 @@ CalculateVariables::CalculateVariables(NewObjectDef *objects, bool isTruth, bool
 
 
 
-
-
+  
+  
   // sort out the adjusted ratio with the electrons as MET
 
   adjustedmEff2j = mEff2j + adjustedETMiss;
@@ -934,8 +921,8 @@ CalculateVariables::CalculateVariables(NewObjectDef *objects, bool isTruth, bool
 
   mEff2j = mEff2j + eTMiss;
   mEff3j = mEff3j + eTMiss;
-
-
+  
+  
 
   ratioMETmEff2j = eTMiss/mEff2j;
   ratioMETmEff3j = eTMiss/mEff3j;
@@ -946,7 +933,7 @@ CalculateVariables::CalculateVariables(NewObjectDef *objects, bool isTruth, bool
   double adjDelPhi2 = 99;
   double adjDelPhi3 = 99;
   double adjDelPhi4 = 99;
-
+  
   adjMinDelPhi = -99;
 
   if (nJets >= 1){
@@ -956,16 +943,16 @@ CalculateVariables::CalculateVariables(NewObjectDef *objects, bool isTruth, bool
       adjDelPhi2 = fabs(TVector2::Phi_mpi_pi( (*(objects->getGoodJets()))[1]->phi()  - adjustedETMissPhi));
       if (adjDelPhi2 < adjMinDelPhi)
 	adjMinDelPhi = adjDelPhi2;
-
+      
       if (nJets >= 3){
 	adjDelPhi3 = fabs(TVector2::Phi_mpi_pi( (*(objects->getGoodJets()))[2]->phi()  - adjustedETMissPhi));
 	if (adjDelPhi3 < adjMinDelPhi){
 	  adjMinDelPhi = adjDelPhi3;
 	}
-
+	
 	if (nJets >= 4){
 	  adjDelPhi4 = fabs(TVector2::Phi_mpi_pi( (*(objects->getGoodJets()))[3]->phi()  - adjustedETMissPhi));
-
+	  
 	  if (adjDelPhi4 < adjMinDelPhi)
 	    adjMinDelPhi = adjDelPhi4;
 	}
@@ -977,28 +964,27 @@ CalculateVariables::CalculateVariables(NewObjectDef *objects, bool isTruth, bool
 
   // can now calculate them mctCorr because we'll have the stuff for it
   TLorentzVector m_CT_vds(0,0,0,0);
-  m_CT_corr = mctTool->mctcorr(b1v, b2v, m_CT_vds, 0.001*(*(objects->getMETvector())));
-
-  delete mctTool;
+  m_CT_corr = mctTool->mctcorr(b1v, b2v, m_CT_vds, 0.001*(*(objects->getMETvector()))); 
+    
 
 
   //do aplanarity/extra calculations here
 
-
-
+  
+  
   //
-  // Maximum DR exclusion
+  // Maximum DR exclusion       
   double inumR=-1;
   double jnumR=-1;
   maxDR=-99;
-  if (nbJets >=4 ){//---Changes 1 24/2
+  if (nbJets >=4 ){//---Changes 1 24/2                                                                    
     for (int i = 0; i < (objects->getBJets())->size() ; i++)
       {
         for (int j = 0; j < (objects->getBJets())->size() ; j++)
           {
             double trialDEta= fabs((*(objects->getBJets()))[i]->eta()  - (*(objects->getBJets()))[j]->eta());
             double trialDPhi=fabs(TVector2::Phi_mpi_pi( (*(objects->getBJets()))[i]->phi()  - (*(objects->getBJets()))[j]->phi()));
-
+            
 	    double trialDR= std::sqrt((trialDEta*trialDEta)+(trialDPhi*trialDPhi));
             if (trialDR>maxDR && (i != j))
               {
@@ -1036,12 +1022,12 @@ CalculateVariables::CalculateVariables(NewObjectDef *objects, bool isTruth, bool
     }
 
 
-  //Min DR algorithm
+  //Min DR algorithm                                                                                                                                                             
   double inummR=-1;
   double jnummR=-1;
   double inummR1=-1;
   double jnummR1=-1;
-
+ 
   //
   minDR=99;
   minDR1=99;
@@ -1060,7 +1046,7 @@ CalculateVariables::CalculateVariables(NewObjectDef *objects, bool isTruth, bool
               minDR=trialDR;
               if(nbJets==3){std::cout<<"something weird here"<<std::endl;}
             }
-          if (trialDR<minDR1 && i != j )//minimisation without exclusion
+          if (trialDR<minDR1 && i != j )//minimisation without exclusion                                                  
             { inummR1=i;
               jnummR1=j;
               minDR1=trialDR;
@@ -1088,12 +1074,12 @@ CalculateVariables::CalculateVariables(NewObjectDef *objects, bool isTruth, bool
     InvMass_Bij_minR1= (bivR1+bjvR1).M();
     JetAsymmR_min1=((*(objects->getBJets()))[inummR1]->pt()-(*(objects->getBJets()))[jnummR1]->pt())/((*(objects->getBJets()))[inummR1]->pt()+(*(objects->getBJets()))[jnummR1]->pt());
   }
-
- //Min DR algorithm end
+ 
+ //Min DR algorithm end 
   //
 
   //SRB algorithms
-
+  
   //SRB Algorithm Start
       int SRB_id1=-99;
       int SRB_id2=-99;
@@ -1124,8 +1110,8 @@ CalculateVariables::CalculateVariables(NewObjectDef *objects, bool isTruth, bool
 		    }
 		  //std::cout<<"SRB_minDR= "<<SRB_minDR<<std::endl;
 		}//i!=j
-	    }//Loop over b-jets
-	}//Loop over b-jets
+	    }//Loop over b-jets	  
+	}//Loop over b-jets 
       //std::cout<<"id1="<<SRB_id1<<",id2= "<<SRB_id2<<std::endl;
 
       for (int i=0; i<4; ++i)//Change to i<4 for 4 strongest b-jets
@@ -1147,13 +1133,13 @@ CalculateVariables::CalculateVariables(NewObjectDef *objects, bool isTruth, bool
 
 		  //std::cout<<"SRB_minDR2= "<<SRB_minDR2<<std::endl;
 		}//i!=j
-	    }//Loop over b-jets
-	}//Loop over b-jets
+	    }//Loop over b-jets	  
+	}//Loop over b-jets 
       //std::cout<<"id3="<<SRB_id3<<", id4= "<<SRB_id4<<std::endl;
       //std::cout<<"Out of SRB algorithm"<<std::endl;
     }//nbJets>=4
-
-  if (SRB_id1>-1 && SRB_id2>-1 && SRB_id3>-1 && SRB_id4>-1)
+  
+  if (SRB_id1>-1 && SRB_id2>-1 && SRB_id3>-1 && SRB_id4>-1) 
     {
       TLorentzVector b1m = (*(objects->getBJets()))[SRB_id1]->p4()*0.001;
       TLorentzVector b2m = (*(objects->getBJets()))[SRB_id2]->p4()*0.001;
@@ -1206,17 +1192,17 @@ CalculateVariables::CalculateVariables(NewObjectDef *objects, bool isTruth, bool
 				  SRB_Higgsino_id2=j;
 				  SRB_Higgsino_id3=i2;
 				  SRB_Higgsino_id4=j2;
-				  //std::cout<<" Higgsino b-jet id's = "<<SRB_Higgsino_id1<<", "<<SRB_Higgsino_id2<<", "<<SRB_Higgsino_id3<<", "<<SRB_Higgsino_id4<<std::endl;
+				  //std::cout<<" Higgsino b-jet id's = "<<SRB_Higgsino_id1<<", "<<SRB_Higgsino_id2<<", "<<SRB_Higgsino_id3<<", "<<SRB_Higgsino_id4<<std::endl;				  
 				}
 			    }//i!=j
-			}//Loop over b-jets
-		    }//Loop over b-jets
+			}//Loop over b-jets	  
+		    }//Loop over b-jets 
 		}//i!=j
-	    }//Loop over b-jets
-	}//Loop over b-jets
+	    }//Loop over b-jets	  
+	}//Loop over b-jets 
     }//Nbjets>=4
   //SRB Algorithm with Higgsino minimisation start
-  if (SRB_Higgsino_id1>-1 && SRB_Higgsino_id2>-1 && SRB_Higgsino_id3>-1 && SRB_Higgsino_id4>-1)
+  if (SRB_Higgsino_id1>-1 && SRB_Higgsino_id2>-1 && SRB_Higgsino_id3>-1 && SRB_Higgsino_id4>-1) 
     {
       TLorentzVector b1m = (*(objects->getBJets()))[SRB_Higgsino_id1]->p4()*0.001;
       TLorentzVector b2m = (*(objects->getBJets()))[SRB_Higgsino_id2]->p4()*0.001;
@@ -1225,20 +1211,20 @@ CalculateVariables::CalculateVariables(NewObjectDef *objects, bool isTruth, bool
       TLorentzVector b3m = (*(objects->getBJets()))[SRB_Higgsino_id3]->p4()*0.001;
       TLorentzVector b4m = (*(objects->getBJets()))[SRB_Higgsino_id4]->p4()*0.001;
       double SRB_Higgsino_mbb2= (b3m+b4m).M();
-
+      
       SRB_Higgsino_Hmbb= (SRB_Higgsino_mbb1+SRB_Higgsino_mbb2)/2;
     }
-
+ 
   //SRB algorithms end
 
 
 }
 
 void CalculateVariables::CalculatePhotonMET(NewObjectDef *objects){
-
+  
   TVector2 tempMET = *(objects->getMETvector());
   //std::cout << "Temp MET(px,py): (" << tempMET.Px() << " ," << tempMET.Py() << ")" << std::endl;
-
+  
   TVector2 tempgamma((*(objects->getGoodPhotons()))[0]->p4().Px(), (*(objects->getGoodPhotons()))[0]->p4().Py());
 
   //std::cout << "Temp photon(px,py): (" << tempgamma.Px() << " ," << tempgamma.Py() << ")" << std::endl;
@@ -1247,15 +1233,15 @@ void CalculateVariables::CalculatePhotonMET(NewObjectDef *objects){
   TVector2 moreTemp = tempMET+tempgamma;
 
   //std::cout << "Combined PhotonMET (px,py): (" << moreTemp.Px() << " ," << moreTemp.Py() << ")" << std::endl;
-
+  
   PhotonETMiss = moreTemp.Mod()*0.001;
   PhotonETMissPhi = TVector2::Phi_0_2pi(moreTemp.Phi());
-
+  
   TLorentzVector g1v = (*objects->getGoodPhotons())[0]->p4()*0.001;
   pTgamma = g1v.Pt();
   phigamma = g1v.Phi();
   etagamma = g1v.Eta();
-
+  
 
 }
 
@@ -1263,81 +1249,80 @@ void CalculateVariables::CalculatePhotonMET(NewObjectDef *objects){
 void CalculateVariables::CalculateOneLepVariables(NewObjectDef *objects, TLorentzVector b1v, TLorentzVector b2v, TLorentzVector tj1v){
 
   TLorentzVector l1v(0,0,0,0);
-  lep2flavour = -99;
-
+  
   if (nLepton == 1 && objects->getGoodElectrons()->size() == 1){
     l1v = (*objects->getGoodElectrons())[0]->p4()*0.001;
     pTel1 = l1v.Pt();
-
+    
     pTl1 = l1v.Pt();
     etal1 = l1v.Eta();
     phil1 = l1v.Phi();
-
+    
     m_T = sqrt(2*(pTl1*eTMiss*(1 - cos(fabs(TVector2::Phi_mpi_pi( (phil1  - eTMissPhi)))))));
     TVector2 tempMET = *(objects->getMETvector());
     TVector2 tempEl ((*(objects->getGoodElectrons()))[0]->p4().Px(), (*(objects->getGoodElectrons()))[0]->p4().Py());
-    TVector2 moreTemp = tempMET+tempEl;
-    m_taulep = (tj1v+l1v).M();
-
+    TVector2 moreTemp = tempMET+tempEl;    
+    m_taulep = (tj1v+l1v).M();    
+    
     adjustedETMiss = moreTemp.Mod()*0.001;
     adjustedETMissPhi = moreTemp.Phi();
-
-    lep1flavour = 0;
 
   }
   else if (nLepton == 1 && objects->getGoodMuons()->size() == 1){
     l1v = (*objects->getGoodMuons())[0]->p4()*0.001;
     pTmu1 = l1v.Pt();
-
+    
     pTl1 = l1v.Pt();
     etal1 = l1v.Eta();
     phil1 = l1v.Phi();
-
+    
     m_T = sqrt(2*(pTl1*eTMiss*(1 - cos(fabs(TVector2::Phi_mpi_pi( (phil1  - eTMissPhi)))))));
-    m_taulep = (tj1v+l1v).M();
-
-    lep1flavour = 1;
+    m_taulep = (tj1v+l1v).M();    
 
   }
-
+  
 
   double mbl11 = (l1v+b1v).M();
   m_b1l = mbl11;
   double mbl12 = (l1v+b2v).M();
   m_b2l = mbl12;
-
-
-
-
-
-  // Do the amT2 for the sbottom here
+  
+  
   TLorentzVector METVector(objects->getMETvector()->X()/1000., objects->getMETvector()->Y()/1000., 0 , 0);
   mbLmin = std::min(mbl11, mbl12);
 
-  if (mbl11 > 170 && mbl12 > 170){
-    ComputeMT2* mT2Tool = new ComputeMT2(b1v, b2v, METVector, 0, 0);
-    amT2 = mT2Tool->Compute();
-  }
-  else if (mbl11 <= 170 && mbl12 > 170 ){
-    ComputeMT2* mT2Tool = new ComputeMT2(b1v+l1v, b2v, METVector, 0, 0);
-    amT2 = mT2Tool->Compute();
+  // Do the amT2 with b-jets ordered by btag weight  
+  xAOD::JetContainer* jetVector_tagOrder = new xAOD::JetContainer(SG::VIEW_ELEMENTS);
+  if (nJets>=2){
+    //order these jets by b-tag weight
+    for(unsigned int i=0;i< nJets; i++){
+      jetVector_tagOrder->push_back((*(objects->getGoodJets()))[i]);
+      double b_wgt;
+      (*(objects->getGoodJets()))[i]->btagging()->MVx_discriminant("MV2c10", b_wgt);
+    }
+    //Arrange these by b-tag order
+    TLorentzVector j1v(0,0,0,0);
+    TLorentzVector j2v(0,0,0,0);
+    jetVector_tagOrder->sort(btag_wgt_Sorter);
+    j1v = (*jetVector_tagOrder)[0]->p4()*0.001;
+    j2v = (*jetVector_tagOrder)[1]->p4()*0.001;
+    
+    double amT2_1 = -99;
+    double amT2_2 = -99;
+    ComputeMT2* mT2Tool_1 = new ComputeMT2(j1v, j2v+l1v, METVector, 80, 0);
+    amT2_1 = mT2Tool_1->Compute();   
+    ComputeMT2* mT2Tool_2 = new ComputeMT2(j1v+l1v, j2v, METVector, 0, 80);
+    amT2_2 = mT2Tool_2->Compute();   
+    amT2=std::min(amT2_1,amT2_2);
 
+    //CheckWith 80
+    // ComputeMT2* mT2Tool_1 = new ComputeMT2(j1v, j2v+l1v, METVector, 0, 0);
+    // amT2_1 = mT2Tool->Compute();   
+    // ComputeMT2* mT2Tool_2 = new ComputeMT2(j1v+l1v, j2v, METVector, 0, 0);
+    // amT2_2 = mT2Tool->Compute();   
+    // amT2=std::min(amT2_1,amT2_2);
+    
   }
-  else if (mbl11 > 170 && mbl12 <= 170 ){
-    ComputeMT2* mT2Tool = new ComputeMT2(b1v, b2v+l1v, METVector, 0, 0);
-    amT2 = mT2Tool->Compute();
-  }
-  else{
-    ComputeMT2* mT2Tool_1 = new ComputeMT2(b1v, b2v+l1v, METVector, 0, 0);
-    double amT2_1 = mT2Tool_1->Compute();
-    ComputeMT2* mT2Tool_2 = new ComputeMT2(b1v+l1v, b2v, METVector, 0, 0);
-    double amT2_2 = mT2Tool_2->Compute();
-    amT2 = std::min(amT2_1, amT2_2);
-  }
-  //std::cout << "amT2 = " << amT2 << std::endl;
-
-
-
   minm_bl = std::min(mbl11, mbl12);
   maxm_bl = std::max(mbl11, mbl12);
 
@@ -1361,7 +1346,7 @@ void CalculateVariables::CalculateOneLepVariables(NewObjectDef *objects, TLorent
   dRL1b2 = l1v.DeltaR(b2v);
   minDRLb = std::min(dRL1b1, dRL1b2);
 
-
+ 
 
 
 }
@@ -1371,113 +1356,70 @@ void CalculateVariables::CalculateTwoLepVariables(NewObjectDef *objects, TLorent
 
   TLorentzVector l1v(0,0,0,0);
   TLorentzVector l2v(0,0,0,0);
-
-  if (nLepton >= 2 && objects->getGoodElectrons()->size() >= 1 && objects->getGoodMuons()->size() >= 1){
-    l1v = (*objects->getGoodElectrons())[0]->p4()*0.001;
-    l2v = (*objects->getGoodMuons())[0]->p4()*0.001;
-
-    pTel1 = l1v.Pt();
-    pTmu1 = l2v.Pt();
-
-    if (pTel1 > pTmu1){
-      pTl1 = l1v.Pt();
-      etal1 = l1v.Eta();
-      phil1 = l1v.Phi();
-
-      pTl2 = l2v.Pt();
-      etal2 = l2v.Eta();
-      phil2 = l2v.Phi();
-
-      lep1flavour = 0;
-      lep2flavour = 1;
-
+  std::vector<TLorentzVector> leptVects;
+  int muonIterator=0;
+  int electronIterator=0;
+  int stopper=0;
+  
+  //lepton pTs
+  if (nElectron>0) pTel1 = (*objects->getGoodElectrons())[0]->pt()*0.001;
+  if (nElectron>1) pTel2 = (*objects->getGoodElectrons())[1]->pt()*0.001;
+  if (nMuon>0) pTmu1 = (*objects->getGoodMuons())[0]->pt()*0.001;
+  if (nMuon>1) pTmu2 = (*objects->getGoodMuons())[1]->pt()*0.001;
+  
+  //Sort the electrons and muons by pT
+  if (nLepton>=2){
+    double muonpT=0;
+    double electronpT=0;
+    while(stopper==0){
+      //Check the iterator is available 
+      if (muonIterator<nMuon){
+	muonpT=(*objects->getGoodMuons())[muonIterator]->pt();
+      }
+      else muonpT=0.0;
+      
+      if (electronIterator<nElectron){
+	electronpT=(*objects->getGoodElectrons())[electronIterator]->pt();
+      }
+      else electronpT=0.0;
+      //exit if there are none left 
+      if (muonpT ==0 && electronpT==0){
+	stopper+=1;
+	continue;
+      }
+      if (electronpT>muonpT){
+	leptVects.push_back((*objects->getGoodElectrons())[electronIterator]->p4()*0.001);
+	electronIterator+=1;
+      }
+      else{
+	leptVects.push_back((*objects->getGoodMuons())[muonIterator]->p4()*0.001);
+	muonIterator+=1;
+      }
     }
-    else{
-      pTl2 = l1v.Pt();
-      etal2 = l1v.Eta();
-      phil2 = l1v.Phi();
-
-      pTl1 = l2v.Pt();
-      etal1 = l2v.Eta();
-      phil1 = l2v.Phi();
-
-      lep1flavour = 1;
-      lep2flavour = 0;
-    }
-
-
-    m_T = sqrt(2*(pTl1*eTMiss*(1 - cos(fabs(TVector2::Phi_mpi_pi( (phil1  - eTMissPhi)))))));
-    TVector2 tempMET = *(objects->getMETvector());
-    TVector2 tempEl ((*(objects->getGoodElectrons()))[0]->p4().Px(), (*(objects->getGoodElectrons()))[0]->p4().Py());
-    TVector2 moreTemp = tempMET+tempEl;
-
-    adjustedETMiss = moreTemp.Mod()*0.001;
-    adjustedETMissPhi = moreTemp.Phi();
+    l1v=leptVects[0];
+    l2v=leptVects[1];
   }
 
-  if (nLepton >= 2 && nBaselineLepton >= 2 && objects->getBaselineElectrons()->size() >= 2){
-    l1v = (*objects->getBaselineElectrons())[0]->p4()*0.001;
-    l2v = (*objects->getBaselineElectrons())[1]->p4()*0.001;
+  pTl1 = l1v.Pt();
+  etal1 = l1v.Eta();
+  phil1 = l1v.Phi();
+  
+  pTl2 = l2v.Pt();
+  etal2 = l2v.Eta();
+  phil2 = l2v.Phi();
 
+    
 
-    pTel1 = l1v.Pt();
-    pTel2 = l2v.Pt();
+  
+    
+  m_T = sqrt(2*(pTl1*eTMiss*(1 - cos(fabs(TVector2::Phi_mpi_pi( (phil1  - eTMissPhi)))))));
+  TVector2 tempMET = *(objects->getMETvector());
+  TVector2 tempEl (l1v.Px(), l2v.Py());
+  TVector2 moreTemp = tempMET+tempEl;
+  
+  adjustedETMiss = moreTemp.Mod()*0.001;
+  adjustedETMissPhi = moreTemp.Phi();
 
-    pTl1 = l1v.Pt();
-    etal1 = l1v.Eta();
-    phil1 = l1v.Phi();
-
-    pTl2 = l2v.Pt();
-    etal2 = l2v.Eta();
-    phil2 = l2v.Phi();
-
-    lep1flavour = 0;
-    lep2flavour = 0;
-
-    m_T = sqrt(2*(pTl1*eTMiss*(1 - cos(fabs(TVector2::Phi_mpi_pi( (phil1  - eTMissPhi)))))));
-    TVector2 tempMET = *(objects->getMETvector());
-    TVector2 tempEl1 ((*(objects->getBaselineElectrons()))[0]->p4().Px(), (*(objects->getBaselineElectrons()))[0]->p4().Py());
-    TVector2 tempEl2 ((*(objects->getBaselineElectrons()))[1]->p4().Px(), (*(objects->getBaselineElectrons()))[1]->p4().Py());
-    TVector2 tempEl = tempEl1+tempEl2;
-    TVector2 moreTemp = tempMET+tempEl;
-
-    adjustedETMiss = moreTemp.Mod()*0.001;
-    adjustedETMissPhi = moreTemp.Phi();
-
-  }
-
-  if (nLepton >= 2 && nBaselineLepton >= 2 && objects->getBaselineMuons()->size() >= 2){
-    l1v = (*objects->getBaselineMuons())[0]->p4()*0.001;
-    l2v = (*objects->getBaselineMuons())[1]->p4()*0.001;
-
-
-    pTmu1 = l1v.Pt();
-    pTmu2 = l2v.Pt();
-
-    pTl1 = l1v.Pt();
-    etal1 = l1v.Eta();
-    phil1 = l1v.Phi();
-
-    pTl2 = l2v.Pt();
-    etal2 = l2v.Eta();
-    phil2 = l2v.Phi();
-
-    lep1flavour = 1;
-    lep2flavour = 1;
-
-    m_T = sqrt(2*(pTl1*eTMiss*(1 - cos(fabs(TVector2::Phi_mpi_pi( (phil1  - eTMissPhi)))))));
-    TVector2 tempMET = *(objects->getMETvector());
-    TVector2 tempEl1 ((*(objects->getBaselineMuons()))[0]->p4().Px(), (*(objects->getBaselineMuons()))[0]->p4().Py());
-    TVector2 tempEl2 ((*(objects->getBaselineMuons()))[1]->p4().Px(), (*(objects->getBaselineMuons()))[1]->p4().Py());
-    TVector2 tempEl = tempEl1+tempEl2;
-    TVector2 moreTemp = tempMET+tempEl;
-
-    adjustedETMiss = moreTemp.Mod()*0.001;
-    adjustedETMissPhi = moreTemp.Phi();
-
-
-
-  }
 
   // Make Z Boson here
 
@@ -1486,7 +1428,7 @@ void CalculateVariables::CalculateTwoLepVariables(NewObjectDef *objects, TLorent
   pTZ = ZBoson.Pt(); //
   etaZ = ZBoson.Eta(); //
   phiZ = ZBoson.Phi(); //
-
+  
   DR_Zb1 = ZBoson.DeltaR(b1v);
   DR_Zb2 = ZBoson.DeltaR(b2v);
   minDR_Zb = std::min(DR_Zb1, DR_Zb2);
@@ -1499,7 +1441,7 @@ void CalculateVariables::CalculateTwoLepVariables(NewObjectDef *objects, TLorent
 
 
   m_ll = (l1v+l2v).M();
-
+  
   double mbl11 = (l1v+b1v).M();
   double mbl12 = (l1v+b2v).M();
   m_b1l = std::min(mbl11,mbl12);
@@ -1507,7 +1449,7 @@ void CalculateVariables::CalculateTwoLepVariables(NewObjectDef *objects, TLorent
   double mbl21 = (l2v+b1v).M();
   double mbl22 = (l2v+b2v).M();
   m_b2l = std::min(mbl21,mbl22);
-
+  
   mbLmin = std::min(mbl11, std::min(mbl12, std::min(mbl21, mbl22)));
   minm_bl = std::min(mbl11, std::min(mbl12, std::min(mbl21, mbl22)));
   maxm_bl = std::max(mbl11, std::max(mbl12, std::max(mbl21, mbl22)));
@@ -1534,7 +1476,7 @@ void CalculateVariables::CalculateTwoLepVariables(NewObjectDef *objects, TLorent
   dEtaL2bSystem = fabs(l2v.Eta() - ((b1v+b2v).Eta()));
   dEtaL2b1 = fabs(l2v.Eta() - b1v.Eta());
   dEtaL2b2 = fabs(l2v.Eta() - b2v.Eta());
-
+  
   minDEtaLb = std::min({dEtaL1b1, dEtaL1b2, dEtaL2b1, dEtaL2b2});
 
 
@@ -1552,62 +1494,64 @@ void CalculateVariables::CalculateTwoLepVariables(NewObjectDef *objects, TLorent
 
 }
 
+
+
 void CalculateVariables::CalculateShapeVariables(NewObjectDef *objects)
 {
   // calculate transverse aplanarity and that
 
     TMatrixD a (3,3);
-
+    
     for (int i = 0; i < 3; i++){
       for (int j = 0; j < 3; j++){
 	a[i][j] = 0;
       }
     }
-
-
+    
+    
     // Loop over the Jets and add to the matrix
-
+    
     for (int iJet = 0; iJet < nJets; iJet++){
       TLorentzVector tempJet = (*objects->getGoodJets())[iJet]->p4()*0.001;
-
+      
       double px = tempJet.Px();
       double py = tempJet.Py();
       double pz = tempJet.Pz();
       double modp = ((px*px) + (py*py) + (pz*pz));
-
-
+      
+        
       a[0][0] = a[0][0]+((px*px)/modp);
       a[0][1] = a[0][1]+((px*py)/modp);
       a[0][2] = a[0][1]+((px*pz)/modp);
-
+        
       a[1][0] = a[1][0]+((py*px)/modp);
       a[1][1] = a[1][1]+((py*py)/modp);
       a[1][2] = a[1][2]+((py*pz)/modp);
-
+        
       a[2][0] = a[2][0]+((pz*px)/modp);
       a[2][1] = a[2][1]+((pz*py)/modp);
       a[2][2] = a[2][2]+((pz*pz)/modp);
     }
 
     // loop over the muons and add to the matrix
-
+   
     for (int iMu = 0; iMu < nMuon ; iMu++){
       TLorentzVector tempMu = (*objects->getGoodMuons())[iMu]->p4()*0.001;
-
+      
       double px = tempMu.Px();
       double py = tempMu.Py();
       double pz = tempMu.Pz();
       double modp = ((px*px) + (py*py) + (pz*pz));
-
-
+      
+        
       a[0][0] = a[0][0]+((px*px)/modp);
       a[0][1] = a[0][1]+((px*py)/modp);
       a[0][2] = a[0][1]+((px*pz)/modp);
-
+        
       a[1][0] = a[1][0]+((py*px)/modp);
       a[1][1] = a[1][1]+((py*py)/modp);
       a[1][2] = a[1][2]+((py*pz)/modp);
-
+        
       a[2][0] = a[2][0]+((pz*px)/modp);
       a[2][1] = a[2][1]+((pz*py)/modp);
       a[2][2] = a[2][2]+((pz*pz)/modp);
@@ -1615,24 +1559,24 @@ void CalculateVariables::CalculateShapeVariables(NewObjectDef *objects)
 
 
     // loop over the electrons and add to the matrix
-
+   
     for (int iEl = 0; iEl < nElectron ; iEl++){
       TLorentzVector tempEl = (*objects->getGoodElectrons())[iEl]->p4()*0.001;
-
+      
       double px = tempEl.Px();
       double py = tempEl.Py();
       double pz = tempEl.Pz();
       double modp = ((px*px) + (py*py) + (pz*pz));
-
-
+      
+        
       a[0][0] = a[0][0]+((px*px)/modp);
       a[0][1] = a[0][1]+((px*py)/modp);
       a[0][2] = a[0][1]+((px*pz)/modp);
-
+        
       a[1][0] = a[1][0]+((py*px)/modp);
       a[1][1] = a[1][1]+((py*py)/modp);
       a[1][2] = a[1][2]+((py*pz)/modp);
-
+        
       a[2][0] = a[2][0]+((pz*px)/modp);
       a[2][1] = a[2][1]+((pz*py)/modp);
       a[2][2] = a[2][2]+((pz*pz)/modp);
@@ -1645,7 +1589,7 @@ void CalculateVariables::CalculateShapeVariables(NewObjectDef *objects)
 
     TMatrixD M = eM.GetEigenValues();
 
-
+    
 
     double eigen_a = M[0][0];
     double eigen_b = M[1][1];
@@ -1665,19 +1609,19 @@ void CalculateVariables::CalculateShapeVariables(NewObjectDef *objects)
     Aplanarity = (3/2)*smallest;
 
     transformedAplan = exp(-8*Aplanarity);
-
+      
     if ( (eigen_a > eigen_b) && (eigen_a > eigen_c) ){
       Sphericity = (3/2)*(eigen_b + eigen_c);
-    }
-
+    }  
+      
     if ( (eigen_b > eigen_a) && (eigen_b > eigen_c) ){
       Sphericity = (3/2)*(eigen_a + eigen_c);
-    }
-
+    }  
+      
     if ( (eigen_c > eigen_a) && (eigen_c > eigen_b) ){
       Sphericity = (3/2)*(eigen_a + eigen_b);
-    }
-
+    }  
+      
 
 }
 
@@ -1705,7 +1649,7 @@ void CalculateVariables::CalculateRazorVariables(NewObjectDef *objects)
   RInvisibleFrame I2("I2","I_{b}");
 
   //////////////////////////////////////////////////////////////
-  // different 'groups' of particles
+  // different 'groups' of particles 
   //////////////////////////////////////////////////////////////
   //std::cout << " Define invisible and combinatoric groups " << endl;
 
@@ -1715,7 +1659,7 @@ void CalculateVariables::CalculateRazorVariables(NewObjectDef *objects)
   INV.AddFrame(I2);
 
   // the combinatoric group is the list of visible objects
-  // that go into our hemispheres
+  // that go into our hemispheres 
   CombinatoricGroup VIS("VIS","Visible Object Jigsaws");
   VIS.AddFrame(V1);
   VIS.SetNElementsForFrame(V1,1,false);
@@ -1737,13 +1681,13 @@ void CalculateVariables::CalculateRazorVariables(NewObjectDef *objects)
   S2.AddChildFrame(I2);
 
   //////////////////////////////////////////////////////////////
-  // check to make sure the tree is acceptably connected
+  // check to make sure the tree is acceptably connected 
   //////////////////////////////////////////////////////////////
-  //std::cout << "Is consistent tree topology? " << LAB.InitializeTree() << endl;
+  //std::cout << "Is consistent tree topology? " << LAB.InitializeTree() << endl; 
   LAB.InitializeTree();
   //////////////////////////////////////////////////////////////
   // now we define 'jigsaw rules' that tell the tree
-  // how to define the objects in our groups
+  // how to define the objects in our groups 
   //////////////////////////////////////////////////////////////
   InvisibleMassJigsaw MinMassJigsaw("MINMASS_JIGSAW", "Invisible system mass Jigsaw");
   INV.AddJigsaw(MinMassJigsaw);
@@ -1751,7 +1695,7 @@ void CalculateVariables::CalculateRazorVariables(NewObjectDef *objects)
   InvisibleRapidityJigsaw RapidityJigsaw("RAPIDITY_JIGSAW", "Invisible system rapidity Jigsaw");
   INV.AddJigsaw(RapidityJigsaw);
   RapidityJigsaw.AddVisibleFrame((LAB.GetListVisibleFrames()));
-
+  
   ContraBoostInvariantJigsaw ContraBoostJigsaw("CB_JIGSAW","Contraboost invariant Jigsaw");
   INV.AddJigsaw(ContraBoostJigsaw);
   ContraBoostJigsaw.AddVisibleFrame((S1.GetListVisibleFrames()), 0);
@@ -1767,7 +1711,7 @@ void CalculateVariables::CalculateRazorVariables(NewObjectDef *objects)
   //////////////////////////////////////////////////////////////
   // check to make sure that all the jigsaws etc. are correctly connected
   //////////////////////////////////////////////////////////////
-  //std::cout << "Is consistent analysis tree? : " << LAB.InitializeAnalysis() << endl;
+  //std::cout << "Is consistent analysis tree? : " << LAB.InitializeAnalysis() << endl; 
   LAB.InitializeAnalysis();
   //////////////////////////////////////////////////////////////
   // draw some pictures of our tree
@@ -1793,7 +1737,7 @@ void CalculateVariables::CalculateRazorVariables(NewObjectDef *objects)
   RSelfAssemblingFrame S_alt("CM","CM");
   RVisibleFrame V_alt("V_alt","Vis");
   RInvisibleFrame I_alt("I_alt","Iinv");
-
+ 
   InvisibleGroup INV_alt("INV_alt","Invisible State Jigsaws");
   INV_alt.AddFrame(I_alt);
 
@@ -1805,7 +1749,7 @@ void CalculateVariables::CalculateRazorVariables(NewObjectDef *objects)
   S_alt.AddChildFrame(V_alt);
   S_alt.AddChildFrame(I_alt);
 
-  LAB_alt.InitializeTree();
+  LAB_alt.InitializeTree(); 
 
   // Will just set invisible mass to zero
   InvisibleMassJigsaw MinMass_alt("MINMASS_JIGSAW_ALT", "Invisible system mass Jigsaw");
@@ -1816,12 +1760,12 @@ void CalculateVariables::CalculateRazorVariables(NewObjectDef *objects)
   INV_alt.AddJigsaw(Rapidity_alt);
   Rapidity_alt.AddVisibleFrame((LAB_alt.GetListVisibleFrames()));
 
-  LAB_alt.InitializeAnalysis();
+  LAB_alt.InitializeAnalysis(); 
 
 
   //
   // TEST EVENT Reconcstruction
-  //
+  // 
   int TotalJets = objects->getGoodJets()->size();;
   vector<TLorentzVector> JETS;
   for(int ijet = 0; ijet < TotalJets; ijet++){
@@ -1832,22 +1776,22 @@ void CalculateVariables::CalculateRazorVariables(NewObjectDef *objects)
     TVector2 tempMET = *(objects->getMETvector());
     TVector3 MET(tempMET.Px()*0.001,tempMET.Py()*0.001,0.);
     //std::cout << MET.Px() << "MET pX" << std::endl;
-
-
+    
+    
     LAB.ClearEvent();
-    // can use this to see where
+    // can use this to see where 
     // each jet ended up in the tree
-    vector<GroupElementID> jetID;
-
+    vector<GroupElementID> jetID; 
+    
     // // add the jets to the 'VIS' group
-    for(int i = 0; i < int(JETS.size()); i++)
+    for(int i = 0; i < int(JETS.size()); i++) 
       jetID.push_back(VIS.AddLabFrameFourVector(JETS[i]));
-    // Set the 'INV' group momentum in
+    // Set the 'INV' group momentum in 
     // the lab frame (the MET)
     INV.SetLabFrameThreeVector(MET);
     LAB.AnalyzeEvent();
-
-    // Do the same for 'background' tree - set
+    
+    // Do the same for 'background' tree - set 
     // jets' z-momenta to zero before loading into tree
     LAB_alt.ClearEvent();
     for(int i = 0; i < int(JETS.size()); i++){
@@ -1868,7 +1812,7 @@ void CalculateVariables::CalculateRazorVariables(NewObjectDef *objects)
 
     double gaminvRp1 = SS.GetVisibleShape();
     //std::cout << "1/(gamma_{R+1}) =  " << gaminvRp1 << std::endl;
-
+    
     double MdeltaR = ((sqrt(shatR))*gaminvRp1)/2;
     //std::cout << "M_{Delta}^{R} = " << MdeltaR << std::endl;
 
@@ -1922,7 +1866,7 @@ void CalculateVariables::CalculateRazorVariables(NewObjectDef *objects)
     RJVarsSS_invGamma = gaminvRp1;
     RJVarsSS_s_hat = shatR;
     RJVarsSS_MDelR = MdeltaR;
-
+    
     // Hemisphere variables - still studying to improve this part
     int NJ[2];
     double ND[2];
@@ -1935,7 +1879,7 @@ void CalculateVariables::CalculateRazorVariables(NewObjectDef *objects)
     I[1] = &I2;
     S[0] = &S1;
     S[1] = &S2;
-
+    
     for(int h = 0; h < 2; h++){
       NJ[h] = VIS.GetNElementsInFrame(V[h]);
       ND[h] = S[h]->GetFrameDepth(I[h]);
@@ -1948,10 +1892,10 @@ void CalculateVariables::CalculateRazorVariables(NewObjectDef *objects)
         const RestFrame* frame = S[h]->GetFrameAtDepth(d+1, I[h]);
 	const RestFrame* prod_frame = frame->GetProductionFrame();
 	const RestFrame* prod_prod_frame = prod_frame->GetProductionFrame();
-
+	
 	RATIO[h][d] = 2./sqrt(3.)*frame->GetMomentum(prod_frame)/prod_frame->GetMomentum(prod_prod_frame);
 	cosD[h][d] = prod_frame->GetCosDecayAngle(frame);
       }
     }
+}
 
-  }  

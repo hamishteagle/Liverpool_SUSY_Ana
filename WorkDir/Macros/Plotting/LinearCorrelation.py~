@@ -1,0 +1,69 @@
+#!/usr/bin/env python
+
+import os,sys,subprocess,datetime,copy,math,array,shutil,ROOT,string
+from ROOT import gROOT, TColor, TLatex, gStyle, TLegend, gPad, TAttText
+
+__author__ = "John Anders"
+__doc__    = """Module to do a plot using the MasterPlot.py script
+"""
+
+# Make sure that Path exists for output files
+def ensure_dir(d):
+    if not os.path.isdir(d):
+        os.makedirs(d)
+def CorrelationPlot(variable1, variable2, xaxislabel, yaxislabel, xmin, xmax, xbins, ymin, ymax, ybins,selection, directory, label, inputFile):
+
+    #Draw the scatter first
+    scatterPlot1 = ROOT.TH2F("scatterPlot1","scatterPlot1" , xnbins, xmin, xmax, ynbins, ymin, ymax)
+    inFile1 = ROOT.TFile(inputFile1)
+    inTree1 = inFile1.Get("CollectionTree_")
+    inTree1.Draw(yvariabletoplot+":"+xvariabletoplot+">>scatterPlot1", cutstouse)
+    
+
+
+
+
+
+
+
+
+
+   #Linear Correlation
+    Canvas = ROOT.TCanvas("Canvas","Canvas",0,0,900,900)
+
+    h_linCorr1=ROOT.TH1D("linCorr","Linear Correlation between variables",10,-2.5,2.5)
+    xmean=scatterPlot1.GetMean(1)
+    ymean=scatterPlot1.GetMean(2)
+    xrms=scatterPlot1.GetRMS(1)
+    yrms=scatterPlot1.GetRMS(2)
+    for entry in range(inTree1.GetEntries()):
+        inTree1.GetEntry(entry)
+        x = inTree1.GetLeaf(xvariabletoplot).GetValue()
+        y = inTree1.GetLeaf(yvariabletoplot).GetValue()
+        linCorr=((x-xmean)*(y-ymean))/(xrms*yrms)
+        h_linCorr1.Fill(linCorr)
+    h_linCorr1.SetLineColor
+    h_linCorr1.GetXaxis().SetTitle(xaxislabel);
+    h_linCorr1.GetYaxis().SetTitle(yaxislabel);
+    h_
+        
+    h_linCorr1.Draw("Hist,E0")
+    latex_draw(xvariabletoplot+'_'+yvariabletoplot)
+
+
+
+
+
+
+
+
+    output_dir = "/user/hteagle//SummerAnalysis/Summer_Student_Analysis/histograms/CorrelationPlots/"
+   
+    change_me = directory+"/"+label+"/"
+    output_dir = output_dir + change_me
+    print("Directory is :"+str(output_dir))
+    ensure_dir(output_dir)
+
+
+    Canvas.SaveAs(output_dir+variable1+"_"+variable2+"correlation_reco.eps")
+    return

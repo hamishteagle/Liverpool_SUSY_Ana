@@ -748,7 +748,6 @@ EL::StatusCode MyxAODAnalysis :: execute ()
     met_decisions.clear();
 
   }
-
   return StatusCode::SUCCESS;
 }
 

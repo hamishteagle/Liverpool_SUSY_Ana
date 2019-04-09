@@ -88,7 +88,7 @@ int main( int argc, char* argv[] ) {
 
   submitDir = CurrentDate+fileType;
 
-  std::string CreateDir = "/scratch/msullivan/GridSubmissions/"+submitDir;
+  std::string CreateDir = "/scratch/hteagle/GridSubmissions/"+submitDir;
   std::string Command = "[ ! -d "+CreateDir+" ] && mkdir "+CreateDir+" || echo \"Directory Exists\"";
   std::system(Command.c_str());
 
