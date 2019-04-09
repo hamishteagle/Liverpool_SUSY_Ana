@@ -451,6 +451,7 @@ EL::StatusCode MyxAODAnalysis :: execute ()
     if (isMC){
 
       mcChannel = eventInfo->mcChannelNumber();
+<<<<<<< .merge_file_rsAXNK
       puWgt = objTool->GetPileupWeight();
 
       try {
@@ -749,7 +750,6 @@ EL::StatusCode MyxAODAnalysis :: execute ()
     met_decisions.clear();
 
   }
-
   return StatusCode::SUCCESS;
 }
 

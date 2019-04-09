@@ -21,6 +21,7 @@
 int main( int argc, char* argv[]) {
 
   // Take the submit directory from the input if provided:
+<<<<<<< .merge_file_mFc8X2
   std::string submitDir = "";
   std::string inputDir = "";
   std::string inputFile = "";

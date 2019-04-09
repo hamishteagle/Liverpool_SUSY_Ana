@@ -33,6 +33,7 @@ int main( int argc, char* argv[] ) {
 
   int Month = now->tm_mon;
   std::string CurrentDate = std::to_string(now->tm_mday)+Months[Month];
+<<<<<<< .merge_file_wDTAAT
   std::string fileType = "";
 
   int found_TRUTH1 = inputFile.find("TRUTH1");
