@@ -31,18 +31,16 @@ int main( int argc, char* argv[]) {
 
   if (argc > 3) {
     inputDir = argv[1];
-    inputFile = argv[2];
-    submitDir = argv[3];
-    RunningWithSyst = (bool) atoi(argv[4]);
-    RunningWithPhotons = (bool) atoi(argv[5]);
-    RunningLocally = (bool) atoi(argv[6]);
-    NoEvents = atoi(argv[7]);
-    std::cout << "Input dir: " << argv[1] << std::endl;
-    std::cout << "Input file: " << argv[2] << std::endl;
-    std::cout << "Submission file: " << argv[3] << std::endl;
+    std::cout << "Input dir: " << inputDir << std::endl;
+    submitDir = argv[2];
+    std::cout << "Submission file: " << submitDir << std::endl;
+    RunningWithSyst = (bool) atoi(argv[3]);
     std::cout << "RunningWithSyst: " << RunningWithSyst << std::endl;
+    RunningWithPhotons = (bool) atoi(argv[4]);
     std::cout << "RunningWithPhotons: " << RunningWithPhotons << std::endl;
+    RunningLocally = (bool) atoi(argv[5]);
     std::cout << "RunningLocally: " << RunningLocally << std::endl;
+    NoEvents = atoi(argv[6]);
     std::cout << "Running on: " << NoEvents << " events" << std::endl;
   }
 
@@ -51,12 +49,8 @@ int main( int argc, char* argv[]) {
   // Construct the samples to run on:
   SH::SampleHandler sh;
 
-  submitDir = submitDir + inputFile;
-  inputFile = inputDir + inputFile;
-
-  SH::DiskListLocal list (inputFile);
+  SH::DiskListLocal list (inputDir);
   SH::scanFiles(sh, list); // specifying one
-
   sh.setMetaString ("nc_tree", "CollectionTree");
 
   sh.print();
