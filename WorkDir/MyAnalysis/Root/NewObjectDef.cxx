@@ -1,6 +1,6 @@
 #include "MyAnalysis/NewObjectDef.h"
 
-NewObjectDef::NewObjectDef(asg::SgTEvent* event, ST::SUSYObjDef_xAOD* SUSYTool,/*asg::AnaToolHandle<ST::SUSYObjDef_xAOD>& SUSYTool,*/ xAOD::TStore* store, double mcChannel, double EventNumber, double mcWgt, double m_lumiScaled, std::string syst) {
+NewObjectDef::NewObjectDef(asg::SgTEvent* event, ST::SUSYObjDef_xAOD* SUSYTool, xAOD::TStore* store, double mcChannel, double EventNumber, double mcWgt, double m_lumiScaled, std::string syst) {
 
   objTool = SUSYTool;
   eventStore = store;
@@ -108,10 +108,8 @@ void NewObjectDef::GetObjects() {
   }
 
   electronSF = 1;
-  electronTriggerSF = 1;
-  if (objTool->isData() == 0 && goodElectrons->size() == 1) {
+  if (objTool->isData() == 0) {
     electronSF = objTool->GetTotalElectronSF(*electrons,true,true,false,true,"", false);
-    electronTriggerSF = objTool->GetTotalElectronSF(*electrons,false,false,true,false,"singleLepton", false);
   }
   // Fill muons
   for (const auto& mu_itr: *muons) {
@@ -126,15 +124,7 @@ void NewObjectDef::GetObjects() {
   }
 
   muonSF = 1;
-  muonTriggerSF = 1;
-  if (objTool->isData() == 0 && goodMuons->size() == 1) {
-    int year = objTool->treatAsYear();
-    if (year == 2015) {
-      muonTriggerSF = objTool->GetTotalMuonSF(*muons,false, false, "HLT_mu20_iloose_L1MU15_OR_HLT_mu50");
-    }
-    else {
-      muonTriggerSF = objTool->GetTotalMuonSF(*muons,false,false, "HLT_mu26_ivarmedium_OR_HLT_mu50");
-    }
+  if (objTool->isData() == 0 ) {
     muonSF = objTool->GetTotalMuonSF(*muons,true,true,"");
   }
   // Fill taus
@@ -176,6 +166,27 @@ void NewObjectDef::GetObjects() {
     if (vx->vertexType() == xAOD::VxType::PriVtx) {
       nVertex++ ;
     }
+  }
+
+  //Lepton trigger SFs
+  electronTriggerSF = 1;
+  muonTriggerSF = 1;
+  dilepTriggerSF = 1;
+
+  if (objTool->isData() == 0) {
+    if (goodElectrons->size() == 1) {
+      electronTriggerSF = objTool->GetTotalElectronSF(*electrons,false,false,true,false,"singleLepton", false);
+    }
+    if (goodMuons->size() == 1) {
+      int year = objTool->treatAsYear();
+      if (year == 2015) {
+        muonTriggerSF = objTool->GetTotalMuonSF(*muons,false, false, "HLT_mu20_iloose_L1MU15_OR_HLT_mu50");
+      }
+      else {
+        muonTriggerSF = objTool->GetTotalMuonSF(*muons,false,false, "HLT_mu26_ivarmedium_OR_HLT_mu50");
+      }
+    }
+    if ((goodElectrons->size() + goodMuons->size()) == 2) dilepTriggerSF = objTool->GetTriggerGlobalEfficiencySF(*electrons, *muons, "diLepton");
   }
 
   delete met_nominal;

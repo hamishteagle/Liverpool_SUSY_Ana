@@ -16,6 +16,7 @@
 #include <xAODCore/ShallowCopy.h>
 #include <AsgTools/StatusCode.h>
 
+
 class NewObjectDef
 {
 
@@ -24,7 +25,7 @@ class NewObjectDef
     /*asg::AnaToolHandle<ST::SUSYObjDef_xAOD> objTool;*/
     ST::SUSYObjDef_xAOD* objTool;
 
-    NewObjectDef(asg::SgTEvent* event, ST::SUSYObjDef_xAOD* SUSYTool,/*asg::AnaToolHandle<ST::SUSYObjDef_xAOD>& SUSYTool,*/ xAOD::TStore* store, double mcChannel, double EventNumber, double mcWgt, double m_lumiScaled, std::string systematic);
+    NewObjectDef(asg::SgTEvent* event, ST::SUSYObjDef_xAOD* SUSYTool, xAOD::TStore* store, double mcChannel, double EventNumber, double mcWgt, double m_lumiScaled, std::string systematic);
 
     ~NewObjectDef(){};
 
@@ -38,6 +39,7 @@ class NewObjectDef
     double getMuonTriggerSF(){return muonTriggerSF;};
     double getElectronSF(){return electronSF;};
     double getElectronTriggerSF(){return electronTriggerSF;};
+    double getDilepTriggerSF(){return dilepTriggerSF;};
     double getTauSF(){return 1;};
     double getTauTriggerSF(){return 1;};
     double getPhotonSF(){return 1;};
@@ -108,6 +110,7 @@ class NewObjectDef
     double bJetSF;
     double JVTSF;
     double muonTriggerSF;
+    double dilepTriggerSF;
 
     int nVertex = 0;
     bool passElectronTriggerMatch = false;

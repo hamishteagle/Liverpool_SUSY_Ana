@@ -163,6 +163,7 @@ TreeService::TreeService(TTree *outputTree, TDirectory *OutDir){
   tree->Branch("puWgt", &puWgt);
   //tree->Branch("muonRecoSF", &muonRecoSF);
   tree->Branch("muonTriggerSF", &muonTriggerSF);
+  tree->Branch("dilepTriggerSF",&dilepTriggerSF);
 
 
 
@@ -524,6 +525,7 @@ void TreeService::fillTree(NewObjectDef *objects ,PreliminarySel &region, Calcul
 
   muonSF = objects->getMuonSF();
   muonTriggerSF = objects->getMuonTriggerSF();
+  dilepTriggerSF = objects->getDilepTriggerSF();
   //  muonRecoSF = objects->getMuonRecoSF();
   //  oldMuonSF = objects->getOldMuonSF();
   electronSF = objects->getElectronSF();

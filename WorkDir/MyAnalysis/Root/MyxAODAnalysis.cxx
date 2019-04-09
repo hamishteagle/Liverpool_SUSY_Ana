@@ -299,10 +299,6 @@ EL::StatusCode MyxAODAnalysis :: initialize ()
   ANA_CHECK(m_PMGCrossSectionTool.retrieve());
   m_PMGCrossSectionTool->readInfosFromDir("/cvmfs/atlas.cern.ch/repo/sw/database/GroupData/dev/PMGTools/");
 
-  //m_muonCalibrationAndSmearingTool.setTypeAndName("CP::MuonCalibrationAndSmearingTool/MuonCorrectionTool");
-  //ANA_CHECK (m_muonCalibrationAndSmearingTool.initialize());
-  //ANA_CHECK(objTool->setProperty("MuonCalibrationAndSmearingTool", m_muonCalibrationAndSmearingTool.getHandle()));
-
   return StatusCode::SUCCESS;
 }
 
@@ -489,6 +485,7 @@ EL::StatusCode MyxAODAnalysis :: execute ()
     NewObjectDef* m_objs;
 
     m_objs = new NewObjectDef(evtStore(), objTool, store, mcChannel, EventNumber, mcWgt, m_lumiScaled, syst.name());
+    if (firstEvent == true) firstEvent = false;
 
     std::unique_ptr<MCChecks> checkMC (new MCChecks ());
     bool passGRL = false;

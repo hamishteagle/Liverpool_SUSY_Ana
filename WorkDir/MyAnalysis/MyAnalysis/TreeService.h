@@ -355,6 +355,7 @@ class TreeService
   double electronTriggerSF;
   //  double muonRecoSF;
   double muonTriggerSF;
+  double dilepTriggerSF;
   double tauSF;
   double tauTriggerSF;
   double bJetSF;
