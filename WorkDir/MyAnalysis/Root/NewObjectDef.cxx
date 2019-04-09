@@ -1,6 +1,6 @@
 #include "MyAnalysis/NewObjectDef.h"
 
-NewObjectDef::NewObjectDef(asg::SgTEvent* event, ST::SUSYObjDef_xAOD* SUSYTool,/*asg::AnaToolHandle<ST::SUSYObjDef_xAOD>& SUSYTool,*/ xAOD::TStore* store, double mcChannel, double EventNumber, double mcWgt, double m_lumiScaled, std::string syst) {
+NewObjectDef::NewObjectDef(asg::SgTEvent* event, ST::SUSYObjDef_xAOD* SUSYTool, xAOD::TStore* store, double mcChannel, double EventNumber, double mcWgt, double m_lumiScaled, std::string syst) {
 
   objTool = SUSYTool;
   eventStore = store;
@@ -29,16 +29,16 @@ NewObjectDef::NewObjectDef(asg::SgTEvent* event, ST::SUSYObjDef_xAOD* SUSYTool,/
   BJets = new xAOD::JetContainer(SG::VIEW_ELEMENTS);
   nonBJets = new xAOD::JetContainer(SG::VIEW_ELEMENTS);
 
-  store->record(baselineElectrons,"baselineElectrons_"+systematic);
-  store->record(baselineMuons,"baselineMuons_"+systematic);
-  store->record(baselineTaus,"baselineTaus_"+systematic);
-  store->record(baselinePhotons,"baselinePhotons_"+systematic);
-  event->record(goodElectrons,"goodElectrons"+systematic);
-  event->record(goodTaus,"goodTaus"+systematic);
-  event->record(goodMuons,"goodMuons"+systematic);
-  event->record(goodPhotons,"goodPhotons"+systematic);
-  event->record(BJets,"BJets"+systematic);
-  event->record(nonBJets,"nonBJets"+systematic);
+  eventStore->record(baselineElectrons,"baselineElectrons_"+systematic);
+  eventStore->record(baselineMuons,"baselineMuons_"+systematic);
+  eventStore->record(baselineTaus,"baselineTaus_"+systematic);
+  eventStore->record(baselinePhotons,"baselinePhotons_"+systematic);
+  eventStore->record(goodElectrons,"goodElectrons"+systematic);
+  eventStore->record(goodTaus,"goodTaus"+systematic);
+  eventStore->record(goodMuons,"goodMuons"+systematic);
+  eventStore->record(goodPhotons,"goodPhotons"+systematic);
+  eventStore->record(BJets,"BJets"+systematic);
+  eventStore->record(nonBJets,"nonBJets"+systematic);
 
   GetObjects();
 
@@ -47,31 +47,40 @@ NewObjectDef::NewObjectDef(asg::SgTEvent* event, ST::SUSYObjDef_xAOD* SUSYTool,/
 void NewObjectDef::GetObjects() {
 
   // Setup object containers
-  xAOD::MuonContainer* muons_nominal = nullptr;
-  xAOD::ShallowAuxContainer* muons_nominal_aux = nullptr;
-  xAOD::ElectronContainer* electrons_nominal = nullptr;
-  xAOD::ShallowAuxContainer* electrons_nominal_aux = nullptr;
-  xAOD::TauJetContainer* taus_nominal = nullptr;
-  xAOD::ShallowAuxContainer* taus_nominal_aux = nullptr;
-  xAOD::JetContainer* jets_nominal = nullptr;
-  xAOD::ShallowAuxContainer* jets_nominal_aux = nullptr;
-  xAOD::PhotonContainer* photons_nominal = nullptr;
-  xAOD::ShallowAuxContainer* photons_nominal_aux = nullptr;
+  xAOD::MuonContainer* muons_nominal(0);
+  xAOD::ShallowAuxContainer* muons_nominal_aux(0);
+  xAOD::ElectronContainer* electrons_nominal(0);
+  xAOD::ShallowAuxContainer* electrons_nominal_aux(0);
+  xAOD::TauJetContainer* taus_nominal(0);
+  xAOD::ShallowAuxContainer* taus_nominal_aux(0);
+  xAOD::JetContainer* jets_nominal(0);
+  xAOD::ShallowAuxContainer* jets_nominal_aux(0);
+  xAOD::PhotonContainer* photons_nominal(0);
+  xAOD::ShallowAuxContainer* photons_nominal_aux(0);
   // Setup MET containers
   xAOD::MissingETContainer* met_nominal = new xAOD::MissingETContainer;
 	xAOD::MissingETAuxContainer* met_nominal_aux = new xAOD::MissingETAuxContainer;
   met_nominal->setStore(met_nominal_aux);
+  met_nominal->reserve(10);
+
   // Retrieve objects with SUSYTools
   objTool->GetMuons(muons_nominal, muons_nominal_aux);
-  eventStore->record(muons_nominal, "muons_"+systematic);
-  eventStore->record(muons_nominal_aux, "muons_aux_");
   objTool->GetElectrons(electrons_nominal, electrons_nominal_aux);
-  eventStore->record(electrons_nominal, "electrons_"+systematic);
-  eventStore->record(electrons_nominal_aux, "electrons_aux_");
-  objTool->GetTaus(taus_nominal, taus_nominal_aux);
   objTool->GetJets(jets_nominal, jets_nominal_aux);
+  objTool->GetTaus(taus_nominal, taus_nominal_aux);
   objTool->GetPhotons(photons_nominal, photons_nominal_aux);
   objTool->OverlapRemoval(electrons_nominal, muons_nominal, jets_nominal, photons_nominal, taus_nominal);
+
+  eventStore->record(muons_nominal, "muons_"+systematic);
+  eventStore->record(muons_nominal_aux, "muons_aux_"+systematic);
+  eventStore->record(electrons_nominal, "electrons_"+systematic);
+  eventStore->record(electrons_nominal_aux, "electrons_aux_"+systematic);
+  eventStore->record(taus_nominal, "taus_"+systematic);
+  eventStore->record(taus_nominal_aux, "taus_aux_"+systematic);
+  eventStore->record(jets_nominal, "jets_"+systematic);
+  eventStore->record(jets_nominal_aux, "jets_aux_"+systematic);
+  eventStore->record(photons_nominal, "photons_"+systematic);
+  eventStore->record(photons_nominal_aux, "photons_aux_"+systematic);
   // Get pointers to filled containers
   xAOD::ElectronContainer* electrons(electrons_nominal);
   xAOD::PhotonContainer* photons(photons_nominal);
@@ -99,12 +108,9 @@ void NewObjectDef::GetObjects() {
   }
 
   electronSF = 1;
-  electronTriggerSF = 1;
-  if (objTool->isData() == 0 && goodElectrons->size() == 1) {
+  if (objTool->isData() == 0) {
     electronSF = objTool->GetTotalElectronSF(*electrons,true,true,false,true,"", false);
-    electronTriggerSF = objTool->GetTotalElectronSF(*electrons,false,false,true,false,"singleLepton", false);
   }
-
   // Fill muons
   for (const auto& mu_itr: *muons) {
     if (mu_itr->auxdata<char>("passOR")) {
@@ -118,18 +124,9 @@ void NewObjectDef::GetObjects() {
   }
 
   muonSF = 1;
-  muonTriggerSF = 1;
-  if (objTool->isData() == 0 && goodMuons->size() == 1) {
-    int year = objTool->treatAsYear();
-    if (year == 2015) {
-      muonTriggerSF = objTool->GetTotalMuonSF(*muons,false, false, "HLT_mu20_iloose_L1MU15_OR_HLT_mu50");
-    }
-    else {
-      muonTriggerSF = objTool->GetTotalMuonSF(*muons,false,false, "HLT_mu26_ivarmedium_OR_HLT_mu50");
-    }
+  if (objTool->isData() == 0 ) {
     muonSF = objTool->GetTotalMuonSF(*muons,true,true,"");
   }
-
   // Fill taus
   for (const auto& tau_itr: *taus) {
     if (tau_itr->auxdata<char>("passOR")) {
@@ -170,5 +167,31 @@ void NewObjectDef::GetObjects() {
       nVertex++ ;
     }
   }
+
+  //Lepton trigger SFs
+  electronTriggerSF = 1;
+  muonTriggerSF = 1;
+  dilepTriggerSF = 1;
+
+  if (objTool->isData() == 0) {
+    if (goodElectrons->size() == 1) {
+      electronTriggerSF = objTool->GetTotalElectronSF(*electrons,false,false,true,false,"singleLepton", false);
+    }
+    if (goodMuons->size() == 1) {
+      int year = objTool->treatAsYear();
+      if (year == 2015) {
+        muonTriggerSF = objTool->GetTotalMuonSF(*muons,false, false, "HLT_mu20_iloose_L1MU15_OR_HLT_mu50");
+      }
+      else {
+        muonTriggerSF = objTool->GetTotalMuonSF(*muons,false,false, "HLT_mu26_ivarmedium_OR_HLT_mu50");
+      }
+    }
+    if ((goodElectrons->size() + goodMuons->size()) == 2) dilepTriggerSF = objTool->GetTriggerGlobalEfficiencySF(*electrons, *muons, "diLepton");
+  }
+
+  delete met_nominal;
+  delete met_nominal_aux;
+
+  return;
 
 }

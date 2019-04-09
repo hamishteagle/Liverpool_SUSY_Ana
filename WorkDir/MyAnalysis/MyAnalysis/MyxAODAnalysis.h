@@ -177,6 +177,7 @@ public:
   int counter = 0;
 
   bool firstFile = true;
+  bool firstEvent = true;
   int doSyst;
   int doPhotons;
   int RunningLocally;

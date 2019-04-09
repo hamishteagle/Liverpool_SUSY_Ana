@@ -11,6 +11,7 @@ TreeService::TreeService(TTree *outputTree, TDirectory *OutDir){
   tree = outputTree;
 
   tree->SetDirectory(OutDir);
+  tree->SetAutoFlush(500);
   //gDirectory->cd(OutDir.c_str());
 
   tree->Branch("mcID", &mcID);
@@ -162,6 +163,7 @@ TreeService::TreeService(TTree *outputTree, TDirectory *OutDir){
   tree->Branch("puWgt", &puWgt);
   //tree->Branch("muonRecoSF", &muonRecoSF);
   tree->Branch("muonTriggerSF", &muonTriggerSF);
+  tree->Branch("dilepTriggerSF",&dilepTriggerSF);
 
 
 
@@ -523,6 +525,7 @@ void TreeService::fillTree(NewObjectDef *objects ,PreliminarySel &region, Calcul
 
   muonSF = objects->getMuonSF();
   muonTriggerSF = objects->getMuonTriggerSF();
+  dilepTriggerSF = objects->getDilepTriggerSF();
   //  muonRecoSF = objects->getMuonRecoSF();
   //  oldMuonSF = objects->getOldMuonSF();
   electronSF = objects->getElectronSF();

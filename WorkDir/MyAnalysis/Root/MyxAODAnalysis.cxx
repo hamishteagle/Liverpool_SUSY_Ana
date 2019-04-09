@@ -299,10 +299,6 @@ EL::StatusCode MyxAODAnalysis :: initialize ()
   ANA_CHECK(m_PMGCrossSectionTool.retrieve());
   m_PMGCrossSectionTool->readInfosFromDir("/cvmfs/atlas.cern.ch/repo/sw/database/GroupData/dev/PMGTools/");
 
-  //m_muonCalibrationAndSmearingTool.setTypeAndName("CP::MuonCalibrationAndSmearingTool/MuonCorrectionTool");
-  //ANA_CHECK (m_muonCalibrationAndSmearingTool.initialize());
-  //ANA_CHECK(objTool->setProperty("MuonCalibrationAndSmearingTool", m_muonCalibrationAndSmearingTool.getHandle()));
-
   return StatusCode::SUCCESS;
 }
 
@@ -490,6 +486,7 @@ EL::StatusCode MyxAODAnalysis :: execute ()
     NewObjectDef* m_objs;
 
     m_objs = new NewObjectDef(evtStore(), objTool, store, mcChannel, EventNumber, mcWgt, m_lumiScaled, syst.name());
+    if (firstEvent == true) firstEvent = false;
 
     std::unique_ptr<MCChecks> checkMC (new MCChecks ());
     bool passGRL = false;
@@ -739,6 +736,8 @@ EL::StatusCode MyxAODAnalysis :: execute ()
       }
     }
 
+    store->clear();
+
     isyst++;
     if(m_objs){
       delete m_objs;
@@ -773,6 +772,19 @@ EL::StatusCode MyxAODAnalysis :: finalize ()
   // submission node after all your histogram outputs have been
   // merged.  This is different from histFinalize() in that it only
   // gets called on worker nodes that processed input events.
+
+  if (objTool) {
+    delete objTool;
+    objTool = 0;
+  }
+
+  delete noWeightHist;
+  delete sherpaWeightHist;
+  delete h_SumOfWeights;
+  delete h_SumOfWeightsSquared;
+  delete renormedSherpaWeightHist;
+  delete h_eventsPerRun;
+
 
   return StatusCode::SUCCESS;
  }
