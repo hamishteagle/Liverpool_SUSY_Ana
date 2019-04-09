@@ -593,7 +593,7 @@ EL::StatusCode MyxAODAnalysis :: execute ()
       std::vector<std::string> single_mu_2017 = {"HLT_mu26_ivarmedium_OR_HLT_mu50", "HLT_mu26_ivarmedium", "HLT_mu50"};
       std::vector<std::string> single_el_2018 = {"HLT_e26_lhtight_nod0_ivarloose", "HLT_e60_lhmedium_nod0", "HLT_e140_lhloose_nod0"};
       std::vector<std::string> single_mu_2018 = {"HLT_mu26_ivarmedium_OR_HLT_mu50", "HLT_mu26_ivarmedium", "HLT_mu50"};
-      std::vector<std::string> met = {"HLT_xe70_mht", "HLT_xe70_tc_lcw", "HLT_xe80_tc_lcw_L1XE50", "HLT_xe90_mht_L1XE50",	"HLT_xe100_mht_L1XE50",	"HLT_xe110_mht_L1XE50", "HLT_xe120_pufit_L1XE50"};
+      //Use IsMETTriggerPassed() function which should check the lowest un-prescaled triggers
 
       if (year == 2015) {
         for (auto mu_trig: single_mu_2015) {
@@ -663,10 +663,9 @@ EL::StatusCode MyxAODAnalysis :: execute ()
       if (el_triggers > 0) {
         passedSingleElTrigger = true;
       }
-      if (met_triggers > 0) {
+      if (IsMETTriggerPassed()) {
         passedMETTrigger = true;
       }
-
     }
 
     if (passedElTrigger == 1 || passedMuTrigger == 1) passedLepTrigger = true;
