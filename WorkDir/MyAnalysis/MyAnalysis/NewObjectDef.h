@@ -40,7 +40,6 @@ class NewObjectDef
     double getElectronSF(){return electronSF;};
     double getElectronTriggerSF(){return electronTriggerSF;};
     double getDilepTriggerSF(){return dilepTriggerSF;};
-    double getMultilepTriggerSF(){return multilepTriggerSF;};
     double getTauSF(){return 1;};
     double getTauTriggerSF(){return 1;};
     double getPhotonSF(){return 1;};
@@ -112,8 +111,8 @@ class NewObjectDef
     double JVTSF;
     double muonTriggerSF;
     double dilepTriggerSF;
-    double multilepTriggerSF;
-
+    
+    
     int nVertex = 0;
     bool passElectronTriggerMatch = false;
     bool passMuonTriggerMatch = false;

@@ -59,7 +59,7 @@ void NewObjectDef::GetObjects() {
   xAOD::ShallowAuxContainer* photons_nominal_aux(0);
   // Setup MET containers
   xAOD::MissingETContainer* met_nominal = new xAOD::MissingETContainer;
-	xAOD::MissingETAuxContainer* met_nominal_aux = new xAOD::MissingETAuxContainer;
+  xAOD::MissingETAuxContainer* met_nominal_aux = new xAOD::MissingETAuxContainer;
   met_nominal->setStore(met_nominal_aux);
   met_nominal->reserve(10);
 
@@ -88,7 +88,8 @@ void NewObjectDef::GetObjects() {
   xAOD::JetContainer* jets(jets_nominal);
   xAOD::TauJetContainer* taus(taus_nominal);
   // Get MET
-  objTool->GetMET(*met_nominal, jets_nominal, electrons_nominal, muons_nominal, NULL, taus_nominal, true);
+  //Only jets electrons muons, NoPhotons, NoTaus, do
+  objTool->GetMET(*met_nominal, jets_nominal, electrons_nominal, muons_nominal, NULL, NULL, true);
   xAOD::MissingETContainer::const_iterator met_it = met_nominal->find("Final");
   if (met_it == met_nominal->end())
   {
@@ -169,10 +170,11 @@ void NewObjectDef::GetObjects() {
   }
 
   //Lepton trigger SFs
+  //If only one 1-lepton trigger has fired, take this scale factor, if both e and mu fire, then dilep should fire and we take this as the scale factor.
+  //cout events to check if the muon trigger and electron trigger fire without the mu_e trigger firing (should never happen)
   electronTriggerSF = 1;
   muonTriggerSF = 1;
   dilepTriggerSF = 1;
-  multilepTriggerSF = 1;
 
   if (objTool->isData() == 0) {
     if (goodElectrons->size() == 1) {
@@ -188,8 +190,7 @@ void NewObjectDef::GetObjects() {
       }
     }
     if ((goodElectrons->size() + goodMuons->size()) >= 2) {
-      if ((goodElectrons->size() + goodMuons->size()) == 2) dilepTriggerSF = objTool->GetTriggerGlobalEfficiencySF(*electrons, *muons, "diLepton");
-      else multilepTriggerSF = objTool->GetTriggerGlobalEfficiencySF(*electrons, *muons, "multiLepton");
+      dilepTriggerSF = objTool->GetTriggerGlobalEfficiencySF(*electrons, *muons, "diLepton");
       if (goodElectrons->size() == 1) electronTriggerSF = objTool->GetTotalElectronSF(*electrons,false,false,true,false,"singleLepton", false);
       if (goodMuons->size() == 1) {
         int year = objTool->treatAsYear();

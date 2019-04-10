@@ -76,7 +76,7 @@ CalculateVariables::CalculateVariables(NewObjectDef *objects, bool isTruth, bool
   nJets = objects->getGoodJets()->size();
   nJets_beforeOR = objects->getGoodJets_beforeOR()->size();
   nbJets = objects->getBJets()->size();
-
+  nNonBJets = objects->getNonBJets()->size();
 
   njet20 = 0;
   njet25 = 0;
@@ -145,16 +145,10 @@ CalculateVariables::CalculateVariables(NewObjectDef *objects, bool isTruth, bool
   all_METSig = eTMiss/std::sqrt(all_HT);
   all_Meff = all_HT + eTMiss;
   
-  //std::cout << "all_HT " << all_HT  << std::endl;
-  //std::cout << "all_METSig " << all_METSig << std::endl;
-  //std::cout << "all_Meff "<< all_Meff << std::endl;
-  //std::cout << "ETMiss "<< eTMiss << std::endl;
-  //std::cout << "Min DelPhiB " << delPhiMinb << std::endl;
-  //std::cout << "    " << std::endl;
-
 
   
-  nNonBJets = objects->getNonBJets()->size();
+
+
   // Scale Factors
   muonSF = objects->getMuonSF();
   electronTrigSF = objects->getElectronTriggerSF();
@@ -162,10 +156,8 @@ CalculateVariables::CalculateVariables(NewObjectDef *objects, bool isTruth, bool
   bJetSF = objects->getBJetSF();
   JVTSF = objects->getJVTSF();
   electronSF = objects->getElectronSF();
-  //muonTrigSF = objects->getMuonTriggerSF();
-  //muonRecoSF = objects->getMuonRecoSF();
-  // trigger matching
 
+  // trigger matching
   elTriggerMatch = objects->elTriggerMatch();
   muTriggerMatch = objects->muTriggerMatch();
   phTriggerMatch = objects->phTriggerMatch();

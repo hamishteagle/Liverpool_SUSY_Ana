@@ -166,8 +166,7 @@ TreeService::TreeService(TTree *outputTree, TDirectory *OutDir){
   //tree->Branch("muonRecoSF", &muonRecoSF);
   tree->Branch("muonTriggerSF", &muonTriggerSF);
   tree->Branch("dilepTriggerSF",&dilepTriggerSF);
-  tree->Branch("multilepTriggerSF",&multilepTriggerSF);
-
+  tree->Branch("leptonTriggerSF",&leptonTriggerSF);
   //btagging
   tree->Branch("b1m", &b1m);
   tree->Branch("b2m", &b2m);
@@ -200,7 +199,7 @@ TreeService::TreeService(TTree *outputTree, TDirectory *OutDir){
 }
 
 
-void TreeService::fillTree(NewObjectDef *objects ,PreliminarySel &region, CalculateVariables &variables, MCChecks MCTruthInfo, double mFinalWeight, double mInitialWeight, double puWeight, double SFmCTbbll, bool TrigMET, bool TrigMu, bool TrigEl, bool TrigDilep, bool TrigGamma, bool Trig6j, std::vector<std::string> muon_triggers, std::vector<int> muon_decisions, std::vector<std::string> electron_triggers, std::vector<int> electron_decisions, std::vector<std::string> dilepton_triggers, std::vector<int> dilepton_decisions, double puSumWeights, double TRUTHMET, double TRUTHHT, bool CoreFlags, bool SCTFlag,bool LArTileFlags, bool passGRL, bool passedPrimVertexes, bool passedJetCleans, bool passedCosmicMus, bool passedMuonCleans, double RNo,  double RenormedMCWgt, int LumiYear, double m_averageIntPerCrossing, double m_actualIntPerCrossing, double m_xsec, double m_filteff, double m_kfactor){
+void TreeService::fillTree(NewObjectDef *objects ,PreliminarySel &region, CalculateVariables &variables, MCChecks MCTruthInfo, double mFinalWeight, double mInitialWeight, double puWeight, double SFmCTbbll, bool TrigMET, bool TrigMu, bool TrigEl, bool TrigDilep, bool TrigGamma, bool Trig6j, std::vector<std::string> muon_triggers, std::vector<int> muon_decisions, std::vector<std::string> electron_triggers, std::vector<int> electron_decisions, std::vector<std::string> dilepton_triggers, std::vector<int> dilepton_decisions, double LeptonTriggerSF, double puSumWeights, double TRUTHMET, double TRUTHHT, bool CoreFlags, bool SCTFlag,bool LArTileFlags, bool passGRL, bool passedPrimVertexes, bool passedJetCleans, bool passedCosmicMus, bool passedMuonCleans, double RNo,  double RenormedMCWgt, int LumiYear, double m_averageIntPerCrossing, double m_actualIntPerCrossing, double m_xsec, double m_filteff, double m_kfactor){
 
   CutsRegion = region.region;
 
@@ -527,7 +526,6 @@ void TreeService::fillTree(NewObjectDef *objects ,PreliminarySel &region, Calcul
   muonSF = objects->getMuonSF();
   muonTriggerSF = objects->getMuonTriggerSF();
   dilepTriggerSF = objects->getDilepTriggerSF();
-  multilepTriggerSF = objects->getMultilepTriggerSF();
   //  muonRecoSF = objects->getMuonRecoSF();
   //  oldMuonSF = objects->getOldMuonSF();
   electronSF = objects->getElectronSF();
@@ -537,6 +535,7 @@ void TreeService::fillTree(NewObjectDef *objects ,PreliminarySel &region, Calcul
   photonSF = objects->getPhotonSF();
   bJetSF = objects->getBJetSF();
   JVTSF = objects->getJVTSF();
+  leptonTriggerSF = LeptonTriggerSF;
 
 
   passedMETTrigger = TrigMET;
@@ -555,7 +554,7 @@ void TreeService::fillTree(NewObjectDef *objects ,PreliminarySel &region, Calcul
   el_decisions = electron_decisions;
   dilep_triggers = dilepton_triggers;
   dilep_decisions = dilepton_decisions;
-
+  
 
   b1m = variables.b1m;
   b2m = variables.b2m;

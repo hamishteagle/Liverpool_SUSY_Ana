@@ -533,6 +533,7 @@ EL::StatusCode MyxAODAnalysis :: execute ()
     double nCosmicMu = m_objs->getCosmicMuons()->size();
     double nBadMu = m_objs->getBadMuons()->size();
 
+
     // Put the trigger here:
     bool passedMETTrigger = false;
     bool passedGammaTrigger = false;
@@ -552,6 +553,8 @@ EL::StatusCode MyxAODAnalysis :: execute ()
     std::vector<int> electron_decisions;
     std::vector<int> dilepton_decisions;
 
+    double leptonTriggerSF =1;
+    
     if (isTruth){
       passedMETTrigger = true;
       passedGammaTrigger = true;
@@ -659,18 +662,27 @@ EL::StatusCode MyxAODAnalysis :: execute ()
       }
       if (mu_triggers > 0) {
         passedSingleMuTrigger = true;
+	leptonTriggerSF = m_objs->getMuonTriggerSF();
       }
       if (el_triggers > 0) {
         passedSingleElTrigger = true;
+	leptonTriggerSF = m_objs->getElectronTriggerSF();
       }
       if (dilep_triggers >0) {
 	passedDiLeptonTrigger = true;
+	leptonTriggerSF = m_objs->getDilepTriggerSF();
       }
       if (objTool->IsMETTrigPassed()) {
         passedMETTrigger = true;
       }
     }
-
+    if(passedSingleMuTrigger ==true && passedSingleElTrigger== true){
+      std::cout<<"passed both single lepton triggers"<<std::endl;
+      if(passedDiLeptonTrigger !=true && passedSingleMuTrigger ==true && passedSingleElTrigger== true){
+	std::cout<<"WARNING, both single lep triggers fired but no di-lepton trigger, your SFs are not prepared for this!!"<<std::endl;
+      }
+    }
+    
 
     bool passedPrimVertex=true;
     if (m_objs->getPrimVertex() < 1){
@@ -729,7 +741,7 @@ EL::StatusCode MyxAODAnalysis :: execute ()
 
     if (!isTruth){
       if (m_regions->interestingRegion || RunningLocally){
-      	(m_treeServiceVector[isyst])->fillTree(m_objs, *m_regions, *m_varCalc, *checkMC,m_finalSumOfWeights, m_initialSumOfWeights, puWgt, SFmctbbll, passedMETTrigger, passedSingleMuTrigger, passedSingleElTrigger, passedDiLeptonTrigger, passedGammaTrigger, passedMultiJetTrigger, muon_triggers, muon_decisions, electron_triggers, electron_decisions, dilepton_triggers, dilepton_decisions, PUSumOfWeights, truthfilt_MET, truthfilt_HT, coreFlag, sctFlag, LArTileFlag, passGRL, passedPrimVertex, passedJetClean, passedCosmicMu, passedMuonClean, m_runNumber, renormedMcWgt, year, m_averageIntPerX, m_actualIntPerX, xsec, filteff, kfactor);
+      	(m_treeServiceVector[isyst])->fillTree(m_objs, *m_regions, *m_varCalc, *checkMC,m_finalSumOfWeights, m_initialSumOfWeights, puWgt, SFmctbbll, passedMETTrigger, passedSingleMuTrigger, passedSingleElTrigger, passedDiLeptonTrigger, passedGammaTrigger, passedMultiJetTrigger, muon_triggers, muon_decisions, electron_triggers, electron_decisions, dilepton_triggers, dilepton_decisions,leptonTriggerSF, PUSumOfWeights, truthfilt_MET, truthfilt_HT, coreFlag, sctFlag, LArTileFlag, passGRL, passedPrimVertex, passedJetClean, passedCosmicMu, passedMuonClean, m_runNumber, renormedMcWgt, year, m_averageIntPerX, m_actualIntPerX, xsec, filteff, kfactor);
       }
     }
 
