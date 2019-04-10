@@ -11,11 +11,13 @@ class CalculateVariables
 
 {
  public:
-  CalculateVariables(NewObjectDef *objects, bool isTruth, bool doPhotons);
+  CalculateVariables(NewObjectDef *objects, asg::AnaToolHandle<IBTaggingSelectionTool> m_BTaggingSelectionTool, bool isTruth, bool doPhotons);
 
   void CalculateOneLepVariables(NewObjectDef *objects, TLorentzVector b1v, TLorentzVector b2v, TLorentzVector tj1v);
   void CalculateTwoLepVariables(NewObjectDef *objects, TLorentzVector b1v, TLorentzVector b2v);
   void CalculatePhotonMET(NewObjectDef *objects);
+  
+  void CalculatePseudoContBtagging(NewObjectDef *objects, asg::AnaToolHandle<IBTaggingSelectionTool> m_BTaggingSelectionTool);
 
   void CalculateShapeVariables(NewObjectDef *objects);
   void CalculateRazorVariables(NewObjectDef *objects);

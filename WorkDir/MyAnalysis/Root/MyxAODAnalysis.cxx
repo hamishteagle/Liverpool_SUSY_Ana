@@ -727,7 +727,7 @@ EL::StatusCode MyxAODAnalysis :: execute ()
       passedCleaningCuts=true;
     }
 
-    std::unique_ptr<CalculateVariables> m_varCalc(new CalculateVariables ( m_objs, isTruth, doPhotons));
+    std::unique_ptr<CalculateVariables> m_varCalc(new CalculateVariables ( m_objs, m_BTaggingSelectionTool, isTruth, doPhotons));
     std::unique_ptr<PreliminarySel> m_regions(new PreliminarySel (*m_varCalc));
 
 

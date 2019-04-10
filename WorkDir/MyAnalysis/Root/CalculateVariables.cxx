@@ -47,7 +47,7 @@ bool btag_wgt_Sorter( const xAOD::Jet* j1, const xAOD::Jet* j2 ) {
 
 
 
-CalculateVariables::CalculateVariables(NewObjectDef *objects, bool isTruth, bool doPhotons){
+CalculateVariables::CalculateVariables(NewObjectDef *objects, asg::AnaToolHandle<IBTaggingSelectionTool> m_BTaggingSelectionTool, bool isTruth, bool doPhotons){
 
   // Initialise the variables to sensible numbers
   
