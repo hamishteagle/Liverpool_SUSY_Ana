@@ -44,7 +44,7 @@ EventPrimitives                       JetTileCorrectionLib           RestFramesL
 EventShapeInterface                   JetUncertaintiesLib            ReweightUtilsLib               TrigSteeringEvent               xAODForward
 FourMomUtils                          JetUtils                    RoiDescriptor               TrigTauMatchingLib                 xAODHIEvent
 FsrUtilsLib                                  xAODJet
-GeoPrimitives                         MCTruthClassifierLib            TriggerMatchingToolLib             xAODLuminosity)
+GeoPrimitives                         MCTruthClassifierLib            TriggerMatchingToolLib             xAODLuminosity     FTagAnalysisInterfacesLib)
 
 #Removed from Link_Libraries;
 #MCUtils

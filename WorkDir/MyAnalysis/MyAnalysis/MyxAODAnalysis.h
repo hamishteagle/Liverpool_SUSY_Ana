@@ -32,6 +32,10 @@
 #include "PMGAnalysisInterfaces/IPMGCrossSectionTool.h"
 #include "PMGTools/PMGCrossSectionTool.h"
 
+//BTaggingSelectionTool
+#include "FTagAnalysisInterfaces/IBTaggingSelectionTool.h"//Interface
+#include "xAODBTaggingEfficiency/BTaggingSelectionTool.h"//tool header for type definition
+
 // GRL inclusion
 class GoodRunsListSelectionTool;
 //class JetCleaningTool;
@@ -100,6 +104,7 @@ public:
 
   asg::AsgMetadataTool *Asgmdtool; //!
 
+
   TTree *MetaData; //!
   bool m_isDerivation; //!
 
@@ -135,7 +140,7 @@ public:
   std::vector <std::string> cutList; //!
   std::vector <std::string> runningOverSysts; //!
   asg::AnaToolHandle<IMETSignificance> m_metSignif; //!
-
+  asg::AnaToolHandle<IBTaggingSelectionTool> m_BTaggingSelectionTool;//!
   //  EL::OutputStream out
 
 

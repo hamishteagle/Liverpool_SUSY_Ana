@@ -289,11 +289,20 @@ EL::StatusCode MyxAODAnalysis :: initialize ()
   for (unsigned int m = 0; m < (m_treeServiceVector.size()); m++){
     m_treeServiceVector[m]->writeTree();
   }
-
+  
+  //PMGCrossSectionTool setup
   ASG_SET_ANA_TOOL_TYPE( m_PMGCrossSectionTool, PMGTools::PMGCrossSectionTool);
   m_PMGCrossSectionTool.setName("myCrossSectionTool");
   ANA_CHECK(m_PMGCrossSectionTool.retrieve());
   m_PMGCrossSectionTool->readInfosFromDir("/cvmfs/atlas.cern.ch/repo/sw/database/GroupData/dev/PMGTools/");
+
+  //BTaggingSelectionTool setup
+  ASG_SET_ANA_TOOL_TYPE( m_BTaggingSelectionTool, BTaggingSelectionTool);
+  ANA_CHECK( m_BTaggingSelectionTool.setProperty( "FlvTagCutDefinitionsFileName","xAODBTaggingEfficiency/13TeV/2017-21-13TeV-MC16-CDI-2018-02-09_v1.root" ) ); //CDI file might need updating..
+  ANA_CHECK( m_BTaggingSelectionTool.setProperty("TaggerName",    "MV2c10"  ) );
+  ANA_CHECK( m_BTaggingSelectionTool.setProperty("OperatingPoint", "Continuous") );
+  ANA_CHECK( m_BTaggingSelectionTool.setProperty("JetAuthor",      "AntiKt4EMTopoJets" ) );
+  ANA_CHECK( m_BTaggingSelectionTool.initialize() );
 
   return StatusCode::SUCCESS;
 }
