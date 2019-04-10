@@ -84,7 +84,8 @@ CalculateVariables::CalculateVariables(NewObjectDef *objects, asg::AnaToolHandle
   njet35 = 0;
   njet50 = 0;
 
-  // This will only work for truth files. For Reco we require pt 35
+
+
   njet20 = objects->getGoodJets()->size();
   
   for (int iJet = 0; iJet < nJets; iJet++){
@@ -102,6 +103,15 @@ CalculateVariables::CalculateVariables(NewObjectDef *objects, asg::AnaToolHandle
       njet50++;
     }
   }
+
+  //PseudoContinuos b-tagging
+  if (nJets>0){
+    if (!this->CalculatePseudoContBTagging(objects, m_BTaggingSelectionTool))
+      {
+	Error("execute()","BTaggingSelectionTool exception caught");
+      }
+  }
+  
 
   // tbMET Analysis variables
   delPhiMinb = 99;
@@ -1212,6 +1222,7 @@ CalculateVariables::CalculateVariables(NewObjectDef *objects, asg::AnaToolHandle
 
 }
 
+
 void CalculateVariables::CalculatePhotonMET(NewObjectDef *objects){
   
   TVector2 tempMET = *(objects->getMETvector());
@@ -1486,7 +1497,21 @@ void CalculateVariables::CalculateTwoLepVariables(NewObjectDef *objects, TLorent
 
 }
 
-
+bool CalculateVariables::CalculatePseudoContBTagging(NewObjectDef *objects, asg::AnaToolHandle<IBTaggingSelectionTool> m_BTaggingSelectionTool){
+  int quantile=-1;
+  int iterator = 0;
+  for (const xAOD::Jet *jet :(*objects->getGoodJets())){
+    try {
+      quantile = m_BTaggingSelectionTool->getQuantile(*jet);
+    }catch(...)
+      {
+	return false;
+      }
+    std::cout<<"Jet:"<<iterator<<" has quantile:"<<quantile<<std::endl;
+    iterator++;
+  }
+  return true;
+}
 
 void CalculateVariables::CalculateShapeVariables(NewObjectDef *objects)
 {
