@@ -173,6 +173,12 @@ class CalculateVariables
   double phij3; //
   double phij4; //
 
+  int j1_bQuantile;
+  int j2_bQuantile;
+  int j3_bQuantile;
+  int j4_bQuantile;
+
+
   double pTZ; //
   double etaZ; //
   double phiZ; //

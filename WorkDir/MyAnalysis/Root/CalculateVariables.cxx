@@ -84,6 +84,10 @@ CalculateVariables::CalculateVariables(NewObjectDef *objects, asg::AnaToolHandle
   njet35 = 0;
   njet50 = 0;
 
+  j1_bQuantile=-1;
+  j2_bQuantile=-1;
+  j3_bQuantile=-1;
+  j4_bQuantile=-1;
 
 
   njet20 = objects->getGoodJets()->size();
@@ -1498,17 +1502,28 @@ void CalculateVariables::CalculateTwoLepVariables(NewObjectDef *objects, TLorent
 }
 
 bool CalculateVariables::CalculatePseudoContBTagging(NewObjectDef *objects, asg::AnaToolHandle<IBTaggingSelectionTool> m_BTaggingSelectionTool){
+
   int quantile=-1;
-  int iterator = 0;
+  std::vector<int> jet_quantiles;
   for (const xAOD::Jet *jet :(*objects->getGoodJets())){
     try {
-      quantile = m_BTaggingSelectionTool->getQuantile(*jet);
+      jet_quantiles.push_back(m_BTaggingSelectionTool->getQuantile(*jet));
     }catch(...)
       {
 	return false;
       }
-    std::cout<<"Jet:"<<iterator<<" has quantile:"<<quantile<<std::endl;
-    iterator++;
+  }
+  if (jet_quantiles.size()>0){
+    j1_bQuantile = jet_quantiles[0];
+  }
+  if (jet_quantiles.size()>1){
+    j2_bQuantile = jet_quantiles[1];
+  }
+  if (jet_quantiles.size()>2){
+    j3_bQuantile = jet_quantiles[2];
+  }
+  if (jet_quantiles.size()>3){
+    j4_bQuantile = jet_quantiles[3];
   }
   return true;
 }

@@ -214,6 +214,11 @@ class TreeService
   double pTj7;
   double pTj8;
 
+  int j1_bQuantile;
+  int j2_bQuantile;
+  int j3_bQuantile;
+  int j4_bQuantile;
+
 
   double etaj1;
   double etaj2;

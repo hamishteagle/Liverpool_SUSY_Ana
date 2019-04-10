@@ -176,6 +176,13 @@ TreeService::TreeService(TTree *outputTree, TDirectory *OutDir){
   tree->Branch("b1_ntrk", &b1_ntrk);
   tree->Branch("b2_ntrk", &b2_ntrk);
 
+  tree->Branch("j1_bQuantile", &j1_bQuantile);
+  tree->Branch("j2_bQuantile", &j2_bQuantile);
+  tree->Branch("j3_bQuantile", &j3_bQuantile);
+  tree->Branch("j4_bQuantile", &j4_bQuantile);
+
+  
+
   //tree->Write();
 
   tree->Branch("delPhiMinb",&delPhiMinb);
@@ -326,6 +333,11 @@ void TreeService::fillTree(NewObjectDef *objects ,PreliminarySel &region, Calcul
   pTj7 = variables.pTj7;
   pTj8 = variables.pTj8;
 
+  j1_bQuantile = variables.j1_bQuantile;
+  j2_bQuantile = variables.j2_bQuantile;
+  j3_bQuantile = variables.j3_bQuantile;
+  j4_bQuantile = variables.j4_bQuantile;
+  
 
   njet20 = variables.njet20;
   njet25 = variables.njet25;
