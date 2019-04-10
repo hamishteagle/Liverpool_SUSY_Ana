@@ -4,7 +4,6 @@
 
 #include "NewObjectDef.h"
 
-#include "TruthObjectDef.h"
 #include "TMctLib.h"
 
 

@@ -188,8 +188,7 @@ void NewObjectDef::GetObjects() {
       }
     }
     if ((goodElectrons->size() + goodMuons->size()) >= 2) {
-
-      if ((goodElectrons->size() + goodMuons->size()) >= 2) dilepTriggerSF = objTool->GetTriggerGlobalEfficiencySF(*electrons, *muons, "diLepton");
+      if ((goodElectrons->size() + goodMuons->size()) == 2) dilepTriggerSF = objTool->GetTriggerGlobalEfficiencySF(*electrons, *muons, "diLepton");
       else multilepTriggerSF = objTool->GetTriggerGlobalEfficiencySF(*electrons, *muons, "multiLepton");
       if (goodElectrons->size() == 1) electronTriggerSF = objTool->GetTotalElectronSF(*electrons,false,false,true,false,"singleLepton", false);
       if (goodMuons->size() == 1) {

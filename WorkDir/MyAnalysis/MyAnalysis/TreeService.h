@@ -23,7 +23,7 @@ class TreeService
  public:
   TreeService(TTree *outputTree, TDirectory *OutDir);
 
-  void fillTree(NewObjectDef *objects, PreliminarySel &region, CalculateVariables &variables, MCChecks MCTruthInfo , double mFinalWeight, double mInitialWeight, double puWeight, double SFmCTbbll, bool TrigMET, bool TrigMu, bool TrigEl, bool TrigGamma, bool Trig6j, std::vector<std::string> muon_triggers, std::vector<int> muon_decisions, std::vector<std::string> electron_triggers, std::vector<int> electron_decisions, std::vector<std::string> met_triggers, std::vector<int> met_decisions, double puSumWeights, double TRUTHMET, double TRUTHHT ,bool CoreFlags, bool SCTFlag, bool LArTileFlag, bool passGRL, bool passedPrimVertex, bool passedJetClean, bool passedCosmicMu, bool passedMuonClean, double RNo, double RenormedMCWgt, int LumiYear, double m_averageIntPerCrossing, double m_actualIntPerCrossing, double m_xsec, double m_filteff, double m_kfactor);
+  void fillTree(NewObjectDef *objects, PreliminarySel &region, CalculateVariables &variables, MCChecks MCTruthInfo , double mFinalWeight, double mInitialWeight, double puWeight, double SFmCTbbll, bool TrigMET, bool TrigMu, bool TrigEl, bool TrigDilep, bool TrigGamma, bool Trig6j, std::vector<std::string> muon_triggers, std::vector<int> muon_decisions, std::vector<std::string> electron_triggers, std::vector<int> electron_decisions,std::vector<std::string> dilepton_triggers, std::vector<int> dilepton_decisions, double puSumWeights, double TRUTHMET, double TRUTHHT ,bool CoreFlags, bool SCTFlag, bool LArTileFlag, bool passGRL, bool passedPrimVertex, bool passedJetClean, bool passedCosmicMu, bool passedMuonClean, double RNo, double RenormedMCWgt, int LumiYear, double m_averageIntPerCrossing, double m_actualIntPerCrossing, double m_xsec, double m_filteff, double m_kfactor);
 
   void writeTree();
 
@@ -77,6 +77,7 @@ class TreeService
   bool passedMuTrigger;
   bool passedElTrigger;
   bool passedGammaTrigger;
+  bool passedDileptonTrigger;
 
   bool elTriggerMatch;
   bool phTriggerMatch;
@@ -84,10 +85,10 @@ class TreeService
 
   std::vector<std::string> mu_triggers;
   std::vector<std::string> el_triggers;
-  std::vector<std::string> MET_triggers;
+  std::vector<std::string> dilep_triggers;
+  std::vector<int> dilep_decisions;
   std::vector<int> mu_decisions;
   std::vector<int> el_decisions;
-  std::vector<int> MET_decisions;
 
   double pileUpSumOfWeights;
   double truthFilterMET;

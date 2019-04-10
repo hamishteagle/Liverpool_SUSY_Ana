@@ -78,8 +78,8 @@ class MyxAODAnalysis : public EL::Algorithm
 #ifndef __CINT__
   //GoodRunsListSelectionTool *m_grl;
   CP::PileupReweightingTool *pu_tool; //!
-  JetToolRunner* m_jetRecTool_kt12; //!
-  JetToolRunner* m_jetRecTool_kt8; //!
+  //JetToolRunner* m_jetRecTool_kt12; //!
+  //JetToolRunner* m_jetRecTool_kt8; //!
 
 #endif // not__CINT__
 

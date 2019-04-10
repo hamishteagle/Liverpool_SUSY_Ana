@@ -3,6 +3,7 @@
 #include <MyAnalysis/MyxAODAnalysis.h>
 #include "CPAnalysisExamples/errorcheck.h"
 #include "xAODEventInfo/EventInfo.h"
+#include "xAODTruth/TruthEventContainer.h"
 #include "GoodRunsLists/GoodRunsListSelectionTool.h"
 #include "xAODCutFlow/CutBookkeeper.h"
 #include "xAODCutFlow/CutBookkeeperContainer.h"
@@ -20,8 +21,6 @@
 #include <fstream>
 #include <TTreeFormula.h>
 #include "xAODEventInfo/EventInfo.h"
-#include "MyAnalysis/TruthObjectDef.h"
-#include "MyAnalysis/ObjectDef.h"
 #include "MyAnalysis/NewObjectDef.h"
 #include "MyAnalysis/AddPileUp.h"
 #include "MyAnalysis/PreliminarySel.h"
@@ -95,7 +94,6 @@ EL::StatusCode MyxAODAnalysis :: fileExecute ()
   // single file, e.g. collect a list of all lumi-blocks processed
 
   m_event = wk()->xaodEvent();
-  double nEventsProcessed  = 0;
   double sumOfWeights        = 0;
   double sumOfWeightsSquared = 0;
 
@@ -124,8 +122,7 @@ EL::StatusCode MyxAODAnalysis :: fileExecute ()
 
     // Now, let's actually find the right one that contains all the needed info...
     const xAOD::CutBookkeeper* allEventsCBK=0;
-    const xAOD::CutBookkeeper* DxAODEventsCBK=0;
-    const xAOD::CutBookkeeper* all = 0; int maxCycle=-1; //need to find the max cycle where input stream is StreamAOD and the name is AllExecutedEvents
+    int maxCycle=-1; //need to find the max cycle where input stream is StreamAOD and the name is AllExecutedEvents
 
     for ( auto cbk :  *completeCBC ) {
       if(cbk->inputStream()=="StreamAOD" && cbk->name()=="AllExecutedEvents" && cbk->cycle()>maxCycle)
@@ -134,14 +131,13 @@ EL::StatusCode MyxAODAnalysis :: fileExecute ()
       }
     }
 
-    uint64_t cbknEventsProcessed  = allEventsCBK->nAcceptedEvents();
+    
     double cbksumOfWeights        = allEventsCBK->sumOfEventWeights();
     double cbksumOfWeightsSquared = allEventsCBK->sumOfEventWeightsSquared();
 
 
 
 
-    nEventsProcessed  = cbknEventsProcessed;
     sumOfWeights        = cbksumOfWeights;
     sumOfWeightsSquared = cbksumOfWeightsSquared;
   }
@@ -290,7 +286,7 @@ EL::StatusCode MyxAODAnalysis :: initialize ()
 
   }
 
-  for (int m = 0; m < (m_treeServiceVector.size()); m++){
+  for (unsigned int m = 0; m < (m_treeServiceVector.size()); m++){
     m_treeServiceVector[m]->writeTree();
   }
 
@@ -325,9 +321,9 @@ EL::StatusCode MyxAODAnalysis :: histInitialize ()
 
   gErrorIgnoreLevel = kFatal;
 
-  int foundData = m_fileName.find("data");
-  int foundAtlfast = m_fileName.find("_a");
-  int foundTruth = m_fileName.find("TRUTH");
+  static const size_t foundData = m_fileName.find("data");
+  static const size_t foundAtlfast = m_fileName.find("_a");
+  static const size_t foundTruth = m_fileName.find("TRUTH");
 
   if (foundData != std::string::npos){
     isData = 1;
@@ -370,7 +366,6 @@ EL::StatusCode MyxAODAnalysis :: execute ()
 
   const char* APP_NAME = "MyxAODAnalysis";
 
-  bool isNominal = true;
 
   isyst = 0;
 
@@ -393,7 +388,6 @@ EL::StatusCode MyxAODAnalysis :: execute ()
         std::string temp = "Cannot configure SUSYTools for systematic: " + syst.name();
         ANA_MSG_INFO(temp);
       }
-      if(sysInfo.affectsKinematics || sysInfo.affectsWeights) isNominal = false;
     }
 
     const xAOD::EventInfo* eventInfo =0;
@@ -423,18 +417,8 @@ EL::StatusCode MyxAODAnalysis :: execute ()
     EventNumber = (eventInfo->eventNumber());
 
     xAOD::TStore* store = wk()->xaodStore();
-    double btagWgt = 1;
-    double electronWgt = 1;
-    double muonWgt = 1;
-    double electronTrigWgt = 1;
-    double muonTrigWgt = 1;
-    double lepWgt = 1;
-    double trigWgt = 1;
-    double puWgt = 1;
-    double JVTWgt = 1;
-    double weight = 1;
-    double truth_pTW = 0;
     mcChannel = 0;
+    double puWgt = 1;
     double mcWgt = 1;
     double truthfilt_MET = 0;
     double truthfilt_HT = 0;
@@ -468,10 +452,10 @@ EL::StatusCode MyxAODAnalysis :: execute ()
       m_event->retrieve(truthE, "TruthEvents" );
 
       for(const auto& evt : *truthE) {
-        float x1, x2, pdf1, pdf2, scalePDF, Q;
-        int id1, id2;
-        evt->pdfInfoParameter(id1, xAOD::TruthEvent::PDGID1);
-        evt->pdfInfoParameter(id2, xAOD::TruthEvent::PDGID2);
+	//float x1, x2, pdf1, pdf2, scalePDF, Q;
+	int id1, id2;
+	evt->pdfInfoParameter(id1, xAOD::TruthEvent::PDGID1);
+	evt->pdfInfoParameter(id2, xAOD::TruthEvent::PDGID2);
         //evt->pdfInfoParameter(x1, xAOD::TruthEvent::X1);
         //evt->pdfInfoParameter(x2, xAOD::TruthEvent::X2);
         //evt->pdfInfoParameter(pdf1, xAOD::TruthEvent::PDFID1);
@@ -479,7 +463,6 @@ EL::StatusCode MyxAODAnalysis :: execute ()
         //evt->pdfInfoParameter(scalePDF, xAOD::TruthEvent::SCALE);
         //evt->pdfInfoParameter(Q, xAOD::TruthEvent::Q);
       }
-
     }
 
     NewObjectDef* m_objs;
@@ -505,7 +488,7 @@ EL::StatusCode MyxAODAnalysis :: execute ()
       truthfilt_MET = 0.001*eventInfo->auxdata< float >("GenFiltMET");
       truthfilt_HT = 0.001*eventInfo->auxdata< float>("GenFiltHT");
       checkMC->ttbar_decay(evtStore());
-      int foundSherpa = m_fileName.find("Sherpa");
+      static const size_t foundSherpa = m_fileName.find("Sherpa");
 
       checkMC->HeavyFlavourFilter_countJets(evtStore(), true);
       checkMC->TruthTaus(evtStore());
@@ -515,7 +498,7 @@ EL::StatusCode MyxAODAnalysis :: execute ()
       	checkMC->SherpaZpT(evtStore());
       }
 
-      int foundSherpa221 = m_fileName.find("Sherpa_221");
+      static const size_t foundSherpa221 = m_fileName.find("Sherpa_221");
       if (foundSherpa221 != std::string::npos){
   	    checkMC->SherpaUncertaintyWeights(evtStore());
       }
@@ -552,49 +535,48 @@ EL::StatusCode MyxAODAnalysis :: execute ()
 
     // Put the trigger here:
     bool passedMETTrigger = false;
-    bool passedMuTrigger = false;
-    bool passedElTrigger = false;
     bool passedGammaTrigger = false;
-    bool passedLepTrigger = false;
     bool passedMultiJetTrigger = false;
-    bool passedTauTrigger = false;
     bool passedSingleMuTrigger = false;
     bool passedSingleElTrigger = false;
+    bool passedDiLeptonTrigger = false;
 
     int mu_triggers = 0;
     int el_triggers = 0;
-    int met_triggers = 0;
+    int dilep_triggers = 0;
 
     std::vector<std::string> muon_triggers;
     std::vector<std::string> electron_triggers;
+    std::vector<std::string>dilepton_triggers;
     std::vector<int> muon_decisions;
     std::vector<int> electron_decisions;
-    std::vector<int> met_decisions;
-    std::vector<std::string> met;
+    std::vector<int> dilepton_decisions;
 
     if (isTruth){
       passedMETTrigger = true;
-      passedMuTrigger = true;
-      passedElTrigger = true;
       passedGammaTrigger = true;
       passedMultiJetTrigger = true;
-      passedTauTrigger = true;
       passedSingleMuTrigger = true;
       passedSingleElTrigger = true;
+      passedDiLeptonTrigger = true;
     }
 
     //NEW TRIGGER IMPLEMENTATION
+    //Note:diMuon triggers only require 1 L1 muon.
     else {
       std::vector<std::string> single_el_2015 = {"HLT_e24_lhmedium_L1EM20VH", "HLT_e60_lhmedium", "HLT_e120_lhloose"};
-      std::vector<std::string> single_mu_2015 = {"HLT_mu20_iloose_L1MU15_OR_HLT_mu50", "HLT_mu20_iloose_L1MU15", "HLT_mu50"};
+      std::vector<std::string> single_mu_2015 = {"HLT_mu20_iloose_L1MU15_OR_HLT_mu50"};
+      std::vector<std::string> di_lepton_2015 = {"HLT_2e12_lhloose_L12EM10VH", "HLT_mu18_mu8noL1", "HLT_e17_lhloose_mu14"};
       std::vector<std::string> single_el_2016 = {"HLT_e26_lhtight_nod0_ivarloose", "HLT_e60_lhmedium_nod0", "HLT_e140_lhloose_nod0"};
-      std::vector<std::string> single_mu_2016 = {"HLT_mu26_ivarmedium_OR_HLT_mu50", "HLT_mu26_ivarmedium", "HLT_mu50"};
+      std::vector<std::string> single_mu_2016 = {"HLT_mu26_ivarmedium_OR_HLT_mu50"};
+      std::vector<std::string> di_lepton_2016 = {"HLT_2e17_lhvloose_nod0","HLT_mu22_mu8noL1","HLT_e17_lhloose_nod0_mu14 "};
       std::vector<std::string> single_el_2017 = {"HLT_e26_lhtight_nod0_ivarloose", "HLT_e60_lhmedium_nod0", "HLT_e140_lhloose_nod0"};
-      std::vector<std::string> single_mu_2017 = {"HLT_mu26_ivarmedium_OR_HLT_mu50", "HLT_mu26_ivarmedium", "HLT_mu50"};
-      std::vector<std::string> single_el_2018 = {"HLT_e26_lhtight_nod0_ivarloose", "HLT_e60_lhmedium_nod0", "HLT_e140_lhloose_nod0"};
-      std::vector<std::string> single_mu_2018 = {"HLT_mu26_ivarmedium_OR_HLT_mu50", "HLT_mu26_ivarmedium", "HLT_mu50"};
+      std::vector<std::string> single_mu_2017 = {"HLT_mu26_ivarmedium_OR_HLT_mu50"};
+      std::vector<std::string> di_lepton_2017 = {"HLT_2e17_lhvloose_nod0_L12EM15VHI","HLT_mu22_mu8noL1", "HLT_e17_lhloose_nod0_mu14"};
+      std::vector<std::string> single_el_2018 = {"HLT_e26_lhtight_nod0_ivarloose","HLT_2e24_lhvloose_nod0", "HLT_e60_lhmedium_nod0", "HLT_e140_lhloose_nod0"};
+      std::vector<std::string> single_mu_2018 = {"HLT_mu26_ivarmedium_OR_HLT_mu50"};
+      std::vector<std::string> di_lepton_2018 = {"HLT_2e17_lhvloose_nod0_L12EM15VHI","HLT_2e24_lhvloose_nod0","HLT_mu22_mu8noL1","HLT_e17_lhloose_nod0_mu14"};
       //Use IsMETTriggerPassed() function which should check the lowest un-prescaled triggers
-
       if (year == 2015) {
         for (auto mu_trig: single_mu_2015) {
           int trigDecision = objTool->IsTrigPassed(mu_trig);
@@ -607,6 +589,12 @@ EL::StatusCode MyxAODAnalysis :: execute ()
           el_triggers += trigDecision;
           electron_triggers.push_back(el_trig);
           electron_decisions.push_back(trigDecision);
+        }
+        for (auto dilep_trig: di_lepton_2015) {
+          int trigDecision = objTool->IsTrigPassed(dilep_trig);
+          dilep_triggers += trigDecision;
+          dilepton_triggers.push_back(dilep_trig);
+          dilepton_decisions.push_back(trigDecision);
         }
       }
       if (year == 2016) {
@@ -622,6 +610,12 @@ EL::StatusCode MyxAODAnalysis :: execute ()
           electron_triggers.push_back(el_trig);
           electron_decisions.push_back(trigDecision);
         }
+        for (auto dilep_trig: di_lepton_2016) {
+          int trigDecision = objTool->IsTrigPassed(dilep_trig);
+          dilep_triggers += trigDecision;
+          dilepton_triggers.push_back(dilep_trig);
+          dilepton_decisions.push_back(trigDecision);
+        }
       }
       if (year == 2017) {
         for (auto mu_trig: single_mu_2017) {
@@ -635,6 +629,12 @@ EL::StatusCode MyxAODAnalysis :: execute ()
           el_triggers += trigDecision;
           electron_triggers.push_back(el_trig);
           electron_decisions.push_back(trigDecision);
+        }
+        for (auto dilep_trig: di_lepton_2017) {
+          int trigDecision = objTool->IsTrigPassed(dilep_trig);
+          dilep_triggers += trigDecision;
+          dilepton_triggers.push_back(dilep_trig);
+          dilepton_decisions.push_back(trigDecision);
         }
       }
       if (year == 2018) {
@@ -650,25 +650,27 @@ EL::StatusCode MyxAODAnalysis :: execute ()
           electron_triggers.push_back(el_trig);
           electron_decisions.push_back(trigDecision);
         }
+        for (auto dilep_trig: di_lepton_2018) {
+          int trigDecision = objTool->IsTrigPassed(dilep_trig);
+          dilep_triggers += trigDecision;
+          dilepton_triggers.push_back(dilep_trig);
+          dilepton_decisions.push_back(trigDecision);
+        }
       }
-      for (auto met_trig: met) {
-        int trigDecision = objTool->IsTrigPassed(met_trig);
-        met_triggers += trigDecision;
-        met_decisions.push_back(trigDecision);
-      }
-
       if (mu_triggers > 0) {
         passedSingleMuTrigger = true;
       }
       if (el_triggers > 0) {
         passedSingleElTrigger = true;
       }
-      if (IsMETTriggerPassed()) {
+      if (dilep_triggers >0) {
+	passedDiLeptonTrigger = true;
+      }
+      if (objTool->IsMETTrigPassed()) {
         passedMETTrigger = true;
       }
     }
 
-    if (passedElTrigger == 1 || passedMuTrigger == 1) passedLepTrigger = true;
 
     bool passedPrimVertex=true;
     if (m_objs->getPrimVertex() < 1){
@@ -713,12 +715,9 @@ EL::StatusCode MyxAODAnalysis :: execute ()
 
     if (!isData && !isTruth) {
       PUSumOfWeights = objTool->GetSumOfWeights(mcChannel);
-      //lepWgt = m_varCalc->leptonSF;
-
     }
     else{
       PUSumOfWeights = 0;
-      lepWgt = 1;
     }
 
     //Checking the number of events against the lumi
@@ -730,7 +729,7 @@ EL::StatusCode MyxAODAnalysis :: execute ()
 
     if (!isTruth){
       if (m_regions->interestingRegion || RunningLocally){
-      	(m_treeServiceVector[isyst])->fillTree(m_objs, *m_regions, *m_varCalc, *checkMC,m_finalSumOfWeights, m_initialSumOfWeights, puWgt, SFmctbbll, passedMETTrigger, passedSingleMuTrigger, passedSingleElTrigger, passedGammaTrigger, passedMultiJetTrigger, muon_triggers, muon_decisions, electron_triggers, electron_decisions, met, met_decisions, PUSumOfWeights, truthfilt_MET, truthfilt_HT, coreFlag, sctFlag, LArTileFlag, passGRL, passedPrimVertex, passedJetClean, passedCosmicMu, passedMuonClean, m_runNumber, renormedMcWgt, year, m_averageIntPerX, m_actualIntPerX, xsec, filteff, kfactor);
+      	(m_treeServiceVector[isyst])->fillTree(m_objs, *m_regions, *m_varCalc, *checkMC,m_finalSumOfWeights, m_initialSumOfWeights, puWgt, SFmctbbll, passedMETTrigger, passedSingleMuTrigger, passedSingleElTrigger, passedDiLeptonTrigger, passedGammaTrigger, passedMultiJetTrigger, muon_triggers, muon_decisions, electron_triggers, electron_decisions, dilepton_triggers, dilepton_decisions, PUSumOfWeights, truthfilt_MET, truthfilt_HT, coreFlag, sctFlag, LArTileFlag, passGRL, passedPrimVertex, passedJetClean, passedCosmicMu, passedMuonClean, m_runNumber, renormedMcWgt, year, m_averageIntPerX, m_actualIntPerX, xsec, filteff, kfactor);
       }
     }
 
@@ -744,8 +743,8 @@ EL::StatusCode MyxAODAnalysis :: execute ()
     electron_decisions.clear();
     muon_triggers.clear();
     muon_decisions.clear();
-    met_decisions.clear();
-
+    dilepton_triggers.clear();
+    dilepton_decisions.clear();
   }
   return StatusCode::SUCCESS;
 }
