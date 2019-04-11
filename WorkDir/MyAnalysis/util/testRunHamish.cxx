@@ -73,6 +73,7 @@ int main( int argc, char* argv[]) {
     job.outputAdd (output);
     job.algsAdd( alg );
     
+    //alg->setProperty("SampleName",inputFile);
     alg->outputName = "outputLabel"; // give the name of the output to our algorithm
     alg->inputFile = inputFile;
     alg->doSyst = RunningWithSyst;

@@ -185,6 +185,9 @@ EL::StatusCode MyxAODAnalysis :: initialize ()
   m_numElectronEvents = 0;
   m_numMuonEvents = 0;
 
+  m_fileType = wk()->metaData()->getString("sample_name");
+  m_fileName = inputFile;
+
   // GRL
   m_grl.setTypeAndName("GoodRunsListSelectionTool/grl");
 
@@ -321,8 +324,6 @@ EL::StatusCode MyxAODAnalysis :: histInitialize ()
   m_finalSumOfWeights = 0;
   m_initialSumOfWeights = 0;
 
-  m_fileType = wk()->metaData()->getString("sample_name");
-  m_fileName = inputFile;
 
   isData = 0;
   isAtlfast = 0;
@@ -334,12 +335,14 @@ EL::StatusCode MyxAODAnalysis :: histInitialize ()
   static const size_t foundAtlfast = m_fileName.find("_a");
   static const size_t foundTruth = m_fileName.find("TRUTH");
 
+  std::cout<<"m_fileName:"<<m_fileName<<std::endl;
   if (foundData != std::string::npos){
     isData = 1;
     doSyst = false;
   }
   else if (foundAtlfast != std::string::npos){
     isAtlfast = 1;
+    std::cout<<"This is an atlas fase sample"<<std::endl;
   }
   else if (foundTruth != std::string::npos) {
     isTruth = 1;
