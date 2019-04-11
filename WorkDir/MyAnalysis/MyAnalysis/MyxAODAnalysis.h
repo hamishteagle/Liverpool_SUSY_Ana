@@ -203,6 +203,7 @@ public:
  private:
 
   bool isData; //!
+  bool isMC; //!
   bool isAtlfast; //!
   bool isTruth; //!
   

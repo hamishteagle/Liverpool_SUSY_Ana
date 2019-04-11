@@ -162,6 +162,10 @@ EL::StatusCode MyxAODAnalysis :: beginInputFile (bool firstFile)
   if (MetaData) {
     MetaData->LoadTree(0);
     m_isDerivation = !MetaData->GetBranch("StreamAOD");
+    isTruth = MetaData->GetBranch("TruthMetaData");
+    ANA_MSG_INFO ("%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%");
+    ANA_MSG_INFO ("This is Truth");
+    
   }
 
 return StatusCode::SUCCESS;
@@ -186,20 +190,6 @@ EL::StatusCode MyxAODAnalysis :: initialize ()
   m_fileType = wk()->metaData()->castString("sample_name");
   m_fileName = inputFile;
 
-
-  isAtlfast = false;
-  isData = false;
-  isTruth = false;
-
-
-  //if (MetaData->GetBranch("FileMetaDataAuxDyn.simFlavour")->GetValue() == "AtlfastII"){
-  //isAtlfast = true;
-  //std::cout<<"MetaData: "<<MetaData->GetBranch("FileMetaDataAuxDyn.simFlavour")->GetValue()<<std::endl;
-  //}
-  //std::cout<<"This is a full sim file"<<std::endl;
-  //std::cout<< const_cast<SH::MetaObject*>(wk()->metaData())->dumpToString()<<std::endl;
-  //if (wk()->metaData()->castDouble("isdata") == 1) isData = true;
-  //if (wk()->metaData()->castDouble("istruth") == 1) isTruth = true;
 
   // GRL
   m_grl.setTypeAndName("GoodRunsListSelectionTool/grl");
@@ -245,28 +235,23 @@ EL::StatusCode MyxAODAnalysis :: initialize ()
   if(isMC16d){lumicalcFiles.push_back(PathResolverFindCalibFile("GoodRunsLists/data17_13TeV/20180619/physics_25ns_Triggerno17e33prim.lumicalc.OflLumi-13TeV-010.root"));}
   if(isMC16e){lumicalcFiles.push_back(PathResolverFindCalibFile("GoodRunsLists/data18_13TeV/20190219/ilumicalc_histograms_None_348885-364292_OflLumi-13TeV-010.root"));}
 
-  //Assigining the config files for MC15
-  std::vector<std::string> confFiles;
-  if (isMC15b){
-    confFiles.push_back(PathResolverFindCalibFile("MyAnalysis/MyAnalysis/signals_mc15b_merged.root"));
-    confFiles.push_back(PathResolverFindCalibFile("MyAnalysis/MyAnalysis/merged_prw_mc15b.root"));
-  }
-  else if (isMC15a){
-    confFiles.push_back(PathResolverFindCalibFile("MyAnalysis/MyAnalysis/merged_prw.root"));
-  }
-  else if (isMC15c){
-    confFiles.push_back(PathResolverFindCalibFile("MyAnalysis/MyAnalysis/mc15c_v2_defaults.NotRecommended.prw.root"));
-  }
 
   objTool = new ST::SUSYObjDef_xAOD("SUSYObjDef_xAOD");
+
   const xAOD::FileMetaData* fmd = nullptr;
   ANA_CHECK(objTool->inputMetaStore()->retrieve(fmd, "FileMetaData") );
   std::string simFlavour;
-  ANA_CHECK(fmd->value(xAOD::FileMetaData::simFlavour, simFlavour) );
-  isAtlfast = (simFlavour == "AtlfastII");
-  
-  ANA_MSG_INFO ("%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%");
-  ANA_MSG_INFO ("simFlavour = " << simFlavour );
+  if (!(isData = !fmd->value(xAOD::FileMetaData::simFlavour, simFlavour))){
+    isMC = true;
+    isAtlfast = (simFlavour == "AtlfastII");
+    ANA_MSG_INFO ("%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%");
+    ANA_MSG_INFO ("simFlavour = " << simFlavour );
+  }  
+  else {
+    ANA_MSG_INFO ("%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%");
+    ANA_MSG_INFO ("This is data");
+    isMC= false;
+  }
   ST::ISUSYObjDef_xAODTool::DataSource datasource = (isData ? ST::ISUSYObjDef_xAODTool::Data : (isAtlfast ? ST::ISUSYObjDef_xAODTool::AtlfastII : ST::ISUSYObjDef_xAODTool::FullSim));
   
   ANA_CHECK(objTool->setProperty("DataSource",datasource) ) ;
@@ -314,18 +299,21 @@ EL::StatusCode MyxAODAnalysis :: initialize ()
   }
   
   //PMGCrossSectionTool setup
+  std::cout<<"Before cross-sections tool"<<std::endl;
   ASG_SET_ANA_TOOL_TYPE( m_PMGCrossSectionTool, PMGTools::PMGCrossSectionTool);
   m_PMGCrossSectionTool.setName("myCrossSectionTool");
   ANA_CHECK(m_PMGCrossSectionTool.retrieve());
   m_PMGCrossSectionTool->readInfosFromDir("/cvmfs/atlas.cern.ch/repo/sw/database/GroupData/dev/PMGTools/");
-
+  std::cout<<"After cross-sections tool"<<std::endl;
   //BTaggingSelectionTool setup
   ASG_SET_ANA_TOOL_TYPE( m_BTaggingSelectionTool, BTaggingSelectionTool);
+  m_BTaggingSelectionTool.setName("myBTaggingSelectionTool");
   ANA_CHECK( m_BTaggingSelectionTool.setProperty( "FlvTagCutDefinitionsFileName","xAODBTaggingEfficiency/13TeV/2017-21-13TeV-MC16-CDI-2018-02-09_v1.root" ) ); //CDI file might need updating..
   ANA_CHECK( m_BTaggingSelectionTool.setProperty("TaggerName",    "MV2c10"  ) );
   ANA_CHECK( m_BTaggingSelectionTool.setProperty("OperatingPoint", "Continuous") );
   ANA_CHECK( m_BTaggingSelectionTool.setProperty("JetAuthor",      "AntiKt4EMTopoJets" ) );
   ANA_CHECK( m_BTaggingSelectionTool.initialize() );
+  std::cout<<"After BTaggingTool tool"<<std::endl;
 
   return StatusCode::SUCCESS;
 }
@@ -412,12 +400,6 @@ EL::StatusCode MyxAODAnalysis :: execute ()
       continue;
     }
 
-    //File types (MC/truth)
-    bool isMC = false;
-    if(eventInfo->eventType( xAOD::EventInfo::IS_SIMULATION) ){
-      isMC = true; // lets us do things correctly later
-    }
-
     if(!isTruth && !isData){
       m_averageIntPerX=eventInfo->averageInteractionsPerCrossing();
       m_actualIntPerX=eventInfo->actualInteractionsPerCrossing();
@@ -444,7 +426,6 @@ EL::StatusCode MyxAODAnalysis :: execute ()
 
 
     if (isMC){
-
       mcChannel = eventInfo->mcChannelNumber();
       puWgt = objTool->GetPileupWeight();
 
@@ -583,16 +564,16 @@ EL::StatusCode MyxAODAnalysis :: execute ()
     //Note:diMuon triggers only require 1 L1 muon.
     else {
       std::vector<std::string> single_el_2015 = {"HLT_e24_lhmedium_L1EM20VH", "HLT_e60_lhmedium", "HLT_e120_lhloose"};
-      std::vector<std::string> single_mu_2015 = {"HLT_mu20_iloose_L1MU15_OR_HLT_mu50"};
+      std::vector<std::string> single_mu_2015 = {"HLT_mu20_iloose_L1MU15", "HLT_mu50"};
       std::vector<std::string> di_lepton_2015 = {"HLT_2e12_lhloose_L12EM10VH", "HLT_mu18_mu8noL1", "HLT_e17_lhloose_mu14"};
       std::vector<std::string> single_el_2016 = {"HLT_e26_lhtight_nod0_ivarloose", "HLT_e60_lhmedium_nod0", "HLT_e140_lhloose_nod0"};
-      std::vector<std::string> single_mu_2016 = {"HLT_mu26_ivarmedium_OR_HLT_mu50"};
+      std::vector<std::string> single_mu_2016 = {"HLT_mu26_ivarmedium","HLT_mu50"};
       std::vector<std::string> di_lepton_2016 = {"HLT_2e17_lhvloose_nod0","HLT_mu22_mu8noL1","HLT_e17_lhloose_nod0_mu14 "};
       std::vector<std::string> single_el_2017 = {"HLT_e26_lhtight_nod0_ivarloose", "HLT_e60_lhmedium_nod0", "HLT_e140_lhloose_nod0"};
-      std::vector<std::string> single_mu_2017 = {"HLT_mu26_ivarmedium_OR_HLT_mu50"};
+      std::vector<std::string> single_mu_2017 = {"HLT_mu26_ivarmedium","HLT_mu50"};
       std::vector<std::string> di_lepton_2017 = {"HLT_2e17_lhvloose_nod0_L12EM15VHI","HLT_mu22_mu8noL1", "HLT_e17_lhloose_nod0_mu14"};
       std::vector<std::string> single_el_2018 = {"HLT_e26_lhtight_nod0_ivarloose","HLT_2e24_lhvloose_nod0", "HLT_e60_lhmedium_nod0", "HLT_e140_lhloose_nod0"};
-      std::vector<std::string> single_mu_2018 = {"HLT_mu26_ivarmedium_OR_HLT_mu50"};
+      std::vector<std::string> single_mu_2018 = {"HLT_mu26_ivarmedium","HLT_mu50"};
       std::vector<std::string> di_lepton_2018 = {"HLT_2e17_lhvloose_nod0_L12EM15VHI","HLT_2e24_lhvloose_nod0","HLT_mu22_mu8noL1","HLT_e17_lhloose_nod0_mu14"};
       //Use IsMETTriggerPassed() function which should check the lowest un-prescaled triggers
       if (year == 2015) {
@@ -692,7 +673,6 @@ EL::StatusCode MyxAODAnalysis :: execute ()
       }
     }
     if(passedSingleMuTrigger ==true && passedSingleElTrigger== true){
-      std::cout<<"passed both single lepton triggers"<<std::endl;
       if(passedDiLeptonTrigger !=true && passedSingleMuTrigger ==true && passedSingleElTrigger== true){
 	std::cout<<"WARNING, both single lep triggers fired but no di-lepton trigger, your SFs are not prepared for this!!"<<std::endl;
       }
