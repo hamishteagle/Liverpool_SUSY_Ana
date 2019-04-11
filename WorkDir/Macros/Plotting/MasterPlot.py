@@ -68,11 +68,11 @@ def main():
     #signalFiles.append('/user/hteagle/liverpool-ml/TMVATuples/reco_full/400_250_TruthSmeared_CollTree.root')    
     #signalFiles.append('/user/hteagle/liverpool-ml/TMVATuples/reco_full/400_250_TruthSmeared_mct_CollTree.root')    
     #signalFiles.append('/user/hteagle/liverpool-ml/TMVATuples/reco_full/400_250_TruthSmeared_EtaPhiPsmear_CollTree.root')
-    #signalFiles.append('/user/hteagle/AnalysisDirectory/Rel21/Base.21.2.31/run/submitdir_ttbarCheck/data-output/mc16_13TeV.root')
-    signalFiles.append('/user/hteagle/liverpool-ml/TMVATuples/reco_full/396706.MadGraphPythia8EvtGen_A14N23LO_C1N2_Wh_hbb_250p0_100p0_lep_output.root')
-    signalFiles.append('/user/hteagle/liverpool-ml/TMVATuples/reco_full/396716.MadGraphPythia8EvtGen_A14N23LO_C1N2_Wh_hbb_300p0_150p0_lep_output.root')
-    signalFiles.append('/user/hteagle/liverpool-ml/TMVATuples/reco_full/396734.MadGraphPythia8EvtGen_A14N23LO_C1N2_Wh_hbb_400p0_250p0_lep_output.root')
-    signalFiles.append('/user/hteagle/liverpool-ml/TMVATuples/reco_full/396750.MadGraphPythia8EvtGen_A14N23LO_C1N2_Wh_hbb_500p0_350p0_lep_output.root')
+    signalFiles.append('/user/hteagle/AnalysisDirectory/Rel21/Base.21.2.31/run/submitdir_ttbarCheck/data-output/DAOD_SUSY5.root')
+    #signalFiles.append('/user/hteagle/liverpool-ml/TMVATuples/reco_full/396706.MadGraphPythia8EvtGen_A14N23LO_C1N2_Wh_hbb_250p0_100p0_lep_output.root')
+    #signalFiles.append('/user/hteagle/liverpool-ml/TMVATuples/reco_full/396716.MadGraphPythia8EvtGen_A14N23LO_C1N2_Wh_hbb_300p0_150p0_lep_output.root')
+    #signalFiles.append('/user/hteagle/liverpool-ml/TMVATuples/reco_full/396734.MadGraphPythia8EvtGen_A14N23LO_C1N2_Wh_hbb_400p0_250p0_lep_output.root')
+    #signalFiles.append('/user/hteagle/liverpool-ml/TMVATuples/reco_full/396750.MadGraphPythia8EvtGen_A14N23LO_C1N2_Wh_hbb_500p0_350p0_lep_output.root')
 
     
 
@@ -146,7 +146,7 @@ def main():
     directory = options.date+'/'
     print ("Output Directory is: ", directory)
     #############################
-    label = "compressedSR"
+    label = "monotop_cutflow"
     #############################
     EventCounter = True
 
@@ -193,8 +193,8 @@ def main():
     elif label == "monotop_preSelection":
         cutstouse = preCuts+"(nLeptons==1)*(nBJets>=1)"
     elif label == "monotop_cutflow":
-        cutstouse = "passedMETTrigger==1"
-#cutstouse = "(ETMiss>=100)*(nLeptons==1)*(pTl1>27)*(nBJets)*(pTb1>40)*(pTb2>25)*(pTj1>50)*(pTj2>40)*(minDPhijMET_4>0.4)*(m_T>120)"#
+        #cutstouse = "passedMETTrigger==1"
+        cutstouse = "(ETMiss>=100)*(nLeptons==1)*(pTl1>27)*(nJets>=2)*(nBJets>=1)*(pTb1>40)*(pTb2>25)*(pTj1>50)*(pTj2>40)*(minDPhijMET_4>0.4)*(m_T>120)"#
 
 
     else:
@@ -391,8 +391,8 @@ def main():
 
     if options.doCutflow:
         print ("Going to do cutflow")
-        ##untrimmed
-        signalFile = '/user/hteagle/AnalysisDirectory/Rel21/Base.21.2.31/run/submitdir_ttbarCheck/data-output/mc16_13TeV.root'
+        ##untrimmed                                                          submitdir_ttbarCheck/data-output/DAOD_SUSY5.root
+        signalFile = '/user/hteagle/AnalysisDirectory/Rel21/Base.21.2.67/run/submitdir_ttbarCheck/data-output/DAOD_SUSY5.root'
         Cutflow.Cutflow(label, cutstouse, signalFile, luminosity_liv)
 
 #TurnOn Curves

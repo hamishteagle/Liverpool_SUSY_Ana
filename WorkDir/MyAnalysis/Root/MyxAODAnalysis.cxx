@@ -696,29 +696,29 @@ EL::StatusCode MyxAODAnalysis :: execute ()
     bool passedPrimVertex=true;
     if (m_objs->getPrimVertex() < 1){
       passedPrimVertex=false;
-      isyst++;
-      continue;
+      //isyst++;
+      //continue;
     }
 
     bool passedJetClean=true;
     if (nBadJet > 0){
       passedJetClean=false;
-      isyst++;
-      continue;
+      //isyst++;
+      //continue;
     }
 
     bool passedCosmicMu=true;
     if (nCosmicMu > 0){
       passedCosmicMu=false;
-      isyst++;
-      continue;
+      //isyst++;
+      //continue;
     }
 
     bool passedMuonClean=true;
     if (nBadMu > 0){
       passedMuonClean=false;
-      isyst++;
-      continue;
+      //isyst++;
+      //continue;
     }
 
     //All cleaning cuts before trigger

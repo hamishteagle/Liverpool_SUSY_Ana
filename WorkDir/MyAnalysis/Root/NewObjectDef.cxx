@@ -44,6 +44,17 @@ NewObjectDef::NewObjectDef(asg::SgTEvent* event, ST::SUSYObjDef_xAOD* SUSYTool, 
 
 }
 
+bool pT_Sorter( const xAOD::Jet* j1, const xAOD::Jet* j2 ) {
+  double pT1 = 0;
+  double pT2 = 0;
+  // need to change this to the new discriminant 
+  pT1=j1->pt();
+  pT2=j2->pt();
+  return ( pT1 > pT2 );
+}
+
+
+
 void NewObjectDef::GetObjects() {
 
   // Setup object containers
@@ -88,7 +99,7 @@ void NewObjectDef::GetObjects() {
   xAOD::JetContainer* jets(jets_nominal);
   xAOD::TauJetContainer* taus(taus_nominal);
   // Get MET
-  //Only jets electrons muons, NoPhotons, NoTaus, do
+  //Only jets electrons muons, NoPhotons, NoTaus
   objTool->GetMET(*met_nominal, jets_nominal, electrons_nominal, muons_nominal, NULL, NULL, true);
   xAOD::MissingETContainer::const_iterator met_it = met_nominal->find("Final");
   if (met_it == met_nominal->end())
@@ -157,6 +168,8 @@ void NewObjectDef::GetObjects() {
         if (!objTool->isData()) JVTSF = objTool->JVT_SF(goodJets);
       }
     }
+    goodJets->sort(pT_Sorter);
+    BJets->sort(pT_Sorter);
   }
   //Get nVertex
   const xAOD::VertexContainer* primVertex = 0;
@@ -210,3 +223,4 @@ void NewObjectDef::GetObjects() {
   return;
 
 }
+

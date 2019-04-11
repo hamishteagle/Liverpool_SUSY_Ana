@@ -39,7 +39,6 @@ using namespace RestFrames;
 bool btag_wgt_Sorter( const xAOD::Jet* j1, const xAOD::Jet* j2 ) {
   double b1 = 0;
   double b2 = 0;
-  // need to change this to the new discriminant 
   j1->btagging()->MVx_discriminant("MV2c10", b1);
   j2->btagging()->MVx_discriminant("MV2c10", b2);
   return ( b1 > b2 );
@@ -541,6 +540,7 @@ CalculateVariables::CalculateVariables(NewObjectDef *objects, asg::AnaToolHandle
   if (nbJets >= 2){
     b2v = (*objects->getBJets())[1]->p4()*0.001;
     pTb2 = b2v.Pt();
+    if (pTb1<pTb2)std::cout<<"Your pT ordering doesn't work you idiot"<<std::endl;
     etab2 = b2v.Eta();
     phib2 = b2v.Phi();
   }    
