@@ -7,6 +7,7 @@
 #include "GoodRunsLists/GoodRunsListSelectionTool.h"
 #include "xAODCutFlow/CutBookkeeper.h"
 #include "xAODCutFlow/CutBookkeeperContainer.h"
+#include "xAODMetaData/FileMetaData.h"
 
 #include "JetSelectorTools/JetCleaningTool.h"
 #include "JetResolution/JERTool.h"
@@ -159,11 +160,8 @@ EL::StatusCode MyxAODAnalysis :: beginInputFile (bool firstFile)
 
   MetaData = dynamic_cast<TTree*> (wk()->inputFile()->Get("MetaData"));
   if (MetaData) {
-
     MetaData->LoadTree(0);
-
     m_isDerivation = !MetaData->GetBranch("StreamAOD");
-
   }
 
 return StatusCode::SUCCESS;
@@ -185,8 +183,23 @@ EL::StatusCode MyxAODAnalysis :: initialize ()
   m_numElectronEvents = 0;
   m_numMuonEvents = 0;
 
-  m_fileType = wk()->metaData()->getString("sample_name");
+  m_fileType = wk()->metaData()->castString("sample_name");
   m_fileName = inputFile;
+
+
+  isAtlfast = false;
+  isData = false;
+  isTruth = false;
+
+
+  //if (MetaData->GetBranch("FileMetaDataAuxDyn.simFlavour")->GetValue() == "AtlfastII"){
+  //isAtlfast = true;
+  //std::cout<<"MetaData: "<<MetaData->GetBranch("FileMetaDataAuxDyn.simFlavour")->GetValue()<<std::endl;
+  //}
+  //std::cout<<"This is a full sim file"<<std::endl;
+  //std::cout<< const_cast<SH::MetaObject*>(wk()->metaData())->dumpToString()<<std::endl;
+  //if (wk()->metaData()->castDouble("isdata") == 1) isData = true;
+  //if (wk()->metaData()->castDouble("istruth") == 1) isTruth = true;
 
   // GRL
   m_grl.setTypeAndName("GoodRunsListSelectionTool/grl");
@@ -246,12 +259,19 @@ EL::StatusCode MyxAODAnalysis :: initialize ()
   }
 
   objTool = new ST::SUSYObjDef_xAOD("SUSYObjDef_xAOD");
-  //objTool.setTypeAndName("ST::SUSYObjDef_xAOD/objTool");
+  const xAOD::FileMetaData* fmd = nullptr;
+  ANA_CHECK(objTool->inputMetaStore()->retrieve(fmd, "FileMetaData") );
+  std::string simFlavour;
+  ANA_CHECK(fmd->value(xAOD::FileMetaData::simFlavour, simFlavour) );
+  isAtlfast = (simFlavour == "AtlfastII");
+  
+  ANA_MSG_INFO ("%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%");
+  ANA_MSG_INFO ("simFlavour = " << simFlavour );
   ST::ISUSYObjDef_xAODTool::DataSource datasource = (isData ? ST::ISUSYObjDef_xAODTool::Data : (isAtlfast ? ST::ISUSYObjDef_xAODTool::AtlfastII : ST::ISUSYObjDef_xAODTool::FullSim));
+  
   ANA_CHECK(objTool->setProperty("DataSource",datasource) ) ;
-  //ANA_CHECK( objTool.setProperty("ConfigFile", PathResolverFindCalibFile("MyAnalysis/MyAnalysis/SUSYToolsDefault_21_2_66.conf")));
   ANA_CHECK(objTool->setProperty("UseBtagging", true));
-
+  
   if (!isTruth){
     ANA_CHECK(objTool->setProperty("PRWLumiCalcFiles",lumicalcFiles));
     ANA_CHECK(objTool->setProperty("AutoconfigurePRWTool",true));
@@ -331,23 +351,6 @@ EL::StatusCode MyxAODAnalysis :: histInitialize ()
 
   gErrorIgnoreLevel = kFatal;
 
-  static const size_t foundData = m_fileName.find("data");
-  static const size_t foundAtlfast = m_fileName.find("_a");
-  static const size_t foundTruth = m_fileName.find("TRUTH");
-
-  std::cout<<"m_fileName:"<<m_fileName<<std::endl;
-  if (foundData != std::string::npos){
-    isData = 1;
-    doSyst = false;
-  }
-  else if (foundAtlfast != std::string::npos){
-    isAtlfast = 1;
-    std::cout<<"This is an atlas fase sample"<<std::endl;
-  }
-  else if (foundTruth != std::string::npos) {
-    isTruth = 1;
-    doSyst = false;
-  }
 
   noWeightHist = new TH1F("h_noWeights","h_noWeightHist",1 , 0.5, 1.5);
   sherpaWeightHist = new TH1F("h_sherpaWeights","h_sherpaWeightHist",1 , 0.5, 1.5);

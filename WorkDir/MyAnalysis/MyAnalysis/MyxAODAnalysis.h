@@ -102,9 +102,6 @@ public:
 
   xAOD::TEvent *m_event; //!
 
-  asg::AsgMetadataTool *Asgmdtool; //!
-
-
   TTree *MetaData; //!
   bool m_isDerivation; //!
 
@@ -122,9 +119,7 @@ public:
   std::string m_fileType;
   std::string m_fileName;
   double m_fileLumi;
-  bool isData; //!
-  bool isAtlfast; //!
-  bool isTruth; //!
+  
 
   int isyst; //!
   int m_totalEvents; //!
@@ -179,14 +174,16 @@ public:
   double m_actualIntPerX; //!
   double truth_pT_W; //!
 
+  std::string inputFile;//!
   int counter = 0;
-
+  bool RunningLocally=true;
+  bool RunningWithSyst = false;
+  bool RunningWithPhotons = false;
+  int NoEvents = -1;
   bool firstFile = true;
   bool firstEvent = true;
   int doSyst;
   int doPhotons;
-  int RunningLocally;
-  std::string inputFile;
 
   //  OutputStream *out;
 
@@ -205,11 +202,15 @@ public:
 
  private:
 
-   asg::AnaToolHandle<PMGTools::IPMGCrossSectionTool> m_PMGCrossSectionTool; //!
-   asg::AnaToolHandle<CP::IPileupReweightingTool> m_prw_tool; //!
-   asg::AnaToolHandle<CP::IMuonCalibrationAndSmearingTool> m_muonCalibrationAndSmearingTool; //!
-   /*asg::AnaToolHandle<ST::SUSYObjDef_xAOD> objTool; //!*/
-   asg::AnaToolHandle<IGoodRunsListSelectionTool> m_grl; //!
+  bool isData; //!
+  bool isAtlfast; //!
+  bool isTruth; //!
+  
+  asg::AnaToolHandle<PMGTools::IPMGCrossSectionTool> m_PMGCrossSectionTool; //!
+  asg::AnaToolHandle<CP::IPileupReweightingTool> m_prw_tool; //!
+  asg::AnaToolHandle<CP::IMuonCalibrationAndSmearingTool> m_muonCalibrationAndSmearingTool; //!
+  /*asg::AnaToolHandle<ST::SUSYObjDef_xAOD> objTool; //!*/
+  asg::AnaToolHandle<IGoodRunsListSelectionTool> m_grl; //!
 
   // put functions here?
  public:
