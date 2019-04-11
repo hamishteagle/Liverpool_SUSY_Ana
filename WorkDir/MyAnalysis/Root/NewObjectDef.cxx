@@ -44,10 +44,9 @@ NewObjectDef::NewObjectDef(asg::SgTEvent* event, ST::SUSYObjDef_xAOD* SUSYTool, 
 
 }
 
-bool pT_Sorter( const xAOD::Jet* j1, const xAOD::Jet* j2 ) {
+bool pT_Sorter( const xAOD::IParticle* j1, const xAOD::IParticle* j2 ) {
   double pT1 = 0;
   double pT2 = 0;
-  // need to change this to the new discriminant 
   pT1=j1->pt();
   pT2=j2->pt();
   return ( pT1 > pT2 );
@@ -118,7 +117,8 @@ void NewObjectDef::GetObjects() {
       if (el_itr->auxdata<char>("signal")) goodElectrons->push_back(el_itr);
     }
   }
-
+  baselineElectrons->sort(pT_Sorter);
+  goodElectrons->sort(pT_Sorter);
   electronSF = 1;
   if (objTool->isData() == 0) {
     electronSF = objTool->GetTotalElectronSF(*electrons,true,true,false,true,"", false);
@@ -134,7 +134,9 @@ void NewObjectDef::GetObjects() {
       if (mu_itr->auxdata<char>("baseline") && mu_itr->auxdata<char>("bad")) badMuons->push_back(mu_itr);
     }
   }
-
+  baselineMuons->sort(pT_Sorter);
+  cosmicMuons->sort(pT_Sorter);
+  badMuons->sort(pT_Sorter);
   muonSF = 1;
   if (objTool->isData() == 0 ) {
     muonSF = objTool->GetTotalMuonSF(*muons,true,true,"");
@@ -146,6 +148,8 @@ void NewObjectDef::GetObjects() {
       if (tau_itr->auxdata<char>("signal")) goodTaus->push_back(tau_itr);
     }
   }
+  baselineTaus->sort(pT_Sorter);
+  goodTaus->sort(pT_Sorter);
   // Fill photons
   for (const auto& ph_itr: *photons) {
     if (ph_itr->auxdata<char>("passOR")) {
@@ -153,6 +157,8 @@ void NewObjectDef::GetObjects() {
       if (ph_itr->auxdata<char>("signal")) goodPhotons->push_back(ph_itr);
     }
   }
+  baselinePhotons->sort(pT_Sorter);
+  goodPhotons->sort(pT_Sorter);
   //Fill jets
   bJetSF = 1;
   JVTSF = 1;
@@ -168,9 +174,14 @@ void NewObjectDef::GetObjects() {
         if (!objTool->isData()) JVTSF = objTool->JVT_SF(goodJets);
       }
     }
-    goodJets->sort(pT_Sorter);
-    BJets->sort(pT_Sorter);
+   
   }
+  goodJetsBeforeOR->sort(pT_Sorter);
+  badJets->sort(pT_Sorter);
+  goodJets->sort(pT_Sorter);
+  BJets->sort(pT_Sorter);
+  nonBJets->sort(pT_Sorter);
+
   //Get nVertex
   const xAOD::VertexContainer* primVertex = 0;
   currentEvent->retrieve( primVertex, "PrimaryVertices" );
