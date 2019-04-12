@@ -41,9 +41,9 @@ int main( int argc, char* argv[]) {
     inputFile = argv[1];
     std::cout << "InputFile: "<< inputFile << std::endl;
     std::cout << "Input dir: " << inputDir << std::endl;
-    PhysicsName = argv[3];
+    PhysicsName = argv[2];
     std::cout << "Input Type: " << PhysicsName << std::endl;
-    submitDir = argv[2];
+    submitDir = argv[3];
     std::cout << "Submission file: " << submitDir << std::endl;
     RunningWithSyst = (bool) atoi(argv[4]);
     std::cout << "RunningWithSyst: " << RunningWithSyst << std::endl;
