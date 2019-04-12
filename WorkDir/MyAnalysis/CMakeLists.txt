@@ -73,7 +73,7 @@ atlas_add_dictionary (MyAnalysisDict
 atlas_install_data( data/* )
 
 
-atlas_add_executable( testRun util/testRunHamish.cxx LINK_LIBRARIES MyAnalysisLib ${Boost_LIBRARIES} )
+atlas_add_executable( testRun util/testRunTest.cxx LINK_LIBRARIES MyAnalysisLib ${Boost_LIBRARIES} )
 atlas_add_executable( testRunGrid util/testRunGrid.cxx LINK_LIBRARIES MyAnalysisLib ${Boost_LIBRARIES} )
 
 # Install files from the package:
