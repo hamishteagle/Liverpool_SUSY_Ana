@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 
-import argparse, ROOT
+import argparse, ROOT, os
 from datetime import datetime
 
 class submit:
@@ -126,7 +126,6 @@ class submit:
         name_string += str(Months[int(d.month)])
         name_string += str('_SUSY5.')
         name_string += str(self.campaign())
-
         return(name_string)
 
     def campaign(self):
