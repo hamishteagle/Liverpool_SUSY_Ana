@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 
-import argparse, ROOT, os
+import argparse, ROOT, os, io
 from datetime import datetime
 
 class submit:
@@ -19,6 +19,7 @@ class submit:
         parser.add_argument('--photons', dest = 'photons', type = bool, default = False)
         parser.add_argument('--local', dest = 'local', type = bool, default = True)
         parser.add_argument('--events', dest = 'events', type = int, default = -1)
+        parser.add_argument('--username', dest = 'username', default = 'msulliva')
         args = parser.parse_args()
 
         # Make input file name accessible
@@ -30,7 +31,13 @@ class submit:
         doPhotons = int(args.photons)
         local     = int(args.local)
 
-        outdir = args.submission_dir + '/' + self.input.split('/')[slashes - 2] + '/'
+        multi_submit = '\"'
+        if ('.txt' in self.input):
+          for line in open(args.input_file):
+            multi_submit += line.replace('\n',',')
+        multi_submit += '\"'
+
+        outdir = args.submission_dir
 
         command = 'testRun '
         command += self.input
@@ -44,8 +51,12 @@ class submit:
         command += str(local)
         command += ' '
         command += str(args.events) 
+        command += ' '
+        command += str(args.username)
 
-        os.system(command)
+        print(command)
+
+        #os.system(command)
 
 if __name__=='__main__':
   submit().main()

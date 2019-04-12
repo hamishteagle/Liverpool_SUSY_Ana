@@ -190,21 +190,53 @@ std::string get_file_type(const std::string& s)
     int found_data15 = s.find("data15");
     if (found_data15 != std::string::npos){
       fileType = "DATA15";
+        int found_SUSY5 = s.find("SUSY5");
+        if (found_SUSY5 != std::string::npos){
+        fileType += ".SUSY5";
+        }
+        int found_SUSY7 = s.find("SUSY7");
+        if (found_SUSY7 != std::string::npos){
+        fileType += ".SUSY7";
+        }
     }
     
     int found_data16 = s.find("data16");
     if (found_data16 != std::string::npos){
       fileType = "DATA16";
+        int found_SUSY5 = s.find("SUSY5");
+        if (found_SUSY5 != std::string::npos){
+        fileType += ".SUSY5";
+        }
+        int found_SUSY7 = s.find("SUSY7");
+        if (found_SUSY7 != std::string::npos){
+        fileType += ".SUSY7";
+        }
     }
     
     int found_data17 = s.find("data17");
     if (found_data17 != std::string::npos){
       fileType = "DATA17";
+        int found_SUSY5 = s.find("SUSY5");
+        if (found_SUSY5 != std::string::npos){
+        fileType += ".SUSY5";
+        }
+        int found_SUSY7 = s.find("SUSY7");
+        if (found_SUSY7 != std::string::npos){
+        fileType += ".SUSY7";
+        }
     }
     
     int found_data18 = s.find("data18");
     if (found_data18 != std::string::npos){
       fileType = "DATA18";
+        int found_SUSY5 = s.find("SUSY5");
+        if (found_SUSY5 != std::string::npos){
+        fileType += ".SUSY5";
+        }
+        int found_SUSY7 = s.find("SUSY7");
+        if (found_SUSY7 != std::string::npos){
+        fileType += ".SUSY7";
+        }
     }
     
     int found_mc16a = s.find("r9364");
