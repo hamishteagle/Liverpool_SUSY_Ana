@@ -22,6 +22,7 @@
 
 std::string get_sample_name(const std::string& s);
 std::string get_file_type(const std::string& s);
+std::string get_derivation_type(const std::string& s);
 bool is_multiple_submission(const std::string& s);
 void info_message(const std::string& s);
 
@@ -31,7 +32,10 @@ int main( int argc, char* argv[]) {
     std::string sample_name = "";
     std::string submit_dir = "";
     std::string fileType = "";
+    std::string derivationType ="";
     std::string username = "";
+    std::string release = "";
+    std::string physicsName = "";
 
     bool RunningWithSyst = false;
     bool RunningWithPhotons = false;
@@ -40,14 +44,16 @@ int main( int argc, char* argv[]) {
 
     if (argv[1] != "") sample_path = argv[1];
     sample_name = get_sample_name(sample_path);
-    if (argv[2] != "") submit_dir  = argv[2] + sample_name + "/";
+    if (argv[2] != "") submit_dir  = argv[2];
     if (argv[3] != "") RunningWithSyst = (bool) atoi(argv[3]);
     if (argv[4] != "") RunningWithPhotons = (bool) atoi(argv[4]);
     if (argv[5] != "") RunningLocally = (bool) atoi(argv[5]);
     if (argv[6] != "") NoEvents = atoi(argv[6]);
     if (argv[7] != "") username = argv[7];
+    if (argv[8] != "") release = argv[8];
+    if (argv[9] != "") physicsName = argv[9];
     fileType = get_file_type(sample_name);
-
+    derivationType = get_derivation_type(sample_name);
     info_message("Input path: " + sample_path);
     info_message("Sample name: " + sample_name);
     info_message("Sample type: " + fileType);
@@ -122,10 +128,10 @@ int main( int argc, char* argv[]) {
         if (is_multiple_submission(sample_name)) {
             output_name = CurrentDate + "." + "Combined." + fileType;
             job.options()->setString( EL::Job::optSubmitFlags, "--addNthFieldOfInDSToLFN=2,3,6 --useContElementBoundary" );        
-            driver.options()->setString("nc_outputSampleName", "user." + username + "." + CurrentDate + "." + "Combined." + fileType+"_testsubmission");
+            driver.options()->setString("nc_outputSampleName", "user." + username + "." + CurrentDate + "." + physicsName +  ".Combined." + fileType+"."+derivationType);
         } else {
             output_name = CreateDir+"/"+sample_name;        
-            driver.options()->setString("nc_outputSampleName", "user." + username + "." + CurrentDate+"_"+fileType+"%in:name[2]%.%in:name[3]%"+"_testsubmission");
+            driver.options()->setString("nc_outputSampleName", "user." + username + "." + CurrentDate+"." + physicsName+"_"+fileType+"."+derivationType+"%in:name[2]%.%in:name[3]%");
         }
         // Add our analysis to the job:
         MyxAODAnalysis* alg = new MyxAODAnalysis();
@@ -146,7 +152,8 @@ int main( int argc, char* argv[]) {
         driver.options()->setString(EL::Job::optGridNFilesPerJob, "5");
         // Use submit if you want to see all of the info about the submitted jobs. Use submitOnly if you want to send the jobs then Monitor online with panda
         std::string out_dir = CreateDir + "/" + output_name;
-        driver.submitOnly( job, out_dir );
+	std::cout<<"Would submit grid job with this output_name: "<<output_name<<std::endl;
+        //driver.submitOnly( job, out_dir );
 
     }
   return 0;
@@ -178,14 +185,6 @@ std::string get_file_type(const std::string& s)
     int found_TRUTH3 = s.find("TRUTH3");
     if (found_TRUTH3 != std::string::npos){
       fileType = "TRUTH3";
-    }
-    int found_SUSY5 = s.find("SUSY5");
-    if (found_SUSY5 != std::string::npos){
-      fileType = "SUSY5";
-    }
-    int found_SUSY7 = s.find("SUSY7");
-    if (found_SUSY7 != std::string::npos){
-      fileType = "SUSY7";
     }
     int found_data15 = s.find("data15");
     if (found_data15 != std::string::npos){
@@ -221,6 +220,19 @@ std::string get_file_type(const std::string& s)
     }
 
     return fileType;
+}
+std::string get_derivation_type(const std::string & s){
+
+  std::string derivationType = "";
+  int found_SUSY5 = s.find("SUSY5");
+  if (found_SUSY5 != std::string::npos){
+    derivationType = "SUSY5";
+  }
+  int found_SUSY7 = s.find("SUSY7");
+  if (found_SUSY7 != std::string::npos){
+    derivationType = "SUSY7";
+  }
+  return derivationType;
 }
 
 bool is_multiple_submission(const std::string& s) 

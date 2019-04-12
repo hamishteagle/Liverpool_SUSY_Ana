@@ -39,15 +39,6 @@ function runttbar_a(){
     echo $file 'does not exist!!'
     fi
 }
-function runttbarAllhad_a(){
-    file="SampleLists_SUSY5/mc16a/ttbar_allhad.txt"
-    if [  -f $file ]; then
-	python listsubmission.py -i $file -t TTBARALLHAD
-	echo "fine"
-    else 
-    echo $file 'does not exist!!'
-    fi
-}
 function runsingleTop_a(){
     file="SampleLists_SUSY5/mc16a/singleTop.txt"
     if [  -f $file ]; then
@@ -150,15 +141,7 @@ function runttbar_d(){
     echo $file 'does not exist!!'
     fi
 }
-function runttbarAllhad_d(){
-    file="SampleLists_SUSY5/mc16d/ttbar_allhad.txt"
-    if [  -f $file ]; then
-	python listsubmission.py -i $file -t TTBARALLHAD
-	echo "fine"
-    else 
-    echo $file 'does not exist!!'
-    fi
-}
+
 function runsingleTop_d(){
     file="SampleLists_SUSY5/mc16d/singleTop.txt"
     if [  -f $file ]; then
@@ -256,15 +239,6 @@ function runttbar_e(){
     file="SampleLists_SUSY5/mc16e/ttbar.txt"
     if [  -f $file ]; then
 	python listsubmission.py -i $file -t TTBAR
-	echo "fine"
-    else 
-    echo $file 'does not exist!!'
-    fi
-}
-function runttbarAllhad_e(){
-    file="SampleLists_SUSY5/mc16e/ttbar_allhad.txt"
-    if [  -f $file ]; then
-	python listsubmission.py -i $file -t TTBARALLHAD
 	echo "fine"
     else 
     echo $file 'does not exist!!'
@@ -495,19 +469,7 @@ wait
 #wait
 #runmc16d
 #wait
-
-#runttbarAllhad_a
-#wait
-#runttbarAllhad_d
-#wait
-#runttbarAllhad_e
-#wait
-#runmissing_e
-#wait
-runmissing_d
-wait
-#runmissing_a
-#wait
+runtriBoson_a
 
 echo "Completed all processes!"
 #  LocalWords:  runttbar
