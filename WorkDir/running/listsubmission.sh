@@ -341,7 +341,7 @@ function runsignal_e(){
 function rundata15(){
     file="SampleLists_SUSY5/data15.txt"
     if [  -f $file ]; then
-	python listsubmission.py -i $file -t DATA
+	python listsubmission.py -i $file -t DATA -m True
 	echo "fine"
     else 
     echo $file 'does not exist!!'
@@ -469,7 +469,7 @@ wait
 #wait
 #runmc16d
 #wait
-runtriBoson_a
+rundata15
 
 echo "Completed all processes!"
 #  LocalWords:  runttbar

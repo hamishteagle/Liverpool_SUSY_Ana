@@ -15,6 +15,7 @@
 #include <SampleHandler/Sample.h>
 #include <SampleHandler/SampleGrid.h>
 #include <SampleHandler/SampleHandler.h>
+#include <SampleHandler/MetaFields.h>
 
 #include <iostream>
 
@@ -47,13 +48,15 @@ int main( int argc, char* argv[]) {
     if (argv[2] != "") submit_dir  = argv[2];
     if (argv[3] != "") RunningWithSyst = (bool) atoi(argv[3]);
     if (argv[4] != "") RunningWithPhotons = (bool) atoi(argv[4]);
-    if (argv[5] != "") RunningLocally = (bool) atoi(argv[5]);
+    if (argv[5] != ""){
+      RunningLocally = (bool) atoi(argv[5]);
+      std::cout<<"RunningLocally = "<<RunningLocally<<std::endl;
+    }
     if (argv[6] != "") NoEvents = atoi(argv[6]);
     if (argv[7] != "") username = argv[7];
     if (argv[8] != "") release = argv[8];
     if (argv[9] != "") physicsName = argv[9];
     fileType = get_file_type(sample_name);
-    derivationType = get_derivation_type(sample_name);
     info_message("Input path: " + sample_path);
     info_message("Sample name: " + sample_name);
     info_message("Sample type: " + fileType);
@@ -110,28 +113,34 @@ int main( int argc, char* argv[]) {
         int Month = now->tm_mon;
         std::string CurrentDate = std::to_string(now->tm_mday)+Months[Month];
         
-        std::string CreateDir = "/scratch/msullivan/GridSubmissions/"+CurrentDate+fileType;;
+        std::string CreateDir = "/scratch/hteagle/GridSubmissions/"+CurrentDate+fileType;;
         std::string Command = "[ ! -d "+CreateDir+" ] && mkdir "+CreateDir+" || echo \"Directory Exists\"";
         std::system(Command.c_str());
         
-        SH::scanRucio (sh, sample_name);
-        sh.print();
-        sh.setMetaString ("nc_tree", "CollectionTree");
-        sh.print();
         
         // Create an EventLoop job:
         EL::Job job;
         EL::PrunDriver driver;
-        job.sampleHandler( sh );
+
         //job.options()->setString(EL::Job::optXaodAccessMode,EL::Job::optXaodAccessMode_branch);
         job.options()->setString(EL::Job::optXaodAccessMode,EL::Job::optXaodAccessMode_class);
         if (is_multiple_submission(sample_name)) {
-            output_name = CurrentDate + "." + "Combined." + fileType;
-            job.options()->setString( EL::Job::optSubmitFlags, "--addNthFieldOfInDSToLFN=2,3,6 --useContElementBoundary" );        
-            driver.options()->setString("nc_outputSampleName", "user." + username + "." + CurrentDate + "." + physicsName +  ".Combined." + fileType+"."+derivationType);
+	  std::cout<<"Doing multiple Submission"<<std::endl;
+	  output_name = CurrentDate + "." + "Combined." + fileType;
+	  std::unique_ptr<SH::SampleGrid> sample(new SH::SampleGrid("AllMyData"));
+	  sh.setMetaString ("nc_tree", "CollectionTree");
+	  sample->meta()->setString(SH::MetaFields::gridName, sample_name);
+	  sample->meta()->setString(SH::MetaFields::gridFilter, SH::MetaFields::gridFilter_default);
+	  sh.add(sample.release());
+	  sh.setMetaString ("nc_tree", "CollectionTree");
+	  job.options()->setString( EL::Job::optSubmitFlags, "--addNthFieldOfInDSToLFN=2,3,6 --useContElementBoundary" );        
+	  driver.options()->setString("nc_outputSampleName", "user." + username + "." + CurrentDate + "." + physicsName +  ".Combined." + fileType+release);
         } else {
-            output_name = CreateDir+"/"+sample_name;        
-            driver.options()->setString("nc_outputSampleName", "user." + username + "." + CurrentDate+"." + physicsName+"_"+fileType+"."+derivationType+"%in:name[2]%.%in:name[3]%");
+	  SH::scanRucio (sh, sample_name);
+	  sh.setMetaString ("nc_tree", "CollectionTree");
+	  sh.print();
+	  output_name = CreateDir+"/"+sample_name;        
+	  driver.options()->setString("nc_outputSampleName", "user." + username + "." + CurrentDate+"." + physicsName+"_"+fileType+"."+release+"%in:name[2]%.%in:name[3]%");
         }
         // Add our analysis to the job:
         MyxAODAnalysis* alg = new MyxAODAnalysis();
@@ -148,12 +157,13 @@ int main( int argc, char* argv[]) {
         alg->setMsgLevel(MSG::ERROR);
 
         job.options()->setDouble (EL::Job::optRemoveSubmitDir, 1);
-
+        job.sampleHandler( sh );
         driver.options()->setString(EL::Job::optGridNFilesPerJob, "5");
         // Use submit if you want to see all of the info about the submitted jobs. Use submitOnly if you want to send the jobs then Monitor online with panda
         std::string out_dir = CreateDir + "/" + output_name;
-	std::cout<<"Would submit grid job with this output_name: "<<output_name<<std::endl;
-        //driver.submitOnly( job, out_dir );
+	//std::cout<<"Would submit grid job with this output_name: "<<output_name<<std::endl;
+	std::cout<<"Going to submit now"<<std::endl;
+        driver.submitOnly( job, out_dir );
 
     }
   return 0;
@@ -252,19 +262,6 @@ std::string get_file_type(const std::string& s)
     }
 
     return fileType;
-}
-std::string get_derivation_type(const std::string & s){
-
-  std::string derivationType = "";
-  int found_SUSY5 = s.find("SUSY5");
-  if (found_SUSY5 != std::string::npos){
-    derivationType = "SUSY5";
-  }
-  int found_SUSY7 = s.find("SUSY7");
-  if (found_SUSY7 != std::string::npos){
-    derivationType = "SUSY7";
-  }
-  return derivationType;
 }
 
 bool is_multiple_submission(const std::string& s) 

@@ -30,18 +30,30 @@ class submit:
 
         doSysts   = int(args.syst)
         doPhotons = int(args.photons)
-        local     = int(args.local)
+        local     = bool(args.local)
         PhysicsName = str(args.PhysicsName)
         #Get the release directly from asetup (you will need to change the path to the build dir)
         release_string = os.popen('(cd /user/hteagle/AnalysisDirectory/Rel21/Base.21.2.67/build/ &&  source $AtlasSetup/scripts/asetup.sh $@ --printLast)').read()
         pos=release_string.find('Base/')
         release = release_string[pos+5:pos+5+8]
-        #print ("AnalysisBase release = "+str(release))
-        outdir = args.submission_dir + '/' + self.input.split('/')[slashes - 2] + '/'
+
+        doMultiSubmit= False
+        multi_submit = '\"'
+        if ('.txt' in self.input):
+            doMultiSubmit =True
+            for line in open(args.input_file):
+                multi_submit += line.replace('\n',',')
+        multi_submit = multi_submit.rstrip(',')
+        multi_submit += '\"'
+        
+        outdir = args.submission_dir
+
 
         command = 'testRun '
-        command += ' '
-        command += self.input
+        if doMultiSubmit :
+            command += multi_submit
+        else:
+            command += self.input
         command += ' '
         command += outdir
         command += ' '
