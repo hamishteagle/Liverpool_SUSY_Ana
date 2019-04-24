@@ -462,8 +462,8 @@ EL::StatusCode MyxAODAnalysis :: execute ()
     }
 
     NewObjectDef* m_objs;
-
     m_objs = new NewObjectDef(evtStore(), objTool, store, mcChannel, EventNumber, mcWgt, m_lumiScaled, syst.name());
+
     if (firstEvent == true) firstEvent = false;
 
     std::unique_ptr<MCChecks> checkMC (new MCChecks ());
@@ -784,8 +784,6 @@ EL::StatusCode MyxAODAnalysis :: finalize ()
 
   delete noWeightHist;
   delete sherpaWeightHist;
-  delete h_SumOfWeights;
-  delete h_SumOfWeightsSquared;
   delete renormedSherpaWeightHist;
   delete h_eventsPerRun;
 

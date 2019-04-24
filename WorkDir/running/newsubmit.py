@@ -30,7 +30,7 @@ class submit:
 
         doSysts   = int(args.syst)
         doPhotons = int(args.photons)
-        local     = bool(args.local)
+        local     = int(args.local)
         PhysicsName = str(args.PhysicsName)
         #Get the release directly from asetup (you will need to change the path to the build dir)
         release_string = os.popen('(cd /user/hteagle/AnalysisDirectory/Rel21/Base.21.2.67/build/ &&  source $AtlasSetup/scripts/asetup.sh $@ --printLast)').read()

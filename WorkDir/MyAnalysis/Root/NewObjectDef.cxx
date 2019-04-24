@@ -11,15 +11,17 @@ NewObjectDef::NewObjectDef(asg::SgTEvent* event, ST::SUSYObjDef_xAOD* SUSYTool, 
   lumiScaled = m_lumiScaled;
   currentEvent = event;
 
-  baselineElectrons = new xAOD::ElectronContainer(SG::VIEW_ELEMENTS);
-  baselineMuons = new xAOD::MuonContainer(SG::VIEW_ELEMENTS);
-  baselineTaus = new xAOD::TauJetContainer(SG::VIEW_ELEMENTS);
-  baselinePhotons = new xAOD::PhotonContainer(SG::VIEW_ELEMENTS);
+
 
   cosmicMuons = new xAOD::MuonContainer(SG::VIEW_ELEMENTS);
   badJets = new xAOD::JetContainer(SG::VIEW_ELEMENTS);
   badMuons = new xAOD::MuonContainer(SG::VIEW_ELEMENTS);
 
+  baselineElectrons = new xAOD::ElectronContainer(SG::VIEW_ELEMENTS);
+  baselineMuons = new xAOD::MuonContainer(SG::VIEW_ELEMENTS);
+  baselineTaus = new xAOD::TauJetContainer(SG::VIEW_ELEMENTS);
+  baselinePhotons = new xAOD::PhotonContainer(SG::VIEW_ELEMENTS);
+ 
   goodElectrons = new xAOD::ElectronContainer(SG::VIEW_ELEMENTS);
   goodMuons = new xAOD::MuonContainer(SG::VIEW_ELEMENTS);
   goodTaus = new xAOD::TauJetContainer(SG::VIEW_ELEMENTS);
@@ -40,8 +42,11 @@ NewObjectDef::NewObjectDef(asg::SgTEvent* event, ST::SUSYObjDef_xAOD* SUSYTool, 
   eventStore->record(BJets,"BJets"+systematic);
   eventStore->record(nonBJets,"nonBJets"+systematic);
 
-  GetObjects();
+  //Do the baseline get here, pass this to the OR
+  GetBaselineObjects();
 
+  //Get the objects after the OR with baseline
+  GetObjects();
 }
 
 bool pT_Sorter( const xAOD::IParticle* j1, const xAOD::IParticle* j2 ) {
@@ -52,9 +57,8 @@ bool pT_Sorter( const xAOD::IParticle* j1, const xAOD::IParticle* j2 ) {
   return ( pT1 > pT2 );
 }
 
+void NewObjectDef::GetBaselineObjects() {
 
-
-void NewObjectDef::GetObjects() {
 
   // Setup object containers
   xAOD::MuonContainer* muons_nominal(0);
@@ -67,6 +71,14 @@ void NewObjectDef::GetObjects() {
   xAOD::ShallowAuxContainer* jets_nominal_aux(0);
   xAOD::PhotonContainer* photons_nominal(0);
   xAOD::ShallowAuxContainer* photons_nominal_aux(0);
+
+  preOR_baselineElectrons = new xAOD::ElectronContainer(SG::VIEW_ELEMENTS);
+  preOR_baselineMuons = new xAOD::MuonContainer(SG::VIEW_ELEMENTS);
+  preOR_baselineTaus = new xAOD::TauJetContainer(SG::VIEW_ELEMENTS);
+  preOR_baselinePhotons = new xAOD::PhotonContainer(SG::VIEW_ELEMENTS);
+  preOR_baselineJets = new xAOD::JetContainer(SG::VIEW_ELEMENTS);
+
+ 
   // Setup MET containers
   xAOD::MissingETContainer* met_nominal = new xAOD::MissingETContainer;
   xAOD::MissingETAuxContainer* met_nominal_aux = new xAOD::MissingETAuxContainer;
@@ -79,7 +91,7 @@ void NewObjectDef::GetObjects() {
   objTool->GetJets(jets_nominal, jets_nominal_aux);
   objTool->GetTaus(taus_nominal, taus_nominal_aux);
   objTool->GetPhotons(photons_nominal, photons_nominal_aux);
-  objTool->OverlapRemoval(electrons_nominal, muons_nominal, jets_nominal, photons_nominal, taus_nominal);
+
 
   eventStore->record(muons_nominal, "muons_"+systematic);
   eventStore->record(muons_nominal_aux, "muons_aux_"+systematic);
@@ -109,9 +121,38 @@ void NewObjectDef::GetObjects() {
   MET = (*met_it)->met();
   METphi = (*met_it)->phi();
   objTool->GetMETSig(*met_nominal, METsig, false, false);
+  
+  //Fill preOR electrons
+  for (const auto &el_itr: *electrons) {
+      if (el_itr->auxdata<char>("baseline")) preOR_baselineElectrons->push_back(el_itr);
+  }
+
+  //Fill preOR muons
+  for (const auto &mu_itr: *muons) {
+      if (mu_itr->auxdata<char>("baseline")) preOR_baselineMuons->push_back(mu_itr);
+  }
+  //Fill preOR photons
+  for (const auto &ph_itr: *photons) {
+    if (ph_itr->auxdata<char>("baseline")) preOR_baselinePhotons->push_back(ph_itr);
+  }
+  //Fill preOR jets
+  for (const auto& jet_itr: *jets) {
+    if (jet_itr->auxdata<char>("baseline")) preOR_baselineJets->push_back(jet_itr);
+  }
+  //Fill preOR taus
+  for (const auto& tau_itr: *taus) {
+    if (tau_itr->auxdata<char>("baseline")) preOR_baselineTaus->push_back(tau_itr);
+  }
+  objTool->OverlapRemoval(preOR_baselineElectrons, preOR_baselineMuons, preOR_baselineJets, preOR_baselinePhotons, preOR_baselineTaus);
+  delete met_nominal;
+  delete met_nominal_aux;
+}
+
+void NewObjectDef::GetObjects() {
+
 
   // Fill electrons
-  for (auto el_itr: *electrons) {
+  for (const auto &el_itr: *preOR_baselineElectrons) {
     if (el_itr->auxdata<char>("passOR")) {
       if (el_itr->auxdata<char>("baseline")) baselineElectrons->push_back(el_itr);
       if (el_itr->auxdata<char>("signal")) goodElectrons->push_back(el_itr);
@@ -121,10 +162,10 @@ void NewObjectDef::GetObjects() {
   goodElectrons->sort(pT_Sorter);
   electronSF = 1;
   if (objTool->isData() == 0) {
-    electronSF = objTool->GetTotalElectronSF(*electrons,true,true,false,true,"", false);
+    electronSF = objTool->GetTotalElectronSF(*goodElectrons,true,true,false,true,"", false);
   }
   // Fill muons
-  for (const auto& mu_itr: *muons) {
+  for (const auto& mu_itr: *preOR_baselineMuons) {
     if (mu_itr->auxdata<char>("passOR")) {
       if (mu_itr->auxdata<char>("baseline") && !(mu_itr)->auxdata<char>("cosmic")) baselineMuons->push_back(mu_itr);
       if (mu_itr->auxdata<char>("baseline") && mu_itr->auxdata<char>("cosmic")) cosmicMuons->push_back(mu_itr);
@@ -139,10 +180,10 @@ void NewObjectDef::GetObjects() {
   badMuons->sort(pT_Sorter);
   muonSF = 1;
   if (objTool->isData() == 0 ) {
-    muonSF = objTool->GetTotalMuonSF(*muons,true,true,"");
+    muonSF = objTool->GetTotalMuonSF(*goodMuons,true,true,"");
   }
   // Fill taus
-  for (const auto& tau_itr: *taus) {
+  for (const auto& tau_itr: *preOR_baselineTaus) {
     if (tau_itr->auxdata<char>("passOR")) {
       if (tau_itr->auxdata<char>("baseline")) baselineTaus->push_back(tau_itr);
       if (tau_itr->auxdata<char>("signal")) goodTaus->push_back(tau_itr);
@@ -151,7 +192,7 @@ void NewObjectDef::GetObjects() {
   baselineTaus->sort(pT_Sorter);
   goodTaus->sort(pT_Sorter);
   // Fill photons
-  for (const auto& ph_itr: *photons) {
+  for (const auto& ph_itr: *preOR_baselinePhotons) {
     if (ph_itr->auxdata<char>("passOR")) {
       if (ph_itr->auxdata<char>("baseline")) baselinePhotons->push_back(ph_itr);
       if (ph_itr->auxdata<char>("signal")) goodPhotons->push_back(ph_itr);
@@ -162,8 +203,8 @@ void NewObjectDef::GetObjects() {
   //Fill jets
   bJetSF = 1;
   JVTSF = 1;
-  for (const auto& jet_itr: *jets) {
-    if (jet_itr->auxdata<char>("baseline")) goodJetsBeforeOR->push_back(jet_itr);
+  for (const auto& jet_itr: *preOR_baselineJets) {
+    if (jet_itr->auxdata<char>("signal")) goodJetsBeforeOR->push_back(jet_itr);
     if (jet_itr->auxdata<char>("passOR")) {
       if (jet_itr->auxdata<char>("bad")) badJets->push_back(jet_itr);
       if (jet_itr->auxdata<char>("signal") && jet_itr->auxdata<char>("baseline")) {
@@ -174,7 +215,6 @@ void NewObjectDef::GetObjects() {
         if (!objTool->isData()) JVTSF = objTool->JVT_SF(goodJets);
       }
     }
-   
   }
   goodJetsBeforeOR->sort(pT_Sorter);
   badJets->sort(pT_Sorter);
@@ -192,7 +232,7 @@ void NewObjectDef::GetObjects() {
       nVertex++ ;
     }
   }
-
+ 
   //Lepton trigger SFs
   //If only one 1-lepton trigger has fired, take this scale factor, if both e and mu fire, then dilep should fire and we take this as the scale factor.
   //cout events to check if the muon trigger and electron trigger fire without the mu_e trigger firing (should never happen)
@@ -202,34 +242,22 @@ void NewObjectDef::GetObjects() {
 
   if (objTool->isData() == 0) {
     if (goodElectrons->size() == 1) {
-      electronTriggerSF = objTool->GetTotalElectronSF(*electrons,false,false,true,false,"singleLepton", false);
+      electronTriggerSF = objTool->GetTotalElectronSF(*goodElectrons,false,false,true,false,"singleLepton", false);
     }
     if (goodMuons->size() == 1) {
       int year = objTool->treatAsYear();
       if (year == 2015) {
-        muonTriggerSF = objTool->GetTotalMuonSF(*muons,false, false, "HLT_mu20_iloose_L1MU15_OR_HLT_mu50");
+        muonTriggerSF = objTool->GetTotalMuonSF(*goodMuons,false, false, "HLT_mu20_iloose_L1MU15_OR_HLT_mu50");
       }
       else {
-        muonTriggerSF = objTool->GetTotalMuonSF(*muons,false,false, "HLT_mu26_ivarmedium_OR_HLT_mu50");
+        muonTriggerSF = objTool->GetTotalMuonSF(*goodMuons,false,false, "HLT_mu26_ivarmedium_OR_HLT_mu50");
       }
     }
     if ((goodElectrons->size() + goodMuons->size()) >= 2) {
-      dilepTriggerSF = objTool->GetTriggerGlobalEfficiencySF(*electrons, *muons, "diLepton");
-      if (goodElectrons->size() == 1) electronTriggerSF = objTool->GetTotalElectronSF(*electrons,false,false,true,false,"singleLepton", false);
-      if (goodMuons->size() == 1) {
-        int year = objTool->treatAsYear();
-        if (year == 2015) {
-          muonTriggerSF = objTool->GetTotalMuonSF(*muons,false, false, "HLT_mu20_iloose_L1MU15_OR_HLT_mu50");
-        }
-        else {
-          muonTriggerSF = objTool->GetTotalMuonSF(*muons,false,false, "HLT_mu26_ivarmedium_OR_HLT_mu50");
-        }
-      }
+      dilepTriggerSF = objTool->GetTriggerGlobalEfficiencySF(*goodElectrons, *goodMuons, "diLepton");
     }
   }
 
-  delete met_nominal;
-  delete met_nominal_aux;
 
   return;
 

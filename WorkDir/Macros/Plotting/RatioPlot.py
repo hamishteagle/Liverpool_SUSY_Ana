@@ -400,7 +400,7 @@ def RatioPlot(variable, xaxislabel, xmin, xmax, rebin, ymax, selection, director
         print("Drawing signalPlot"+str(i))
         signalTree = signalFiles["signalFile_"+str(i)].Get(treeName)
         signalTree.SetAlias("mcID","mcChannel")
-        if (inputSignalFiles[i].find("Truth") != -1 or inputSignalFiles[i].find("TMVATuples")!= -1):
+        if (inputSignalFiles[i].find("Truth") != -1 or inputSignalFiles[i].find("TMVATuples")!= -1 or inputSignalFiles[i].find("SimpleAnalysis")!=-1):
             print("Setting Aliases for TruthFile"+str(inputSignalFiles[i]))
             if (inputSignalFiles[i].find("Truth") != -1):
                 TruthBool = True
@@ -412,6 +412,7 @@ def RatioPlot(variable, xaxislabel, xmin, xmax, rebin, ymax, selection, director
                 signalTree.SetAlias("electronSF","mcChannel>0 ? 1:0")
                 signalTree.SetAlias("mcEventWeight","eventWeight")
             signalTree.SetAlias("nLeptons","nLep_signal")
+            signalTree.SetAlias("nJets","nJet25")
             signalTree.SetAlias("nBJets","nBJet25_MV2c10")
             signalTree.SetAlias("ETMiss","met")
             signalTree.SetAlias("m_bb","mbb")
@@ -626,7 +627,7 @@ def RatioPlot(variable, xaxislabel, xmin, xmax, rebin, ymax, selection, director
         DataPlot.GetXaxis().SetRangeUser(minvalue,maxvalue)
     for signalPlot in signalPlots:
         signalPlots[signalPlot].GetXaxis().SetRangeUser(minvalue,maxvalue)
-        #signalPlots[signalPlot].Scale(1/signalPlots[signalPlot].Integral())
+        signalPlots[signalPlot].Scale(1/signalPlots[signalPlot].Integral())
         
 
 

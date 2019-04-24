@@ -898,7 +898,7 @@ CalculateVariables::CalculateVariables(NewObjectDef *objects, asg::AnaToolHandle
   minbMV2weight = std::min(b1MV2wgt, b2MV2wgt);
 
     
-  if (nLepton >= 1){
+  if (nLepton == 1){
     this->CalculateOneLepVariables(objects, b1v, b2v, tj1v);
 
     //    if(nTau == 1 && nElectron == 1){
@@ -1321,6 +1321,7 @@ void CalculateVariables::CalculateOneLepVariables(NewObjectDef *objects, TLorent
     ComputeMT2* mT2Tool_2 = new ComputeMT2(j1v+l1v, j2v, METVector, 0, 80);
     amT2_2 = mT2Tool_2->Compute();   
     amT2=std::min(amT2_1,amT2_2);
+    
 
     //CheckWith 80
     // ComputeMT2* mT2Tool_1 = new ComputeMT2(j1v, j2v+l1v, METVector, 0, 0);

@@ -30,7 +30,7 @@ class NewObjectDef
     ~NewObjectDef(){};
 
     void GetObjects();
-
+    void GetBaselineObjects();
 
     double getMET(){return MET;};
     double getMETPhi(){return METphi;};
@@ -88,6 +88,13 @@ class NewObjectDef
     xAOD::TauJetContainer* baselineTaus;
     xAOD::MuonContainer* baselineMuons;
     xAOD::PhotonContainer* baselinePhotons;
+    
+    xAOD::JetContainer* preOR_baselineJets;
+    xAOD::ElectronContainer* preOR_baselineElectrons;
+    xAOD::MuonContainer* preOR_baselineMuons;
+    xAOD::TauJetContainer* preOR_baselineTaus;
+    xAOD::PhotonContainer* preOR_baselinePhotons;
+    
     xAOD::JetContainer* goodJets;
     xAOD::JetContainer* goodJetsBeforeOR;
     xAOD::ElectronContainer* goodElectrons;
@@ -97,6 +104,8 @@ class NewObjectDef
     xAOD::JetContainer* BJets;
     xAOD::JetContainer* nonBJets;
 
+    
+    
     double MET;
     double METphi;
     double METsig;
