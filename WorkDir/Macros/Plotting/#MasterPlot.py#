@@ -435,7 +435,9 @@ def main():
         print ("Going to do Significance")
 
         directory = "/hepstore/hteagle/Wh/ntuples_simpleAnalysis/SbMB/"
+        directory_reco = "/hepstore/hteagle/SbMB/"
         outputdir = "/user/hteagle//SummerAnalysis/Summer_Student_Analysis/histograms/Acceptanceplots/"   
+
         ensure_dir(outputdir)
         bkgFile = directory+"410470.root"
         signalFiles = []

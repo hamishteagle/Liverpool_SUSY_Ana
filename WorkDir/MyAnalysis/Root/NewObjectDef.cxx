@@ -169,7 +169,7 @@ void NewObjectDef::GetObjects() {
     if (mu_itr->auxdata<char>("passOR")) {
       if (mu_itr->auxdata<char>("baseline") && !(mu_itr)->auxdata<char>("cosmic")) baselineMuons->push_back(mu_itr);
       if (mu_itr->auxdata<char>("baseline") && mu_itr->auxdata<char>("cosmic")) cosmicMuons->push_back(mu_itr);
-      if (mu_itr->auxdata<char>("signal")) goodMuons->push_back(mu_itr);
+      if (mu_itr->auxdata<char>("signal") && !(mu_itr)->auxdata<char>("cosmic")) goodMuons->push_back(mu_itr);
     }
     else {
       if (mu_itr->auxdata<char>("baseline") && mu_itr->auxdata<char>("bad")) badMuons->push_back(mu_itr);
@@ -178,6 +178,7 @@ void NewObjectDef::GetObjects() {
   baselineMuons->sort(pT_Sorter);
   cosmicMuons->sort(pT_Sorter);
   badMuons->sort(pT_Sorter);
+  goodMuons->sort(pT_Sorter);
   muonSF = 1;
   if (objTool->isData() == 0 ) {
     muonSF = objTool->GetTotalMuonSF(*goodMuons,true,true,"");
