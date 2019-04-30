@@ -14,8 +14,8 @@ class submit:
 
         parser = argparse.ArgumentParser(description='Analysis submission script')
         parser.add_argument( '-i', '--input_file', dest='input_file', action = 'store', help = 'Input file/directory for EventLoop', default='/hepstore/hteagle/Wh/recoSamples/ttbar_checkfile/mc16_13TeV/')
-        parser.add_argument( '-s', '--submission-dir', dest = 'submission_dir', action = 'store', help = 'Submission directory for EventLoop',default='/user/hteagle/AnalysisDirectory/Rel21/Base.21.2.67/run/submitdir_ttbarCheck' )
-        parser.add_argument('-l','--local', dest = 'local', type = bool, default = True)
+        parser.add_argument( '-s', '--submission-dir', dest = 'submission_dir', action = 'store', help = 'Submission directory for EventLoop',default='/user/hteagle/AnalysisDirectory/Rel21/Base.21.2.72/run/submitdir_ttbarCheck' )
+        parser.add_argument('-l','--local', dest = 'local', type = int, default = True)
         parser.add_argument('--type',dest = 'PhysicsName', type = str, default = 'TYPE')
         parser.add_argument('--syst', dest = 'syst', type = bool, default = False)
         parser.add_argument('--photons', dest = 'photons', type = bool, default = False)
@@ -30,10 +30,11 @@ class submit:
 
         doSysts   = int(args.syst)
         doPhotons = int(args.photons)
+        print ('local : '+str(args.local))
         local     = int(args.local)
         PhysicsName = str(args.PhysicsName)
         #Get the release directly from asetup (you will need to change the path to the build dir)
-        release_string = os.popen('(cd /user/hteagle/AnalysisDirectory/Rel21/Base.21.2.67/build/ &&  source $AtlasSetup/scripts/asetup.sh $@ --printLast)').read()
+        release_string = os.popen('(cd /user/hteagle/AnalysisDirectory/Rel21/Base.21.2.72/build/ &&  source $AtlasSetup/scripts/asetup.sh $@ --printLast)').read()
         pos=release_string.find('Base/')
         release = release_string[pos+5:pos+5+8]
 

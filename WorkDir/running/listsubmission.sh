@@ -121,9 +121,18 @@ function runttV_a(){
     fi
 }
 function runsignal_a(){
-    file="SampleLists_SUSY5/mc16a/signal.txt" 
+    file="SampleLists_SUSY5/signal_mc16a.txt" 
     if [  -f $file ]; then
-	python listsubmission.py -i $file -t SIGNAL
+	python listsubmission.py -i $file -t SIGNAL -m True
+	echo "fine"
+    else 
+    echo $file 'does not exist!!'
+    fi
+}
+function runsignal_a_temp(){
+    file="SampleLists_SUSY5/signal_mc16a_temp.txt" 
+    if [  -f $file ]; then
+	python listsubmission.py -i $file -t SIGNAL -m True
 	echo "fine"
     else 
     echo $file 'does not exist!!'
@@ -224,7 +233,7 @@ function runttV_d(){
     fi
 }
 function runsignal_d(){
-    file="SampleLists_SUSY5/mc16d/signal.txt"
+    file="SampleLists_SUSY5/signal_mc16d.txt"
     if [  -f $file ]; then
 	python listsubmission.py -i $file -t SIGNAL
 	echo "fine"
@@ -326,7 +335,7 @@ function runttV_e(){
     fi
 }
 function runsignal_e(){
-    file="SampleLists_SUSY5/mc16e/signal.txt"
+    file="SampleLists_SUSY5/signal_mc16e.txt"
     if [  -f $file ]; then
 	python listsubmission.py -i $file -t SIGNAL
 	echo "fine"
@@ -469,7 +478,9 @@ wait
 #wait
 #runmc16d
 #wait
-rundata15
+#rundata15
+#runttbar_a
+runsignal_a_temp
 
 echo "Completed all processes!"
 #  LocalWords:  runttbar

@@ -165,7 +165,6 @@ EL::StatusCode MyxAODAnalysis :: beginInputFile (bool firstFile)
     isTruth = MetaData->GetBranch("TruthMetaData");
     ANA_MSG_INFO ("%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%");
     ANA_MSG_INFO ("This is Truth");
-    
   }
 
 return StatusCode::SUCCESS;
@@ -238,8 +237,10 @@ EL::StatusCode MyxAODAnalysis :: initialize ()
 
   objTool = new ST::SUSYObjDef_xAOD("SUSYObjDef_xAOD");
 
+  //Get the metadata using SUSYTools
   const xAOD::FileMetaData* fmd = nullptr;
   ANA_CHECK(objTool->inputMetaStore()->retrieve(fmd, "FileMetaData") );
+  //Get the simulation flavour
   std::string simFlavour;
   if (!(isData = !fmd->value(xAOD::FileMetaData::simFlavour, simFlavour))){
     isMC = true;
@@ -252,9 +253,22 @@ EL::StatusCode MyxAODAnalysis :: initialize ()
     ANA_MSG_INFO ("This is data");
     isMC= false;
   }
+  //Get the Derivation type
+  std::string dataType;
+  fmd->value(xAOD::FileMetaData::dataType, dataType);
+  m_SUSY5= (dataType == "StreamDAOD_SUSY5") ;
+  m_SUSY7= (dataType == "StreamDAOD_SUSY7") ;
+  
+
+
+
   ST::ISUSYObjDef_xAODTool::DataSource datasource = (isData ? ST::ISUSYObjDef_xAODTool::Data : (isAtlfast ? ST::ISUSYObjDef_xAODTool::AtlfastII : ST::ISUSYObjDef_xAODTool::FullSim));
   
-  ANA_CHECK(objTool->setProperty("DataSource",datasource) ) ;
+  ANA_CHECK(objTool->setProperty("DataSource",datasource) );
+  if (m_SUSY5){
+    ANA_CHECK(objTool->setProperty("ConfigFile",PathResolverFindCalibFile("/MyAnalysis/MyAnalysis/configs/1Lbb_default.conf")));
+    ANA_MSG_INFO("This is SUSY5");
+  }
   ANA_CHECK(objTool->setProperty("UseBtagging", true));
   
   if (!isTruth){
@@ -683,28 +697,28 @@ EL::StatusCode MyxAODAnalysis :: execute ()
     if (m_objs->getPrimVertex() < 1){
       passedPrimVertex=false;
       //isyst++;
-      //continue;
+      continue;
     }
 
     bool passedJetClean=true;
     if (nBadJet > 0){
       passedJetClean=false;
       //isyst++;
-      //continue;
+      continue;
     }
 
     bool passedCosmicMu=true;
     if (nCosmicMu > 0){
       passedCosmicMu=false;
       //isyst++;
-      //continue;
+      continue;
     }
 
     bool passedMuonClean=true;
     if (nBadMu > 0){
       passedMuonClean=false;
       //isyst++;
-      //continue;
+      continue;
     }
 
     //All cleaning cuts before trigger

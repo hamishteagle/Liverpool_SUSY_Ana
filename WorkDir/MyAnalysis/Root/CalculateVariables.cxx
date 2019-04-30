@@ -1375,6 +1375,7 @@ void CalculateVariables::CalculateTwoLepVariables(NewObjectDef *objects, TLorent
   if (nMuon>0) pTmu1 = (*objects->getGoodMuons())[0]->pt()*0.001;
   if (nMuon>1) pTmu2 = (*objects->getGoodMuons())[1]->pt()*0.001;
   
+
   //Sort the electrons and muons by pT
   if (nLepton>=2){
     double muonpT=0;
@@ -1408,6 +1409,8 @@ void CalculateVariables::CalculateTwoLepVariables(NewObjectDef *objects, TLorent
     l2v=leptVects[1];
   }
 
+
+
   pTl1 = l1v.Pt();
   etal1 = l1v.Eta();
   phil1 = l1v.Phi();
@@ -1416,6 +1419,7 @@ void CalculateVariables::CalculateTwoLepVariables(NewObjectDef *objects, TLorent
   etal2 = l2v.Eta();
   phil2 = l2v.Phi();
 
+  if (pTl1<pTl2){std::cout<<"The lepton pT stuff is screwed"<<std::endl;}
     
 
   

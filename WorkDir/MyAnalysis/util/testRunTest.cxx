@@ -113,7 +113,7 @@ int main( int argc, char* argv[]) {
         int Month = now->tm_mon;
         std::string CurrentDate = std::to_string(now->tm_mday)+Months[Month];
         
-        std::string CreateDir = "/scratch/hteagle/GridSubmissions/"+CurrentDate+fileType;;
+        std::string CreateDir = "/scratch/hteagle/GridSubmissions/"+CurrentDate+fileType;
         std::string Command = "[ ! -d "+CreateDir+" ] && mkdir "+CreateDir+" || echo \"Directory Exists\"";
         std::system(Command.c_str());
         
@@ -133,14 +133,14 @@ int main( int argc, char* argv[]) {
 	  sample->meta()->setString(SH::MetaFields::gridFilter, SH::MetaFields::gridFilter_default);
 	  sh.add(sample.release());
 	  sh.setMetaString ("nc_tree", "CollectionTree");
-	  job.options()->setString( EL::Job::optSubmitFlags, "--addNthFieldOfInDSToLFN=2,3,6 --useContElementBoundary" );        
-	  driver.options()->setString("nc_outputSampleName", "user." + username + "." + CurrentDate + "." + physicsName +  ".Combined." + fileType+release);
+	  job.options()->setString( EL::Job::optSubmitFlags, "--addNthFieldOfInDSToLFN=2,3 --useContElementBoundary" );        
+	  driver.options()->setString("nc_outputSampleName", "user." + username + "." + CurrentDate + "." + physicsName +  ".Combined." + fileType+ "." +release);
         } else {
 	  SH::scanRucio (sh, sample_name);
 	  sh.setMetaString ("nc_tree", "CollectionTree");
 	  sh.print();
-	  output_name = CreateDir+"/"+sample_name;        
-	  driver.options()->setString("nc_outputSampleName", "user." + username + "." + CurrentDate+"." + physicsName+"_"+fileType+"."+release+"%in:name[2]%.%in:name[3]%");
+	  output_name = sample_name;        
+	  driver.options()->setString("nc_outputSampleName", "user." + username + "." + CurrentDate+"." + physicsName+"_"+fileType+"."+release+"."+"%in:name[2]%.%in:name[3]%");
         }
         // Add our analysis to the job:
         MyxAODAnalysis* alg = new MyxAODAnalysis();

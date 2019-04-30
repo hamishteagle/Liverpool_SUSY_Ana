@@ -15,6 +15,7 @@ def ensure_dir(d):
 def Cutflow(label, cutstouse, signalFile,luminosity):
     
     print (str(cutstouse))
+
     for i in range(2):
         scaling="1*"
         if i ==1:
@@ -34,8 +35,29 @@ def Cutflow(label, cutstouse, signalFile,luminosity):
     
         signal=ROOT.TFile(signalFile)
         #signalTree=signal.Get("CollectionTree_")
-        signalTree=signal.Get("CollectionTree_")
-        #signalTree.SetAlias("YearWeight","year==2018 ? 59.9/140 :(year==2017 ? 43.3/140 : 36.2/140)")
+        try:
+            signalTree=signal.Get("NominalFixed")
+            signalTree.SetAlias("YearWeight","treatAsYear==2018 ? 59.9/139 :(treatAsYear==2017 ? 43.3/139 : 36.2/139)")
+        except:
+            signalTree=signal.Get("ntuple")
+            print ("Setting aliases")
+            signalTree.SetAlias("YearWeight","eventWeight>-100")
+            signalTree.SetAlias("pileupweight","eventWeight>-100")
+            signalTree.SetAlias("jvtweight","eventWeight>-100")
+            signalTree.SetAlias("btagweight","eventWeight>-100")
+            signalTree.SetAlias("AnalysisWeight","eventWeight")
+            signalTree.SetAlias("LumiWeight","(HFScale/1000)")
+            
+            signalTree.SetAlias("passMETtriggers","eventWeight>-100")
+            signalTree.SetAlias("nbaselineLep","nBaselineLeptons")
+            signalTree.SetAlias("dphimin4_orig","minDPhiJMET_4")
+            signalTree.SetAlias("nj_good","nJets")
+            signalTree.SetAlias("num_bjets","nBJets")
+            signalTree.SetAlias("eT_miss","ETMiss")                        
+            signalTree.SetAlias("metsigHT","metsig_HT")
+
+        #signalTree.SetAlias("YearWeight","year==2018 ? 59.9/139 :(year==2017 ? 43.3/139 : 36.2/139)")
+
         signalHist=ROOT.TH1D("SignalHist","SignalHist",1,0.5,1.5)
 
         
@@ -52,6 +74,7 @@ def Cutflow(label, cutstouse, signalFile,luminosity):
             cutsUsed=cutsUsed+"*("+cut+")"
             #print( "cutsUsed=", cutsUsed)
             cutsUsedScaled=scaling+"("+cutsUsed+")"
+            print ("Scaled cutstouse: "+str(cutsUsedScaled))
             signalTree.Draw("1>>SignalHist",cutsUsedScaled)
         
             e1=ROOT.Double()

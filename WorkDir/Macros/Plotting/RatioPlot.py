@@ -628,7 +628,7 @@ def RatioPlot(variable, xaxislabel, xmin, xmax, rebin, ymax, selection, director
     for signalPlot in signalPlots:
         signalPlots[signalPlot].GetXaxis().SetRangeUser(minvalue,maxvalue)
         signalPlots[signalPlot].Scale(1/signalPlots[signalPlot].Integral())
-        
+        #signalPlots[signalPlot].SetMinimum()
 
 
 
@@ -728,7 +728,13 @@ def RatioPlot(variable, xaxislabel, xmin, xmax, rebin, ymax, selection, director
             elif EtaPhiPsmearBool: 
                 Legend.AddEntry(signalPlots["signalPlot_"+str(j)],"400_250_TruthSmeared_EtaPhipSmear", "L")
             else:
-                Legend.AddEntry(signalPlots["signalPlot_"+str(j)],"400_250", "L")
+                if j==0:
+                    Legend.AddEntry(signalPlots["signalPlot_"+str(j)],"300_150", "L")
+                elif j==1:
+                    Legend.AddEntry(signalPlots["signalPlot_"+str(j)],"400_250", "L")
+                else:
+                    Legend.AddEntry(signalPlots["signalPlot_"+str(j)],"ttbar", "L")
+        
         j+=1
     Legend.SetTextSize(0.02)
     #Legend.SetTextFont(2)
@@ -781,7 +787,7 @@ def RatioPlot(variable, xaxislabel, xmin, xmax, rebin, ymax, selection, director
                 if i==0 :
                     signalPlots[signalPlot].GetXaxis().SetTitle(xaxislabel)
                     signalPlots[signalPlot].SetLabelSize(0.04,"X")
-                    signalPlots[signalPlot].SetMaximum(signalPlots[signalPlot].GetMaximum()*100)
+                    signalPlots[signalPlot].SetMaximum(signalPlots[signalPlot].GetMaximum()*10)
                     signalPlots[signalPlot].Draw("HIST;E")
                     print ("number of events: "+str(signalPlots[signalPlot].GetEntries()))
                 else:

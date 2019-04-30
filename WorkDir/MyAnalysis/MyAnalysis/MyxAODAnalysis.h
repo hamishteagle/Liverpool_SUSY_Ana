@@ -104,7 +104,8 @@ public:
 
   TTree *MetaData; //!
   bool m_isDerivation; //!
-
+  bool m_SUSY5= false; //!
+  bool m_SUSY7= false; //!
 
   int m_eventCounter; //!
   int m_numCleanEvents; //!

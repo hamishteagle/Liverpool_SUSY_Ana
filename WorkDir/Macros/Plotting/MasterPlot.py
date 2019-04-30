@@ -46,7 +46,7 @@ def main():
     # DiBosonFile = "/hepstore/hteagle/Wh/ntuples_21.2.60/diBoson.root"
     # HiggsFile = "/hepstore/hteagle/Wh/ntuples_21.2.60/higgs.root"
     # dataFile = "/hepstore/hteagle/Wh/ntuples_21.2.60/data.root"
-#
+
 
     #Liv ntuples_wh_21.2.60_BDT
     DiJetFile = "/user/hteagle/liverpool-ml/TMVATuples/reco_full/diJet.root"
@@ -67,13 +67,18 @@ def main():
     # signalFiles.append('/hepstore/hteagle/Wh/ntuples_simpleAnalysis/400_250_TruthSmeared_EtaPhiPsmear.root')
     # signalFiles.append('/hepstore/hteagle/Wh/ntuples_21.2.60/396734.MadGraphPythia8EvtGen_A14N23LO_C1N2_Wh_hbb_400p0_250p0_lep_output.root')
     
-    #SbMB baseline samples
-    #signalFiles.append('/user/hteagle/SimpleAnalysis_HistFitter/Wh_Upgrade/SimpleAnalysis/mc15_13TeV.390285.MGPy8EG_A14N23LO_BB_onestepN2hN1_700_680_550.root')
-    #signalFiles.append('/user/hteagle/SimpleAnalysis_HistFitter/Wh_Upgrade/SimpleAnalysis/mc15_13TeV.390312.MGPy8EG_A14N23LO_BB_onestepN2hN1_1000_630_500.root')
-    #signalFiles.append('/user/hteagle/SimpleAnalysis_HistFitter/Wh_Upgrade/SimpleAnalysis/mc15_13TeV.391863.MGPy8EG_A14N23LO_BB_onestepN2hN1_1100_1095_60.root')
-    signalFiles.append('/user/hteagle/SimpleAnalysis_HistFitter/Wh_Upgrade/SimpleAnalysis/mc15_13TeV.391841.MGPy8EG_A14N23LO_BB_onestepN2hN1_1100_330_200.root')
+    ##Local files
+    signalFiles.append('/user/hteagle/AnalysisDirectory/Rel21/Base.21.2.67/run/submitdir_300_150/data-output/DAOD_SUSY5.root')
+    signalFiles.append('/user/hteagle/AnalysisDirectory/Rel21/Base.21.2.67/run/submitdir_400_250/data-output/DAOD_SUSY5.root')
+    signalFiles.append('/user/hteagle/AnalysisDirectory/Rel21/Base.21.2.67/run/submitdir_ttbarCheck/data-output/DAOD_SUSY5.root')
     
+    #signalFiles.append('/hepstore/hteagle/Wh/ntuples_simpleAnalysis/SbMB/391874.MGPy8EG_A14N23LO_BB_onestepN2hN1_1200_1150_60.deriv.DAOD_TRUTH3.e6330_e5984_p3655.v1_XYZ.root')
+    #signalFiles.append('/scratch/hteagle/SbMB/Sheff_ntuples_21_2_62/mc16_13TeV.391874.MGPy8EG_A14N23LO_BB_onestepN2hN1_1200_1150_60.root')
 
+#    signalFiles.append('/hepstore/hteagle/Wh/ntuples_21.2.60/396716.MadGraphPythia8EvtGen_A14N23LO_C1N2_Wh_hbb_300p0_150p0_lep_output.root')
+#    signalFiles.append('/hepstore/hteagle/Wh/ntuples_21.2.60/396734.MadGraphPythia8EvtGen_A14N23LO_C1N2_Wh_hbb_400p0_250p0_lep_output.root')
+#    signalFiles.append('/hepstore/hteagle/Wh/ntuples_21.2.60/396750.MadGraphPythia8EvtGen_A14N23LO_C1N2_Wh_hbb_500p0_350p0_lep_output.root')
+#    signalFiles.append('/hepstore/hteagle/Wh/ntuples_21.2.60/396767.MadGraphPythia8EvtGen_A14N23LO_C1N2_Wh_hbb_600p0_400p0_lep_output.root')
 
     #signalFiles.append('/user/hteagle/liverpool-ml/TMVATuples/reco_full/400_250_TruthSmeared.root')    
     #signalFiles.append('/user/hteagle/liverpool-ml/TMVATuples/reco_full/400_250_TruthSmeared_EtaPhiPsmear.root')
@@ -83,6 +88,9 @@ def main():
     #signalFiles.append('/user/hteagle/liverpool-ml/TMVATuples/reco_full/396734.MadGraphPythia8EvtGen_A14N23LO_C1N2_Wh_hbb_400p0_250p0_lep_output.root')
     #signalFiles.append('/user/hteagle/liverpool-ml/TMVATuples/reco_full/396750.MadGraphPythia8EvtGen_A14N23LO_C1N2_Wh_hbb_500p0_350p0_lep_output.root')
 
+
+    ##SbottomMB files
+    #signalFiles.append('/hepstore/hteagle/SbMB/Sheff_ntuples_21_2_62/mc16_13TeV.391874.MGPy8EG_A14N23LO_BB_onestepN2hN1_1200_1150_60.root')
     
     
     foundSignalInput = ""
@@ -108,11 +116,12 @@ def main():
 
     #Liv Cleaning cuts
     cleaningCuts = "(coreFlag)*(sctFlag)*(LArTileFlag)*(passedPrimVertex)*(passedJetClean)*(passedCosmicMu)*(passedMuonClean)*"
-    weights = 'eventWeight*HFScale*JVTSF*puWgt*bJetSF*muonSF*electronSF*YearWeight*'
+    weights = 'mcEventWeight*HFScale*JVTSF*puWgt*bJetSF*muonSF*electronSF*YearWeight*'
     #Liv luminosity and -weights
     luminosity_liv ="139*"
-    luminosity_Shef ="LumiWeight*pileupweight*jvtweight*btagweight*AnalysisWeight*"
-    luminosity_Truth = "140.5*eventWeight*HFScale*"
+    luminosity_Shef ="139000*LumiWeight*pileupweight*jvtweight*btagweight*AnalysisWeight*YearWeight*"
+
+    luminosity_Truth = "140.5*mcEventWeight*HFScale*"
     cutstouse = ""
 
 
@@ -142,7 +151,7 @@ def main():
     directory = options.date+'/'
     print ("Output Directory is: ", directory)
     #############################
-    label = "SRC_incl"
+    label = "SRA_incl"
     #############################
     EventCounter = True
 
@@ -153,7 +162,7 @@ def main():
     # Change the "cutstouse" variable to produce different distributions for a given selection. If plotting a SR distribution,
     # make sure that SR is contained in the label variable, which will blind the distribution
     if label == "noSelection_SR":
-        cutstouse = preCuts+"1"#
+        cutstouse = "1*(nLeptons==1 && nBJets==2)"#preCuts
     elif label == "preSelectionSR":
         cutstouse = preCuts+"(nJet25==2)"#
     elif label ==  "Matts_presel":
@@ -195,27 +204,47 @@ def main():
         #cutstouse = "passedMETTrigger==1"
         cutstouse = "(ETMiss>=100)*(nLeptons==1)*(pTl1>27)*(nJets>=2)*(nBJets>=1)*(pTb1>40)*(pTb2>25)*(pTj1>50)*(pTj2>40)*(minDPhijMET_4>0.4)*(m_T>120)"
 
-    elif label == "SRB":
+    elif label == "SRB_truth":
         cutstouse = "(nBaselineLeptons==0)*(nJets>=4)*(nBJets>=4)*(ETMiss>350)*(minDPhiJMET_4>0.4)*(max_avg_M>75 && max_avg_M<175)*(nonBLead)*(pTj1>350)*(DPhiJMET_1>2.8)*(meff>1000)"
-    elif label == "SRA_incl":
+    elif label == "SRA_incl_truth":
         cutstouse = "(nBaselineLeptons==0)*(nJets>=6)*(nBJets>=4)*(ETMiss>350)*(minDPhiJMET_4>0.4)*(pTb1>200)*(maxDR>2.5)*(maxminDR<2.5)*(maxmin_M>80)*(meff>1000)"
-    elif label == "SRA_L":
+    elif label == "SRA_L_truth":
         cutstouse = "(nBaselineLeptons==0)*(nJets>=6)*(nBJets>=4)*(ETMiss>350)*(minDPhiJMET_4>0.4)*(pTb1>200)*(maxDR>2.5)*(maxminDR<2.5)*(maxmin_M>80)*(meff>1000)*(meff<1500)"
-    elif label == "SRA_M":
+    elif label == "SRA_M_truth":
         cutstouse = "(nBaselineLeptons==0)*(nJets>=6)*(nBJets>=4)*(ETMiss>350)*(minDPhiJMET_4>0.4)*(pTb1>200)*(maxDR>2.5)*(maxminDR<2.5)*(maxmin_M>80)*(meff>1500)*(meff<2000)"
-    elif label == "SRA_H":
+    elif label == "SRA_H_truth":
         cutstouse = "(nBaselineLeptons==0)*(nJets>=6)*(nBJets>=4)*(ETMiss>350)*(minDPhiJMET_4>0.4)*(pTb1>200)*(maxDR>2.5)*(maxminDR<2.5)*(maxmin_M>80)*(meff>-2000)"
-    elif label == "SRC_incl":
+    elif label == "SRC_incl_truth":
         cutstouse = "(nBaselineLeptons==0)*(nJets>=4)*(nBJets>=3)*(ETMiss>250)*(minDPhiJMET_4>0.4)*(metsig_HT>18)"
-    elif label == "SRC_22":
+    elif label == "SRC_22_truth":
         cutstouse = "(nBaselineLeptons==0)*(nJets>=4)*(nBJets>=3)*(ETMiss>250)*(minDPhiJMET_4>0.4)*(metsig_HT>18)*(metsig_HT<20.4)"
-    elif label == "SRC_24":
+    elif label == "SRC_24_truth":
         cutstouse = "(nBaselineLeptons==0)*(nJets>=4)*(nBJets>=3)*(ETMiss>250)*(minDPhiJMET_4>0.4)*(metsig_HT>20.4)*(metsig_HT<22.7)"
-    elif label == "SRC_26":
+    elif label == "SRC_26_truth":
         cutstouse = "(nBaselineLeptons==0)*(nJets>=4)*(nBJets>=3)*(ETMiss>250)*(minDPhiJMET_4>0.4)*(metsig_HT>22.7)*(metsig_HT<25.2)"
-    elif label == "SRC_28":
+    elif label == "SRC_28_truth":
         cutstouse = "(nBaselineLeptons==0)*(nJets>=4)*(nBJets>=3)*(ETMiss>250)*(minDPhiJMET_4>0.4)*(metsig_HT>25.2)"
 
+    elif label == "SRB":
+        cutstouse = "(nbaselineLep==0)*(num_bjets>=4)*(num_bjets>=4)*(eT_miss>350)*(dphimin4_orig>0.4)*(SRB3_mbb_avg>75 && SRB3_mbb_avg<175)*(leadb1=0)*(pT_1jet>350)*(dPhi_1jet>2.8)*(meff>1000)"
+    elif label == "SRA_incl":
+        cutstouse = "(nbaselineLep==0)*(num_bjets>=6)*(num_bjets>=4)*(eT_miss>350)*(dphimin4_orig>0.4)*( pT_1bjet>200)*(maxDRbb>2.5)*(maxminDRbb<2.5)*( maxminDRmbb>80)*(meff>1000)"
+    elif label == "SRA_L":
+        cutstouse = "(nbaselineLep==0)*(num_bjets>=6)*(num_bjets>=4)*(eT_miss>350)*(dphimin4_orig>0.4)*( pT_1bjet>200)*(maxDRbb>2.5)*(maxminDRbb<2.5)*( maxminDRmbb>80)*(meff>1000)*(meff<1500)"
+    elif label == "SRA_M":
+        cutstouse = "(nbaselineLep==0)*(num_bjets>=6)*(num_bjets>=4)*(eT_miss>350)*(dphimin4_orig>0.4)*( pT_1bjet>200)*(maxDRbb>2.5)*(maxminDRbb<2.5)*( maxminDRmbb>80)*(meff>1500)*(meff<2000)"
+    elif label == "SRA_H":
+        cutstouse = "(nbaselineLep==0)*(num_bjets>=6)*(num_bjets>=4)*(eT_miss>350)*(dphimin4_orig>0.4)*( pT_1bjet>200)*(maxDRbb>2.5)*(maxminDRbb<2.5)*( maxminDRmbb>80)*(meff>-2000)"
+    elif label == "SRC_incl":
+        cutstouse = "((passMETtriggers==1)*(nbaselineLep==0)*(dphimin4_orig>0.4)*(nj_good>=4)*(num_bjets>=3)*(eT_miss>250)*(metsigHT>18))"
+    elif label == "SRC_22":
+        cutstouse = "(nbaselineLep==0)*(num_bjets>=4)*(num_bjets>=3)*(eT_miss>250)*(dphimin4_orig>0.4)*(metsigHT>18)*(metsigHT<20.4)"
+    elif label == "SRC_24":
+        cutstouse = "(nbaselineLep==0)*(num_bjets>=4)*(num_bjets>=3)*(eT_miss>250)*(dphimin4_orig>0.4)*(metsigHT>20.4)*(metsigHT<22.7)"
+    elif label == "SRC_26":
+        cutstouse = "(nbaselineLep==0)*(num_bjets>=4)*(num_bjets>=3)*(eT_miss>250)*(dphimin4_orig>0.4)*(metsigHT>22.7)*(metsigHT<25.2)"
+    elif label == "SRC_28":
+        cutstouse = "(nbaselineLep==0)*(num_bjets>=4)*(num_bjets>=3)*(eT_miss>250)*(dphimin4_orig>0.4)*(metsigHT>25.2)"
 
     
     else:
@@ -245,6 +274,7 @@ def main():
         #RatioPlot.RatioPlot("nTruthTausBeforeOR", "NTaus_{truth}", -0.5, 3.5, 4, ymax, cutstouse, directory, label, False, ttVFile, singleTopFile, DiBosonFile, HiggsFile, wJetFile, zJetFile, ttbarFile, DiJetFile, dataFile, signalFiles, False, False, luminosity_liv, False,False)
         #RatioPlot.RatioPlot("m_CTcorr", "m_{CT}", 0, 300, 20, ymax, cutstouse, directory, label, False, ttVFile, singleTopFile, DiBosonFile, HiggsFile, wJetFile, zJetFile, ttbarFile, DiJetFile, dataFile, signalFiles, False, False, luminosity_liv, False, False)
         #RatioPlot.RatioPlot("m_T", "m_{T}", 0, 600, 15, ymax, cutstouse, directory, label, False, ttVFile, singleTopFile, DiBosonFile, HiggsFile, wJetFile, zJetFile, ttbarFile, DiJetFile, dataFile, signalFiles, False, False, luminosity_liv, False, False)
+        RatioPlot.RatioPlot("amT2", "amT_{2}", 0, 600, 15, ymax, cutstouse, directory, label, False, ttVFile, singleTopFile, DiBosonFile, HiggsFile, wJetFile, zJetFile, ttbarFile, DiJetFile, dataFile, signalFiles, False, False, luminosity_liv, True, True)
         #RatioPlot.RatioPlot("dRb1b2", "#DeltaR(b_{1},b_{2})", 0, 4, 10, ymax, cutstouse, directory, label, False, ttVFile, singleTopFile, DiBosonFile, HiggsFile, wJetFile, zJetFile, ttbarFile, DiJetFile, dataFile, signalFiles, False, False, luminosity_liv, False,False)
         # RatioPlot.RatioPlot("fabs(TVector2::Phi_mpi_pi(fabs(phib1-phib2)))", "#Delta#Phi(b_{1},b_{2})", 0, 4, 10, ymax, cutstouse, directory, label, False, ttVFile, singleTopFile, DiBosonFile, HiggsFile, wJetFile, zJetFile, ttbarFile, DiJetFile, dataFile, signalFiles, False, False, luminosity_liv, False,False)
         #RatioPlot.RatioPlot(" m_b1l", "m_{bl1}", 0, 600, 15, ymax, cutstouse, directory, label, False, ttVFile, singleTopFile, DiBosonFile, HiggsFile, wJetFile, zJetFile, ttbarFile, DiJetFile, dataFile, signalFiles, False, False, luminosity_liv, False,False)
@@ -253,7 +283,7 @@ def main():
         #RatioPlot.RatioPlot("nLeptons", "Nleptons", -0.5, 3.5, 4, ymax, cutstouse, directory, label, False, ttVFile, singleTopFile, DiBosonFile, HiggsFile, wJetFile, zJetFile, ttbarFile, DiJetFile, dataFile, signalFiles, False, False, luminosity_liv, False,False)
         #RatioPlot.RatioPlot(" pTb2", "p_{T}^{b2}", 0, 400, 20, ymax, cutstouse, directory, label, False, ttVFile, singleTopFile, DiBosonFile, HiggsFile, wJetFile, zJetFile, ttbarFile, DiJetFile, dataFile, signalFiles, False, False, luminosity_liv, False,False)
         #RatioPlot.RatioPlot(" pTb1", "p_{T}^{b1}", 0, 400, 20, ymax, cutstouse, directory, label, False, ttVFile, singleTopFile, DiBosonFile, HiggsFile, wJetFile, zJetFile, ttbarFile, DiJetFile, dataFile, signalFiles, False, False, luminosity_liv, False,False)
-        RatioPlot.RatioPlot("nJets", "NJets", -0.5, 11.5, 12, ymax, cutstouse, directory, label, True, ttVFile, singleTopFile, DiBosonFile, HiggsFile, wJetFile, zJetFile, ttbarFile, DiJetFile, dataFile, signalFiles, False, False, luminosity_Truth, True,True)
+        RatioPlot.RatioPlot("nJets", "NJets", -0.5, 11.5, 12, ymax, cutstouse, directory, label, True, ttVFile, singleTopFile, DiBosonFile, HiggsFile, wJetFile, zJetFile, ttbarFile, DiJetFile, dataFile, signalFiles, False, False, luminosity_liv, True,True)
         #RatioPlot.RatioPlot("dRL1b1", "#Delta R(l1b1)", 0, 1000, 50, ymax, cutstouse, directory, label, False, ttVFile, singleTopFile, DiBosonFile, HiggsFile, wJetFile, zJetFile, ttbarFile, DiJetFile, dataFile, signalFiles, False, False, luminosity_liv, False,False)
         #RatioPlot.RatioPlot("dRL1b2", "#Delta R(l1b2)", 0, 4, 20, ymax, cutstouse, directory, label, False, ttVFile, singleTopFile, DiBosonFile, HiggsFile, wJetFile, zJetFile, ttbarFile, DiJetFile, dataFile, signalFiles, False, False, luminosity_liv, False,False)
         # RatioPlot.RatioPlot("etal1", "#eta_{l1}", -4, 4, 10, ymax, cutstouse, directory, label, False, ttVFile, singleTopFile, DiBosonFile, HiggsFile, wJetFile, zJetFile, ttbarFile, DiJetFile, dataFile, signalFiles, False, False, luminosity_liv, False,False)
@@ -414,7 +444,7 @@ def main():
         print ("Going to do cutflow")
         ##untrimmed                                                          submitdir_ttbarCheck/data-output/DAOD_SUSY5.root
         #signalFile = '/user/hteagle/AnalysisDirectory/Rel21/Base.21.2.67/run/submitdir_ttbarCheck/data-output/DAOD_SUSY5.root'
-        Cutflow.Cutflow(label, cutstouse, signalFile, luminosity_Truth)
+        Cutflow.Cutflow(label, cutstouse, signalFile, luminosity_Shef)
 
 #TurnOn Curves
     if options.doTurnOn:
@@ -434,18 +464,23 @@ def main():
     if options.doSignif:
         print ("Going to do Significance")
 
-        directory = "/hepstore/hteagle/Wh/ntuples_simpleAnalysis/SbMB/"
-        outputdir = "/user/hteagle//SummerAnalysis/Summer_Student_Analysis/histograms/Acceptanceplots/"   
-        ensure_dir(outputdir)
+        directory = "/hepstore/hteagle/Wh/ntuples_simpleAnalysis/SbMB/dm130/"
+        directory_reco = "/scratch/hteagle/SbMB/Sheff_ntuples_21_2_62/dm130/"
+
+
         bkgFile = directory+"410470.root"
         signalFiles = []
+        reco_signalFiles = []
 
         for files  in os.listdir(directory):
             if files.find(".root")!=-1:
-                if files.find("_60") != -1:
-                    signalFiles.append(files)
+                signalFiles.append(files)
 
-        Significance.Significance(cutstouse,luminosity_liv ,signalFiles, bkgFile, outputdir, label, False, True, False)
+        for reco_files  in os.listdir(directory_reco):
+            if reco_files.find(".root")!=-1:
+                reco_signalFiles.append(reco_files)
+
+        Significance.Significance(cutstouse,luminosity_Shef ,signalFiles, reco_signalFiles, bkgFile, label, False, False, True)
 
 
 # if options.doShapeFit:
