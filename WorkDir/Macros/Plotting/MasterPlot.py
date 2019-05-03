@@ -68,12 +68,14 @@ def main():
     # signalFiles.append('/hepstore/hteagle/Wh/ntuples_21.2.60/396734.MadGraphPythia8EvtGen_A14N23LO_C1N2_Wh_hbb_400p0_250p0_lep_output.root')
     
     ##Local files
-    signalFiles.append('/user/hteagle/AnalysisDirectory/Rel21/Base.21.2.67/run/submitdir_300_150/data-output/DAOD_SUSY5.root')
-    signalFiles.append('/user/hteagle/AnalysisDirectory/Rel21/Base.21.2.67/run/submitdir_400_250/data-output/DAOD_SUSY5.root')
-    signalFiles.append('/user/hteagle/AnalysisDirectory/Rel21/Base.21.2.67/run/submitdir_ttbarCheck/data-output/DAOD_SUSY5.root')
+    signalFiles.append('/user/hteagle/AnalysisDirectory/Rel21/Base.21.2.72/run/submitdir_300_150/data-output/DAOD_SUSY5.root')
+    signalFiles.append('/user/hteagle/AnalysisDirectory/Rel21/Base.21.2.72/run/submitdir_400_250/data-output/DAOD_SUSY5.root')
+    signalFiles.append('/hepstore/hteagle/Wh/ntuples_21.2.67/26Apr.TTBAR_MC16a.21.2.67410470.PhPy8EG_A14_ttbar_hdamp258p75_nonallhad_output.root')
     
-    #signalFiles.append('/hepstore/hteagle/Wh/ntuples_simpleAnalysis/SbMB/391874.MGPy8EG_A14N23LO_BB_onestepN2hN1_1200_1150_60.deriv.DAOD_TRUTH3.e6330_e5984_p3655.v1_XYZ.root')
-    #signalFiles.append('/scratch/hteagle/SbMB/Sheff_ntuples_21_2_62/mc16_13TeV.391874.MGPy8EG_A14N23LO_BB_onestepN2hN1_1200_1150_60.root')
+    #signalFiles.append('/scratch/hteagle/SbMB/dm130/mc16_13TeV.390285.MGPy8EG_A14N23LO_BB_onestepN2hN1_700_680_550_a_d_e.root')
+    #signalFiles.append('/scratch/hteagle/SbMB/dm130/mc16_13TeV.391841.MGPy8EG_A14N23LO_BB_onestepN2hN1_1100_330_200_a_d_e.root')
+    #signalFiles.append('/scratch/hteagle/SbMB/m60/mc16_13TeV.391874.MGPy8EG_A14N23LO_BB_onestepN2hN1_1200_1150_60_a_d_e.root')
+
 
 #    signalFiles.append('/hepstore/hteagle/Wh/ntuples_21.2.60/396716.MadGraphPythia8EvtGen_A14N23LO_C1N2_Wh_hbb_300p0_150p0_lep_output.root')
 #    signalFiles.append('/hepstore/hteagle/Wh/ntuples_21.2.60/396734.MadGraphPythia8EvtGen_A14N23LO_C1N2_Wh_hbb_400p0_250p0_lep_output.root')
@@ -151,7 +153,7 @@ def main():
     directory = options.date+'/'
     print ("Output Directory is: ", directory)
     #############################
-    label = "SRA_incl"
+    label = "noSelection_SR"
     #############################
     EventCounter = True
 
@@ -162,7 +164,7 @@ def main():
     # Change the "cutstouse" variable to produce different distributions for a given selection. If plotting a SR distribution,
     # make sure that SR is contained in the label variable, which will blind the distribution
     if label == "noSelection_SR":
-        cutstouse = "1*(nLeptons==1 && nBJets==2)"#preCuts
+        cutstouse = "1*(nLeptons==1 && nBJets==2)*(ETMiss>100)"#preCuts
     elif label == "preSelectionSR":
         cutstouse = preCuts+"(nJet25==2)"#
     elif label ==  "Matts_presel":
@@ -226,25 +228,26 @@ def main():
         cutstouse = "(nBaselineLeptons==0)*(nJets>=4)*(nBJets>=3)*(ETMiss>250)*(minDPhiJMET_4>0.4)*(metsig_HT>25.2)"
 
     elif label == "SRB":
-        cutstouse = "(nbaselineLep==0)*(num_bjets>=4)*(num_bjets>=4)*(eT_miss>350)*(dphimin4_orig>0.4)*(SRB3_mbb_avg>75 && SRB3_mbb_avg<175)*(leadb1=0)*(pT_1jet>350)*(dPhi_1jet>2.8)*(meff>1000)"
+        cutstouse = "(passMETtriggers)*(nbaselineLep==0)*(nj_good>=4)*(num_bjets>=4)*(eT_miss_orig>350)*(dphimin4_orig>0.4)*(SRB3_mbb_avg>75 && SRB3_mbb_avg<175)*(!leadb1)*(pT_1jet>350)*(fabs(dPhi_1jet)>2.8) *(meff>1000)*(passtauveto==1)"
+                    #(passMETtriggers)*(nbaselineLep==0)*(nj_good>=5)*(num_bjets>=4)*(eT_miss>350)*(dphimin4_orig>0.4)*(SRB3_mbb_avg>75 && SRB3_mbb_avg<175)*(!leadb1)*(pT_1jet>350)*(fabs(dPhi_1jet)>2.8)*(meff>1000)*(passtauveto==1)
     elif label == "SRA_incl":
-        cutstouse = "(nbaselineLep==0)*(num_bjets>=6)*(num_bjets>=4)*(eT_miss>350)*(dphimin4_orig>0.4)*( pT_1bjet>200)*(maxDRbb>2.5)*(maxminDRbb<2.5)*( maxminDRmbb>80)*(meff>1000)"
+        cutstouse = "(passMETtriggers)*(nbaselineLep==0)*(nj_good>=6)*(num_bjets>=4)*(eT_miss_orig>350)*(dphimin4_orig>0.4)*(pT_1bjet>200)*(maxDRbb>2.5)*(maxminDRbb<2.5)*( maxminDRmbb>80)*(meff>1000)*(passtauveto==1)"
     elif label == "SRA_L":
-        cutstouse = "(nbaselineLep==0)*(num_bjets>=6)*(num_bjets>=4)*(eT_miss>350)*(dphimin4_orig>0.4)*( pT_1bjet>200)*(maxDRbb>2.5)*(maxminDRbb<2.5)*( maxminDRmbb>80)*(meff>1000)*(meff<1500)"
+        cutstouse = "(passMETtriggers)*(nbaselineLep==0)*(nj_good>=6)*(num_bjets>=4)*(eT_miss_orig>350)*(dphimin4_orig>0.4)*( pT_1bjet>200)*(maxDRbb>2.5)*(maxminDRbb<2.5)*( maxminDRmbb>80)*(meff>1000)*(meff<1500)*(passtauveto==1)"
     elif label == "SRA_M":
-        cutstouse = "(nbaselineLep==0)*(num_bjets>=6)*(num_bjets>=4)*(eT_miss>350)*(dphimin4_orig>0.4)*( pT_1bjet>200)*(maxDRbb>2.5)*(maxminDRbb<2.5)*( maxminDRmbb>80)*(meff>1500)*(meff<2000)"
+        cutstouse = "(passMETtriggers)*(nbaselineLep==0)*(nj_good>=6)*(num_bjets>=4)*(eT_miss_orig>350)*(dphimin4_orig>0.4)*( pT_1bjet>200)*(maxDRbb>2.5)*(maxminDRbb<2.5)*( maxminDRmbb>80)*(meff>1500)*(meff<2000)*(passtauveto==1)"
     elif label == "SRA_H":
-        cutstouse = "(nbaselineLep==0)*(num_bjets>=6)*(num_bjets>=4)*(eT_miss>350)*(dphimin4_orig>0.4)*( pT_1bjet>200)*(maxDRbb>2.5)*(maxminDRbb<2.5)*( maxminDRmbb>80)*(meff>-2000)"
+        cutstouse = "(passMETtriggers)*(nbaselineLep==0)*(nj_good>=6)*(num_bjets>=4)*(eT_miss_orig>350)*(dphimin4_orig>0.4)*( pT_1bjet>200)*(maxDRbb>2.5)*(maxminDRbb<2.5)*( maxminDRmbb>80)*(meff>2000)*(passtauveto==1)"
     elif label == "SRC_incl":
-        cutstouse = "((passMETtriggers==1)*(nbaselineLep==0)*(dphimin4_orig>0.4)*(nj_good>=4)*(num_bjets>=3)*(eT_miss>250)*(metsigHT>18))"
+        cutstouse = "((passMETtriggers==1)*(nbaselineLep==0)*(dphimin4_orig>0.4)*(nj_good>=4)*(num_bjets>=3)*(eT_miss_orig>250)*(metsigHT>18.4))"
     elif label == "SRC_22":
-        cutstouse = "(nbaselineLep==0)*(num_bjets>=4)*(num_bjets>=3)*(eT_miss>250)*(dphimin4_orig>0.4)*(metsigHT>18)*(metsigHT<20.4)"
+        cutstouse = "((passMETtriggers==1)*(nbaselineLep==0)*(dphimin4_orig>0.4)*(nj_good>=4)*(num_bjets>=3)*(eT_miss_orig>250)*(metsigHT>18.4)*(metsigHT<21.0))"
     elif label == "SRC_24":
-        cutstouse = "(nbaselineLep==0)*(num_bjets>=4)*(num_bjets>=3)*(eT_miss>250)*(dphimin4_orig>0.4)*(metsigHT>20.4)*(metsigHT<22.7)"
+        cutstouse = "((passMETtriggers==1)*(nbaselineLep==0)*(dphimin4_orig>0.4)*(nj_good>=4)*(num_bjets>=3)*(eT_miss_orig>250)*(metsigHT>21)*(metsigHT<23.55))"
     elif label == "SRC_26":
-        cutstouse = "(nbaselineLep==0)*(num_bjets>=4)*(num_bjets>=3)*(eT_miss>250)*(dphimin4_orig>0.4)*(metsigHT>22.7)*(metsigHT<25.2)"
+        cutstouse = "((passMETtriggers==1)*(nbaselineLep==0)*(dphimin4_orig>0.4)*(nj_good>=4)*(num_bjets>=3)*(eT_miss_orig>250)*(metsigHT>23.55)*(metsigHT<26.1))"
     elif label == "SRC_28":
-        cutstouse = "(nbaselineLep==0)*(num_bjets>=4)*(num_bjets>=3)*(eT_miss>250)*(dphimin4_orig>0.4)*(metsigHT>25.2)"
+        cutstouse = "((passMETtriggers==1)*(nbaselineLep==0)*(dphimin4_orig>0.4)*(nj_good>=4)*(num_bjets>=3)*(eT_miss_orig>250)*(metsigHT>26.1))"
 
     
     else:
@@ -464,8 +467,8 @@ def main():
     if options.doSignif:
         print ("Going to do Significance")
 
-        directory = "/hepstore/hteagle/Wh/ntuples_simpleAnalysis/SbMB/dm130/"
-        directory_reco = "/scratch/hteagle/SbMB/Sheff_ntuples_21_2_62/dm130/"
+        directory = "/hepstore/hteagle/Wh/ntuples_simpleAnalysis/SbMB/m60/"
+        directory_reco = "/scratch/hteagle/SbMB/m60/"
 
 
         bkgFile = directory+"410470.root"
@@ -480,7 +483,8 @@ def main():
             if reco_files.find(".root")!=-1:
                 reco_signalFiles.append(reco_files)
 
-        Significance.Significance(cutstouse,luminosity_Shef ,signalFiles, reco_signalFiles, bkgFile, label, False, False, True)
+
+        Significance.Significance(cutstouse,luminosity_Shef ,signalFiles, reco_signalFiles, bkgFile, label, False, True, False, False, directory_reco, directory)
 
 
 # if options.doShapeFit:

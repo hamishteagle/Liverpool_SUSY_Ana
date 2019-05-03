@@ -37,7 +37,8 @@ def Cutflow(label, cutstouse, signalFile,luminosity):
         #signalTree=signal.Get("CollectionTree_")
         try:
             signalTree=signal.Get("NominalFixed")
-            signalTree.SetAlias("YearWeight","treatAsYear==2018 ? 59.9/139 :(treatAsYear==2017 ? 43.3/139 : 36.2/139)")
+            signalTree.SetAlias("YearWeight","treatAsYear==2018 ? 58.5/139 :(treatAsYear==2017 ? 43.3/139 : 36.2/139)")
+            #signalTree.SetAlias("YearWeight","treatAsYear==2017 ? 1:0")
         except:
             signalTree=signal.Get("ntuple")
             print ("Setting aliases")
@@ -55,6 +56,13 @@ def Cutflow(label, cutstouse, signalFile,luminosity):
             signalTree.SetAlias("num_bjets","nBJets")
             signalTree.SetAlias("eT_miss","ETMiss")                        
             signalTree.SetAlias("metsigHT","metsig_HT")
+            signalTree.SetAlias("maxDRbb","maxDR")
+            signalTree.SetAlias("maxminDRbb","maxminDR")
+            signalTree.SetAlias("leadb1","(pTb1==pTj1)")
+            signalTree.SetAlias("SRB3_mbb_avg","max_avg_M")
+            signalTree.SetAlias("dPhi_1jet","DPhiJMET_1")
+            signalTree.SetAlias("maxminDRmbb","maxmin_M")
+            signalTree.SetAlias("pT_1jet","pTj1")
 
         #signalTree.SetAlias("YearWeight","year==2018 ? 59.9/139 :(year==2017 ? 43.3/139 : 36.2/139)")
 
@@ -74,7 +82,7 @@ def Cutflow(label, cutstouse, signalFile,luminosity):
             cutsUsed=cutsUsed+"*("+cut+")"
             #print( "cutsUsed=", cutsUsed)
             cutsUsedScaled=scaling+"("+cutsUsed+")"
-            print ("Scaled cutstouse: "+str(cutsUsedScaled))
+            #print ("Scaled cutstouse: "+str(cutsUsedScaled))
             signalTree.Draw("1>>SignalHist",cutsUsedScaled)
         
             e1=ROOT.Double()

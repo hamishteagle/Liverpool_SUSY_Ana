@@ -27,25 +27,25 @@ TreeService::TreeService(TTree *outputTree, TDirectory *OutDir){
   tree->Branch("m_actualIntPerX",&m_actualIntPerX);
 
 
-  //Initial event cleaning
-  tree->Branch("Region", &CutsRegion);
-  tree->Branch("coreFlag", &coreFlag);
-  tree->Branch("sctFlag", &sctFlag);
-  tree->Branch("LArTileFlag",&LArTileFlag);
-  tree->Branch("passedPrimVertex", &passedPrimVertex);
-  tree->Branch("passedGRL", &passedGRL);
+  // //Initial event cleaning
+  // tree->Branch("Region", &CutsRegion);
+  // tree->Branch("coreFlag", &coreFlag);
+  // tree->Branch("sctFlag", &sctFlag);
+  // tree->Branch("LArTileFlag",&LArTileFlag);
+  // tree->Branch("passedPrimVertex", &passedPrimVertex);
+  // tree->Branch("passedGRL", &passedGRL);
 
-  //Object cleaning cuts
-  tree->Branch("passedJetClean", &passedJetClean);
-  tree->Branch("passedCosmicMu", &passedCosmicMu);
-  tree->Branch("passedMuonClean", &passedMuonClean);
+  // //Object cleaning cuts
+  // tree->Branch("passedJetClean", &passedJetClean);
+  // tree->Branch("passedCosmicMu", &passedCosmicMu);
+  // tree->Branch("passedMuonClean", &passedMuonClean);
 
   // Triggers
   tree->Branch("passedMETTrigger", &passedMETTrigger);
   tree->Branch("passedMuTrigger", &passedMuTrigger);
   tree->Branch("passedElTrigger", &passedElTrigger);
   tree->Branch("passedDileptoonTrigger", &passedDileptonTrigger);
-  tree->Branch("passedGammaTrigger", &passedGammaTrigger);
+  //tree->Branch("passedGammaTrigger", &passedGammaTrigger);
 
 
   //tree->Branch("muon_triggers",&mu_triggers);
@@ -71,11 +71,11 @@ TreeService::TreeService(TTree *outputTree, TDirectory *OutDir){
   tree->Branch("h_T", &h_T);
   tree->Branch("m_T", &m_T);
 
-  tree->Branch("njet20" ,&njet20);
-  tree->Branch("njet25" ,&njet25);
-  tree->Branch("njet30", &njet30);
-  tree->Branch("njet35", &njet35);
-  tree->Branch("njet50", &njet50);
+  //tree->Branch("njet20" ,&njet20);
+  //tree->Branch("njet25" ,&njet25);
+  //tree->Branch("njet30", &njet30);
+  //tree->Branch("njet35", &njet35);
+  //tree->Branch("njet50", &njet50);
 
   tree->Branch("pTj1",&pTj1);
   tree->Branch("pTj2",&pTj2);
@@ -117,40 +117,41 @@ TreeService::TreeService(TTree *outputTree, TDirectory *OutDir){
   tree->Branch("phib4",&phib4);
 
   tree->Branch("nJets",&nJets);
-  tree->Branch("nJets_beforeOR",&nJets_beforeOR);
+  //tree->Branch("nJets_beforeOR",&nJets_beforeOR);
   tree->Branch("nBJets",&nBJets);
   tree->Branch("nLeptons",&nLeptons);
   tree->Branch("nBaselineLeptons",&nBaselineLeptons);
-  tree->Branch("nBaselineElectrons",&nBaselineElectrons);
-  tree->Branch("nBaselineTaus",&nBaselineTaus);
-  tree->Branch("nBaselineMuons",&nBaselineMuons);
+  //tree->Branch("nBaselineElectrons",&nBaselineElectrons);
+  //tree->Branch("nBaselineTaus",&nBaselineTaus);
+  //tree->Branch("nBaselineMuons",&nBaselineMuons);
   tree->Branch("nMuons",&nMuons);
   tree->Branch("nBadMuons",&nBadMuons);
   tree->Branch("nElectrons",&nElectrons);
-  tree->Branch("nTaus",&nTaus);
-  tree->Branch("nPhoton",&nPhoton);
+  //tree->Branch("nTaus",&nTaus);
+  //tree->Branch("nPhoton",&nPhoton);
   tree->Branch("ETMiss", &ETMiss);
   tree->Branch("ETMissPhi", &ETMissPhi);
   tree->Branch("adjustedETMiss", &adjustedETMiss);
   tree->Branch("adjustedETMissPhi", &adjustedETMissPhi);
 
-  tree->Branch("m_finalWeightSum", &m_finalWeightSum);
-  tree->Branch("m_intialWeightSum", &m_intialWeightSum);
-
+  //tree->Branch("m_finalWeightSum", &m_finalWeightSum);
+  //tree->Branch("m_intialWeightSum", &m_intialWeightSum);
+  
+  tree->Branch("dPhij1MET",&dPhij1MET);
   tree->Branch("minDPhijMET_4",&minDPhijMET_4);
   tree->Branch("m_jj", &m_jj);
-  tree->Branch("m_jjb1", &m_jjb1);
-  tree->Branch("m_jjb2", &m_jjb2);
-  tree->Branch("maxm_jjb", &maxm_jjb);
-  tree->Branch("minm_jjb", &minm_jjb);
-  tree->Branch("dRjjb1", &dRjjb1);
-  tree->Branch("dRjjb2", &dRjjb2);
-  tree->Branch("minDRjjb", &minDRjjb);
-  tree->Branch("maxDRjjb", &maxDRjjb);
+  //  tree->Branch("m_jjb1", &m_jjb1);
+  //tree->Branch("m_jjb2", &m_jjb2);
+  //tree->Branch("maxm_jjb", &maxm_jjb);
+  //tree->Branch("minm_jjb", &minm_jjb);
+  //tree->Branch("dRjjb1", &dRjjb1);
+  //tree->Branch("dRjjb2", &dRjjb2);
+  //tree->Branch("minDRjjb", &minDRjjb);
+  //tree->Branch("maxDRjjb", &maxDRjjb);
   tree->Branch("m_b1l", &m_b1l);
   tree->Branch("m_b2l", &m_b2l);
-  tree->Branch("minm_bl", &minm_bl);
-  tree->Branch("maxm_bl", &maxm_bl);
+  //tree->Branch("minm_bl", &minm_bl);
+  //tree->Branch("maxm_bl", &maxm_bl);
 
   // Scale Factors
 
@@ -170,11 +171,11 @@ TreeService::TreeService(TTree *outputTree, TDirectory *OutDir){
   //btagging
   tree->Branch("b1m", &b1m);
   tree->Branch("b2m", &b2m);
-  tree->Branch("b1MV2wgt", &b1MV2wgt);
-  tree->Branch("b2MV2wgt", &b2MV2wgt);
-  tree->Branch("minb1MV2weight", &minbMV2weight);
-  tree->Branch("b1_ntrk", &b1_ntrk);
-  tree->Branch("b2_ntrk", &b2_ntrk);
+  //tree->Branch("b1MV2wgt", &b1MV2wgt);
+  //tree->Branch("b2MV2wgt", &b2MV2wgt);
+  //tree->Branch("minb1MV2weight", &minbMV2weight);
+  //tree->Branch("b1_ntrk", &b1_ntrk);
+  //tree->Branch("b2_ntrk", &b2_ntrk);
 
   tree->Branch("j1_bQuantile", &j1_bQuantile);
   tree->Branch("j2_bQuantile", &j2_bQuantile);
