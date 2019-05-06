@@ -219,6 +219,10 @@ class TreeService
   int j3_bQuantile;
   int j4_bQuantile;
 
+  //ISR variables
+  double delPhi1;
+  double delPhi2;
+  double delPhi3;
 
   double etaj1;
   double etaj2;
