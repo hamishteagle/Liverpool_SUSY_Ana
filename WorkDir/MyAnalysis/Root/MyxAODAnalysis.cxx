@@ -373,17 +373,17 @@ EL::StatusCode MyxAODAnalysis :: histInitialize ()
   h_eventsPerRun->SetDirectory(wk()->getOutputFile("output"));
 
   if (doTruthJets){
-    h_dPhi_p30= new TH1F("h_dPhi_p30","h_dPhi_p30",100, -1 , 1);
-    h_dPhi_p40= new TH1F("h_dPhi_p40","h_dPhi_p40",100, -1 , 1);
-    h_dPhi_p80= new TH1F("h_dPhi_p80","h_dPhi_p80",100, -1 , 1);
-    h_dPhi_p200= new TH1F("h_dPhi_p200","h_dPhi_p200",100, -1 , 1);
-    h_dPhi_H= new TH1F("h_dPhi_H","h_dPhi_H",100, -1 , 1);
+    h_dPhi_p30= new TH1F("h_dPhi_p30","h_dPhi_p30",1000, -0.5 , 0.5);
+    h_dPhi_p40= new TH1F("h_dPhi_p40","h_dPhi_p40",1000, -0.5 , 0.5);
+    h_dPhi_p80= new TH1F("h_dPhi_p80","h_dPhi_p80",1000, -0.5 , 0.5);
+    h_dPhi_p200= new TH1F("h_dPhi_p200","h_dPhi_p200",1000, -0.5 , 0.5);
+    h_dPhi_H= new TH1F("h_dPhi_H","h_dPhi_H",1000, -0.5 , 0.5);
 
-    h_dEta_p30= new TH1F("h_dEta_p30","h_dEta_p30",100, -1 , 1);
-    h_dEta_p40= new TH1F("h_dEta_p40","h_dEta_p40",100, -1 , 1);
-    h_dEta_p80= new TH1F("h_dEta_p80","h_dEta_p80",100, -1 , 1);
-    h_dEta_p200= new TH1F("h_dEta_p200","h_dEta_p200",100, -1 , 1);
-    h_dEta_H= new TH1F("h_dEta_H","h_dEta_H",100, -1 , 1);
+    h_dEta_p30= new TH1F("h_dEta_p30","h_dEta_p30",1000, -0.5 , 0.5);
+    h_dEta_p40= new TH1F("h_dEta_p40","h_dEta_p40",1000, -0.5 , 0.5);
+    h_dEta_p80= new TH1F("h_dEta_p80","h_dEta_p80",1000, -0.5 , 0.5);
+    h_dEta_p200= new TH1F("h_dEta_p200","h_dEta_p200",1000, -0.5 , 0.5);
+    h_dEta_H= new TH1F("h_dEta_H","h_dEta_H",1000, -0.5 , 0.5);
     
     h_dPhi_p30->SetDirectory(wk()->getOutputFile("output"));
     h_dPhi_p40->SetDirectory(wk()->getOutputFile("output"));
@@ -528,8 +528,8 @@ EL::StatusCode MyxAODAnalysis :: execute ()
       checkMC->ttbar_decay(evtStore());
       static const size_t foundSherpa = m_fileName.find("Sherpa");
 
-      checkMC->HeavyFlavourFilter_countJets(evtStore(), true);
-      checkMC->TruthTaus(evtStore());
+      //checkMC->HeavyFlavourFilter_countJets(evtStore(), true);
+      //checkMC->TruthTaus(evtStore());
 
       if (isTruth && foundSherpa != std::string::npos){
       	checkMC->ZpT(evtStore());
@@ -792,10 +792,11 @@ EL::StatusCode MyxAODAnalysis :: execute ()
 	  double dEta = truth_jet->eta()-reco_jet->eta();
 	  double dPhi = truth_jet->phi()-reco_jet->phi();
 	  double dP = fabs(truth_jet->e()-reco_jet->e())/(reco_jet->e()+truth_jet->e());
+	  double truthP = sqrt((truth_jet->px()*truth_jet->px())+(truth_jet->pz()*truth_jet->py())+(truth_jet->pz()*truth_jet->pz()));
 	  if (fabs(dR)<dR_init && dR<0.4 && dP <0.2){
 	    dR_init=dR;
 	    dEta_init = dEta;
-	    P_init = truth_jet->e();
+	    P_init = truthP;
 	    dPhi_init = dPhi;
 	  }
 	}
@@ -804,19 +805,19 @@ EL::StatusCode MyxAODAnalysis :: execute ()
 	    h_dPhi_p30->Fill(dPhi_init);
 	    h_dEta_p30->Fill(dEta_init);
 	  }
-	  if (truth_jet->e()*0.001<40){	
+	  if (P_init*0.001<40){	
 	    h_dPhi_p40->Fill(dPhi_init);
 	    h_dEta_p40->Fill(dEta_init);
 	  }
-	  if (truth_jet->e()*0.001<80){	
+	  if (P_init*0.001<80){	
 	    h_dPhi_p80->Fill(dPhi_init);
 	    h_dEta_p80->Fill(dEta_init);
 	  }
-	  if (truth_jet->e()*0.001<200){	
+	  if (P_init*0.001<200){	
 	    h_dPhi_p200->Fill(dPhi_init);
 	    h_dEta_p200->Fill(dEta_init);
 	  }
-	  if (truth_jet->e()*0.001>200){	
+	  if (P_init*0.001>200){	
 	    h_dPhi_H->Fill(dPhi_init);
 	    h_dEta_H->Fill(dEta_init);
 	  }

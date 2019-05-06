@@ -192,6 +192,7 @@ CalculateVariables::CalculateVariables(NewObjectDef *objects, asg::AnaToolHandle
   minm_jjb = -99;
   m_b1l = -99;
   m_b2l = -99;
+  m_lbb = -99;
   minm_bl = -99;
   maxm_bl = -99;
   mbLmin = -99;
@@ -1293,6 +1294,8 @@ void CalculateVariables::CalculateOneLepVariables(NewObjectDef *objects, TLorent
   m_b1l = mbl11;
   double mbl12 = (l1v+b2v).M();
   m_b2l = mbl12;
+  if (objects->getBJets()->size()>=2) m_lbb = (l1v+b1v+b2v).M();
+
   
   
   TLorentzVector METVector(objects->getMETvector()->X()/1000., objects->getMETvector()->Y()/1000., 0 , 0);

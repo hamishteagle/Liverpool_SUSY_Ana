@@ -336,6 +336,7 @@ class TreeService
   double maxDRjjb;
   double m_b1l;
   double m_b2l;
+  double m_lbb;
   double minm_bl;
   double maxm_bl;
 
