@@ -628,7 +628,7 @@ def RatioPlot(variable, xaxislabel, xmin, xmax, rebin, ymax, selection, director
     for signalPlot in signalPlots:
         signalPlots[signalPlot].GetXaxis().SetRangeUser(minvalue,maxvalue)
         signalPlots[signalPlot].Scale(1/signalPlots[signalPlot].Integral())
-        #signalPlots[signalPlot].SetMinimum()
+        #signalPlots[signalPlot].SetMinimum(0.01)
 
 
 
