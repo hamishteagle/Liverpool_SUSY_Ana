@@ -153,7 +153,7 @@ def main():
     directory = options.date+'/'
     print ("Output Directory is: ", directory)
     #############################
-    label = "SRC_incl"
+    label = "SRB"
     #############################
     EventCounter = True
 
@@ -484,7 +484,7 @@ def main():
                 reco_signalFiles.append(reco_files)
 
 
-        Significance.Significance(cutstouse,luminosity_Shef ,signalFiles, reco_signalFiles, bkgFile, label, False, True, False, False, False, directory_reco, directory)
+        Significance.Significance(cutstouse,luminosity_Shef ,signalFiles, reco_signalFiles, bkgFile, label, False, False, True, False, False, directory_reco, directory)
 
 
 # if options.doShapeFit:

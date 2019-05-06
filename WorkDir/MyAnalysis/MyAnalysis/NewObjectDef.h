@@ -25,12 +25,13 @@ class NewObjectDef
     /*asg::AnaToolHandle<ST::SUSYObjDef_xAOD> objTool;*/
     ST::SUSYObjDef_xAOD* objTool;
 
-    NewObjectDef(asg::SgTEvent* event, ST::SUSYObjDef_xAOD* SUSYTool, xAOD::TStore* store, double mcChannel, double EventNumber, double mcWgt, double m_lumiScaled, std::string systematic);
+    NewObjectDef(asg::SgTEvent* event, ST::SUSYObjDef_xAOD* SUSYTool, xAOD::TStore* store, double mcChannel, double EventNumber, double mcWgt, double m_lumiScaled, std::string systematic, bool doTruthJets);
 
     ~NewObjectDef(){};
 
     void GetObjects();
     void GetBaselineObjects();
+    void GetTruthJets();
 
     double getMET(){return MET;};
     double getMETPhi(){return METphi;};
@@ -71,6 +72,9 @@ class NewObjectDef
     xAOD::PhotonContainer* getBaselinePhotons(){return baselinePhotons;};
     xAOD::PhotonContainer* getGoodPhotons(){return goodPhotons;};
 
+    xAOD::JetContainer* getTruthJets(){return goodTruthJets;};
+    
+    
     asg::SgTEvent* currentEvent;
     xAOD::TStore* eventStore;
     std::string systematic;
@@ -105,6 +109,7 @@ class NewObjectDef
     xAOD::JetContainer* nonBJets;
 
     
+    xAOD::JetContainer* goodTruthJets;
     
     double MET;
     double METphi;

@@ -159,6 +159,17 @@ public:
   TH1F *HTruthHTFilt; //!
   TH1F *HSumOfPileUp; //!
 
+  TH1F *h_dPhi_p30; //!
+  TH1F *h_dPhi_p40; //!
+  TH1F *h_dPhi_p80; //!
+  TH1F *h_dPhi_p200; //!
+  TH1F *h_dPhi_H; //!
+
+  TH1F *h_dEta_p30; //!
+  TH1F *h_dEta_p40; //!
+  TH1F *h_dEta_p80; //!
+  TH1F *h_dEta_p200; //!
+  TH1F *h_dEta_H; //!
 
   std::string outputName;
 
@@ -180,11 +191,13 @@ public:
   bool RunningLocally=true;
   bool RunningWithSyst = false;
   bool RunningWithPhotons = false;
+  bool RunningWithTruthJets = false;
   int NoEvents = -1;
   bool firstFile = true;
   bool firstEvent = true;
   int doSyst;
   int doPhotons;
+  int doTruthJets;
 
   //  OutputStream *out;
 

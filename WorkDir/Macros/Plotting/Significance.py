@@ -28,15 +28,21 @@ def latex_draw(label, dom60):
     Tl.SetTextSize(0.045)
     Tl.DrawLatex(0.17, 0.88,"#it{#bf{ATLAS} Simulation}")
 
-def make_yaml(label, var_map, doAccept, doEff, doStats):
+def make_yaml(label, var_map, doAccept, doEff, doStats, dom60):
     output_yaml_name = ".yaml"
     if doAccept:
         output_yaml_name = "Acc_" + label + ".yaml"
         header = "'Acceptance [$\\%$] "+label+"'"
+        if label.find("SRA")!=-1 and dom60:
+            output_yaml_name = "Acc_" + label + "_m60.yaml"
     if doEff:
         output_yaml_name = "Eff_" + label + ".yaml"
-        header = "Efficiency [$\\%$] "+label+"'\n"
+        header = "Efficiency [$\\%$] "+label+"'"
+        if label.find("SRA")!=-1 and dom60:
+            output_yaml_name = "Acc_" + label + "_m60.yaml"
+        
 
+        
     file=open(output_yaml_name, "w+")
 
     file.write("dependent_variables:\n")
@@ -269,7 +275,7 @@ def Significance(cutstouse,luminosity, signalFiles,reco_signalFiles, bkgFile, la
                 else :
                     Significance.Fill(int(Sb_mass), int(N2_mass), Accept)
 
-        if doEff or doAccTimesEff and not failedTree:
+        if (doEff or doAccTimesEff) and not failedTree:
             Sb_mass = files.split('_')[4]
             N2_mass = files.split('_')[5]
             signal_truth_map[str(Sb_mass)+'_'+str(N2_mass)]=scaled_nSignal
@@ -422,9 +428,9 @@ def Significance(cutstouse,luminosity, signalFiles,reco_signalFiles, bkgFile, la
             Canvas.SaveAs(outputdir + "sig_" + label + ".pdf")        
             
     if doEff:
-        make_yaml(label, signal_Eff_map , doAccept, doEff, doStats)
+        make_yaml(label, signal_Eff_map , doAccept, doEff, doStats, dom60)
     if doAccept:
-        make_yaml(label, signal_Acc_map , doAccept, doEff, doStats)
+        make_yaml(label, signal_Acc_map , doAccept, doEff, doStats, dom60)
                    
 
 

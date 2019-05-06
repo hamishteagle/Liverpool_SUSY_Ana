@@ -162,9 +162,10 @@ EL::StatusCode MyxAODAnalysis :: beginInputFile (bool firstFile)
   if (MetaData) {
     MetaData->LoadTree(0);
     m_isDerivation = !MetaData->GetBranch("StreamAOD");
-    isTruth = MetaData->GetBranch("TruthMetaData");
-    ANA_MSG_INFO ("%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%");
-    ANA_MSG_INFO ("This is Truth");
+    if (isTruth = MetaData->GetBranch("TruthMetaData")){
+      ANA_MSG_INFO ("%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%");
+      ANA_MSG_INFO ("This is Truth");
+    }
   }
 
 return StatusCode::SUCCESS;
@@ -371,6 +372,34 @@ EL::StatusCode MyxAODAnalysis :: histInitialize ()
 
   h_eventsPerRun->SetDirectory(wk()->getOutputFile("output"));
 
+  if (doTruthJets){
+    h_dPhi_p30= new TH1F("h_dPhi_p30","h_dPhi_p30",100, -1 , 1);
+    h_dPhi_p40= new TH1F("h_dPhi_p40","h_dPhi_p40",100, -1 , 1);
+    h_dPhi_p80= new TH1F("h_dPhi_p80","h_dPhi_p80",100, -1 , 1);
+    h_dPhi_p200= new TH1F("h_dPhi_p200","h_dPhi_p200",100, -1 , 1);
+    h_dPhi_H= new TH1F("h_dPhi_H","h_dPhi_H",100, -1 , 1);
+
+    h_dEta_p30= new TH1F("h_dEta_p30","h_dEta_p30",100, -1 , 1);
+    h_dEta_p40= new TH1F("h_dEta_p40","h_dEta_p40",100, -1 , 1);
+    h_dEta_p80= new TH1F("h_dEta_p80","h_dEta_p80",100, -1 , 1);
+    h_dEta_p200= new TH1F("h_dEta_p200","h_dEta_p200",100, -1 , 1);
+    h_dEta_H= new TH1F("h_dEta_H","h_dEta_H",100, -1 , 1);
+    
+    h_dPhi_p30->SetDirectory(wk()->getOutputFile("output"));
+    h_dPhi_p40->SetDirectory(wk()->getOutputFile("output"));
+    h_dPhi_p80->SetDirectory(wk()->getOutputFile("output"));
+    h_dPhi_p200->SetDirectory(wk()->getOutputFile("output"));
+    h_dPhi_H->SetDirectory(wk()->getOutputFile("output"));
+
+    h_dEta_p30->SetDirectory(wk()->getOutputFile("output"));
+    h_dEta_p40->SetDirectory(wk()->getOutputFile("output"));
+    h_dEta_p80->SetDirectory(wk()->getOutputFile("output"));
+    h_dEta_p200->SetDirectory(wk()->getOutputFile("output"));
+    h_dEta_H->SetDirectory(wk()->getOutputFile("output"));
+    
+  }
+
+
   return StatusCode::SUCCESS;
 }
 
@@ -476,8 +505,7 @@ EL::StatusCode MyxAODAnalysis :: execute ()
     }
 
     NewObjectDef* m_objs;
-    m_objs = new NewObjectDef(evtStore(), objTool, store, mcChannel, EventNumber, mcWgt, m_lumiScaled, syst.name());
-
+    m_objs = new NewObjectDef(evtStore(), objTool, store, mcChannel, EventNumber, mcWgt, m_lumiScaled, syst.name(), doTruthJets);
     if (firstEvent == true) firstEvent = false;
 
     std::unique_ptr<MCChecks> checkMC (new MCChecks ());
@@ -542,6 +570,8 @@ EL::StatusCode MyxAODAnalysis :: execute ()
     double nBadJet = m_objs->getBadJets()->size();
     double nCosmicMu = m_objs->getCosmicMuons()->size();
     double nBadMu = m_objs->getBadMuons()->size();
+
+    
 
 
     // Put the trigger here:
@@ -747,6 +777,54 @@ EL::StatusCode MyxAODAnalysis :: execute ()
         h_eventsPerRun->Fill(m_runNumber,1);
       }
     }
+
+    //Filling truthJet-recoJet information
+    double dR_init = 99;
+    double dEta_init = -99;
+    double dPhi_init = -99;
+    double P_init = -99;
+    if (doTruthJets){
+      int nTruthJets = m_objs->getTruthJets()->size();
+      //Compare truth jets and reco jets
+      for (auto truth_jet: (*m_objs->getTruthJets())){
+	for (auto reco_jet: (*m_objs->getGoodJets())){
+	  double dR = truth_jet->p4().DeltaR(reco_jet->p4());
+	  double dEta = truth_jet->eta()-reco_jet->eta();
+	  double dPhi = truth_jet->phi()-reco_jet->phi();
+	  double dP = fabs(truth_jet->e()-reco_jet->e())/(reco_jet->e()+truth_jet->e());
+	  if (fabs(dR)<dR_init && dR<0.4 && dP <0.2){
+	    dR_init=dR;
+	    dEta_init = dEta;
+	    P_init = truth_jet->e();
+	    dPhi_init = dPhi;
+	  }
+	}
+	if (P_init>0){
+	  if (truth_jet->e()*0.001<30){	
+	    h_dPhi_p30->Fill(dPhi_init);
+	    h_dEta_p30->Fill(dEta_init);
+	  }
+	  if (truth_jet->e()*0.001<40){	
+	    h_dPhi_p40->Fill(dPhi_init);
+	    h_dEta_p40->Fill(dEta_init);
+	  }
+	  if (truth_jet->e()*0.001<80){	
+	    h_dPhi_p80->Fill(dPhi_init);
+	    h_dEta_p80->Fill(dEta_init);
+	  }
+	  if (truth_jet->e()*0.001<200){	
+	    h_dPhi_p200->Fill(dPhi_init);
+	    h_dEta_p200->Fill(dEta_init);
+	  }
+	  if (truth_jet->e()*0.001>200){	
+	    h_dPhi_H->Fill(dPhi_init);
+	    h_dEta_H->Fill(dEta_init);
+	  }
+	}
+      }
+    }
+
+
 
     if (!isTruth){
       if (m_regions->interestingRegion || RunningLocally){

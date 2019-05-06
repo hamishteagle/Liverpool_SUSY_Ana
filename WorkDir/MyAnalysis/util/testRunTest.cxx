@@ -42,6 +42,8 @@ int main( int argc, char* argv[]) {
     bool RunningWithPhotons = false;
     bool RunningLocally = true;
     int NoEvents = -1;
+    bool RunningWithTruthJets = false;
+
 
     if (argv[1] != "") sample_path = argv[1];
     sample_name = get_sample_name(sample_path);
@@ -56,6 +58,10 @@ int main( int argc, char* argv[]) {
     if (argv[7] != "") username = argv[7];
     if (argv[8] != "") release = argv[8];
     if (argv[9] != "") physicsName = argv[9];
+    if (argv[10] != ""){
+      RunningWithTruthJets = (bool) atoi(argv[10]);
+      std::cout<<"RunningWithTruthJets = "<<RunningWithTruthJets<<std::endl;
+    }
     fileType = get_file_type(sample_name);
     info_message("Input path: " + sample_path);
     info_message("Sample name: " + sample_name);
@@ -93,6 +99,7 @@ int main( int argc, char* argv[]) {
         alg->inputFile = sample_name;
         alg->doSyst = RunningWithSyst;
         alg->doPhotons = RunningWithPhotons;
+	alg->doTruthJets= RunningWithTruthJets;
         // If you want to check that the filtering is working correctly, then set this to false
         alg->RunningLocally = RunningLocally;
         alg->setMsgLevel(MSG::VERBOSE);

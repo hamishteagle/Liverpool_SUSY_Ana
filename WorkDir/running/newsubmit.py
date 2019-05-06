@@ -21,6 +21,7 @@ class submit:
         parser.add_argument('--photons', dest = 'photons', type = bool, default = False)
         parser.add_argument('--events', dest = 'events', type = int, default = -1)
         parser.add_argument('--username', dest = 'username', action = 'store' , default = "hteagle")
+        parser.add_argument('--doTruthJets', dest = 'doTruthJets', type = int, default= False)
         args = parser.parse_args()
 
         # Make input file name accessible
@@ -33,6 +34,7 @@ class submit:
         print ('local : '+str(args.local))
         local     = int(args.local)
         PhysicsName = str(args.PhysicsName)
+        doTruthJets = int(args.doTruthJets)
         #Get the release directly from asetup (you will need to change the path to the build dir)
         release_string = os.popen('(cd /user/hteagle/AnalysisDirectory/Rel21/Base.21.2.72/build/ &&  source $AtlasSetup/scripts/asetup.sh $@ --printLast)').read()
         pos=release_string.find('Base/')
@@ -71,6 +73,8 @@ class submit:
         command += str(release)
         command += ' '
         command += str(PhysicsName)
+        command += ' '
+        command += str(doTruthJets)
         print str(command)
         os.system(command)
 

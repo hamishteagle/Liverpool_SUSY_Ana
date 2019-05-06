@@ -1,6 +1,9 @@
+#include <xAODJet/JetContainer.h>
+#include <xAODJet/JetAuxContainer.h>
 #include "MyAnalysis/NewObjectDef.h"
-
-NewObjectDef::NewObjectDef(asg::SgTEvent* event, ST::SUSYObjDef_xAOD* SUSYTool, xAOD::TStore* store, double mcChannel, double EventNumber, double mcWgt, double m_lumiScaled, std::string syst) {
+bool pT_Sorter( const xAOD::IParticle* j1, const xAOD::IParticle* j2 );
+bool pT_TruthSorter( const xAOD::IParticle* j1, const xAOD::IParticle* j2 );
+NewObjectDef::NewObjectDef(asg::SgTEvent* event, ST::SUSYObjDef_xAOD* SUSYTool, xAOD::TStore* store, double mcChannel, double EventNumber, double mcWgt, double m_lumiScaled, std::string syst, bool doTruthJets) {
 
   objTool = SUSYTool;
   eventStore = store;
@@ -31,6 +34,19 @@ NewObjectDef::NewObjectDef(asg::SgTEvent* event, ST::SUSYObjDef_xAOD* SUSYTool, 
   BJets = new xAOD::JetContainer(SG::VIEW_ELEMENTS);
   nonBJets = new xAOD::JetContainer(SG::VIEW_ELEMENTS);
 
+
+  //Do the baseline get here, pass this to the OR
+  GetBaselineObjects();
+
+  //Get the objects after the OR with baseline
+  GetObjects();
+  
+  //Get the truth jets (no overlap removal atm)
+  if (doTruthJets){
+    goodTruthJets = new xAOD::JetContainer(SG::VIEW_ELEMENTS);
+    GetTruthJets();
+  }
+
   eventStore->record(baselineElectrons,"baselineElectrons_"+systematic);
   eventStore->record(baselineMuons,"baselineMuons_"+systematic);
   eventStore->record(baselineTaus,"baselineTaus_"+systematic);
@@ -42,13 +58,8 @@ NewObjectDef::NewObjectDef(asg::SgTEvent* event, ST::SUSYObjDef_xAOD* SUSYTool, 
   eventStore->record(BJets,"BJets"+systematic);
   eventStore->record(nonBJets,"nonBJets"+systematic);
 
-  //Do the baseline get here, pass this to the OR
-  GetBaselineObjects();
-
-  //Get the objects after the OR with baseline
-  GetObjects();
 }
-
+ 
 bool pT_Sorter( const xAOD::IParticle* j1, const xAOD::IParticle* j2 ) {
   double pT1 = 0;
   double pT2 = 0;
@@ -56,6 +67,10 @@ bool pT_Sorter( const xAOD::IParticle* j1, const xAOD::IParticle* j2 ) {
   pT2=j2->pt();
   return ( pT1 > pT2 );
 }
+bool pT_TruthSorter( const xAOD::IParticle* j1, const xAOD::IParticle* j2 ) {
+  return ( j1->pt() > j2->pt() );
+}
+
 
 void NewObjectDef::GetBaselineObjects() {
 
@@ -264,3 +279,27 @@ void NewObjectDef::GetObjects() {
 
 }
 
+
+ 
+void NewObjectDef::GetTruthJets(){
+
+  //Get the truth Jets a' la SUSYTools
+  const xAOD::JetContainer* truthJets(0);//The actual truthJets go here
+  xAOD::JetContainer* truthJetContainer(0);//Shallow Copies go here
+  xAOD::ShallowAuxContainer* truthJetContainer_aux(0);//aux for the shallow copy here
+
+  currentEvent->retrieve(truthJets, "AntiKt4TruthJets" );
+  std::pair<xAOD::JetContainer*, xAOD::ShallowAuxContainer*> shallowcopy = xAOD::shallowCopyContainer(*truthJets);
+  truthJetContainer = shallowcopy.first;//shallow copy to truthJet temp container
+  truthJetContainer_aux = shallowcopy.second;//same with aux temp container
+
+  
+  for (const auto &jet: *truthJetContainer){
+    if (jet->pt()>20000 && fabs(jet->eta())<2.8){
+      goodTruthJets->push_back(jet);
+    }
+  }
+  goodTruthJets->sort(pT_TruthSorter);
+  eventStore->record(goodTruthJets,"goodTruthJets");
+  return;
+}
