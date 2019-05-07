@@ -123,7 +123,7 @@ function runttV_a(){
 function runsignal_a(){
     file="SampleLists_SUSY5/signal_mc16a.txt" 
     if [  -f $file ]; then
-	python listsubmission.py -i $file -t SIGNAL -m True
+	python listsubmission.py -i $file -t SIGNAL 
 	echo "fine"
     else 
     echo $file 'does not exist!!'
@@ -132,7 +132,7 @@ function runsignal_a(){
 function runsignal_a_temp(){
     file="SampleLists_SUSY5/signal_mc16a_temp.txt" 
     if [  -f $file ]; then
-	python listsubmission.py -i $file -t SIGNAL -m True
+	python listsubmission.py -i $file -t SIGNAL 
 	echo "fine"
     else 
     echo $file 'does not exist!!'
@@ -359,7 +359,7 @@ function rundata15(){
 function rundata16(){
     file="SampleLists_SUSY5/data16.txt"
     if [  -f $file ]; then
-	python listsubmission.py -i $file -t DATA
+	python listsubmission.py -i $file -t DATA -m True
 	echo "fine"
     else 
     echo $file 'does not exist!!'
@@ -368,7 +368,7 @@ function rundata16(){
 function rundata17(){
     file="SampleLists_SUSY5/data17.txt"
     if [  -f $file ]; then
-	python listsubmission.py -i $file -t DATA
+	python listsubmission.py -i $file -t DATA -m True
 	echo "fine"
     else 
     echo $file 'does not exist!!'
@@ -377,7 +377,7 @@ function rundata17(){
 function rundata18(){
     file="SampleLists_SUSY5/data18.txt"
     if [  -f $file ]; then
-	python listsubmission.py -i $file -t DATA
+	python listsubmission.py -i $file -t DATA -m True
 	echo "fine"
     else 
     echo $file 'does not exist!!'
@@ -473,14 +473,15 @@ wait
 
 
 
+runmc16a
+wait
+runmc16d
+wait
+runmc16e
+wait 
+rundata
+wait
 
-#runmc16a
-#wait
-#runmc16d
-#wait
-#rundata15
-#runttbar_a
-runsignal_a_temp
 
 echo "Completed all processes!"
 #  LocalWords:  runttbar
