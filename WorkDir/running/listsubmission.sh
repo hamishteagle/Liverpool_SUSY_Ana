@@ -476,11 +476,10 @@ wait
 runmc16a
 wait
 runmc16d
-wait
-runmc16e
 wait 
-rundata
+runmc16e
 wait
+rundata
 
 
 echo "Completed all processes!"
