@@ -19,49 +19,28 @@ atlas_add_root_dictionary(MyAnalysisLib MyAnalysisLibCintDict
 atlas_add_library (MyAnalysisLib MyAnalysis/*.h Root/*.cxx ${MyAnalysisLibCintDict}
   PUBLIC_HEADERS MyAnalysis BoostedJetTaggers SUSYTools NewMT2 METUtilities RestFrames
 
-  LINK_LIBRARIES AnaAlgorithmLib AsgAnalysisInterfaces         GoodRunsListsLib            TruthUtils            xAODMetaData
-AsgExampleToolsLib                    NewMT2Lib		          METInterface                RootCoreUtils                   ZMassConstraintLib   xAODMetaDataCnv
-AsgTools                              HFORToolsLib                METUtilitiesLib  	      SUSYToolsLib            xAODMissingET
-AssociationUtilsLib                   IRegionSelector             MVAUtils                    SampleHandler                   egammaLayerRecalibTool  xAODMuon
-AthContainers                         InDetTrackSelectionToolLib     MultiDraw                egammaMVACalibLib          xAODPFlow
-AthContainersInterfaces               InDetTrackSystematicsToolsLib  MuonEfficiencyCorrectionsLib   TauAnalysisToolsLib                egammaRecEvent          xAODParticleEvent
-AthLinks                              IsolationCorrectionsLib        MuonIdHelpersLib               TestTools                                  xAODPrimitives
-BoostedJetTaggersLib                  IsolationSelectionLib      MuonMomentumCorrectionsLib     TrackVertexAssociationToolLib                         xAODRootAccess
-CPAnalysisExamplesLib                 JetAnalysisInterfacesLib MuonSelectorToolsLib           TrigAnalysisInterfaces                             xAODRootAccessInterfaces
-CalibrationDataInterfaceLib           JetCPInterfaces          TrigAnalysisTestLib            tauRecToolsLib                  xAODBTaggingEfficiencyLib     xAODTau
-CaloGeoHelpers                        JetCalibToolsLib            TrigBunchCrossingTool       xAODAssociations                xAODTracking
-CxxUtils                              JetEDM                      PATCoreLib                     TrigConfBase                 xAODBPhysLib               xAODTrigBphys
-DiTauMassToolsLib                        JetInterface                PATInterfaces               TrigConfHLTData                 xAODBTagging            xAODTrigCalo
-JetJvtEfficiencyLib                   PFlowUtilsLib                  TrigConfInterfaces       xAODTrigEgamma
-ElectronEfficiencyCorrectionLib       JetMomentToolsLib        PMGToolsLib                    TrigConfL1Data                  xAODBase                xAODTrigL1Calo
-ElectronPhotonFourMomentumCorrectionLib  JetRecLib                ParticleJetToolsLib         TrigConfxAODLib                    xAODCaloEvent           xAODTrigMinBias
-ElectronPhotonSelectorToolsLib        JetReclusteringLib          PathResolver                TrigDecisionInterface           xAODCore                xAODTrigMissingET
-ElectronPhotonShowerShapeFudgeToolLib    JetResolutionLib         PhotonEfficiencyCorrectionLib  TrigDecisionToolLib                xAODCutFlow             xAODTrigMuon
-EventLoop                             JetSelectorToolsLib         PhotonVertexSelectionLib         xAODEgamma              xAODTrigRinger
-EventLoopAlgs                         JetSubStructureMomentToolsLib  PileupReweightingLib     xAODEventFormat         xAODTrigger
-EventLoopGrid                         JetSubStructureUtils        QuickAnaLib                    TrigNavStructure                xAODEventInfo           xAODTriggerCnvLib
-EventPrimitives                       JetTileCorrectionLib           RestFramesLib               TrigRoiConversionLib               xAODEventShape          xAODTruth
-EventShapeInterface                   JetUncertaintiesLib            ReweightUtilsLib               TrigSteeringEvent               xAODForward
-FourMomUtils                          JetUtils                    RoiDescriptor               TrigTauMatchingLib                 xAODHIEvent
-FsrUtilsLib                                  xAODJet
-GeoPrimitives                         MCTruthClassifierLib            TriggerMatchingToolLib             xAODLuminosity     FTagAnalysisInterfacesLib)
+  LINK_LIBRARIES  AsgAnalysisInterfaces         GoodRunsListsLib            TruthUtils            xAODMetaData
+AsgExampleToolsLib                    NewMT2Lib		          METInterface                RootCoreUtils  
+AsgTools                              METUtilitiesLib  	      SUSYToolsLib            xAODMissingET
+IRegionSelector                      SampleHandler    xAODMuon
+TauAnalysisToolsLib                egammaRecEvent                  
+xAODRootAccess
+CPAnalysisExamplesLib       JetCPInterfaces          TrigAnalysisTestLib            tauRecToolsLib                  xAODBTaggingEfficiencyLib     xAODTau
+CxxUtils                              JetEDM                      PATCoreLib                     TrigConfBase                 xAODBPhysLib         
+JetInterface                PATInterfaces               xAODBTagging            xAODTrigEgamma
+JetMomentToolsLib        PMGToolsLib           xAODBase              
+JetRecLib                ParticleJetToolsLib         TrigConfxAODLib
+JetReclusteringLib          PathResolver                TrigDecisionInterface           xAODCore                xAODTrigMissingET
+TrigDecisionToolLib                xAODCutFlow             xAODTrigMuon
+EventLoop                             JetSelectorToolsLib          xAODEgamma      
+EventLoopAlgs                         JetSubStructureMomentToolsLib  PileupReweightingLib         xAODTrigger
+EventLoopGrid                         JetSubStructureUtils                     TrigNavStructure                xAODEventInfo  
+EventPrimitives                       RestFramesLib                  xAODTruth
+EventShapeInterface                   JetUncertaintiesLib            ReweightUtilsLib               TrigSteeringEvent    
+FourMomUtils                          JetUtils                 
+FsrUtilsLib             xAODJet   MCTruthClassifierLib            TriggerMatchingToolLib             xAODLuminosity     FTagAnalysisInterfacesLib)
 
 #Removed from Link_Libraries;
-#MCUtils
-#RootCoreTest
-#HEPUtils
-#boost
-#SemileptonicCorr
-#fastjet
-#gmock
-#gtest
-#Eigen
-#TrigGlobalEfficiencyCorrection
-#TrigMuonEfficiency
-#LHAPDFLib
-#RooUnfoldLib
-#RootCoreLib
-#TriggerAnalysisInterfacesLib
 
 # Add the dictionary:
 atlas_add_dictionary (MyAnalysisDict

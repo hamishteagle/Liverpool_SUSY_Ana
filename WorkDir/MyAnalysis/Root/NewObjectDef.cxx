@@ -274,9 +274,13 @@ void NewObjectDef::GetObjects() {
     }
   }
 
-
-  return;
-
+  //We're done with these now
+  delete  preOR_baselineElectrons;
+  delete  preOR_baselineMuons;
+  delete  preOR_baselineTaus;
+  delete  preOR_baselinePhotons;
+  delete  preOR_baselineJets;
+  return; 
 }
 
 

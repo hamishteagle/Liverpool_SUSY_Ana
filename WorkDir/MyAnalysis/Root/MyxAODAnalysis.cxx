@@ -223,10 +223,6 @@ EL::StatusCode MyxAODAnalysis :: initialize ()
   bool isMC16d = (periodNumber == 300000);
   bool isMC16e = (periodNumber == 310000);
 
-  bool isMC15a = false;
-  bool isMC15b = false;
-  bool isMC15c = false;
-
   if(isMC16a)
     {
       lumicalcFiles.push_back(PathResolverFindCalibFile("GoodRunsLists/data15_13TeV/20170619/PHYS_StandardGRL_All_Good_25ns_276262-284484_OflLumi-13TeV-008.root"));
