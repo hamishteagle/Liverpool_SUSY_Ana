@@ -27,7 +27,13 @@ class NewObjectDef
 
     NewObjectDef(asg::SgTEvent* event, ST::SUSYObjDef_xAOD* SUSYTool, xAOD::TStore* store, double mcChannel, double EventNumber, double mcWgt, double m_lumiScaled, std::string systematic, bool doTruthJets);
 
-    ~NewObjectDef(){};
+    ~NewObjectDef(){
+      delete cosmicMuons;
+      delete badJets;
+      delete badMuons;
+      delete METvector;
+      
+    };
 
     void GetObjects();
     void GetBaselineObjects();
@@ -83,34 +89,35 @@ class NewObjectDef
     double mcEventWeight;
     double lumiScaled;
 
+
+
+    xAOD::JetContainer* badJets = nullptr;
+    xAOD::MuonContainer* cosmicMuons = nullptr;
+    xAOD::MuonContainer* badMuons = nullptr;
+    xAOD::ElectronContainer* baselineElectrons = nullptr;
+    xAOD::TauJetContainer* baselineTaus = nullptr;
+    xAOD::MuonContainer* baselineMuons = nullptr;
+    xAOD::PhotonContainer* baselinePhotons = nullptr;
+    
+    xAOD::JetContainer* preOR_baselineJets = nullptr;
+    xAOD::ElectronContainer* preOR_baselineElectrons = nullptr;
+    xAOD::MuonContainer* preOR_baselineMuons = nullptr;
+    xAOD::TauJetContainer* preOR_baselineTaus = nullptr;
+    xAOD::PhotonContainer* preOR_baselinePhotons = nullptr;
+    
+    xAOD::JetContainer* goodJets = nullptr;
+    xAOD::JetContainer* goodJetsBeforeOR = nullptr;
+    xAOD::ElectronContainer* goodElectrons = nullptr;
+    xAOD::TauJetContainer* goodTaus = nullptr;
+    xAOD::MuonContainer* goodMuons = nullptr;
+    xAOD::PhotonContainer* goodPhotons = nullptr;
+    xAOD::JetContainer* BJets = nullptr;
+    xAOD::JetContainer* nonBJets = nullptr;
+
+    
+    xAOD::JetContainer* goodTruthJets = nullptr;
+    
   private:
-
-    xAOD::JetContainer* badJets;
-    xAOD::MuonContainer* cosmicMuons;
-    xAOD::MuonContainer* badMuons;
-    xAOD::ElectronContainer* baselineElectrons;
-    xAOD::TauJetContainer* baselineTaus;
-    xAOD::MuonContainer* baselineMuons;
-    xAOD::PhotonContainer* baselinePhotons;
-    
-    xAOD::JetContainer* preOR_baselineJets;
-    xAOD::ElectronContainer* preOR_baselineElectrons;
-    xAOD::MuonContainer* preOR_baselineMuons;
-    xAOD::TauJetContainer* preOR_baselineTaus;
-    xAOD::PhotonContainer* preOR_baselinePhotons;
-    
-    xAOD::JetContainer* goodJets;
-    xAOD::JetContainer* goodJetsBeforeOR;
-    xAOD::ElectronContainer* goodElectrons;
-    xAOD::TauJetContainer* goodTaus;
-    xAOD::MuonContainer* goodMuons;
-    xAOD::PhotonContainer* goodPhotons;
-    xAOD::JetContainer* BJets;
-    xAOD::JetContainer* nonBJets;
-
-    
-    xAOD::JetContainer* goodTruthJets;
-    
     double MET;
     double METphi;
     double METsig;
@@ -134,9 +141,6 @@ class NewObjectDef
     bool passTauTriggerMatch = false;
     bool passPhotonTriggerMatch = false;
 
-
-
-  private:
 
 };
 #endif

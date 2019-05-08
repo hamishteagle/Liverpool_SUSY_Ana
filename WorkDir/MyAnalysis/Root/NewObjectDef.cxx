@@ -46,7 +46,7 @@ NewObjectDef::NewObjectDef(asg::SgTEvent* event, ST::SUSYObjDef_xAOD* SUSYTool, 
     goodTruthJets = new xAOD::JetContainer(SG::VIEW_ELEMENTS);
     GetTruthJets();
   }
-
+  
   eventStore->record(baselineElectrons,"baselineElectrons_"+systematic);
   eventStore->record(baselineMuons,"baselineMuons_"+systematic);
   eventStore->record(baselineTaus,"baselineTaus_"+systematic);
@@ -57,6 +57,8 @@ NewObjectDef::NewObjectDef(asg::SgTEvent* event, ST::SUSYObjDef_xAOD* SUSYTool, 
   eventStore->record(goodPhotons,"goodPhotons"+systematic);
   eventStore->record(BJets,"BJets"+systematic);
   eventStore->record(nonBJets,"nonBJets"+systematic);
+  
+
 
 }
  

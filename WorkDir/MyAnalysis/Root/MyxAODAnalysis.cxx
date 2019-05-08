@@ -829,12 +829,13 @@ EL::StatusCode MyxAODAnalysis :: execute ()
       }
     }
 
-    store->clear();
+
 
     isyst++;
     if(m_objs){
       delete m_objs;
     }
+    store->clear();
     electron_triggers.clear();
     electron_decisions.clear();
     muon_triggers.clear();

@@ -17,7 +17,7 @@ bool PreliminarySel::whichPreliminaryRegion(CalculateVariables &variables, bool 
 
   bool passesPresel = false;
 
-  if (variables.nJets>=2 && variables.nbJets >=1 && variables.nLepton ==1 && passedCleaningCuts){
+  if (variables.nJets>=2 && variables.nbJets >=1 && variables.nLepton ==1 && passedCleaningCuts && variables.eTMiss>50){
     region = "Preselection";
     return true;
   }
