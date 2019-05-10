@@ -13,9 +13,126 @@ RunningWithTruthJets = 0
 [0;32m--- Going to submit to grid ---[0;0m
 TInterpreter::ReadRoot... WARNING class  MyxAODAnalysis found in libMyAnalysisDict.so  is already in libMyAnalysisLib.so 
 xAOD::Init                INFO    Environment initialised for data access
+Directory Exists
 SampleHandler with 1 files
 Sample:name=mc16_13TeV.410470.PhPy8EG_A14_ttbar_hdamp258p75_nonallhad.deriv.DAOD_SUSY5.e6337_e5984_s3126_r9364_r9315_p3563
  nc_grid=mc16_13TeV.410470.PhPy8EG_A14_ttbar_hdamp258p75_nonallhad.deriv.DAOD_SUSY5.e6337_e5984_s3126_r9364_r9315_p3563
  nc_grid_filter=*.root*
 
 Going to submit now
+Submitting mc16_13TeV.410470.PhPy8EG_A14_ttbar_hdamp258p75_nonallhad.deriv.DAOD_SUSY5.e6337_e5984_s3126_r9364_r9315_p3563...
+[?1034h[?1034hlocal : 0
+testRun mc16_13TeV.410470.PhPy8EG_A14_ttbar_hdamp258p75_nonallhad.deriv.DAOD_SUSY5.e6337_e5984_s3126_r9364_r9315_p3563 410470 0 0 0 -1 hteagle 21.2.73  TTBAR 0
+Warning in <TInterpreter::ReadRootmapFile>: class  MyxAODAnalysis found in libMyAnalysisDict.so  is already in libMyAnalysisLib.so 
+
+[36mRestFrames v1.0.0 -- Developed by Christopher Rogan (crogan@cern.ch)
+                     Copyright (c) 2014-2015, Christopher Rogan
+                     http://RestFrames.com
+[0m
+RunningLocally = 0
+RunningWithTruthJets = 0
+[0;32mInput path: mc16_13TeV.345935.PhPy8EG_A14_ttbarMET100_200_hdamp258p75_nonallhad.deriv.DAOD_SUSY5.e6620_s3126_r9364_p3712[0;0m
+[0;32mSample name: mc16_13TeV.345935.PhPy8EG_A14_ttbarMET100_200_hdamp258p75_nonallhad.deriv.DAOD_SUSY5.e6620_s3126_r9364_p3712[0;0m
+[0;32mSample type: MC16a[0;0m
+[0;32mSubmission directory: 345935[0;0m
+[0;32m--- Going to submit to grid ---[0;0m
+TInterpreter::ReadRoot... WARNING class  MyxAODAnalysis found in libMyAnalysisDict.so  is already in libMyAnalysisLib.so 
+xAOD::Init                INFO    Environment initialised for data access
+Directory Exists
+SampleHandler with 1 files
+Sample:name=mc16_13TeV.345935.PhPy8EG_A14_ttbarMET100_200_hdamp258p75_nonallhad.deriv.DAOD_SUSY5.e6620_s3126_r9364_p3712
+ nc_grid=mc16_13TeV.345935.PhPy8EG_A14_ttbarMET100_200_hdamp258p75_nonallhad.deriv.DAOD_SUSY5.e6620_s3126_r9364_p3712
+ nc_grid_filter=*.root*
+
+Going to submit now
+Submitting mc16_13TeV.345935.PhPy8EG_A14_ttbarMET100_200_hdamp258p75_nonallhad.deriv.DAOD_SUSY5.e6620_s3126_r9364_p3712...
+[?1034h[?1034hlocal : 0
+testRun mc16_13TeV.345935.PhPy8EG_A14_ttbarMET100_200_hdamp258p75_nonallhad.deriv.DAOD_SUSY5.e6620_s3126_r9364_p3712 345935 0 0 0 -1 hteagle 21.2.73  TTBAR 0
+Warning in <TInterpreter::ReadRootmapFile>: class  MyxAODAnalysis found in libMyAnalysisDict.so  is already in libMyAnalysisLib.so 
+
+[36mRestFrames v1.0.0 -- Developed by Christopher Rogan (crogan@cern.ch)
+                     Copyright (c) 2014-2015, Christopher Rogan
+                     http://RestFrames.com
+[0m
+RunningLocally = 0
+RunningWithTruthJets = 0
+[0;32mInput path: mc16_13TeV.407345.PhPy8EG_A14_ttbarMET200_300_hdamp258p75_nonallhad.deriv.DAOD_SUSY5.e6414_s3126_r9364_p3712[0;0m
+[0;32mSample name: mc16_13TeV.407345.PhPy8EG_A14_ttbarMET200_300_hdamp258p75_nonallhad.deriv.DAOD_SUSY5.e6414_s3126_r9364_p3712[0;0m
+[0;32mSample type: MC16a[0;0m
+[0;32mSubmission directory: 407345[0;0m
+[0;32m--- Going to submit to grid ---[0;0m
+TInterpreter::ReadRoot... WARNING class  MyxAODAnalysis found in libMyAnalysisDict.so  is already in libMyAnalysisLib.so 
+xAOD::Init                INFO    Environment initialised for data access
+Directory Exists
+SampleHandler with 1 files
+Sample:name=mc16_13TeV.407345.PhPy8EG_A14_ttbarMET200_300_hdamp258p75_nonallhad.deriv.DAOD_SUSY5.e6414_s3126_r9364_p3712
+ nc_grid=mc16_13TeV.407345.PhPy8EG_A14_ttbarMET200_300_hdamp258p75_nonallhad.deriv.DAOD_SUSY5.e6414_s3126_r9364_p3712
+ nc_grid_filter=*.root*
+
+Going to submit now
+Submitting mc16_13TeV.407345.PhPy8EG_A14_ttbarMET200_300_hdamp258p75_nonallhad.deriv.DAOD_SUSY5.e6414_s3126_r9364_p3712...
+[?1034h[?1034hlocal : 0
+testRun mc16_13TeV.407345.PhPy8EG_A14_ttbarMET200_300_hdamp258p75_nonallhad.deriv.DAOD_SUSY5.e6414_s3126_r9364_p3712 407345 0 0 0 -1 hteagle 21.2.73  TTBAR 0
+Warning in <TInterpreter::ReadRootmapFile>: class  MyxAODAnalysis found in libMyAnalysisDict.so  is already in libMyAnalysisLib.so 
+
+[36mRestFrames v1.0.0 -- Developed by Christopher Rogan (crogan@cern.ch)
+                     Copyright (c) 2014-2015, Christopher Rogan
+                     http://RestFrames.com
+[0m
+RunningLocally = 0
+RunningWithTruthJets = 0
+[0;32mInput path: mc16_13TeV.407346.PhPy8EG_A14_ttbarMET300_400_hdamp258p75_nonallhad.deriv.DAOD_SUSY5.e6414_s3126_r9364_p3712[0;0m
+[0;32mSample name: mc16_13TeV.407346.PhPy8EG_A14_ttbarMET300_400_hdamp258p75_nonallhad.deriv.DAOD_SUSY5.e6414_s3126_r9364_p3712[0;0m
+[0;32mSample type: MC16a[0;0m
+[0;32mSubmission directory: 407346[0;0m
+[0;32m--- Going to submit to grid ---[0;0m
+TInterpreter::ReadRoot... WARNING class  MyxAODAnalysis found in libMyAnalysisDict.so  is already in libMyAnalysisLib.so 
+xAOD::Init                INFO    Environment initialised for data access
+Directory Exists
+SampleHandler with 1 files
+Sample:name=mc16_13TeV.407346.PhPy8EG_A14_ttbarMET300_400_hdamp258p75_nonallhad.deriv.DAOD_SUSY5.e6414_s3126_r9364_p3712
+ nc_grid=mc16_13TeV.407346.PhPy8EG_A14_ttbarMET300_400_hdamp258p75_nonallhad.deriv.DAOD_SUSY5.e6414_s3126_r9364_p3712
+ nc_grid_filter=*.root*
+
+Going to submit now
+Submitting mc16_13TeV.407346.PhPy8EG_A14_ttbarMET300_400_hdamp258p75_nonallhad.deriv.DAOD_SUSY5.e6414_s3126_r9364_p3712...
+[?1034h[?1034hlocal : 0
+testRun mc16_13TeV.407346.PhPy8EG_A14_ttbarMET300_400_hdamp258p75_nonallhad.deriv.DAOD_SUSY5.e6414_s3126_r9364_p3712 407346 0 0 0 -1 hteagle 21.2.73  TTBAR 0
+Warning in <TInterpreter::ReadRootmapFile>: class  MyxAODAnalysis found in libMyAnalysisDict.so  is already in libMyAnalysisLib.so 
+
+[36mRestFrames v1.0.0 -- Developed by Christopher Rogan (crogan@cern.ch)
+                     Copyright (c) 2014-2015, Christopher Rogan
+                     http://RestFrames.com
+[0m
+RunningLocally = 0
+RunningWithTruthJets = 0
+[0;32mInput path: mc16_13TeV.407347.PhPy8EG_A14_ttbarMET400_hdamp258p75_nonallhad.deriv.DAOD_SUSY5.e6414_s3126_r9364_p3712[0;0m
+[0;32mSample name: mc16_13TeV.407347.PhPy8EG_A14_ttbarMET400_hdamp258p75_nonallhad.deriv.DAOD_SUSY5.e6414_s3126_r9364_p3712[0;0m
+[0;32mSample type: MC16a[0;0m
+[0;32mSubmission directory: 407347[0;0m
+[0;32m--- Going to submit to grid ---[0;0m
+TInterpreter::ReadRoot... WARNING class  MyxAODAnalysis found in libMyAnalysisDict.so  is already in libMyAnalysisLib.so 
+xAOD::Init                INFO    Environment initialised for data access
+Directory Exists
+SampleHandler with 1 files
+Sample:name=mc16_13TeV.407347.PhPy8EG_A14_ttbarMET400_hdamp258p75_nonallhad.deriv.DAOD_SUSY5.e6414_s3126_r9364_p3712
+ nc_grid=mc16_13TeV.407347.PhPy8EG_A14_ttbarMET400_hdamp258p75_nonallhad.deriv.DAOD_SUSY5.e6414_s3126_r9364_p3712
+ nc_grid_filter=*.root*
+
+Going to submit now
+Submitting mc16_13TeV.407347.PhPy8EG_A14_ttbarMET400_hdamp258p75_nonallhad.deriv.DAOD_SUSY5.e6414_s3126_r9364_p3712...
+[?1034h[?1034hlocal : 0
+testRun mc16_13TeV.407347.PhPy8EG_A14_ttbarMET400_hdamp258p75_nonallhad.deriv.DAOD_SUSY5.e6414_s3126_r9364_p3712 407347 0 0 0 -1 hteagle 21.2.73  TTBAR 0
+python newsubmit.py -i mc16_13TeV.410470.PhPy8EG_A14_ttbar_hdamp258p75_nonallhad.deriv.DAOD_SUSY5.e6337_e5984_s3126_r9364_r9315_p3563 -s 410470 -l 0 --type TTBAR
+python newsubmit.py -i mc16_13TeV.345935.PhPy8EG_A14_ttbarMET100_200_hdamp258p75_nonallhad.deriv.DAOD_SUSY5.e6620_s3126_r9364_p3712 -s 345935 -l 0 --type TTBAR
+python newsubmit.py -i mc16_13TeV.407345.PhPy8EG_A14_ttbarMET200_300_hdamp258p75_nonallhad.deriv.DAOD_SUSY5.e6414_s3126_r9364_p3712 -s 407345 -l 0 --type TTBAR
+python newsubmit.py -i mc16_13TeV.407346.PhPy8EG_A14_ttbarMET300_400_hdamp258p75_nonallhad.deriv.DAOD_SUSY5.e6414_s3126_r9364_p3712 -s 407346 -l 0 --type TTBAR
+python newsubmit.py -i mc16_13TeV.407347.PhPy8EG_A14_ttbarMET400_hdamp258p75_nonallhad.deriv.DAOD_SUSY5.e6414_s3126_r9364_p3712 -s 407347 -l 0 --type TTBAR
+Traceback (most recent call last):
+  File "listsubmission.py", line 35, in <module>
+    listsubmission().main()
+  File "listsubmission.py", line 25, in main
+    command = 'python newsubmit.py -i ' + line + ' -s ' + line.split('.')[1] + ' -l 0' +' --type '+str(args.PhysicsName)
+IndexError: list index out of range
+fine
+Completed all processes!

@@ -32,7 +32,7 @@ class NewObjectDef
       delete badJets;
       delete badMuons;
       delete METvector;
-      
+      delete goodJets;
     };
 
     void GetObjects();

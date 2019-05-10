@@ -134,7 +134,7 @@ void NewObjectDef::GetBaselineObjects() {
   {
     std::cout << "No RefFinal inside MET container" << std::endl;
   }
-  METvector = new TVector2 ((*met_it)->mpy(),(*met_it)->mpy());
+  METvector = new TVector2 ((*met_it)->mpx(),(*met_it)->mpy());
   MET = (*met_it)->met();
   METphi = (*met_it)->phi();
   objTool->GetMETSig(*met_nominal, METsig, false, false);

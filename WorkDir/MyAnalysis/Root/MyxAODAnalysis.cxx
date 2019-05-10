@@ -263,7 +263,7 @@ EL::StatusCode MyxAODAnalysis :: initialize ()
   
   ANA_CHECK(objTool->setProperty("DataSource",datasource) );
   if (m_SUSY5){
-    ANA_CHECK(objTool->setProperty("ConfigFile",PathResolverFindCalibFile("/MyAnalysis/MyAnalysis/configs/1Lbb_default.conf")));
+    //ANA_CHECK(objTool->setProperty("ConfigFile",PathResolverFindCalibFile("/MyAnalysis/MyAnalysis/configs/1Lbb_default.conf")));
     ANA_MSG_INFO("This is SUSY5");
   }
   ANA_CHECK(objTool->setProperty("UseBtagging", true));
@@ -304,7 +304,7 @@ EL::StatusCode MyxAODAnalysis :: initialize ()
     m_treeServiceVector.push_back(Tree_Service);
 
   }
-
+  
   for (unsigned int m = 0; m < (m_treeServiceVector.size()); m++){
     m_treeServiceVector[m]->writeTree();
   }
@@ -504,7 +504,6 @@ EL::StatusCode MyxAODAnalysis :: execute ()
     m_objs = new NewObjectDef(evtStore(), objTool, store, mcChannel, EventNumber, mcWgt, m_lumiScaled, syst.name(), doTruthJets);
     if (firstEvent == true) firstEvent = false;
 
-    std::unique_ptr<MCChecks> checkMC (new MCChecks ());
     bool passGRL = false;
 
     if (!isMC){
@@ -518,27 +517,8 @@ EL::StatusCode MyxAODAnalysis :: execute ()
     }
 
     if (isMC) {
-
       truthfilt_MET = 0.001*eventInfo->auxdata< float >("GenFiltMET");
       truthfilt_HT = 0.001*eventInfo->auxdata< float>("GenFiltHT");
-      checkMC->ttbar_decay(evtStore());
-      static const size_t foundSherpa = m_fileName.find("Sherpa");
-
-      //checkMC->HeavyFlavourFilter_countJets(evtStore(), true);
-      //checkMC->TruthTaus(evtStore());
-
-      if (isTruth && foundSherpa != std::string::npos){
-      	checkMC->ZpT(evtStore());
-      	checkMC->SherpaZpT(evtStore());
-      }
-
-      static const size_t foundSherpa221 = m_fileName.find("Sherpa_221");
-      if (foundSherpa221 != std::string::npos){
-  	    checkMC->SherpaUncertaintyWeights(evtStore());
-      }
-      else {
-        checkMC->RetrieveWeights(evtStore());
-      }
     }
 
     bool coreFlag = true;
@@ -615,7 +595,7 @@ EL::StatusCode MyxAODAnalysis :: execute ()
       std::vector<std::string> single_el_2018 = {"HLT_e26_lhtight_nod0_ivarloose","HLT_2e24_lhvloose_nod0", "HLT_e60_lhmedium_nod0", "HLT_e140_lhloose_nod0"};
       std::vector<std::string> single_mu_2018 = {"HLT_mu26_ivarmedium","HLT_mu50"};
       std::vector<std::string> di_lepton_2018 = {"HLT_2e17_lhvloose_nod0_L12EM15VHI","HLT_2e24_lhvloose_nod0","HLT_mu22_mu8noL1","HLT_e17_lhloose_nod0_mu14"};
-      //Use IsMETTriggerPassed() function which should check the lowest un-prescaled triggers
+      //Use IsMETTriggerPassed() function which should chec the lowest un-prescaled triggers
       if (year == 2015) {
         for (auto mu_trig: single_mu_2015) {
           int trigDecision = objTool->IsTrigPassed(mu_trig);
@@ -825,7 +805,7 @@ EL::StatusCode MyxAODAnalysis :: execute ()
 
     if (!isTruth){
       if (m_regions->interestingRegion || RunningLocally){
-      	(m_treeServiceVector[isyst])->fillTree(m_objs, *m_regions, *m_varCalc, *checkMC,m_finalSumOfWeights, m_initialSumOfWeights, puWgt, SFmctbbll, passedMETTrigger, passedSingleMuTrigger, passedSingleElTrigger, passedDiLeptonTrigger, passedGammaTrigger, passedMultiJetTrigger, muon_triggers, muon_decisions, electron_triggers, electron_decisions, dilepton_triggers, dilepton_decisions,leptonTriggerSF, PUSumOfWeights, truthfilt_MET, truthfilt_HT, coreFlag, sctFlag, LArTileFlag, passGRL, passedPrimVertex, passedJetClean, passedCosmicMu, passedMuonClean, m_runNumber, renormedMcWgt, year, m_averageIntPerX, m_actualIntPerX, xsec, filteff, kfactor);
+      	(m_treeServiceVector[isyst])->fillTree(m_objs, *m_regions, *m_varCalc,m_finalSumOfWeights, m_initialSumOfWeights, puWgt, SFmctbbll, passedMETTrigger, passedSingleMuTrigger, passedSingleElTrigger, passedDiLeptonTrigger, passedGammaTrigger, passedMultiJetTrigger, muon_triggers, muon_decisions, electron_triggers, electron_decisions, dilepton_triggers, dilepton_decisions,leptonTriggerSF, PUSumOfWeights, truthfilt_MET, truthfilt_HT, coreFlag, sctFlag, LArTileFlag, passGRL, passedPrimVertex, passedJetClean, passedCosmicMu, passedMuonClean, m_runNumber, renormedMcWgt, year, m_averageIntPerX, m_actualIntPerX, xsec, filteff, kfactor);
       }
     }
 

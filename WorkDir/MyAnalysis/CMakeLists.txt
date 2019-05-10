@@ -17,7 +17,7 @@ atlas_add_root_dictionary(MyAnalysisLib MyAnalysisLibCintDict
 
 # Add the shared library:
 atlas_add_library (MyAnalysisLib MyAnalysis/*.h Root/*.cxx ${MyAnalysisLibCintDict}
-  PUBLIC_HEADERS MyAnalysis BoostedJetTaggers SUSYTools NewMT2 METUtilities RestFrames
+  PUBLIC_HEADERS MyAnalysis SUSYTools NewMT2 METUtilities RestFrames
 
   LINK_LIBRARIES  AsgAnalysisInterfaces         GoodRunsListsLib            TruthUtils            xAODMetaData
 AsgExampleToolsLib                    NewMT2Lib		          METInterface                RootCoreUtils  
@@ -40,7 +40,6 @@ EventShapeInterface                   JetUncertaintiesLib            ReweightUti
 FourMomUtils                          JetUtils                 
 FsrUtilsLib             xAODJet   MCTruthClassifierLib            TriggerMatchingToolLib             xAODLuminosity     FTagAnalysisInterfacesLib)
 
-#Removed from Link_Libraries;
 
 # Add the dictionary:
 atlas_add_dictionary (MyAnalysisDict

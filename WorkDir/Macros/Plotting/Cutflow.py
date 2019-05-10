@@ -36,9 +36,8 @@ def Cutflow(label, cutstouse, signalFile,luminosity):
         signal=ROOT.TFile(signalFile)
         #signalTree=signal.Get("CollectionTree_")
         try:
-            signalTree=signal.Get("NominalFixed")
-            signalTree.SetAlias("YearWeight","treatAsYear==2018 ? 58.5/139 :(treatAsYear==2017 ? 43.3/139 : 36.2/139)")
-            #signalTree.SetAlias("YearWeight","treatAsYear==2017 ? 1:0")
+            signalTree=signal.Get("CollectionTree_")
+            signalTree.SetAlias("YearWeight","year==2018 ? 58.5/139 :(year==2017 ? 43.3/139 : 36.2/139)")
         except:
             signalTree=signal.Get("ntuple")
             print ("Setting aliases")

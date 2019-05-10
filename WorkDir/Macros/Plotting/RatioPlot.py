@@ -758,7 +758,7 @@ def RatioPlot(variable, xaxislabel, xmin, xmax, rebin, ymax, selection, director
         SMBkgPlot.SetTitleSize(0.045,"Y")
         SMBkgPlot.SetTitleOffset(1.5,"Y")
         SMBkgPlot.SetLabelSize(0.045,"Y")
-        SMBkgPlot.SetMinimum(0.1)
+        SMBkgPlot.SetMinimum(0.01)
     
 
         #SMBkgPlot.SetMaximum(SMBkgPlot.Integral()*3)

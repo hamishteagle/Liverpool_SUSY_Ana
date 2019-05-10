@@ -20,7 +20,7 @@ TreeService::TreeService(TTree *outputTree, TDirectory *OutDir){
   tree->Branch("eventNumber", &eventNumber);
   tree->Branch("mcEventWeight", &mcEventWeight);
   tree->Branch("RenormedMcEventWeight", &RenormedMcEventWeight);
-  tree->Branch("weightsVector", &weightsVector);
+  //tree->Branch("weightsVector", &weightsVector);
   tree->Branch("sampleSFmCTbbll",&sampleSFmCTbbll);
   tree->Branch("pileUpSumOfWeights",&pileUpSumOfWeights);
   tree->Branch("m_averageIntPerX",&m_averageIntPerX);
@@ -213,7 +213,7 @@ TreeService::TreeService(TTree *outputTree, TDirectory *OutDir){
 }
 
 
-void TreeService::fillTree(NewObjectDef *objects ,PreliminarySel &region, CalculateVariables &variables, MCChecks MCTruthInfo, double mFinalWeight, double mInitialWeight, double puWeight, double SFmCTbbll, bool TrigMET, bool TrigMu, bool TrigEl, bool TrigDilep, bool TrigGamma, bool Trig6j, std::vector<std::string> muon_triggers, std::vector<int> muon_decisions, std::vector<std::string> electron_triggers, std::vector<int> electron_decisions, std::vector<std::string> dilepton_triggers, std::vector<int> dilepton_decisions, double LeptonTriggerSF, double puSumWeights, double TRUTHMET, double TRUTHHT, bool CoreFlags, bool SCTFlag,bool LArTileFlags, bool passGRL, bool passedPrimVertexes, bool passedJetCleans, bool passedCosmicMus, bool passedMuonCleans, double RNo,  double RenormedMCWgt, int LumiYear, double m_averageIntPerCrossing, double m_actualIntPerCrossing, double m_xsec, double m_filteff, double m_kfactor){
+void TreeService::fillTree(NewObjectDef *objects ,PreliminarySel &region, CalculateVariables &variables, double mFinalWeight, double mInitialWeight, double puWeight, double SFmCTbbll, bool TrigMET, bool TrigMu, bool TrigEl, bool TrigDilep, bool TrigGamma, bool Trig6j, std::vector<std::string> muon_triggers, std::vector<int> muon_decisions, std::vector<std::string> electron_triggers, std::vector<int> electron_decisions, std::vector<std::string> dilepton_triggers, std::vector<int> dilepton_decisions, double LeptonTriggerSF, double puSumWeights, double TRUTHMET, double TRUTHHT, bool CoreFlags, bool SCTFlag,bool LArTileFlags, bool passGRL, bool passedPrimVertexes, bool passedJetCleans, bool passedCosmicMus, bool passedMuonCleans, double RNo,  double RenormedMCWgt, int LumiYear, double m_averageIntPerCrossing, double m_actualIntPerCrossing, double m_xsec, double m_filteff, double m_kfactor){
 
   CutsRegion = region.region;
 
@@ -245,7 +245,7 @@ void TreeService::fillTree(NewObjectDef *objects ,PreliminarySel &region, Calcul
   mcEventWeight = objects->mcEventWeight;
   RenormedMcEventWeight = RenormedMCWgt;
   year = LumiYear;
-  weightsVector = MCTruthInfo.variationweights;
+  //weightsVector = MCTruthInfo.variationweights;
 
   m_averageIntPerX=m_averageIntPerCrossing;
   m_actualIntPerX=m_actualIntPerCrossing;
@@ -255,24 +255,24 @@ void TreeService::fillTree(NewObjectDef *objects ,PreliminarySel &region, Calcul
   pileUpSumOfWeights = puSumWeights;
 
 
-  pTZBoson = MCTruthInfo.pTZBoson;
-  etaZBoson = std::abs(MCTruthInfo.etaZBoson);
-  pTZBoson_Sherpa = MCTruthInfo.pTZBoson_Sherpa;
-  etaZBoson_Sherpa = std::abs(MCTruthInfo.etaZBoson_Sherpa);
-  duplicateVar = MCTruthInfo.arbitraryDuplicateCheck;
-  Zqq = MCTruthInfo.Zqq;
-  Zll = MCTruthInfo.Zll;
+  //  pTZBoson = MCTruthInfo.pTZBoson;
+  //etaZBoson = std::abs(MCTruthInfo.etaZBoson);
+  //pTZBoson_Sherpa = MCTruthInfo.pTZBoson_Sherpa;
+  //etaZBoson_Sherpa = std::abs(MCTruthInfo.etaZBoson_Sherpa);
+  //duplicateVar = MCTruthInfo.arbitraryDuplicateCheck;
+  //Zqq = MCTruthInfo.Zqq;
+  //Zll = MCTruthInfo.Zll;
   truthFilterMET = TRUTHMET;
   truthFilterHT = TRUTHHT;
-  jetFilterno = MCTruthInfo.jetFilterno;
-  jetFilterno_prompt = MCTruthInfo.jetFilterno_prompt;
+  //jetFilterno = MCTruthInfo.jetFilterno;
+  //jetFilterno_prompt = MCTruthInfo.jetFilterno_prompt;
 
-  ttbar_W1_decay = MCTruthInfo.ttbar_W1_decay;
-  ttbar_W2_decay = MCTruthInfo.ttbar_W2_decay;
-  ttbar_tau1_decay = MCTruthInfo.ttbar_tau1_decay;
-  ttbar_tau2_decay = MCTruthInfo.ttbar_tau2_decay;
-  tau_1_prongs = MCTruthInfo.tau_1_prongs;
-  tau_2_prongs = MCTruthInfo.tau_2_prongs;
+  //ttbar_W1_decay = MCTruthInfo.ttbar_W1_decay;
+  //ttbar_W2_decay = MCTruthInfo.ttbar_W2_decay;
+  //ttbar_tau1_decay = MCTruthInfo.ttbar_tau1_decay;
+  //ttbar_tau2_decay = MCTruthInfo.ttbar_tau2_decay;
+  //tau_1_prongs = MCTruthInfo.tau_1_prongs;
+  //tau_2_prongs = MCTruthInfo.tau_2_prongs;
 
 
   Asymmetry = variables.Asymmetry;
@@ -315,19 +315,19 @@ void TreeService::fillTree(NewObjectDef *objects ,PreliminarySel &region, Calcul
   mindPhib_MET= variables.mindPhib_MET;
 
 
-  Weight = MCTruthInfo.Weight;
-  MEWeight = MCTruthInfo.MEWeight;
-  WeightNormalisation = MCTruthInfo.WeightNormalisation;
-  NTrials = MCTruthInfo.NTrials;
-  MUR0p5_MUF0p5_PDF261000 = MCTruthInfo.MUR0p5_MUF0p5_PDF261000;
-  MUR0p5_MUF1_PDF261000 = MCTruthInfo.MUR0p5_MUF1_PDF261000;
-  MUR1_MUF0p5_PDF261000 = MCTruthInfo.MUR1_MUF0p5_PDF261000;
-  MUR1_MUF1_PDF261000 = MCTruthInfo.MUR1_MUF1_PDF261000;
-  MUR1_MUF2_PDF261000 = MCTruthInfo.MUR1_MUF2_PDF261000;
-  MUR2_MUF1_PDF261000 = MCTruthInfo.MUR2_MUF1_PDF261000;
-  MUR2_MUF2_PDF261000 = MCTruthInfo.MUR2_MUF2_PDF261000;
-  MUR1_MUF1_PDF261001 = MCTruthInfo.MUR1_MUF1_PDF261001;
-  MUR1_MUF1_PDF261002 = MCTruthInfo.MUR1_MUF1_PDF261002;
+  //Weight = MCTruthInfo.Weight;
+  //MEWeight = MCTruthInfo.MEWeight;
+  //WeightNormalisation = MCTruthInfo.WeightNormalisation;
+  //NTrials = MCTruthInfo.NTrials;
+  // MUR0p5_MUF0p5_PDF261000 = MCTruthInfo.MUR0p5_MUF0p5_PDF261000;
+  // MUR0p5_MUF1_PDF261000 = MCTruthInfo.MUR0p5_MUF1_PDF261000;
+  // MUR1_MUF0p5_PDF261000 = MCTruthInfo.MUR1_MUF0p5_PDF261000;
+  // MUR1_MUF1_PDF261000 = MCTruthInfo.MUR1_MUF1_PDF261000;
+  // MUR1_MUF2_PDF261000 = MCTruthInfo.MUR1_MUF2_PDF261000;
+  // MUR2_MUF1_PDF261000 = MCTruthInfo.MUR2_MUF1_PDF261000;
+  // MUR2_MUF2_PDF261000 = MCTruthInfo.MUR2_MUF2_PDF261000;
+  // MUR1_MUF1_PDF261001 = MCTruthInfo.MUR1_MUF1_PDF261001;
+  // MUR1_MUF1_PDF261002 = MCTruthInfo.MUR1_MUF1_PDF261002;
 
 
   pTj1 = variables.pTj1;
@@ -702,41 +702,39 @@ void TreeService::fillTree(NewObjectDef *objects ,PreliminarySel &region, Calcul
     mu_E.push_back(0.001*(*(objects->getGoodMuons()))[imu]->e());
   }
 
-  int maxTau = objects->getGoodTaus()->size();
-  for (int itau = 0; itau < maxTau; itau++){
-    tau_pT.push_back(0.001*(*(objects->getGoodTaus()))[itau]->pt());
-    tau_eta.push_back((*(objects->getGoodTaus()))[itau]->eta());
-    tau_phi.push_back((*(objects->getGoodTaus()))[itau]->phi());
-    tau_E.push_back(0.001*(*(objects->getGoodTaus()))[itau]->e());
+  // int maxTau = objects->getGoodTaus()->size();
+  // for (int itau = 0; itau < maxTau; itau++){
+  //   tau_pT.push_back(0.001*(*(objects->getGoodTaus()))[itau]->pt());
+  //   tau_eta.push_back((*(objects->getGoodTaus()))[itau]->eta());
+  //   tau_phi.push_back((*(objects->getGoodTaus()))[itau]->phi());
+  //   tau_E.push_back(0.001*(*(objects->getGoodTaus()))[itau]->e());
 
-    // do truth matching here with the first tau. Probably should have a Vector of taus in the truth tau part of MCChecks at some point
-    TLorentzVector tau(0,0,0,0);
-    tau.SetPtEtaPhiE(0.001*(*(objects->getGoodTaus()))[itau]->pt(),(*(objects->getGoodTaus()))[itau]->eta(),(*(objects->getGoodTaus()))[itau]->phi(),(*(objects->getGoodTaus()))[itau]->e());
+  //   // do truth matching here with the first tau. Probably should have a Vector of taus in the truth tau part of MCChecks at some point
+  //   TLorentzVector tau(0,0,0,0);
+  //   tau.SetPtEtaPhiE(0.001*(*(objects->getGoodTaus()))[itau]->pt(),(*(objects->getGoodTaus()))[itau]->eta(),(*(objects->getGoodTaus()))[itau]->phi(),(*(objects->getGoodTaus()))[itau]->e());
 
-    double smallestDR_1 = 99;
-    int truthtau_x = 0;
-    //for (int iTrueTau = 0; iTrueTau < MCTruthInfo.TruthTau.size(); iTrueTau++ ){
-    //  if (tau.DeltaR(MCTruthInfo.TruthTau[iTrueTau]) < smallestDR_1){
-    //	smallestDR_1 = tau.DeltaR(MCTruthInfo.TruthTau[iTrueTau]);
-    //	truthtau_x = iTrueTau;
-    // }
-    //}
+  //   double smallestDR_1 = 99;
+  //   int truthtau_x = 0;
+  //   //for (int iTrueTau = 0; iTrueTau < MCTruthInfo.TruthTau.size(); iTrueTau++ ){
+  //   //  if (tau.DeltaR(MCTruthInfo.TruthTau[iTrueTau]) < smallestDR_1){
+  //   //	smallestDR_1 = tau.DeltaR(MCTruthInfo.TruthTau[iTrueTau]);
+  //   //	truthtau_x = iTrueTau;
+  //   // }
+  //   //}
 
-    for (int iTrueJet = 0; iTrueJet < MCTruthInfo.m_jet_pt.size(); iTrueJet++ ){
-      TLorentzVector trueJet(0,0,0,0);
-      trueJet.SetPtEtaPhiM(0.001*MCTruthInfo.m_jet_pt[iTrueJet], MCTruthInfo.m_jet_eta[iTrueJet], MCTruthInfo.m_jet_phi[iTrueJet], MCTruthInfo.m_jet_m[iTrueJet]);
-      if (tau.DeltaR(trueJet) < smallestDR_1 && std::fabs(MCTruthInfo.m_jet_TruthID[iTrueJet]) == 15){
-	smallestDR_1 = tau.DeltaR(trueJet);
-	truthtau_x = iTrueJet;
-      }
-    }
-
-
-    tau_SmallestDR.push_back(smallestDR_1);
-    tau_associatedTrue.push_back(truthtau_x);
+  //   for (int iTrueJet = 0; iTrueJet < MCTruthInfo.m_jet_pt.size(); iTrueJet++ ){
+  //     TLorentzVector trueJet(0,0,0,0);
+  //     trueJet.SetPtEtaPhiM(0.001*MCTruthInfo.m_jet_pt[iTrueJet], MCTruthInfo.m_jet_eta[iTrueJet], MCTruthInfo.m_jet_phi[iTrueJet], MCTruthInfo.m_jet_m[iTrueJet]);
+  //     if (tau.DeltaR(trueJet) < smallestDR_1 && std::fabs(MCTruthInfo.m_jet_TruthID[iTrueJet]) == 15){
+  // 	smallestDR_1 = tau.DeltaR(trueJet);
+  // 	truthtau_x = iTrueJet;
+  //     }
+  //   }
 
 
-  }
+  //   tau_SmallestDR.push_back(smallestDR_1);
+  //   tau_associatedTrue.push_back(truthtau_x);
+  // }
 
   metsig_New = objects->getMETsig();
 

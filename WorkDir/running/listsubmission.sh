@@ -471,15 +471,16 @@ rundata18
 wait
 }
 
-
-
-runmc16a
+runttbar_a
 wait
-runmc16d
-wait 
-runmc16e
-wait
-rundata
+
+#runmc16a
+#wait
+#runmc16d
+#wait 
+#runmc16e
+#wait
+#rundata
 
 
 echo "Completed all processes!"
