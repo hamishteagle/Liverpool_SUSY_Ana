@@ -1,0 +1,3 @@
+[submodule "HistFitter"]
+	path = HistFitter
+	url = https://gitlab.cern.ch/HistFitter/HistFitter.git
