@@ -379,7 +379,7 @@ CalculateVariables::CalculateVariables(NewObjectDef *objects, asg::AnaToolHandle
   
   // do initial jet things here:
   
-  mctTool = new TMctLib();
+  mctTool = std::make_unique<TMctLib>();
   
   if (nJets > 0 &&  nbJets >= 1 && (  ((*(objects->getGoodJets()))[0]->auxdata< char >("bjet")) )) {
   //if ( nbJets >= 1 &&  {
@@ -401,7 +401,7 @@ CalculateVariables::CalculateVariables(NewObjectDef *objects, asg::AnaToolHandle
   TLorentzVector jet3v(0,0,0,0);
   TLorentzVector jet4v(0,0,0,0);
   
-  xAOD::JetContainer* jetVector = new xAOD::JetContainer(SG::VIEW_ELEMENTS);
+  auto jetVector = std::make_unique<xAOD::JetContainer>(SG::VIEW_ELEMENTS);
   if (nJets >= 1){
     pTj1 = (*(objects->getGoodJets()))[0]->pt()*0.001;
     etaj1 = (*(objects->getGoodJets()))[0]->eta();
@@ -1302,7 +1302,7 @@ void CalculateVariables::CalculateOneLepVariables(NewObjectDef *objects, TLorent
   mbLmin = std::min(mbl11, mbl12);
 
   // Do the amT2 with b-jets ordered by btag weight  
-  xAOD::JetContainer* jetVector_tagOrder = new xAOD::JetContainer(SG::VIEW_ELEMENTS);
+  auto jetVector_tagOrder = std::make_unique<xAOD::JetContainer>(SG::VIEW_ELEMENTS);
   if (nJets>=2){
     //order these jets by b-tag weight
     for(unsigned int i=0;i< nJets; i++){
@@ -1319,19 +1319,11 @@ void CalculateVariables::CalculateOneLepVariables(NewObjectDef *objects, TLorent
     
     double amT2_1 = -99;
     double amT2_2 = -99;
-    ComputeMT2* mT2Tool_1 = new ComputeMT2(j1v, j2v+l1v, METVector, 80, 0);
+    auto mT2Tool_1 = std::make_unique<ComputeMT2>(j1v, j2v+l1v, METVector, 80, 0);
     amT2_1 = mT2Tool_1->Compute();   
-    ComputeMT2* mT2Tool_2 = new ComputeMT2(j1v+l1v, j2v, METVector, 0, 80);
+    auto mT2Tool_2 = std::make_unique<ComputeMT2>(j1v+l1v, j2v, METVector, 0, 80);
     amT2_2 = mT2Tool_2->Compute();   
     amT2=std::min(amT2_1,amT2_2);
-    
-
-    //CheckWith 80
-    // ComputeMT2* mT2Tool_1 = new ComputeMT2(j1v, j2v+l1v, METVector, 0, 0);
-    // amT2_1 = mT2Tool->Compute();   
-    // ComputeMT2* mT2Tool_2 = new ComputeMT2(j1v+l1v, j2v, METVector, 0, 0);
-    // amT2_2 = mT2Tool->Compute();   
-    // amT2=std::min(amT2_1,amT2_2);
     
   }
   minm_bl = std::min(mbl11, mbl12);

@@ -30,7 +30,6 @@
 #include "MyAnalysis/MapVariables.h"
 #include "MyAnalysis/TreeService.h"
 #include "MyAnalysis/MCChecks.h"
-#include "MyAnalysis/Cutflows.h"
 
 #include "PileupReweighting/TPileupReweighting.h"
 
@@ -289,7 +288,7 @@ EL::StatusCode MyxAODAnalysis :: initialize ()
     systInfoList = objTool->getSystInfoList();
   }
 
-  TTree *Temp;
+
   for(const auto& sysInfo : systInfoList){
 
     const CP::SystematicSet& sys = sysInfo.systset;
@@ -297,18 +296,17 @@ EL::StatusCode MyxAODAnalysis :: initialize ()
     std::string temp = "On systematic: " + sys.name();
     ANA_MSG_INFO(temp);
 
+    TDirectory *out_TDir = (TDirectory*) wk()->getOutputFile ("output");
+
     std::string treeName = "CollectionTree_"+std::string(sys.name());
     const char * cName = treeName.c_str();
-    Temp = new TTree (cName, cName);
-    TDirectory *out_TDir = (TDirectory*) wk()->getOutputFile ("output");
-    TreeService* Tree_Service = new TreeService(Temp, out_TDir);
-    m_treeServiceVector.push_back(Tree_Service);
+    TTree *Temp = new TTree(cName, cName);
+    TreeService *Tree_Service = new TreeService(Temp, out_TDir);
 
+    m_treeServiceVector.push_back(Tree_Service);
+    Temp->Write();
   }
-  
-  for (unsigned int m = 0; m < (m_treeServiceVector.size()); m++){
-    m_treeServiceVector[m]->writeTree();
-  }
+
   
   //PMGCrossSectionTool setup
   std::cout<<"Before cross-sections tool"<<std::endl;
@@ -760,7 +758,6 @@ EL::StatusCode MyxAODAnalysis :: execute ()
     double dPhi_init = -99;
     double P_init = -99;
     if (doTruthJets){
-      int nTruthJets = objs->getTruthJets()->size();
       //Compare truth jets and reco jets
       for (auto truth_jet: (*objs->getTruthJets())){
 	for (auto reco_jet: (*objs->getGoodJets())){

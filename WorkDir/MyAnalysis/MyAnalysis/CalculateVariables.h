@@ -336,7 +336,7 @@ class CalculateVariables
 
   // Tools
 
-  TMctLib *mctTool;
+  std::unique_ptr<TMctLib> mctTool;
 
 
   // DM Specific

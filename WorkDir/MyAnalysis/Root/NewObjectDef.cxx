@@ -15,11 +15,14 @@ NewObjectDef::NewObjectDef(asg::SgTEvent* event, ST::SUSYObjDef_xAOD* SUSYTool, 
   currentEvent = event;
 
 
+  //Things not passed to the event store, set these as unique pointers:
+  cosmicMuons =       std::make_unique<xAOD::MuonContainer>(SG::VIEW_ELEMENTS);
+  badJets =           std::make_unique<xAOD::JetContainer>(SG::VIEW_ELEMENTS);
+  badMuons =          std::make_unique<xAOD::MuonContainer>(SG::VIEW_ELEMENTS);
+  goodJetsBeforeOR =  std::make_unique<xAOD::JetContainer>(SG::VIEW_ELEMENTS);
 
-  cosmicMuons = new xAOD::MuonContainer(SG::VIEW_ELEMENTS);
-  badJets = new xAOD::JetContainer(SG::VIEW_ELEMENTS);
-  badMuons = new xAOD::MuonContainer(SG::VIEW_ELEMENTS);
 
+  //Things that are passed to the event store, set these as raw pointers(eventStore takes ownership of memory)
   baselineElectrons = new xAOD::ElectronContainer(SG::VIEW_ELEMENTS);
   baselineMuons = new xAOD::MuonContainer(SG::VIEW_ELEMENTS);
   baselineTaus = new xAOD::TauJetContainer(SG::VIEW_ELEMENTS);
@@ -30,7 +33,6 @@ NewObjectDef::NewObjectDef(asg::SgTEvent* event, ST::SUSYObjDef_xAOD* SUSYTool, 
   goodTaus = new xAOD::TauJetContainer(SG::VIEW_ELEMENTS);
   goodPhotons = new xAOD::PhotonContainer(SG::VIEW_ELEMENTS);
   goodJets = new xAOD::JetContainer(SG::VIEW_ELEMENTS);
-  goodJetsBeforeOR = new xAOD::JetContainer(SG::VIEW_ELEMENTS);
   BJets = new xAOD::JetContainer(SG::VIEW_ELEMENTS);
   nonBJets = new xAOD::JetContainer(SG::VIEW_ELEMENTS);
 
@@ -55,6 +57,7 @@ NewObjectDef::NewObjectDef(asg::SgTEvent* event, ST::SUSYObjDef_xAOD* SUSYTool, 
   eventStore->record(goodTaus,"goodTaus"+systematic);
   eventStore->record(goodMuons,"goodMuons"+systematic);
   eventStore->record(goodPhotons,"goodPhotons"+systematic);
+  eventStore->record(goodJets,"goodJets"+systematic);
   eventStore->record(BJets,"BJets"+systematic);
   eventStore->record(nonBJets,"nonBJets"+systematic);
   
@@ -89,16 +92,16 @@ void NewObjectDef::GetBaselineObjects() {
   xAOD::PhotonContainer* photons_nominal(0);
   xAOD::ShallowAuxContainer* photons_nominal_aux(0);
 
-  preOR_baselineElectrons = new xAOD::ElectronContainer(SG::VIEW_ELEMENTS);
-  preOR_baselineMuons = new xAOD::MuonContainer(SG::VIEW_ELEMENTS);
-  preOR_baselineTaus = new xAOD::TauJetContainer(SG::VIEW_ELEMENTS);
-  preOR_baselinePhotons = new xAOD::PhotonContainer(SG::VIEW_ELEMENTS);
-  preOR_baselineJets = new xAOD::JetContainer(SG::VIEW_ELEMENTS);
+  preOR_baselineElectrons = std::make_unique<xAOD::ElectronContainer>(SG::VIEW_ELEMENTS);
+  preOR_baselineMuons = std::make_unique<xAOD::MuonContainer>(SG::VIEW_ELEMENTS);
+  preOR_baselineTaus = std::make_unique<xAOD::TauJetContainer>(SG::VIEW_ELEMENTS);
+  preOR_baselinePhotons = std::make_unique<xAOD::PhotonContainer>(SG::VIEW_ELEMENTS);
+  preOR_baselineJets = std::make_unique<xAOD::JetContainer>(SG::VIEW_ELEMENTS);
 
  
   // Setup MET containers
   xAOD::MissingETContainer* met_nominal = new xAOD::MissingETContainer;
-  xAOD::MissingETAuxContainer* met_nominal_aux = new xAOD::MissingETAuxContainer;
+  xAOD::MissingETAuxContainer*  met_nominal_aux = new xAOD::MissingETAuxContainer;
   met_nominal->setStore(met_nominal_aux);
   met_nominal->reserve(10);
 
@@ -134,7 +137,7 @@ void NewObjectDef::GetBaselineObjects() {
   {
     std::cout << "No RefFinal inside MET container" << std::endl;
   }
-  METvector = new TVector2 ((*met_it)->mpx(),(*met_it)->mpy());
+  METvector = std::make_unique<TVector2>((*met_it)->mpx(),(*met_it)->mpy());
   MET = (*met_it)->met();
   METphi = (*met_it)->phi();
   objTool->GetMETSig(*met_nominal, METsig, false, false);
@@ -160,7 +163,8 @@ void NewObjectDef::GetBaselineObjects() {
   for (const auto& tau_itr: *taus) {
     if (tau_itr->auxdata<char>("baseline")) preOR_baselineTaus->push_back(tau_itr);
   }
-  objTool->OverlapRemoval(preOR_baselineElectrons, preOR_baselineMuons, preOR_baselineJets, preOR_baselinePhotons, preOR_baselineTaus);
+  objTool->OverlapRemoval(preOR_baselineElectrons.get(), preOR_baselineMuons.get(), preOR_baselineJets.get(), preOR_baselinePhotons.get(), preOR_baselineTaus.get());
+
   delete met_nominal;
   delete met_nominal_aux;
 }
@@ -276,12 +280,6 @@ void NewObjectDef::GetObjects() {
     }
   }
 
-  //We're done with these now
-  delete  preOR_baselineElectrons;
-  delete  preOR_baselineMuons;
-  delete  preOR_baselineTaus;
-  delete  preOR_baselinePhotons;
-  delete  preOR_baselineJets;
   return; 
 }
 
