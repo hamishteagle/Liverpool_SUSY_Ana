@@ -17,6 +17,7 @@
 #include <TFile.h>
 #include <exception>
 #include <AsgTools/MessageCheck.h>
+#include <memory>
 
 #include <string.h>
 #include <fstream>
@@ -500,8 +501,7 @@ EL::StatusCode MyxAODAnalysis :: execute ()
       }
     }
 
-    NewObjectDef* m_objs;
-    m_objs = new NewObjectDef(evtStore(), objTool, store, mcChannel, EventNumber, mcWgt, m_lumiScaled, syst.name(), doTruthJets);
+    auto objs = std::make_unique<NewObjectDef>(evtStore(), objTool, store, mcChannel, EventNumber, mcWgt, m_lumiBlockNumber, syst.name(), doTruthJets);
     if (firstEvent == true) firstEvent = false;
 
     bool passGRL = false;
@@ -543,9 +543,9 @@ EL::StatusCode MyxAODAnalysis :: execute ()
       }
     }
 
-    double nBadJet = m_objs->getBadJets()->size();
-    double nCosmicMu = m_objs->getCosmicMuons()->size();
-    double nBadMu = m_objs->getBadMuons()->size();
+    double nBadJet = objs->getBadJets()->size();
+    double nCosmicMu = objs->getCosmicMuons()->size();
+    double nBadMu = objs->getBadMuons()->size();
 
     
 
@@ -678,15 +678,15 @@ EL::StatusCode MyxAODAnalysis :: execute ()
       }
       if (mu_triggers > 0) {
         passedSingleMuTrigger = true;
-	leptonTriggerSF = m_objs->getMuonTriggerSF();
+	leptonTriggerSF = objs->getMuonTriggerSF();
       }
       if (el_triggers > 0) {
         passedSingleElTrigger = true;
-	leptonTriggerSF = m_objs->getElectronTriggerSF();
+	leptonTriggerSF = objs->getElectronTriggerSF();
       }
       if (dilep_triggers >0) {
 	passedDiLeptonTrigger = true;
-	leptonTriggerSF = m_objs->getDilepTriggerSF();
+	leptonTriggerSF = objs->getDilepTriggerSF();
       }
       if (objTool->IsMETTrigPassed()) {
         passedMETTrigger = true;
@@ -700,7 +700,7 @@ EL::StatusCode MyxAODAnalysis :: execute ()
     
 
     bool passedPrimVertex=true;
-    if (m_objs->getPrimVertex() < 1){
+    if (objs->getPrimVertex() < 1){
       passedPrimVertex=false;
       //isyst++;
       continue;
@@ -733,7 +733,7 @@ EL::StatusCode MyxAODAnalysis :: execute ()
       passedCleaningCuts=true;
     }
 
-    std::unique_ptr<CalculateVariables> m_varCalc(new CalculateVariables ( m_objs, m_BTaggingSelectionTool, isTruth, doPhotons));
+    std::unique_ptr<CalculateVariables> m_varCalc(new CalculateVariables ( objs.get(), m_BTaggingSelectionTool, isTruth, doPhotons));
     std::unique_ptr<PreliminarySel> m_regions(new PreliminarySel (*m_varCalc, passedCleaningCuts));
 
 
@@ -760,10 +760,10 @@ EL::StatusCode MyxAODAnalysis :: execute ()
     double dPhi_init = -99;
     double P_init = -99;
     if (doTruthJets){
-      int nTruthJets = m_objs->getTruthJets()->size();
+      int nTruthJets = objs->getTruthJets()->size();
       //Compare truth jets and reco jets
-      for (auto truth_jet: (*m_objs->getTruthJets())){
-	for (auto reco_jet: (*m_objs->getGoodJets())){
+      for (auto truth_jet: (*objs->getTruthJets())){
+	for (auto reco_jet: (*objs->getGoodJets())){
 	  double dR = truth_jet->p4().DeltaR(reco_jet->p4());
 	  double dEta = truth_jet->eta()-reco_jet->eta();
 	  double dPhi = truth_jet->phi()-reco_jet->phi();
@@ -805,16 +805,13 @@ EL::StatusCode MyxAODAnalysis :: execute ()
 
     if (!isTruth){
       if (m_regions->interestingRegion || RunningLocally){
-      	(m_treeServiceVector[isyst])->fillTree(m_objs, *m_regions, *m_varCalc,m_finalSumOfWeights, m_initialSumOfWeights, puWgt, SFmctbbll, passedMETTrigger, passedSingleMuTrigger, passedSingleElTrigger, passedDiLeptonTrigger, passedGammaTrigger, passedMultiJetTrigger, muon_triggers, muon_decisions, electron_triggers, electron_decisions, dilepton_triggers, dilepton_decisions,leptonTriggerSF, PUSumOfWeights, truthfilt_MET, truthfilt_HT, coreFlag, sctFlag, LArTileFlag, passGRL, passedPrimVertex, passedJetClean, passedCosmicMu, passedMuonClean, m_runNumber, renormedMcWgt, year, m_averageIntPerX, m_actualIntPerX, xsec, filteff, kfactor);
+      	(m_treeServiceVector[isyst])->fillTree(objs.get(), *m_regions, *m_varCalc,m_finalSumOfWeights, m_initialSumOfWeights, puWgt, SFmctbbll, passedMETTrigger, passedSingleMuTrigger, passedSingleElTrigger, passedDiLeptonTrigger, passedGammaTrigger, passedMultiJetTrigger, muon_triggers, muon_decisions, electron_triggers, electron_decisions, dilepton_triggers, dilepton_decisions,leptonTriggerSF, PUSumOfWeights, truthfilt_MET, truthfilt_HT, coreFlag, sctFlag, LArTileFlag, passGRL, passedPrimVertex, passedJetClean, passedCosmicMu, passedMuonClean, m_runNumber, renormedMcWgt, year, m_averageIntPerX, m_actualIntPerX, xsec, filteff, kfactor);
       }
     }
 
 
 
     isyst++;
-    if(m_objs){
-      delete m_objs;
-    }
     store->clear();
     electron_triggers.clear();
     electron_decisions.clear();

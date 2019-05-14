@@ -33,6 +33,7 @@ class NewObjectDef
       delete badMuons;
       delete METvector;
       delete goodJets;
+      delete goodJetsBeforeOR;
     };
 
     void GetObjects();
