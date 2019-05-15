@@ -263,7 +263,7 @@ EL::StatusCode MyxAODAnalysis :: initialize ()
   
   ANA_CHECK(objTool->setProperty("DataSource",datasource) );
   if (m_SUSY5){
-    //ANA_CHECK(objTool->setProperty("ConfigFile",PathResolverFindCalibFile("/MyAnalysis/MyAnalysis/configs/1Lbb_default.conf")));
+    ANA_CHECK(objTool->setProperty("ConfigFile",PathResolverFindCalibFile("/MyAnalysis/MyAnalysis/configs/topDM_Giulia.conf")));
     ANA_MSG_INFO("This is SUSY5");
   }
   ANA_CHECK(objTool->setProperty("UseBtagging", true));
@@ -715,7 +715,7 @@ EL::StatusCode MyxAODAnalysis :: execute ()
     if (nCosmicMu > 0){
       passedCosmicMu=false;
       //isyst++;
-      continue;
+      if(!m_SUSY5) continue;
     }
 
     bool passedMuonClean=true;

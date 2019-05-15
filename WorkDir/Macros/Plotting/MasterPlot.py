@@ -76,9 +76,11 @@ def main():
     #signalFiles.append('/scratch/hteagle/SbMB/dm130/mc16_13TeV.391841.MGPy8EG_A14N23LO_BB_onestepN2hN1_1100_330_200_a_d_e.root')
     #signalFiles.append('/scratch/hteagle/SbMB/m60/mc16_13TeV.391874.MGPy8EG_A14N23LO_BB_onestepN2hN1_1200_1150_60_a_d_e.root')
 
+    #signalFiles.append('/user/hteagle/AnalysisDirectory/Rel21/Base.21.2.72/run/wh_cutflow/data-output/DAOD_SUSY5.root')
+    #signalFiles.append('/user/hteagle/AnalysisDirectory/Rel21/Base.21.2.72/run/submitdir_300_150_cutflow/data-output/DAOD_SUSY5.root')
 
-    #signalFiles.append("/hepstore/hteagle/Wh/ntuples_21.2.60/ttbar.root")
-    signalFiles.append("/hepstore/hteagle/Wh/ntuples_21.2.60/wJets.root")
+    signalFiles.append('/hepstore/hteagle/Wh/ntuples_21.2.60/ttbar.root')
+
     #signalFiles.append('/hepstore/hteagle/Wh/ntuples_21.2.60/396716.MadGraphPythia8EvtGen_A14N23LO_C1N2_Wh_hbb_300p0_150p0_lep_output.root')
     #signalFiles.append('/hepstore/hteagle/Wh/ntuples_21.2.60/396734.MadGraphPythia8EvtGen_A14N23LO_C1N2_Wh_hbb_400p0_250p0_lep_output.root')
     #signalFiles.append('/hepstore/hteagle/Wh/ntuples_21.2.60/396750.MadGraphPythia8EvtGen_A14N23LO_C1N2_Wh_hbb_500p0_350p0_lep_output.root')
@@ -86,7 +88,6 @@ def main():
     
     #signalFiles.append('/user/hteagle/liverpool-ml/TMVATuples/reco_full/400_250_TruthSmeared.root')    
     #signalFiles.append('/user/hteagle/liverpool-ml/TMVATuples/reco_full/400_250_TruthSmeared_EtaPhiPsmear.root')
-    #signalFiles.append('/user/hteagle/AnalysisDirectory/Rel21/Base.21.2.31/run/submitdir_ttbarCheck/data-output/DAOD_SUSY5.root')
     # signalFiles.append('/user/hteagle/liverpool-ml/TMVATuples/reco_full/396706.MadGraphPythia8EvtGen_A14N23LO_C1N2_Wh_hbb_250p0_100p0_lep_output.root')
     # signalFiles.append('/user/hteagle/liverpool-ml/TMVATuples/reco_full/396716.MadGraphPythia8EvtGen_A14N23LO_C1N2_Wh_hbb_300p0_150p0_lep_output.root')
     # signalFiles.append('/user/hteagle/liverpool-ml/TMVATuples/reco_full/396734.MadGraphPythia8EvtGen_A14N23LO_C1N2_Wh_hbb_400p0_250p0_lep_output.root')
@@ -119,7 +120,7 @@ def main():
 
 
     #Liv Cleaning cuts
-    cleaningCuts = "(coreFlag)*(sctFlag)*(LArTileFlag)*(passedPrimVertex)*(passedJetClean)*(passedCosmicMu)*(passedMuonClean)*"
+    cleaningCuts = "(coreFlag)*(sctFlag)*(LArTileFlag)*(passedPrimVertex)*(passedJetClean)*(passedMuonClean)*"
     weights = 'mcEventWeight*HFScale*JVTSF*puWgt*bJetSF*muonSF*electronSF*YearWeight*'
     #Liv luminosity and -weights
     luminosity_liv ="139*"+weights
@@ -144,7 +145,7 @@ def main():
 
     isttbarOK = "( (mcID != 410470 || truthFilterMET < 100)&&(mcID != 345935 || (truthFilterMET >= 100 && truthFilterMET < 200))&&(mcID != 407345 || (truthFilterMET >= 200 && truthFilterMET < 300))&&(mcID != 407346 || (truthFilterMET >= 300 && truthFilterMET < 400))&&(mcID != 407347 || truthFilterMET > 400) )*"
 
-    issingleTopOK = "( (year==2018) ||(((mcID != 407019 || truthFilterMET >=200)&&(mcID != 407021 || truthFilterMET >=200))&&(mcID >410647||mcID <410644 || truthFilterMET<200)&&(mcID!=410658 ||mcID!=410659 || truthFilterMET<200)) )*"
+    issingleTopOK = "( (year==2018) ||(((mcID != 407019 || truthFilterMET >=200)&&(mcID != 407021 || truthFilterMET >=200))&&(mcID >410647 ||mcID <410644 || truthFilterMET<200)&&(mcID!=410658 || mcID!=410659 || truthFilterMET<200)) )*"
 
     
     ymax = 800000
@@ -155,12 +156,13 @@ def main():
     directory = options.date+'/'
     print ("Output Directory is: ", directory)
     #############################
-    label = "SRLM"
+    label = "SRCutflow"
     #############################
     EventCounter = True
 
     preCuts = cleaningCuts+isttbarOK+issingleTopOK
 
+    
     preSelection_Wh_Liv = "(pTl1>27)*(nLeptons==1)*(nBJets==2)*(nJets<4)*(ETMiss>200)*(m_T>100)*(m_bb>50)*"
     # Preliminary Sbottom Multi B regions here:
     # Change the "cutstouse" variable to produce different distributions for a given selection. If plotting a SR distribution,
@@ -200,13 +202,10 @@ def main():
 
 
     elif label =="SRLM":
-        cutstouse = preCuts+"(nBJets==2)*(nLeptons==1)*(m_bb>100 && m_bb<140)*(nJets<4)*(ETMiss>240)*(m_T>100 && m_T<160)*(m_CTcorr>180 && m_CTcorr<230)"
-    elif label =="SRMM":
-        cutstouse = preCuts+"(mbb>100 && mbb<140)*(met>200)*(mt>160 && mt<240)*(m_CTcorr>180)"
-    elif label =="SRHM_Liv":
-        cutstouse = cleaningCuts+METtriggerCuts+preSelection_Wh_Liv+"(mbb>105 && mbb<135)*(m_CTcorr>160)*(met>200)*(mt>200)"
-    elif label =="TRHM_Liv":
-        cutstouse = cleaningCuts+METtriggerCuts+preSelection_Wh_Liv+" (mbb<105 || mbb>135)*(m_CTcorr<160)*(met>200)*(mt>200)"
+        cutstouse = preCuts+"(nLeptons==1)*(nBJets==2)*(m_bb>100 && m_bb<140)*(nJets<4)*(ETMiss>240)*(m_T>100 && m_T<160)*(m_CTcorr>180 && m_CTcorr<230)"
+    elif label == "SRCutflow":
+        cutstouse = preCuts+"(nBaselineLeptons==1)*(nLeptons==1)*(nJets ==2 || nJets ==3)*(ETMiss>180)*(m_T>40)*(nBJets==2)*(m_bb>50)*(m_bb>105 && m_bb<135)*(m_CTcorr>180)*(m_T>100)"
+        
 
 
     elif label == "monotop_preSelection":
