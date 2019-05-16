@@ -213,7 +213,15 @@ TreeService::TreeService(TTree *outputTree, TDirectory *OutDir){
 }
 
 
-void TreeService::fillTree(NewObjectDef *objects ,PreliminarySel &region, CalculateVariables &variables, double mFinalWeight, double mInitialWeight, double puWeight, double SFmCTbbll, bool TrigMET, bool TrigMu, bool TrigEl, bool TrigDilep, bool TrigGamma, bool Trig6j, std::vector<std::string> muon_triggers, std::vector<int> muon_decisions, std::vector<std::string> electron_triggers, std::vector<int> electron_decisions, std::vector<std::string> dilepton_triggers, std::vector<int> dilepton_decisions, double LeptonTriggerSF, double puSumWeights, double TRUTHMET, double TRUTHHT, bool CoreFlags, bool SCTFlag,bool LArTileFlags, bool passGRL, bool passedPrimVertexes, bool passedJetCleans, bool passedCosmicMus, bool passedMuonCleans, double RNo,  double RenormedMCWgt, int LumiYear, double m_averageIntPerCrossing, double m_actualIntPerCrossing, double m_xsec, double m_filteff, double m_kfactor){
+void TreeService::fillTree(NewObjectDef *objects , xAOD::TStore *evtStore, PreliminarySel &region, CalculateVariables &variables, double mFinalWeight, double mInitialWeight, double puWeight, double SFmCTbbll, bool TrigMET, bool TrigMu, bool TrigEl, bool TrigDilep, bool TrigGamma, bool Trig6j, std::vector<std::string> muon_triggers, std::vector<int> muon_decisions, std::vector<std::string> electron_triggers, std::vector<int> electron_decisions, std::vector<std::string> dilepton_triggers, std::vector<int> dilepton_decisions, double LeptonTriggerSF, double puSumWeights, double TRUTHMET, double TRUTHHT, bool CoreFlags, bool SCTFlag,bool LArTileFlags, bool passGRL, bool passedPrimVertexes, bool passedJetCleans, bool passedCosmicMus, bool passedMuonCleans, double RNo,  double RenormedMCWgt, int LumiYear, double m_averageIntPerCrossing, double m_actualIntPerCrossing, double m_xsec, double m_filteff, double m_kfactor){
+
+  xAOD::JetContainer *goodJet_cont = nullptr;
+  evtStore->retrieve(goodJet_cont, "goodJets");
+  xAOD::ElectronContainer *goodElectron_cont = nullptr;
+  evtStore->retrieve(goodElectron_cont, "goodElectrons");
+  xAOD::MuonContainer *goodMuon_cont = nullptr;
+  evtStore->retrieve(goodMuon_cont, "goodMuons");
+
 
   CutsRegion = region.region;
 
@@ -424,7 +432,7 @@ void TreeService::fillTree(NewObjectDef *objects ,PreliminarySel &region, Calcul
   nPhoton = variables.nPhoton;
 
   nMuons = variables.nMuon;
-  nBadMuons = objects->getBadMuons()->size();
+  nBadMuons = variables.nBadMuon;
   nElectrons = variables.nElectron;
   nTaus = variables.nTau;
   ETMiss = variables.eTMiss;
@@ -652,54 +660,54 @@ void TreeService::fillTree(NewObjectDef *objects ,PreliminarySel &region, Calcul
 
 
 
-  int maxJet = objects->getGoodJets()->size();
+  int maxJet = goodJet_cont->size();
   for (int iJet = 0; iJet < maxJet; iJet++)
     {
-      jet_pT.push_back(0.001*(*(objects->getGoodJets()))[iJet]->pt());
-      jet_eta.push_back((*(objects->getGoodJets()))[iJet]->eta());
-      jet_phi.push_back((*(objects->getGoodJets()))[iJet]->phi());
-      jet_E.push_back(0.001*(*(objects->getGoodJets()))[iJet]->e());
-      jet_M.push_back(0.001*(*(objects->getGoodJets()))[iJet]->m());
-      double flav= ( ((*(objects->getGoodJets()))[iJet]->auxdata< char >("bjet") == true ) && fabs((*(objects->getGoodJets()))[iJet]->eta())<2.5 ) ? 5 : 0;
+      jet_pT.push_back(0.001*(*(goodJet_cont))[iJet]->pt());
+      jet_eta.push_back((*(goodJet_cont))[iJet]->eta());
+      jet_phi.push_back((*(goodJet_cont))[iJet]->phi());
+      jet_E.push_back(0.001*(*(goodJet_cont))[iJet]->e());
+      jet_M.push_back(0.001*(*(goodJet_cont))[iJet]->m());
+      double flav= ( ((*(goodJet_cont))[iJet]->auxdata< char >("bjet") == true ) && fabs((*(goodJet_cont))[iJet]->eta())<2.5 ) ? 5 : 0;
       jet_flav.push_back(flav);
       if (flav != 5)
 	{
 	  std::vector<int> ntrk;
-	  (*(objects->getGoodJets()))[iJet]->getAttribute(xAOD::JetAttribute::NumTrkPt500,ntrk);
+	  (*(goodJet_cont))[iJet]->getAttribute(xAOD::JetAttribute::NumTrkPt500,ntrk);
 	  if(ntrk.size()>0)
 	    {
 	      jet_ntrks.push_back(ntrk[0]);
 	      if (ntrk[0]<=4)
 		{
-		  double dphi = TVector2::Phi_mpi_pi(ETMissPhi - (*(objects->getGoodJets()))[iJet]->phi());
+		  double dphi = TVector2::Phi_mpi_pi(ETMissPhi - (*(goodJet_cont))[iJet]->phi());
 		}
 	    }
 	}
       int flavour = -1;
       // mcid == 0 for Data
-      if(mcID > 0){(*(objects->getGoodJets()))[iJet]->getAttribute("ConeTruthLabelID",flavour);}
+      if(mcID > 0){(*(goodJet_cont))[iJet]->getAttribute("ConeTruthLabelID",flavour);}
       jet_truflav.push_back( flavour );
       double MV2c10wgt = -99;
-      if(mcID > 0){(*(objects->getGoodJets()))[iJet]->btagging()->MVx_discriminant("MV2c10", MV2c10wgt);}
+      if(mcID > 0){(*(goodJet_cont))[iJet]->btagging()->MVx_discriminant("MV2c10", MV2c10wgt);}
       jet_bWgt.push_back(MV2c10wgt);
     }
 
 
 
-  int maxEl = objects->getGoodElectrons()->size();
+  int maxEl = goodElectron_cont->size();
   for (int iel = 0; iel < maxEl; iel++){
-    el_pT.push_back(0.001*(*(objects->getGoodElectrons()))[iel]->pt());
-    el_eta.push_back((*(objects->getGoodElectrons()))[iel]->eta());
-    el_phi.push_back((*(objects->getGoodElectrons()))[iel]->phi());
-    el_E.push_back(0.001*(*(objects->getGoodElectrons()))[iel]->e());
+    el_pT.push_back(0.001*(*(goodElectron_cont))[iel]->pt());
+    el_eta.push_back((*(goodElectron_cont))[iel]->eta());
+    el_phi.push_back((*(goodElectron_cont))[iel]->phi());
+    el_E.push_back(0.001*(*(goodElectron_cont))[iel]->e());
   }
 
-  int maxMu = objects->getGoodMuons()->size();
+  int maxMu = goodMuon_cont->size();
   for (int imu = 0; imu < maxMu; imu++){
-    mu_pT.push_back(0.001*(*(objects->getGoodMuons()))[imu]->pt());
-    mu_eta.push_back((*(objects->getGoodMuons()))[imu]->eta());
-    mu_phi.push_back((*(objects->getGoodMuons()))[imu]->phi());
-    mu_E.push_back(0.001*(*(objects->getGoodMuons()))[imu]->e());
+    mu_pT.push_back(0.001*(*(goodMuon_cont))[imu]->pt());
+    mu_eta.push_back((*(goodMuon_cont))[imu]->eta());
+    mu_phi.push_back((*(goodMuon_cont))[imu]->phi());
+    mu_E.push_back(0.001*(*(goodMuon_cont))[imu]->e());
   }
 
   // int maxTau = objects->getGoodTaus()->size();

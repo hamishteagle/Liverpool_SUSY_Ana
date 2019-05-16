@@ -1,3 +1,7 @@
 [submodule "HistFitter"]
 	path = HistFitter
 	url = https://gitlab.cern.ch/HistFitter/HistFitter.git
+[submodule "jb_utils"]
+	path = jb_utils
+	url = https://gitlab.cern.ch/jburr/jb_utils.git
+	branch = master

@@ -50,6 +50,9 @@ class NewObjectDef
     double getJVTSF(){return JVTSF;};
     double getLeptonSF(){return 1;};
     int getPrimVertex(){return nVertex;};
+    int getNBadMuons(){return nBadMuons;};
+    int getNCosmicMuons(){return nCosmicMuons;};
+    int getNBadJets(){return nBadJets;};
     bool elTriggerMatch(){return passElectronTriggerMatch;};
     bool muTriggerMatch(){return passMuonTriggerMatch;};
     bool taTriggerMatch(){return passTauTriggerMatch;};
@@ -62,17 +65,17 @@ class NewObjectDef
     xAOD::MuonContainer* getCosmicMuons(){return cosmicMuons.get();};
     xAOD::MuonContainer* getBadMuons(){return badMuons.get();};
 
-    xAOD::JetContainer* getGoodJets(){return goodJets;};
-    xAOD::JetContainer* getNonBJets(){return nonBJets;};
-    xAOD::JetContainer* getBJets(){return BJets;};
-    xAOD::ElectronContainer* getBaselineElectrons(){return baselineElectrons;};
-    xAOD::ElectronContainer* getGoodElectrons(){return goodElectrons;};
-    xAOD::MuonContainer* getBaselineMuons(){return baselineMuons;};
-    xAOD::MuonContainer* getGoodMuons(){return goodMuons;};
-    xAOD::TauJetContainer* getBaselineTaus(){return baselineTaus;};
-    xAOD::TauJetContainer* getGoodTaus(){return goodTaus;};
-    xAOD::PhotonContainer* getBaselinePhotons(){return baselinePhotons;};
-    xAOD::PhotonContainer* getGoodPhotons(){return goodPhotons;};
+    xAOD::JetContainer* getGoodJets(){return goodJets.get();};
+    xAOD::JetContainer* getNonBJets(){return nonBJets.get();};
+    xAOD::JetContainer* getBJets(){return BJets.get();};
+    xAOD::ElectronContainer* getBaselineElectrons(){return baselineElectrons.get();};
+    xAOD::ElectronContainer* getGoodElectrons(){return goodElectrons.get();};
+    xAOD::MuonContainer* getBaselineMuons(){return baselineMuons.get();};
+    xAOD::MuonContainer* getGoodMuons(){return goodMuons.get();};
+    xAOD::TauJetContainer* getBaselineTaus(){return baselineTaus.get();};
+    xAOD::TauJetContainer* getGoodTaus(){return goodTaus.get();};
+    xAOD::PhotonContainer* getBaselinePhotons(){return baselinePhotons.get();};
+    xAOD::PhotonContainer* getGoodPhotons(){return goodPhotons.get();};
 
     xAOD::JetContainer* getTruthJets(){return goodTruthJets;};
     
@@ -99,18 +102,18 @@ class NewObjectDef
     std::unique_ptr<xAOD::JetContainer>  goodJetsBeforeOR  = nullptr;
     std::unique_ptr<TVector2>            METvector         = nullptr;
 
-    xAOD::ElectronContainer* baselineElectrons = nullptr;
-    xAOD::TauJetContainer* baselineTaus = nullptr;
-    xAOD::MuonContainer* baselineMuons = nullptr;
-    xAOD::PhotonContainer* baselinePhotons = nullptr;
+    std::unique_ptr<xAOD::ElectronContainer> baselineElectrons = nullptr;
+    std::unique_ptr<xAOD::TauJetContainer> baselineTaus = nullptr;
+    std::unique_ptr<xAOD::MuonContainer> baselineMuons = nullptr;
+    std::unique_ptr<xAOD::PhotonContainer> baselinePhotons = nullptr;
     
-    xAOD::JetContainer* goodJets = nullptr;
-    xAOD::ElectronContainer* goodElectrons = nullptr;
-    xAOD::TauJetContainer* goodTaus = nullptr;
-    xAOD::MuonContainer* goodMuons = nullptr;
-    xAOD::PhotonContainer* goodPhotons = nullptr;
-    xAOD::JetContainer* BJets = nullptr;
-    xAOD::JetContainer* nonBJets = nullptr;
+    std::unique_ptr<xAOD::JetContainer> goodJets = nullptr;
+    std::unique_ptr<xAOD::ElectronContainer> goodElectrons = nullptr;
+    std::unique_ptr<xAOD::TauJetContainer> goodTaus = nullptr;
+    std::unique_ptr<xAOD::MuonContainer> goodMuons = nullptr;
+    std::unique_ptr<xAOD::PhotonContainer> goodPhotons = nullptr;
+    std::unique_ptr<xAOD::JetContainer> BJets = nullptr;
+    std::unique_ptr<xAOD::JetContainer> nonBJets = nullptr;
 
     
     xAOD::JetContainer* goodTruthJets = nullptr;
@@ -134,6 +137,9 @@ class NewObjectDef
     
     
     int nVertex = 0;
+    int nBadMuons = 0;
+    int nCosmicMuons = 0;
+    int nBadJets = 0;
     bool passElectronTriggerMatch = false;
     bool passMuonTriggerMatch = false;
     bool passTauTriggerMatch = false;

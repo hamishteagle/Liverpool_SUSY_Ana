@@ -147,7 +147,7 @@ int main( int argc, char* argv[]) {
 	  sh.setMetaString ("nc_tree", "CollectionTree");
 	  sh.print();
 	  output_name = sample_name;        
-	  driver.options()->setString("nc_outputSampleName", "user." + username + "." + CurrentDate+"." + physicsName+"_"+fileType+"."+release+"."+"%in:name[2]%.%in:name[3]%");
+	  driver.options()->setString("nc_outputSampleName", "user." + username + "." + CurrentDate+"." + physicsName+"_"+fileType+"."+release+".v1."+"%in:name[2]%.%in:name[3]%");
         }
         // Add our analysis to the job:
         MyxAODAnalysis* alg = new MyxAODAnalysis();

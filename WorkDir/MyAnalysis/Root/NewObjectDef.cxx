@@ -23,18 +23,18 @@ NewObjectDef::NewObjectDef(asg::SgTEvent* event, ST::SUSYObjDef_xAOD* SUSYTool, 
 
 
   //Things that are passed to the event store, set these as raw pointers(eventStore takes ownership of memory)
-  baselineElectrons = new xAOD::ElectronContainer(SG::VIEW_ELEMENTS);
-  baselineMuons = new xAOD::MuonContainer(SG::VIEW_ELEMENTS);
-  baselineTaus = new xAOD::TauJetContainer(SG::VIEW_ELEMENTS);
-  baselinePhotons = new xAOD::PhotonContainer(SG::VIEW_ELEMENTS);
+  baselineElectrons = std::make_unique<xAOD::ElectronContainer>(SG::VIEW_ELEMENTS);
+  baselineMuons = std::make_unique<xAOD::MuonContainer>(SG::VIEW_ELEMENTS);
+  baselineTaus = std::make_unique<xAOD::TauJetContainer>(SG::VIEW_ELEMENTS);
+  baselinePhotons = std::make_unique<xAOD::PhotonContainer>(SG::VIEW_ELEMENTS);
  
-  goodElectrons = new xAOD::ElectronContainer(SG::VIEW_ELEMENTS);
-  goodMuons = new xAOD::MuonContainer(SG::VIEW_ELEMENTS);
-  goodTaus = new xAOD::TauJetContainer(SG::VIEW_ELEMENTS);
-  goodPhotons = new xAOD::PhotonContainer(SG::VIEW_ELEMENTS);
-  goodJets = new xAOD::JetContainer(SG::VIEW_ELEMENTS);
-  BJets = new xAOD::JetContainer(SG::VIEW_ELEMENTS);
-  nonBJets = new xAOD::JetContainer(SG::VIEW_ELEMENTS);
+  goodElectrons = std::make_unique<xAOD::ElectronContainer>(SG::VIEW_ELEMENTS);
+  goodMuons = std::make_unique<xAOD::MuonContainer>(SG::VIEW_ELEMENTS);
+  goodTaus = std::make_unique<xAOD::TauJetContainer>(SG::VIEW_ELEMENTS);
+  goodPhotons = std::make_unique<xAOD::PhotonContainer>(SG::VIEW_ELEMENTS);
+  goodJets = std::make_unique<xAOD::JetContainer>(SG::VIEW_ELEMENTS);
+  BJets = std::make_unique<xAOD::JetContainer>(SG::VIEW_ELEMENTS);
+  nonBJets = std::make_unique<xAOD::JetContainer>(SG::VIEW_ELEMENTS);
 
 
   //Do the baseline get here, pass this to the OR
@@ -49,17 +49,21 @@ NewObjectDef::NewObjectDef(asg::SgTEvent* event, ST::SUSYObjDef_xAOD* SUSYTool, 
     GetTruthJets();
   }
   
-  eventStore->record(baselineElectrons,"baselineElectrons_"+systematic);
-  eventStore->record(baselineMuons,"baselineMuons_"+systematic);
-  eventStore->record(baselineTaus,"baselineTaus_"+systematic);
-  eventStore->record(baselinePhotons,"baselinePhotons_"+systematic);
-  eventStore->record(goodElectrons,"goodElectrons"+systematic);
-  eventStore->record(goodTaus,"goodTaus"+systematic);
-  eventStore->record(goodMuons,"goodMuons"+systematic);
-  eventStore->record(goodPhotons,"goodPhotons"+systematic);
-  eventStore->record(goodJets,"goodJets"+systematic);
-  eventStore->record(BJets,"BJets"+systematic);
-  eventStore->record(nonBJets,"nonBJets"+systematic);
+  eventStore->record(baselineElectrons.release(),"baselineElectrons"+systematic);
+  eventStore->record(baselineMuons.release(),"baselineMuons"+systematic);
+  eventStore->record(baselineTaus.release(),"baselineTaus"+systematic);
+  eventStore->record(baselinePhotons.release(),"baselinePhotons"+systematic);
+  eventStore->record(goodElectrons.release(),"goodElectrons"+systematic);
+
+  eventStore->record(goodTaus.release(),"goodTaus"+systematic);
+  eventStore->record(goodMuons.release(),"goodMuons"+systematic);
+  eventStore->record(badMuons.release(),"badMuons"+systematic);
+  eventStore->record(goodPhotons.release(),"goodPhotons"+systematic);
+  eventStore->record(goodJets.release(),"goodJets"+systematic);
+  eventStore->record(goodJetsBeforeOR.release(),"goodJets_beforeOR"+systematic);
+  eventStore->record(BJets.release(),"BJets"+systematic);
+  eventStore->record(nonBJets.release(),"nonBJets"+systematic);
+  eventStore->record(METvector.release(),"METvector"+systematic);
   
 
 
@@ -198,7 +202,9 @@ void NewObjectDef::GetObjects() {
   }
   baselineMuons->sort(pT_Sorter);
   cosmicMuons->sort(pT_Sorter);
+  nCosmicMuons=cosmicMuons->size();
   badMuons->sort(pT_Sorter);
+  nBadMuons=badMuons->size();
   goodMuons->sort(pT_Sorter);
   muonSF = 1;
   if (objTool->isData() == 0 ) {
@@ -233,13 +239,14 @@ void NewObjectDef::GetObjects() {
         goodJets->push_back(jet_itr);
         if (jet_itr->auxdata<char>("bjet")) BJets->push_back(jet_itr);
         if (!(jet_itr)->auxdata<char>("bjet")) nonBJets->push_back(jet_itr);
-        if (!objTool->isData()) bJetSF = objTool->BtagSF(goodJets);
-        if (!objTool->isData()) JVTSF = objTool->JVT_SF(goodJets);
+        if (!objTool->isData()) bJetSF = objTool->BtagSF(goodJets.get());
+        if (!objTool->isData()) JVTSF = objTool->JVT_SF(goodJets.get());
       }
     }
   }
   goodJetsBeforeOR->sort(pT_Sorter);
   badJets->sort(pT_Sorter);
+  nBadJets = badJets->size();
   goodJets->sort(pT_Sorter);
   BJets->sort(pT_Sorter);
   nonBJets->sort(pT_Sorter);

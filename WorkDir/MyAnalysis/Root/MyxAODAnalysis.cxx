@@ -263,8 +263,12 @@ EL::StatusCode MyxAODAnalysis :: initialize ()
   
   ANA_CHECK(objTool->setProperty("DataSource",datasource) );
   if (m_SUSY5){
-    ANA_CHECK(objTool->setProperty("ConfigFile",PathResolverFindCalibFile("/MyAnalysis/MyAnalysis/configs/topDM_Giulia.conf")));
+    //ANA_CHECK(objTool->setProperty("ConfigFile",PathResolverFindCalibFile("/MyAnalysis/MyAnalysis/configs/1Lbb_default.conf")));
     ANA_MSG_INFO("This is SUSY5");
+  }
+  if (m_SUSY7){
+    ANA_CHECK(objTool->setProperty("ConfigFile",PathResolverFindCalibFile("/MyAnalysis/MyAnalysis/configs/topDM_Giulia.conf")));
+    ANA_MSG_INFO("This is SUSY7"); 
   }
   ANA_CHECK(objTool->setProperty("UseBtagging", true));
   
@@ -540,12 +544,11 @@ EL::StatusCode MyxAODAnalysis :: execute ()
       	continue;
       }
     }
-
-    double nBadJet = objs->getBadJets()->size();
-    double nCosmicMu = objs->getCosmicMuons()->size();
-    double nBadMu = objs->getBadMuons()->size();
-
     
+    double nBadJet = objs->getNBadJets();
+    double nCosmicMu = objs->getNCosmicMuons();
+    double nBadMu = objs->getNBadMuons();
+
 
 
     // Put the trigger here:
@@ -569,6 +572,22 @@ EL::StatusCode MyxAODAnalysis :: execute ()
 
     double leptonTriggerSF =1;
     
+    
+    //NEW TRIGGER IMPLEMENTATION
+    //Note:diMuon triggers only require 1 L1 muon.
+    std::vector<std::string> single_el_2015 = {"HLT_e24_lhmedium_L1EM20VH", "HLT_e60_lhmedium", "HLT_e120_lhloose"};
+    std::vector<std::string> single_mu_2015 = {"HLT_mu20_iloose_L1MU15", "HLT_mu50"};
+    std::vector<std::string> di_lepton_2015 = {"HLT_2e12_lhloose_L12EM10VH", "HLT_mu18_mu8noL1", "HLT_e17_lhloose_mu14"};
+    std::vector<std::string> single_el_2016 = {"HLT_e26_lhtight_nod0_ivarloose", "HLT_e60_lhmedium_nod0", "HLT_e140_lhloose_nod0"};
+    std::vector<std::string> single_mu_2016 = {"HLT_mu26_ivarmedium","HLT_mu50"};
+    std::vector<std::string> di_lepton_2016 = {"HLT_2e17_lhvloose_nod0","HLT_mu22_mu8noL1","HLT_e17_lhloose_nod0_mu14 "};
+    std::vector<std::string> single_el_2017 = {"HLT_e26_lhtight_nod0_ivarloose", "HLT_e60_lhmedium_nod0", "HLT_e140_lhloose_nod0"};
+    std::vector<std::string> single_mu_2017 = {"HLT_mu26_ivarmedium","HLT_mu50"};
+    std::vector<std::string> di_lepton_2017 = {"HLT_2e17_lhvloose_nod0_L12EM15VHI","HLT_mu22_mu8noL1", "HLT_e17_lhloose_nod0_mu14"};
+    std::vector<std::string> single_el_2018 = {"HLT_e26_lhtight_nod0_ivarloose", "HLT_e60_lhmedium_nod0", "HLT_e140_lhloose_nod0"};
+    std::vector<std::string> single_mu_2018 = {"HLT_mu26_ivarmedium","HLT_mu50"};
+    std::vector<std::string> di_lepton_2018 = {"HLT_2e17_lhvloose_nod0_L12EM15VHI","HLT_2e24_lhvloose_nod0","HLT_mu22_mu8noL1","HLT_e17_lhloose_nod0_mu14"};
+    //Use IsMETTriggerPassed() function which should chec the lowest un-prescaled triggers
     if (isTruth){
       passedMETTrigger = true;
       passedGammaTrigger = true;
@@ -577,23 +596,7 @@ EL::StatusCode MyxAODAnalysis :: execute ()
       passedSingleElTrigger = true;
       passedDiLeptonTrigger = true;
     }
-
-    //NEW TRIGGER IMPLEMENTATION
-    //Note:diMuon triggers only require 1 L1 muon.
     else {
-      std::vector<std::string> single_el_2015 = {"HLT_e24_lhmedium_L1EM20VH", "HLT_e60_lhmedium", "HLT_e120_lhloose"};
-      std::vector<std::string> single_mu_2015 = {"HLT_mu20_iloose_L1MU15", "HLT_mu50"};
-      std::vector<std::string> di_lepton_2015 = {"HLT_2e12_lhloose_L12EM10VH", "HLT_mu18_mu8noL1", "HLT_e17_lhloose_mu14"};
-      std::vector<std::string> single_el_2016 = {"HLT_e26_lhtight_nod0_ivarloose", "HLT_e60_lhmedium_nod0", "HLT_e140_lhloose_nod0"};
-      std::vector<std::string> single_mu_2016 = {"HLT_mu26_ivarmedium","HLT_mu50"};
-      std::vector<std::string> di_lepton_2016 = {"HLT_2e17_lhvloose_nod0","HLT_mu22_mu8noL1","HLT_e17_lhloose_nod0_mu14 "};
-      std::vector<std::string> single_el_2017 = {"HLT_e26_lhtight_nod0_ivarloose", "HLT_e60_lhmedium_nod0", "HLT_e140_lhloose_nod0"};
-      std::vector<std::string> single_mu_2017 = {"HLT_mu26_ivarmedium","HLT_mu50"};
-      std::vector<std::string> di_lepton_2017 = {"HLT_2e17_lhvloose_nod0_L12EM15VHI","HLT_mu22_mu8noL1", "HLT_e17_lhloose_nod0_mu14"};
-      std::vector<std::string> single_el_2018 = {"HLT_e26_lhtight_nod0_ivarloose","HLT_2e24_lhvloose_nod0", "HLT_e60_lhmedium_nod0", "HLT_e140_lhloose_nod0"};
-      std::vector<std::string> single_mu_2018 = {"HLT_mu26_ivarmedium","HLT_mu50"};
-      std::vector<std::string> di_lepton_2018 = {"HLT_2e17_lhvloose_nod0_L12EM15VHI","HLT_2e24_lhvloose_nod0","HLT_mu22_mu8noL1","HLT_e17_lhloose_nod0_mu14"};
-      //Use IsMETTriggerPassed() function which should chec the lowest un-prescaled triggers
       if (year == 2015) {
         for (auto mu_trig: single_mu_2015) {
           int trigDecision = objTool->IsTrigPassed(mu_trig);
@@ -731,8 +734,8 @@ EL::StatusCode MyxAODAnalysis :: execute ()
       passedCleaningCuts=true;
     }
 
-    std::unique_ptr<CalculateVariables> m_varCalc(new CalculateVariables ( objs.get(), m_BTaggingSelectionTool, isTruth, doPhotons));
-    std::unique_ptr<PreliminarySel> m_regions(new PreliminarySel (*m_varCalc, passedCleaningCuts));
+    auto m_varCalc = std::make_unique<CalculateVariables>( objs.get(), m_BTaggingSelectionTool, store, isTruth, doPhotons);
+    auto m_regions = std::make_unique<PreliminarySel>(*m_varCalc, passedCleaningCuts);
 
 
 
@@ -799,17 +802,17 @@ EL::StatusCode MyxAODAnalysis :: execute ()
     }
 
 
-
     if (!isTruth){
       if (m_regions->interestingRegion || RunningLocally){
-      	(m_treeServiceVector[isyst])->fillTree(objs.get(), *m_regions, *m_varCalc,m_finalSumOfWeights, m_initialSumOfWeights, puWgt, SFmctbbll, passedMETTrigger, passedSingleMuTrigger, passedSingleElTrigger, passedDiLeptonTrigger, passedGammaTrigger, passedMultiJetTrigger, muon_triggers, muon_decisions, electron_triggers, electron_decisions, dilepton_triggers, dilepton_decisions,leptonTriggerSF, PUSumOfWeights, truthfilt_MET, truthfilt_HT, coreFlag, sctFlag, LArTileFlag, passGRL, passedPrimVertex, passedJetClean, passedCosmicMu, passedMuonClean, m_runNumber, renormedMcWgt, year, m_averageIntPerX, m_actualIntPerX, xsec, filteff, kfactor);
+      	(m_treeServiceVector[isyst])->fillTree(objs.get(), store ,*m_regions, *m_varCalc,m_finalSumOfWeights, m_initialSumOfWeights, puWgt, SFmctbbll, passedMETTrigger, passedSingleMuTrigger, passedSingleElTrigger, passedDiLeptonTrigger, passedGammaTrigger, passedMultiJetTrigger, muon_triggers, muon_decisions, electron_triggers, electron_decisions, dilepton_triggers, dilepton_decisions,leptonTriggerSF, PUSumOfWeights, truthfilt_MET, truthfilt_HT, coreFlag, sctFlag, LArTileFlag, passGRL, passedPrimVertex, passedJetClean, passedCosmicMu, passedMuonClean, m_runNumber, renormedMcWgt, year, m_averageIntPerX, m_actualIntPerX, xsec, filteff, kfactor);
       }
     }
-
+    
 
 
     isyst++;
     store->clear();
+    //trigger decisions
     electron_triggers.clear();
     electron_decisions.clear();
     muon_triggers.clear();
