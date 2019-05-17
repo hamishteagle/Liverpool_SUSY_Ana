@@ -48,8 +48,14 @@ int main( int argc, char* argv[]) {
     if (argv[1] != "") sample_path = argv[1];
     sample_name = get_sample_name(sample_path);
     if (argv[2] != "") submit_dir  = argv[2];
-    if (argv[3] != "") RunningWithSyst = (bool) atoi(argv[3]);
-    if (argv[4] != "") RunningWithPhotons = (bool) atoi(argv[4]);
+    if (argv[3] != ""){ 
+      RunningWithSyst = (bool) atoi(argv[3]);
+      std::cout<<"RunningWithSyst = "<<RunningWithSyst<<std::endl;
+    }
+    if (argv[4] != ""){
+      RunningWithPhotons = (bool) atoi(argv[4]);
+      std::cout<<"RunningWithPhotons = "<<RunningWithPhotons<<std::endl;
+    }
     if (argv[5] != ""){
       RunningLocally = (bool) atoi(argv[5]);
       std::cout<<"RunningLocally = "<<RunningLocally<<std::endl;
@@ -147,7 +153,7 @@ int main( int argc, char* argv[]) {
 	  sh.setMetaString ("nc_tree", "CollectionTree");
 	  sh.print();
 	  output_name = sample_name;        
-	  driver.options()->setString("nc_outputSampleName", "user." + username + "." + CurrentDate+"." + physicsName+"_"+fileType+"."+release+".v3."+"%in:name[2]%.%in:name[3]%");
+	  driver.options()->setString("nc_outputSampleName", "user." + username + "." + CurrentDate+"." + physicsName+"_"+fileType+"."+release+".v4."+"%in:name[2]%.%in:name[3]%");
         }
         // Add our analysis to the job:
         MyxAODAnalysis* alg = new MyxAODAnalysis();
@@ -161,7 +167,7 @@ int main( int argc, char* argv[]) {
         alg->doSyst = RunningWithSyst;
         alg->doPhotons = RunningWithPhotons;
         alg->RunningLocally = false;
-        alg->setMsgLevel(MSG::ERROR);
+        alg->setMsgLevel(MSG::DEBUG);
 
         job.options()->setDouble (EL::Job::optRemoveSubmitDir, 1);
         job.sampleHandler( sh );
@@ -171,7 +177,6 @@ int main( int argc, char* argv[]) {
 	//std::cout<<"Would submit grid job with this output_name: "<<output_name<<std::endl;
 	std::cout<<"Going to submit now"<<std::endl;
         driver.submitOnly( job, out_dir );
-
     }
   return 0;
 
