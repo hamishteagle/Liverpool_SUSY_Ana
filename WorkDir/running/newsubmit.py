@@ -21,7 +21,7 @@ class submit:
         parser.add_argument('--photons', dest = 'photons', type = bool, default = False)
         parser.add_argument('--events', dest = 'events', type = int, default = -1)
         parser.add_argument('--username', dest = 'username', action = 'store' , default = "hteagle")
-        parser.add_argument('--doTruthJets', dest = 'doTruthJets', type = int, default= False)
+        parser.add_argument('--doTruthJets', dest = 'doTruthJets', type = int, default= 0)
         args = parser.parse_args()
 
         # Make input file name accessible

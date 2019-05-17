@@ -232,7 +232,7 @@ EL::StatusCode MyxAODAnalysis :: initialize ()
   if(isMC16e){lumicalcFiles.push_back(PathResolverFindCalibFile("GoodRunsLists/data18_13TeV/20190219/ilumicalc_histograms_None_348885-364292_OflLumi-13TeV-010.root"));}
 
 
-  objTool = new ST::SUSYObjDef_xAOD("SUSYObjDef_xAOD");
+  objTool = std::make_unique<ST::SUSYObjDef_xAOD>("SUSYObjDef_xAOD");
 
   //Get the metadata using SUSYTools
   const xAOD::FileMetaData* fmd = nullptr;
@@ -263,7 +263,8 @@ EL::StatusCode MyxAODAnalysis :: initialize ()
   
   ANA_CHECK(objTool->setProperty("DataSource",datasource) );
   if (m_SUSY5){
-    ANA_CHECK(objTool->setProperty("ConfigFile",PathResolverFindCalibFile("/MyAnalysis/MyAnalysis/configs/1Lbb_default.conf")));
+    //ANA_CHECK(objTool->setProperty("ConfigFile",PathResolverFindCalibFile("/MyAnalysis/MyAnalysis/configs/1Lbb_default.conf")));//ChangeMeBack!!!!
+    ANA_CHECK(objTool->setProperty("ConfigFile",PathResolverFindCalibFile("/MyAnalysis/MyAnalysis/configs/topDM_Giulia.conf")));
     ANA_MSG_INFO("This is SUSY5");
   }
   if (m_SUSY7){
@@ -503,7 +504,7 @@ EL::StatusCode MyxAODAnalysis :: execute ()
       //      }
     }
 
-    auto objs = std::make_unique<NewObjectDef>(evtStore(), objTool, store, mcChannel, EventNumber, mcWgt, m_lumiBlockNumber, syst.name(), doTruthJets);
+    auto objs = std::make_unique<NewObjectDef>(evtStore(), objTool.get(), store, mcChannel, EventNumber, mcWgt, m_lumiBlockNumber, syst.name(), doTruthJets);
     if (firstEvent == true) firstEvent = false;
 
     bool passGRL = false;
@@ -511,7 +512,8 @@ EL::StatusCode MyxAODAnalysis :: execute ()
     if (!isMC){
 
       if(!(m_grl->passRunLB(*eventInfo))){
-	      continue;
+	store->clear();
+	continue;
       }
       else if (m_grl->passRunLB(*eventInfo)) {
         passGRL = true;
@@ -531,23 +533,58 @@ EL::StatusCode MyxAODAnalysis :: execute ()
       if ((eventInfo->errorState(xAOD::EventInfo::SCT) == xAOD::EventInfo::Error )){
     	  sctFlag = false;
     	  isyst++;
-    	  continue;
+	  store->clear();
+	  continue;
       }
       if (eventInfo->isEventFlagBitSet(xAOD::EventInfo::Core,18)){
       	coreFlag = false;
       	isyst++;
+	store->clear();
       	continue;
       }
       if ((eventInfo->errorState(xAOD::EventInfo::LAr)==xAOD::EventInfo::Error) || (eventInfo->errorState(xAOD::EventInfo::Tile) == xAOD::EventInfo::Error)){
       	LArTileFlag=false;
       	isyst++;
-      	continue;
+      	store->clear();
+	continue;
       }
     }
-    
+
+    bool passedPrimVertex=true;
+    if (objs->getPrimVertex() < 1){
+      passedPrimVertex=false;
+      isyst++;
+      store->clear();
+      continue;
+    }
     double nBadJet = objs->getNBadJets();
     double nCosmicMu = objs->getNCosmicMuons();
     double nBadMu = objs->getNBadMuons();
+
+    bool passedJetClean=true;
+    if (nBadJet > 0){
+      passedJetClean=false;
+      isyst++;
+      store->clear();
+      continue;
+    }
+
+    bool passedCosmicMu=true;
+    if (nCosmicMu > 0){
+      passedCosmicMu=false;
+      isyst++;
+      store->clear();
+      continue;
+    }
+
+    bool passedMuonClean=true;
+    if (nBadMu > 0){
+      passedMuonClean=false;
+      isyst++;
+      store->clear();
+      continue;
+    }
+    
 
 
 
@@ -650,12 +687,20 @@ EL::StatusCode MyxAODAnalysis :: execute ()
           electron_triggers.push_back(el_trig);
           electron_decisions.push_back(trigDecision);
         }
-        for (auto dilep_trig: di_lepton_2017) {
-          int trigDecision = objTool->IsTrigPassed(dilep_trig);
+	if (m_runNumber>=326834 && m_runNumber <=328393){
+	  int trigDecision = objTool->IsTrigPassed("HLT_2e24_lhvloose_nod0");
           dilep_triggers += trigDecision;
-          dilepton_triggers.push_back(dilep_trig);
+          dilepton_triggers.push_back("HLT_2e24_lhvloose_nod0");
           dilepton_decisions.push_back(trigDecision);
-        }
+	}
+	else{
+	  for (auto dilep_trig: di_lepton_2017) {
+	    int trigDecision = objTool->IsTrigPassed(dilep_trig);
+	    dilep_triggers += trigDecision;
+	    dilepton_triggers.push_back(dilep_trig);
+	    dilepton_decisions.push_back(trigDecision);
+	  }
+	}
       }
       if (year == 2018) {
         for (auto mu_trig: single_mu_2018) {
@@ -700,33 +745,6 @@ EL::StatusCode MyxAODAnalysis :: execute ()
     }
     
 
-    bool passedPrimVertex=true;
-    if (objs->getPrimVertex() < 1){
-      passedPrimVertex=false;
-      //isyst++;
-      continue;
-    }
-
-    bool passedJetClean=true;
-    if (nBadJet > 0){
-      passedJetClean=false;
-      //isyst++;
-      continue;
-    }
-
-    bool passedCosmicMu=true;
-    if (nCosmicMu > 0){
-      passedCosmicMu=false;
-      //isyst++;
-      if(!m_SUSY5) continue;
-    }
-
-    bool passedMuonClean=true;
-    if (nBadMu > 0){
-      passedMuonClean=false;
-      //isyst++;
-      continue;
-    }
 
     //All cleaning cuts before trigger
     bool passedCleaningCuts=false;
@@ -844,10 +862,10 @@ EL::StatusCode MyxAODAnalysis :: finalize ()
   // merged.  This is different from histFinalize() in that it only
   // gets called on worker nodes that processed input events.
 
-  if (objTool) {
-    delete objTool;
-    objTool = 0;
-  }
+   //if (objTool) {
+   //delete objTool;
+   //objTool = 0;
+   //}
 
   delete noWeightHist;
   delete sherpaWeightHist;

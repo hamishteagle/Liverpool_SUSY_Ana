@@ -89,6 +89,13 @@ TreeService::TreeService(TTree *outputTree, TDirectory *OutDir){
   tree->Branch("pTj7",&pTj7);
   tree->Branch("pTj8",&pTj8);
 
+  tree->Branch("phij1",&pTj1);
+  tree->Branch("phij2",&pTj2);
+  tree->Branch("phij3",&pTj3);
+  tree->Branch("etaj1",&etaj1);
+  tree->Branch("etaj2",&etaj2);
+  tree->Branch("etaj3",&etaj3);
+
   tree->Branch("pTl1",&pTl1);
   tree->Branch("pTl2",&pTl2);
   tree->Branch("etal1",&etal1);

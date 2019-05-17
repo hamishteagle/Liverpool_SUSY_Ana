@@ -38,15 +38,15 @@ NewObjectDef::NewObjectDef(asg::SgTEvent* event, ST::SUSYObjDef_xAOD* SUSYTool, 
 
 
   //Do the baseline get here, pass this to the OR
-  GetBaselineObjects();
+  this->GetBaselineObjects();
 
   //Get the objects after the OR with baseline
-  GetObjects();
+  this->GetObjects();
   
   //Get the truth jets (no overlap removal atm)
   if (doTruthJets){
     goodTruthJets = new xAOD::JetContainer(SG::VIEW_ELEMENTS);
-    GetTruthJets();
+    this->GetTruthJets();
   }
   
   eventStore->record(baselineElectrons.release(),"baselineElectrons"+systematic);
@@ -135,7 +135,7 @@ void NewObjectDef::GetBaselineObjects() {
   xAOD::TauJetContainer* taus(taus_nominal);
   // Get MET
   //Only jets electrons muons, NoPhotons, NoTaus
-  objTool->GetMET(*met_nominal, jets_nominal, electrons_nominal, muons_nominal, NULL, NULL, true);
+  objTool->GetMET(*met_nominal, jets_nominal, electrons_nominal, muons_nominal, photons_nominal, NULL, true);
   xAOD::MissingETContainer::const_iterator met_it = met_nominal->find("Final");
   if (met_it == met_nominal->end())
   {
@@ -197,13 +197,15 @@ void NewObjectDef::GetObjects() {
       if (mu_itr->auxdata<char>("signal") && !(mu_itr)->auxdata<char>("cosmic")) goodMuons->push_back(mu_itr);
     }
     else {
-      if (mu_itr->auxdata<char>("baseline") && mu_itr->auxdata<char>("bad")) badMuons->push_back(mu_itr);
+      if (mu_itr->auxdata<char>("baseline") && mu_itr->auxdata<char>("bad")){
+	badMuons->push_back(mu_itr);
+      }
     }
   }
   baselineMuons->sort(pT_Sorter);
   cosmicMuons->sort(pT_Sorter);
   nCosmicMuons=cosmicMuons->size();
-  badMuons->sort(pT_Sorter);
+  //badMuons->sort(pT_Sorter);
   nBadMuons=badMuons->size();
   goodMuons->sort(pT_Sorter);
   muonSF = 1;

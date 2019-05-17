@@ -70,6 +70,7 @@ CalculateVariables::CalculateVariables(NewObjectDef *objects, asg::AnaToolHandle
   evtStore->retrieve(METvector_cont, "METvector");
 
   nMuon = goodMuon_cont->size();
+  nBadMuon = badMuon_cont->size();
   nElectron = goodElectron_cont->size();
   nTau = goodTau_cont->size();
   nBaselineMuon = baselineMuon_cont->size();

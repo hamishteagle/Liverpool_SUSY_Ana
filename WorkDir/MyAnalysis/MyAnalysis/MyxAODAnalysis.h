@@ -65,7 +65,7 @@ namespace SUSY{
 class MyxAODAnalysis : public EL::Algorithm
 {
 #ifndef __CINT__
-  ST::SUSYObjDef_xAOD *objTool; //!
+  std::unique_ptr<ST::SUSYObjDef_xAOD> objTool; //!
 #endif // not __CINT__
 
 #ifndef __CINT__
