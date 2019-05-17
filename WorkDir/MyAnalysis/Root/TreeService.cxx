@@ -632,7 +632,8 @@ void TreeService::fillTree(NewObjectDef *objects , xAOD::TStore *evtStore, Preli
   SRB_Higgsino_minDR = variables.SRB_Higgsino_minDR;
   SRB_Higgsino_Hmbb = variables.SRB_Higgsino_Hmbb;
 
-  jet_pT.clear();
+  //Don't think we need all of this stuff as it's mainly done in Calculate variables
+  /*jet_pT.clear();
   jet_eta.clear();
   jet_phi.clear();
   jet_E.clear();
@@ -651,12 +652,6 @@ void TreeService::fillTree(NewObjectDef *objects , xAOD::TStore *evtStore, Preli
   mu_phi.clear();
   mu_E.clear();
 
-  tau_pT.clear();
-  tau_eta.clear();
-  tau_phi.clear();
-  tau_E.clear();
-  tau_SmallestDR.clear();
-  tau_associatedTrue.clear();
 
 
 
@@ -709,6 +704,14 @@ void TreeService::fillTree(NewObjectDef *objects , xAOD::TStore *evtStore, Preli
     mu_phi.push_back((*(goodMuon_cont))[imu]->phi());
     mu_E.push_back(0.001*(*(goodMuon_cont))[imu]->e());
   }
+  */
+
+  // tau_pT.clear();
+  // tau_eta.clear();
+  // tau_phi.clear();
+  // tau_E.clear();
+  // tau_SmallestDR.clear();
+  // tau_associatedTrue.clear();
 
   // int maxTau = objects->getGoodTaus()->size();
   // for (int itau = 0; itau < maxTau; itau++){
@@ -750,6 +753,15 @@ void TreeService::fillTree(NewObjectDef *objects , xAOD::TStore *evtStore, Preli
   multiJetTriggerPassed = Trig6j;
 
   tree->Fill();
+
+  //Clear all the used vectors here.
+  mu_triggers.clear();
+  mu_decisions.clear();
+  el_triggers.clear();
+  el_decisions.clear();
+  dilep_triggers.clear();
+  dilep_decisions.clear();
+
 
 
 }

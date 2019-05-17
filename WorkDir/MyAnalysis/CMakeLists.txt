@@ -58,4 +58,7 @@ atlas_add_executable( testRunGrid util/testRunGrid.cxx LINK_LIBRARIES MyAnalysis
 atlas_install_joboptions( share/*.py )
 
 Include(CTest)
-add_test(TestMyAnalysis testRun)
+add_test(TestMyAnalysis testRun /hepstore/hteagle/Wh/recoSamples/ttbar_checkfile/mc16_13TeV/ /user/hteagle/AnalysisDirectory/Rel21/Base.21.2.72/run/submitdir_ttbarCheck 0 0 1 -1 hteagle 21.2.70  TYPE 0)
+find_program( MEMORYCHECK_COMMAND valgrind )
+set( MEMORYCHECK_COMMAND_OPTIONS "--trace-children=yes --leak-check=full" )
+set( MEMORYCHECK_SUPPRESSIONS_FILE "${PROJECT_SOURCE_DIR}/valgrind_suppress.txt" )

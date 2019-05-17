@@ -263,7 +263,7 @@ EL::StatusCode MyxAODAnalysis :: initialize ()
   
   ANA_CHECK(objTool->setProperty("DataSource",datasource) );
   if (m_SUSY5){
-    //ANA_CHECK(objTool->setProperty("ConfigFile",PathResolverFindCalibFile("/MyAnalysis/MyAnalysis/configs/1Lbb_default.conf")));
+    ANA_CHECK(objTool->setProperty("ConfigFile",PathResolverFindCalibFile("/MyAnalysis/MyAnalysis/configs/1Lbb_default.conf")));
     ANA_MSG_INFO("This is SUSY5");
   }
   if (m_SUSY7){
@@ -470,7 +470,7 @@ EL::StatusCode MyxAODAnalysis :: execute ()
     if (isMC){
       mcChannel = eventInfo->mcChannelNumber();
       puWgt = objTool->GetPileupWeight();
-
+      
       try {
         xsec = m_PMGCrossSectionTool->getAMIXsection(mcChannel);
         filteff = m_PMGCrossSectionTool->getFilterEff(mcChannel);
@@ -478,29 +478,29 @@ EL::StatusCode MyxAODAnalysis :: execute ()
       } catch (...) {
         if (counter == 1) Error("execute()", "PMGCrossSectionTool exception caught");
       }
-
+      
       mcWgt = eventInfo->mcEventWeight();
       renormedMcWgt = mcWgt;
       if (std::abs(renormedMcWgt) >= 100){
-     	  renormedMcWgt = 1;
+	renormedMcWgt = 1;
       }
-
+      
       // This can get all of the PDF info etc if it's required at any point
-      const xAOD::TruthEventContainer* truthE = 0;
-      m_event->retrieve(truthE, "TruthEvents" );
-
-      for(const auto& evt : *truthE) {
+      //const xAOD::TruthEventContainer *truthE = 0;
+      //m_event->retrieve(truthE, "TruthEvents" );
+      
+      //for(const auto& evt : *truthE) {
 	//float x1, x2, pdf1, pdf2, scalePDF, Q;
-	int id1, id2;
-	evt->pdfInfoParameter(id1, xAOD::TruthEvent::PDGID1);
-	evt->pdfInfoParameter(id2, xAOD::TruthEvent::PDGID2);
-        //evt->pdfInfoParameter(x1, xAOD::TruthEvent::X1);
-        //evt->pdfInfoParameter(x2, xAOD::TruthEvent::X2);
-        //evt->pdfInfoParameter(pdf1, xAOD::TruthEvent::PDFID1);
-        //evt->pdfInfoParameter(pdf2, xAOD::TruthEvent::PDFID2);
-        //evt->pdfInfoParameter(scalePDF, xAOD::TruthEvent::SCALE);
-        //evt->pdfInfoParameter(Q, xAOD::TruthEvent::Q);
-      }
+      //int id1, id2;
+      //evt->pdfInfoParameter(id1, xAOD::TruthEvent::PDGID1);
+      //evt->pdfInfoParameter(id2, xAOD::TruthEvent::PDGID2);
+      //evt->pdfInfoParameter(x1, xAOD::TruthEvent::X1);
+      //evt->pdfInfoParameter(x2, xAOD::TruthEvent::X2);
+      //evt->pdfInfoParameter(pdf1, xAOD::TruthEvent::PDFID1);
+      //evt->pdfInfoParameter(pdf2, xAOD::TruthEvent::PDFID2);
+      //evt->pdfInfoParameter(scalePDF, xAOD::TruthEvent::SCALE);
+      //evt->pdfInfoParameter(Q, xAOD::TruthEvent::Q);
+      //      }
     }
 
     auto objs = std::make_unique<NewObjectDef>(evtStore(), objTool, store, mcChannel, EventNumber, mcWgt, m_lumiBlockNumber, syst.name(), doTruthJets);

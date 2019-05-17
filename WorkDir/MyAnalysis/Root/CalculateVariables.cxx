@@ -1537,6 +1537,7 @@ bool CalculateVariables::CalculatePseudoContBTagging(NewObjectDef *objects, asg:
   if (jet_quantiles.size()>3){
     j4_bQuantile = jet_quantiles[3];
   }
+  jet_quantiles.clear();
   return true;
 }
 
