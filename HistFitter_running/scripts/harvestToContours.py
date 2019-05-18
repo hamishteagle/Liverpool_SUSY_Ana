@@ -37,8 +37,8 @@ parser.add_argument("--debug","-d",      help = "print extra debugging info", ac
 parser.add_argument("--sigmax",          type = float, help="maximum significance in sigmas", default = 5.0)
 parser.add_argument("--xVariable","-x",  type = str, default = "mg" )
 parser.add_argument("--yVariable","-y",  type = str, default = "mlsp" )
-parser.add_argument("--xResolution",     type = int, default = 10 )
-parser.add_argument("--yResolution",     type = int, default = 12.5 )
+parser.add_argument("--xResolution",     type = int, default = 5 )
+parser.add_argument("--yResolution",     type = int, default = 10 )
 
 parser.add_argument("--xMin", type=float, default = None )
 parser.add_argument("--yMin", type=float, default = None )

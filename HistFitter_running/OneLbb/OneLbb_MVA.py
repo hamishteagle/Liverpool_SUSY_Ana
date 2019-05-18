@@ -51,8 +51,8 @@ myInputParser.add_option('', '--doFit', dest = 'doFit', default = 'True')
 #doFit = options.doFit ##Fix InputParser
 
 doFit = True
-doCutAndCount = False
-doFitXGB = True
+doCutAndCount = True
+doFitXGB = False
 doFitS = False
 doFitBoth = False
 whichSR = options.SRnum
@@ -92,11 +92,15 @@ configMgr.readFromTree=True
 
 # First define HistFactory attributes
 if not doFit: 
-    configMgr.analysisName = "OneLbb_MVA"
+    configMgr.analysisName = "OneLbb_MVA_OneBin"
 elif doFit:
     if doCutAndCount:
         configMgr.analysisName = "OneLbb_MVA_CutAndCount"
-    else:
+    elif doFitS:
+        configMgr.analysisName = "OneLbb_MVA_metsig"
+    elif doFitBoth:
+        configMgr.analysisName = "OneLbb_MVA_Both"
+    elif doFitXGB:
         configMgr.analysisName = "OneLbb_MVA_Fit"
 
 # Scaling calculated by outputLumi / inputLumi
@@ -115,8 +119,8 @@ testFiles = []
 newSigFiles = []
 testSamples = []
 if configMgr.readFromTree:
-    directory = "/user/hteagle/liverpool-ml/TMVATuples/reco_full_3Jet/"
-    
+    directory = "/user/hteagle/liverpool-ml/TMVATuples/reco_full/"
+    #directory = "/hepstore/hteagle/Wh/ntuples_21.2.60/"
     bgdFiles.append(directory+"ttbar.root")
     bgdFiles.append(directory+"singleTop.root")
     bgdFiles.append(directory+"wJets.root")
@@ -181,9 +185,15 @@ configMgr.cutsDict["CRwJets"] = preCuts+"(400_250_Nominal_nominal_class2>0.5)*(4
 
 
 #Nominal analysis regions
-configMgr.cutsDict["SRLM"] = preCuts+"(mbb>100 && mbb<140)*(nJet25<4)*(met>240)*(mt>100 && mt<160)"
-configMgr.cutsDict["SRMM"] = preCuts+"(mbb>100 && mbb<140)*(nJet25<4)*(met>240)*(mt>160 && mt<240)"
-configMgr.cutsDict["SRHM"] = preCuts+"(mbb>100 && mbb<140)*(nJet25<4)*(met>240)*(mt>240)*(mlb1>120)"
+configMgr.cutsDict["SRLM_1"] = preCuts+"(nLep_signal==1)*(nBJet25_MV2c10==2)*(mbb>100 && mbb<140)*(nJet25<4)*(met>240)*(mt>100 && mt<160)*(m_CTcorr>180 && m_CTcorr<230)"
+configMgr.cutsDict["SRLM_2"] = preCuts+"(nLep_signal==1)*(nBJet25_MV2c10==2)*(mbb>100 && mbb<140)*(nJet25<4)*(met>240)*(mt>100 && mt<160)*(m_CTcorr>230 && m_CTcorr<280)"
+configMgr.cutsDict["SRLM_3"] = preCuts+"(nLep_signal==1)*(nBJet25_MV2c10==2)*(mbb>100 && mbb<140)*(nJet25<4)*(met>240)*(mt>100 && mt<160)*(m_CTcorr>280)"
+configMgr.cutsDict["SRMM_1"] = preCuts+"(nLep_signal==1)*(nBJet25_MV2c10==2)*(mbb>100 && mbb<140)*(nJet25<4)*(met>240)*(mt>160 && mt<240)*(m_CTcorr>180 && m_CTcorr<230)"
+configMgr.cutsDict["SRMM_2"] = preCuts+"(nLep_signal==1)*(nBJet25_MV2c10==2)*(mbb>100 && mbb<140)*(nJet25<4)*(met>240)*(mt>160 && mt<240)*(m_CTcorr>230 && m_CTcorr<280)"
+configMgr.cutsDict["SRMM_3"] = preCuts+"(nLep_signal==1)*(nBJet25_MV2c10==2)*(mbb>100 && mbb<140)*(nJet25<4)*(met>240)*(mt>160 && mt<240)*(m_CTcorr>280)"
+configMgr.cutsDict["SRHM_1"] = preCuts+"(nLep_signal==1)*(nBJet25_MV2c10==2)*(mbb>100 && mbb<140)*(nJet25<4)*(met>240)*(mt>240)*(mlb1>120)*(m_CTcorr>180 && m_CTcorr<230)"
+configMgr.cutsDict["SRHM_2"] = preCuts+"(nLep_signal==1)*(nBJet25_MV2c10==2)*(mbb>100 && mbb<140)*(nJet25<4)*(met>240)*(mt>240)*(mlb1>120)*(m_CTcorr>230 && m_CTcorr<280)"
+configMgr.cutsDict["SRHM_3"] = preCuts+"(nLep_signal==1)*(nBJet25_MV2c10==2)*(mbb>100 && mbb<140)*(nJet25<4)*(met>240)*(mt>240)*(mlb1>120)*(m_CTcorr>280)"
 
 # Tuples of nominal weights without and with b-jet selection
 configMgr.weights = ("eventWeight","HFScale", "JVTSF","bJetSF","muonSF","electronSF",YearWeight) 
@@ -252,7 +262,7 @@ for entry in [topSample,singletopSample,wjetsSample,dibosonSample,ttVSample,trib
 
 exp_syst = Systematic("exp",configMgr.weights,1.+0.3,1.-0.3,"user","userOverallSys")
 bkgtheory_syst = Systematic("bkgtheory",configMgr.weights,1.,1.,"user","userOverallSys")
-bkg_syst = Systematic("bkg_syst",configMgr.weights,1+0.3,1-0.3,"user","userOverallSys")
+bkg_syst = Systematic("bkg_syst",configMgr.weights,1+0.2,1-0.2,"user","overallSys")
 
 #-----------------------------
 # Discovery fits 
@@ -267,7 +277,7 @@ if myFitType==FitType.Discovery:
     #Setup fit config
     disc = configMgr.addFitConfig("DiscOnly")
     configMgr.blindSR = True
-    configMgr.useSignalInBlindedData=True
+    #configMgr.useSignalInBlindedData=True
     meas=disc.addMeasurement(name="NormalMeasurement",lumi=1.0,lumiErr=0.01)
     #meas.addPOI("mu_DISCOVERY_"+channel)
     meas.addPOI("mu_SIG")
@@ -321,8 +331,9 @@ if myFitType==FitType.Exclusion:
     ex = configMgr.addFitConfig("Exclusion")
     configMgr.blindSR = True
     configMgr.useSignalInBlindedData=True
-    meas=ex.addMeasurement(name="NormalMeasurement",lumi=1.0,lumiErr=0.01)
+    meas=ex.addMeasurement(name="NormalMeasurement",lumi=1.0,lumiErr=0.032)
     meas.addPOI("mu_SIG")
+    meas.addParamSetting("Lumi","const",1)
 
     #Samples
     ex.addSamples([topSample,singletopSample,wjetsSample,ttVSample,dibosonSample,tribosonSample,higgsSample,diJetSample,zJetsSample,dataSample])
@@ -362,15 +373,24 @@ if myFitType==FitType.Exclusion:
             ex.addSignalChannels([sr4])
             ex.addSignalChannels([sr5])
         elif doCutAndCount:
-            sr1 = ex.addChannel("m_CTcorr",["SRLM"],2,180.,280.)
-            sr1.userOverflowBin=True
-            sr2 = ex.addChannel("m_CTcorr",["SRMM"],2,180.,280.)
-            sr2.userOverflowBin=True
-            sr3 = ex.addChannel("m_CTcorr",["SRHM"],2,180.,280.)
-            sr3.userOverflowBin=True
-            ex.addSignalChannels([sr1])
-            ex.addSignalChannels([sr2])
-            ex.addSignalChannels([sr3])
+            srL_1 = ex.addChannel("cuts",["SRLM_1"],1,0.,1.5)
+            srL_2 = ex.addChannel("cuts",["SRLM_2"],1,0.,1.5)
+            srL_3 = ex.addChannel("cuts",["SRLM_3"],1,0.,1.5)
+            srM_1 = ex.addChannel("cuts",["SRMM_1"],1,0.,1.5)
+            srM_2 = ex.addChannel("cuts",["SRMM_2"],1,0.,1.5)
+            srM_3 = ex.addChannel("cuts",["SRMM_3"],1,0.,1.5)
+            srH_1 = ex.addChannel("cuts",["SRHM_1"],1,0.,1.5)
+            srH_2 = ex.addChannel("cuts",["SRHM_2"],1,0.,1.5)
+            srH_3 = ex.addChannel("cuts",["SRHM_3"],1,0.,1.5)
+            ex.addSignalChannels([srL_1])
+            ex.addSignalChannels([srL_2])
+            ex.addSignalChannels([srL_3])
+            ex.addSignalChannels([srM_1])
+            ex.addSignalChannels([srM_2])
+            ex.addSignalChannels([srM_3])
+            ex.addSignalChannels([srH_1])
+            ex.addSignalChannels([srH_2])
+            ex.addSignalChannels([srH_3])
     else:
         sr1          = ex.addChannel("cuts",["SR1"],1,0.5,1.5)
         ex.addSignalChannels([sr1])
@@ -402,7 +422,7 @@ if myFitType==FitType.Exclusion:
         sigSample.setNormByTheory()
         sigSample.setStatConfig(True)
         sigSample.setNormFactor("mu_SIG",1.,0.,100.)   
-        sigSample.addSystematic(exp_syst)                
+        #sigSample.addSystematic(exp_syst)                
         #sigSample.buildHisto([10.0],"SR1","cuts",0.5)
         myTopLvl.addSamples(sigSample)
         myTopLvl.setSignalSample(sigSample)
