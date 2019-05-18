@@ -48,7 +48,7 @@ ClassImp(MyxAODAnalysis)
 
 MyxAODAnalysis :: MyxAODAnalysis (/*const std::string& name,
                             ISvcLocator *pSvcLocator)
-  : EL::AnaAlgorithm (name, pSvcLocator*/)
+			    : EL::AnaAlgorithm (name, pSvcLocator*/)
 {
   // Here you put any code for the base initialization of variables,
   // e.g. initialize all pointers to 0.  Note that you should only put

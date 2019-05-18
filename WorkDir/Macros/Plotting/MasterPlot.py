@@ -157,7 +157,7 @@ def main():
     directory = options.date+'/'
     print ("Output Directory is: ", directory)
     #############################
-    label = "preSelection_SR_3Jets_ISR100"
+    label = "preSelection_SR_3Jets_ISR200"
     #############################
     EventCounter = True
 
@@ -170,8 +170,8 @@ def main():
     # make sure that SR is contained in the label variable, which will blind the distribution
     if label == "noSelection_SR_MET100":
         cutstouse = preCuts
-    elif label == "preSelection_SR_3Jets_ISR100":
-        cutstouse = preCuts+"(nJets==3)*(ETMiss>100)*(nBJets==2)*(nLeptons==1)*(pTl1>27)*(pTj1>pTb1)*(pTj1>100)"
+    elif label == "preSelection_SR_3Jets_ISR200":
+        cutstouse = preCuts+"(nJets==3)*(ETMiss>100)*(nBJets==2)*(nLeptons==1)*(pTl1>27)*(pTj1>pTb1)*(pTj1>200)"
     elif label ==  "Matts_presel":
         cutstouse = "ETMiss>110 && m_T>110 && nBJets ==2 && nLeptons==1"
         #1L + 2 b-jets + MET > 110 + mT > 110
