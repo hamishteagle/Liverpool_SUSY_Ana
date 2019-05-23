@@ -13,20 +13,20 @@ FROM atlas/analysisbase:21.2.70
 # Copy the project's sources into the image:
 # You need to copy this one by one, else unwanted files will be copied, too
 COPY WorkDir/CMakeLists.txt Liverpool_SbottomAnalysis_Rel21/source/
-#COPY WorkDir/Macros Liverpool_SbottomAnalysis_Rel21/source/Macros
+COPY WorkDir/Macros Liverpool_SbottomAnalysis_Rel21/source/Macros
 COPY WorkDir/NewMT2 Liverpool_SbottomAnalysis_Rel21/source/NewMT2
 COPY WorkDir/RestFrames Liverpool_SbottomAnalysis_Rel21/source/RestFrames
 COPY WorkDir/MyAnalysis Liverpool_SbottomAnalysis_Rel21/source/MyxAODAnalysis
 
 # and set the permissions from root to atlas
-#USER root
-#RUN chown --recursive atlas:atlas Liverpool_SbottomAnalysis_Rel21
-#USER atlas
+USER root
+RUN chown --recursive atlas:atlas Liverpool_SbottomAnalysis_Rel21
+USER atlas
 
 
 # Build the project inside a build/ directory:
-#RUN source /home/atlas/release_setup.sh && \
-#    cd Liverpool_SbottomAnalysis_Rel21 && ls -l && mkdir build && ls -l && cd build/ && ls -l ../source && cmake ../source/ && make
+RUN source /home/atlas/release_setup.sh && \
+    cd Liverpool_SbottomAnalysis_Rel21 && ls -l && mkdir build && ls -l && cd build/ && ls -l ../source && cmake ../source/ && make
 
 # Set up the environment setup script:
 #RUN mv release_setup.sh analysis_release_setup.sh
