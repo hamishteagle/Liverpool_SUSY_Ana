@@ -10,7 +10,7 @@ class CalculateVariables
 
 {
  public:
-  CalculateVariables(NewObjectDef *objects, asg::AnaToolHandle<IBTaggingSelectionTool> m_BTaggingSelectionTool, xAOD::TStore* evtStore, bool isTruth, bool doPhotons);
+  CalculateVariables(NewObjectDef *objects, asg::AnaToolHandle<IBTaggingSelectionTool> m_BTaggingSelectionTool, xAOD::TStore* evtStore, bool isTruth, bool doPhotons, bool isData);
 
   void CalculateOneLepVariables(NewObjectDef *objects, TLorentzVector b1v, TLorentzVector b2v, TLorentzVector tj1v);
   void CalculateTwoLepVariables(NewObjectDef *objects, TLorentzVector b1v, TLorentzVector b2v);
@@ -197,6 +197,9 @@ class CalculateVariables
   int j3_bQuantile;
   int j4_bQuantile;
 
+  int b1_bQuantile;
+  int b2_bQuantile;
+
 
   double pTZ; //
   double etaZ; //
@@ -228,6 +231,9 @@ class CalculateVariables
   double phib2;
   double phib3;
   double phib4;
+  int truthFlavb1;
+  int truthFlavb2;
+
 
   double pTmu1;
   double pTmu2;

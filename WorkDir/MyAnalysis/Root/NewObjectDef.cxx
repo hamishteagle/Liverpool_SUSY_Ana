@@ -3,7 +3,7 @@
 #include "MyAnalysis/NewObjectDef.h"
 bool pT_Sorter( const xAOD::IParticle* j1, const xAOD::IParticle* j2 );
 bool pT_TruthSorter( const xAOD::IParticle* j1, const xAOD::IParticle* j2 );
-NewObjectDef::NewObjectDef(asg::SgTEvent* event, ST::SUSYObjDef_xAOD* SUSYTool, xAOD::TStore* store, double mcChannel, double EventNumber, double mcWgt, double m_lumiScaled, std::string syst, bool doTruthJets) {
+NewObjectDef::NewObjectDef(asg::SgTEvent* event, ST::SUSYObjDef_xAOD* SUSYTool, xAOD::TStore* store, double mcChannel, double EventNumber, double mcWgt, double m_lumiScaled, std::string syst, bool doTruthJets, bool m_SUSY5, bool m_SUSY7) {
 
   objTool = SUSYTool;
   eventStore = store;
@@ -38,7 +38,7 @@ NewObjectDef::NewObjectDef(asg::SgTEvent* event, ST::SUSYObjDef_xAOD* SUSYTool, 
 
 
   //Do the baseline get here, pass this to the OR
-  this->GetBaselineObjects();
+  this->GetBaselineObjects(m_SUSY5, m_SUSY7);
 
   //Get the objects after the OR with baseline
   this->GetObjects();
@@ -81,7 +81,7 @@ bool pT_TruthSorter( const xAOD::IParticle* j1, const xAOD::IParticle* j2 ) {
 }
 
 
-void NewObjectDef::GetBaselineObjects() {
+void NewObjectDef::GetBaselineObjects(bool m_SUSY5, bool m_SUSY7) {
 
 
   // Setup object containers
@@ -135,7 +135,8 @@ void NewObjectDef::GetBaselineObjects() {
   xAOD::TauJetContainer* taus(taus_nominal);
   // Get MET
   //Only jets electrons muons, NoPhotons, NoTaus
-  objTool->GetMET(*met_nominal, jets_nominal, electrons_nominal, muons_nominal, photons_nominal, NULL, true);
+  if (m_SUSY5) objTool->GetMET(*met_nominal, jets_nominal, electrons_nominal, muons_nominal, photons_nominal, NULL, true);
+  else if (m_SUSY7)  objTool->GetMET(*met_nominal, jets_nominal, electrons_nominal, muons_nominal, NULL, NULL, true);
   xAOD::MissingETContainer::const_iterator met_it = met_nominal->find("Final");
   if (met_it == met_nominal->end())
   {
@@ -241,11 +242,11 @@ void NewObjectDef::GetObjects() {
         goodJets->push_back(jet_itr);
         if (jet_itr->auxdata<char>("bjet")) BJets->push_back(jet_itr);
         if (!(jet_itr)->auxdata<char>("bjet")) nonBJets->push_back(jet_itr);
-        if (!objTool->isData()) bJetSF = objTool->BtagSF(goodJets.get());
-        if (!objTool->isData()) JVTSF = objTool->JVT_SF(goodJets.get());
       }
     }
   }
+  if (!objTool->isData()) bJetSF = objTool->BtagSF(goodJets.get());
+  if (!objTool->isData()) JVTSF = objTool->JVT_SF(preOR_baselineJets.get());
   goodJetsBeforeOR->sort(pT_Sorter);
   badJets->sort(pT_Sorter);
   nBadJets = badJets->size();

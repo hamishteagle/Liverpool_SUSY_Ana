@@ -323,7 +323,7 @@ EL::StatusCode MyxAODAnalysis :: initialize ()
   //BTaggingSelectionTool setup
   ASG_SET_ANA_TOOL_TYPE( m_BTaggingSelectionTool, BTaggingSelectionTool);
   m_BTaggingSelectionTool.setName("myBTaggingSelectionTool");
-  ANA_CHECK( m_BTaggingSelectionTool.setProperty( "FlvTagCutDefinitionsFileName","xAODBTaggingEfficiency/13TeV/2017-21-13TeV-MC16-CDI-2018-02-09_v1.root" ) ); //CDI file might need updating..
+  ANA_CHECK( m_BTaggingSelectionTool.setProperty( "FlvTagCutDefinitionsFileName","/cvmfs/atlas.cern.ch/repo/sw/database/GroupData/xAODBTaggingEfficiency/13TeV/2017-21-13TeV-MC16-CDI-2018-10-19_v1.root" ) ); //CDI file might need updating..
   ANA_CHECK( m_BTaggingSelectionTool.setProperty("TaggerName",    "MV2c10"  ) );
   ANA_CHECK( m_BTaggingSelectionTool.setProperty("OperatingPoint", "Continuous") );
   ANA_CHECK( m_BTaggingSelectionTool.setProperty("JetAuthor",      "AntiKt4EMTopoJets" ) );
@@ -504,7 +504,7 @@ EL::StatusCode MyxAODAnalysis :: execute ()
       //      }
     }
 
-    auto objs = std::make_unique<NewObjectDef>(evtStore(), objTool.get(), store, mcChannel, EventNumber, mcWgt, m_lumiBlockNumber, syst.name(), doTruthJets);
+    auto objs = std::make_unique<NewObjectDef>(evtStore(), objTool.get(), store, mcChannel, EventNumber, mcWgt, m_lumiBlockNumber, syst.name(), doTruthJets, m_SUSY5, m_SUSY7);
     if (firstEvent == true) firstEvent = false;
 
     bool passGRL = false;
@@ -752,7 +752,7 @@ EL::StatusCode MyxAODAnalysis :: execute ()
       passedCleaningCuts=true;
     }
 
-    auto m_varCalc = std::make_unique<CalculateVariables>( objs.get(), m_BTaggingSelectionTool, store, isTruth, doPhotons);
+    auto m_varCalc = std::make_unique<CalculateVariables>( objs.get(), m_BTaggingSelectionTool, store, isTruth, doPhotons, isData);
     auto m_regions = std::make_unique<PreliminarySel>(*m_varCalc, passedCleaningCuts);
 
 

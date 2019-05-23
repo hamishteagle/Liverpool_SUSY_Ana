@@ -47,7 +47,7 @@ bool btag_wgt_Sorter( const xAOD::Jet* j1, const xAOD::Jet* j2 ) {
 
 
 
-CalculateVariables::CalculateVariables(NewObjectDef *objects, asg::AnaToolHandle<IBTaggingSelectionTool> m_BTaggingSelectionTool, xAOD::TStore* evtStore, bool isTruth, bool doPhotons){
+CalculateVariables::CalculateVariables(NewObjectDef *objects, asg::AnaToolHandle<IBTaggingSelectionTool> m_BTaggingSelectionTool, xAOD::TStore* evtStore, bool isTruth, bool doPhotons, bool isData){
 
   // Initialise the variables to sensible numbers
   
@@ -101,6 +101,9 @@ CalculateVariables::CalculateVariables(NewObjectDef *objects, asg::AnaToolHandle
   j2_bQuantile=-1;
   j3_bQuantile=-1;
   j4_bQuantile=-1;
+
+  b1_bQuantile=-1;
+  b2_bQuantile=-1;
 
 
   njet20 = goodJet_cont->size();
@@ -545,13 +548,22 @@ CalculateVariables::CalculateVariables(NewObjectDef *objects, asg::AnaToolHandle
     pTb1 = b1v.Pt();    
     etab1 = b1v.Eta();    
     phib1 = b1v.Phi();    
+    //truthFlavour
+    int flavour =-1;
+    if(!isData){(*(bJet_cont))[0]->getAttribute("ConeTruthLabelID",flavour);}
+    truthFlavb1 = flavour;
+    //
   }
   if (nbJets >= 2){
     b2v = (*bJet_cont)[1]->p4()*0.001;
     pTb2 = b2v.Pt();
-    if (pTb1<pTb2)std::cout<<"Your pT ordering doesn't work you idiot"<<std::endl;
     etab2 = b2v.Eta();
     phib2 = b2v.Phi();
+    //truthFlavour
+    int flavour =-1;
+    if(!isData){(*(bJet_cont))[1]->getAttribute("ConeTruthLabelID",flavour);}
+    truthFlavb2 = flavour;
+    //
   }    
   if (nbJets >= 3){
     b3v = (*bJet_cont)[2]->p4()*0.001;
@@ -1518,6 +1530,8 @@ bool CalculateVariables::CalculatePseudoContBTagging(NewObjectDef *objects, asg:
 
   int quantile=-1;
   std::vector<int> jet_quantiles;
+  std::vector<int> bjet_quantiles;
+  //get the quantiles for the jets 
   for (const xAOD::Jet *jet :(*goodJet_cont)){
     try {
       jet_quantiles.push_back(m_BTaggingSelectionTool->getQuantile(*jet));
@@ -1538,6 +1552,22 @@ bool CalculateVariables::CalculatePseudoContBTagging(NewObjectDef *objects, asg:
   if (jet_quantiles.size()>3){
     j4_bQuantile = jet_quantiles[3];
   }
+  //Get the quantiles for the b-jets
+  for (const xAOD::Jet *jet :(*bJet_cont)){
+    try {
+      bjet_quantiles.push_back(m_BTaggingSelectionTool->getQuantile(*jet));
+    }catch(...)
+      {
+	return false;
+      }
+  }
+  if (bjet_quantiles.size()>0){
+    b1_bQuantile = bjet_quantiles[0];
+  }
+  if (bjet_quantiles.size()>1){
+    b2_bQuantile = bjet_quantiles[1];
+  }
+  bjet_quantiles.clear();
   jet_quantiles.clear();
   return true;
 }

@@ -112,7 +112,7 @@ int main( int argc, char* argv[]) {
 
         EL::DirectDriver driver;
         job.options()->setDouble (EL::Job::optRemoveSubmitDir, 1);
-        
+        job.options()->setDouble (EL::Job::optXAODPerfStats, 1);
         driver.submit( job, submit_dir );
     }
     else if (!RunningLocally){
@@ -153,12 +153,13 @@ int main( int argc, char* argv[]) {
 	  sh.setMetaString ("nc_tree", "CollectionTree");
 	  sh.print();
 	  output_name = sample_name;        
-	  driver.options()->setString("nc_outputSampleName", "user." + username + "." + CurrentDate+"." + physicsName+"_"+fileType+"."+release+".v1."+"%in:name[2]%.%in:name[3]%");
+	  driver.options()->setString("nc_outputSampleName", "user." + username + "." + CurrentDate+"." + physicsName+"_"+fileType+"."+release+".ELv1."+"%in:name[2]%.%in:name[3]%");
         }
         // Add our analysis to the job:
         MyxAODAnalysis* alg = new MyxAODAnalysis();
         
         EL::OutputStream output  ("output");
+
         job.outputAdd (output);
         
         job.algsAdd( alg );
@@ -169,7 +170,7 @@ int main( int argc, char* argv[]) {
         alg->RunningLocally = false;
         alg->setMsgLevel(MSG::DEBUG);
 
-        job.options()->setDouble (EL::Job::optRemoveSubmitDir, 1);
+        //job.options()->setDouble (EL::Job::optRemoveSubmitDir, 1);
         job.sampleHandler( sh );
         driver.options()->setString(EL::Job::optGridNFilesPerJob, "5");
         // Use submit if you want to see all of the info about the submitted jobs. Use submitOnly if you want to send the jobs then Monitor online with panda

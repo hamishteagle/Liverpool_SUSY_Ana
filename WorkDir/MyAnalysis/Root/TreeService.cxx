@@ -125,6 +125,8 @@ TreeService::TreeService(TTree *outputTree, TDirectory *OutDir){
   tree->Branch("phib2",&phib2);
   tree->Branch("phib3",&phib3);
   tree->Branch("phib4",&phib4);
+  tree->Branch("truthFlavb1",&truthFlavb1);
+  tree->Branch("truthFlavb2",&truthFlavb2);
 
   tree->Branch("nJets",&nJets);
   //tree->Branch("nJets_beforeOR",&nJets_beforeOR);
@@ -191,6 +193,9 @@ TreeService::TreeService(TTree *outputTree, TDirectory *OutDir){
   tree->Branch("j2_bQuantile", &j2_bQuantile);
   tree->Branch("j3_bQuantile", &j3_bQuantile);
   tree->Branch("j4_bQuantile", &j4_bQuantile);
+
+  tree->Branch("b1_bQuantile", &b1_bQuantile);
+  tree->Branch("b2_bQuantile", &b2_bQuantile);
 
   //ISR varibles
   tree->Branch("delPhi1",&delPhi1);
@@ -359,6 +364,9 @@ void TreeService::fillTree(NewObjectDef *objects , xAOD::TStore *evtStore, Preli
   j2_bQuantile = variables.j2_bQuantile;
   j3_bQuantile = variables.j3_bQuantile;
   j4_bQuantile = variables.j4_bQuantile;
+
+  b1_bQuantile = variables.b1_bQuantile;
+  b2_bQuantile = variables.b2_bQuantile;
   
 
   njet20 = variables.njet20;
@@ -478,7 +486,8 @@ void TreeService::fillTree(NewObjectDef *objects , xAOD::TStore *evtStore, Preli
   phib2 = variables.phib2;
   phib3 = variables.phib3;
   phib4 = variables.phib4;
-
+  truthFlavb1 = variables.truthFlavb1;
+  truthFlavb2 = variables.truthFlavb2;
 
   dPhij1MET = variables.delPhi1;
   dPhij2MET = variables.delPhi2;
@@ -687,9 +696,6 @@ void TreeService::fillTree(NewObjectDef *objects , xAOD::TStore *evtStore, Preli
 	}
       int flavour = -1;
       // mcid == 0 for Data
-      if(mcID > 0){(*(goodJet_cont))[iJet]->getAttribute("ConeTruthLabelID",flavour);}
-      jet_truflav.push_back( flavour );
-      double MV2c10wgt = -99;
       if(mcID > 0){(*(goodJet_cont))[iJet]->btagging()->MVx_discriminant("MV2c10", MV2c10wgt);}
       jet_bWgt.push_back(MV2c10wgt);
     }

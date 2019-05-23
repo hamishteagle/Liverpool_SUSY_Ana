@@ -91,7 +91,7 @@ def CorrelationPlot(variable1, variable2, xaxislabel, yaxislabel, xmin, xmax, xb
     
 
     scatterPlot1.Draw("colz")
-    latex_draw("Truth")
+    latex_draw("300_150")
     
     Canvas2 = ROOT.TCanvas("Canvas2","Canvas2",0,0,900,900)
     Canvas2.SetRightMargin(0.15)
@@ -110,7 +110,7 @@ def CorrelationPlot(variable1, variable2, xaxislabel, yaxislabel, xmin, xmax, xb
 
 
     scatterPlot2.Draw("colz")
-    latex_draw("TruthSmeared")
+    latex_draw("400_150")
 
     Canvas4 = ROOT.TCanvas("Canvas4","Canvas4",0,0,900,900)
     Canvas4.SetRightMargin(0.15)
@@ -129,7 +129,7 @@ def CorrelationPlot(variable1, variable2, xaxislabel, yaxislabel, xmin, xmax, xb
 
 
     scatterPlot4.Draw("colz")
-    latex_draw("reco")
+    latex_draw("ttbar")
 
     #Divide the two to see differences
     scatterPlot3=scatterPlot2.Clone()
@@ -169,9 +169,9 @@ def CorrelationPlot(variable1, variable2, xaxislabel, yaxislabel, xmin, xmax, xb
 
 
 
-    Canvas.SaveAs(output_dir+variable1+"_"+variable2+"truth.pdf")
-    Canvas2.SaveAs(output_dir+variable1+"_"+variable2+"truthSmeared.pdf")
-    Canvas4.SaveAs(output_dir+variable1+"_"+variable2+"reco.pdf")
+    Canvas.SaveAs(output_dir+variable1+"_"+variable2+"300_150.pdf")
+    Canvas2.SaveAs(output_dir+variable1+"_"+variable2+"400_250.pdf")
+    Canvas4.SaveAs(output_dir+variable1+"_"+variable2+"ttbar.pdf")
     Canvas3.SaveAs(output_dir+variable1+"_"+variable2+"ratio.pdf")
 
 
@@ -189,16 +189,28 @@ def getLinCorrelationPlot(variable1, variable2, xaxislabel, yaxislabel,xbins,xmi
          h_linCorr.Reset()
          print("reseting the hist")
     except:
-        h_linCorr=ROOT.TH1D("linCorr","Linear Correlation between variables",20,-10,10)
+        h_linCorr=ROOT.TH1D("linCorr","Linear Correlation between variables",15,-30,30)
     xmean=scatterPlot.GetMean(1)
     ymean=scatterPlot.GetMean(2)
     xrms=scatterPlot.GetRMS(1)
     yrms=scatterPlot.GetRMS(2)
     for entry in range(inTree.GetEntries()):
         inTree.GetEntry(entry)
-        x = inTree.GetLeaf(xvariabletoplot).GetValue()
-        y = inTree.GetLeaf(yvariabletoplot).GetValue()
-        weight = inTree.GetLeaf('eventWeight').GetValue()
+        if xvariabletoplot.find("+")!=-1:
+            print ("Splitting x varible into:"+str(xvariabletoplot.split("+")[0])+" and "+str(xvariabletoplot.split("+")[1]))
+            x1 = inTree.GetLeaf(xvariabletoplot.split("+")[0]).GetValue()
+            x1 = inTree.GetLeaf(xvariabletoplot.split("+")[1]).GetValue()
+            x = x1+x1
+        else:
+            x = inTree.GetLeaf(xvariabletoplot).GetValue()
+        if yvariabletoplot.find("+")!=-1:
+            print ("Splitting y varible into:"+str(yvariabletoplot.split("+")[0])+" and "+str(yvariabletoplot.split("+")[0]))
+            y1 = inTree.GetLeaf(yvariabletoplot.split("+")[0]).GetValue()
+            y1 = inTree.GetLeaf(yvariabletoplot.split("+")[1]).GetValue()
+            y = y1+y1
+        else:
+            y = inTree.GetLeaf(yvariabletoplot).GetValue()
+        weight = inTree.GetLeaf('mcEventWeight').GetValue()
         linCorr=((x-xmean)*(y-ymean))/(xrms*yrms)
         h_linCorr.Fill(linCorr, weight)
     h_linCorr.SetLineColor
@@ -219,7 +231,7 @@ def LinCorrelationPlot(variable1, variable2, xaxislabel, yaxislabel, xmin, xmax,
 
     xvariabletoplot = variable1
     yvariabletoplot = variable2
-    cutstouse = "eventWeight*"+selection
+    cutstouse = "mcEventWeight*"+selection
 
     sigFile = ROOT.TFile(signalFile)
     sigTree = sigFile.Get("CollectionTree_")
@@ -242,12 +254,12 @@ def LinCorrelationPlot(variable1, variable2, xaxislabel, yaxislabel, xmin, xmax,
     sigPlot_TruthSmeared.Scale(1/sigPlot_TruthSmeared.Integral())
     sigPlot_TruthSmeared.Sumw2()
 
-    sigFile_reco = ROOT.TFile(signalFile_reco)
-    sigTree_reco = sigFile_reco.Get("CollectionTree_")
-    sigPlot_reco = getLinCorrelationPlot(variable1, variable2, xaxislabel, yaxislabel,xbins,xmin,xmax,ybins,ymin,ymax,sigTree_reco,xvariabletoplot,yvariabletoplot, cutstouse).Clone()
-    sigPlot_reco.SetLineColor(ROOT.kMagenta+6)
-    sigPlot_reco.Scale(1/sigPlot_reco.Integral())
-    sigPlot_reco.Sumw2()
+    # sigFile_reco = ROOT.TFile(signalFile_reco)
+    # sigTree_reco = sigFile_reco.Get("CollectionTree_")
+    # sigPlot_reco = getLinCorrelationPlot(variable1, variable2, xaxislabel, yaxislabel,xbins,xmin,xmax,ybins,ymin,ymax,sigTree_reco,xvariabletoplot,yvariabletoplot, cutstouse).Clone()
+    # sigPlot_reco.SetLineColor(ROOT.kMagenta+6)
+    # sigPlot_reco.Scale(1/sigPlot_reco.Integral())
+    # sigPlot_reco.Sumw2()
 
 
    #Linear Correlation
@@ -270,15 +282,15 @@ def LinCorrelationPlot(variable1, variable2, xaxislabel, yaxislabel, xmin, xmax,
     Legend.SetFillStyle(0)
     Legend.SetBorderSize(0)
 
-    Legend.AddEntry(sigPlot,"Truth","L")
-    Legend.AddEntry(sigPlot_Truth,"TruthSmeared","L")
-    Legend.AddEntry(sigPlot_TruthSmeared,"TruthSmeared_EtaPhiP","L")
-    Legend.AddEntry(sigPlot_reco,"reco","L")
+    Legend.AddEntry(sigPlot,"300_150","L")
+    Legend.AddEntry(sigPlot_Truth,"400_250","L")
+    Legend.AddEntry(sigPlot_TruthSmeared,"ttbar","L")
+#    Legend.AddEntry(sigPlot_reco,"reco","L")
 
     sigPlot.DrawNormalized("Hist,E")
     sigPlot_Truth.DrawNormalized("Hist,same, E")
     sigPlot_TruthSmeared.DrawNormalized("Hist,same, E")
-    sigPlot_reco.DrawNormalized("Hist,same, E")
+    #sigPlot_reco.DrawNormalized("Hist,same, E")
     latex_draw(xvariabletoplot+'_'+yvariabletoplot)
     Legend.Draw()
 
@@ -287,12 +299,12 @@ def LinCorrelationPlot(variable1, variable2, xaxislabel, yaxislabel, xmin, xmax,
     sigPlot_ratio = sigPlot.Clone()
     sigPlot_Truth_ratio = sigPlot_Truth.Clone()
     sigPlot_TruthSmeared_ratio = sigPlot_TruthSmeared.Clone()
-    sigPlot_reco_ratio = sigPlot_reco.Clone()
+    #sigPlot_reco_ratio = sigPlot_reco.Clone()
     
-    sigPlot_ratio.Divide(sigPlot_reco)
-    sigPlot_Truth_ratio.Divide(sigPlot_reco)
-    sigPlot_TruthSmeared_ratio.Divide(sigPlot_reco)
-    sigPlot_reco_ratio.Divide(sigPlot_reco)
+    # sigPlot_ratio.Divide(sigPlot_reco)
+    # sigPlot_Truth_ratio.Divide(sigPlot_reco)
+    # sigPlot_TruthSmeared_ratio.Divide(sigPlot_reco)
+    # sigPlot_reco_ratio.Divide(sigPlot_reco)
 
 
 
@@ -305,12 +317,12 @@ def LinCorrelationPlot(variable1, variable2, xaxislabel, yaxislabel, xmin, xmax,
     sigPlot_ratio.Draw("E1, Hist")
     sigPlot_Truth_ratio.Draw("Hist same, E1")
     sigPlot_TruthSmeared_ratio.Draw("Hist same, E1")
-    sigPlot_reco_ratio.Draw("Hist same, E1")
+#    sigPlot_reco_ratio.Draw("Hist same, E1")
 
 
     middleLine = ROOT.TLine()
     middleLine.SetLineColor(ROOT.kRed)
-    middleLine.DrawLine(-10,1,10,1)
+    middleLine.DrawLine(-20,1,20,1)
 
 
     

@@ -25,13 +25,13 @@ class NewObjectDef
     /*asg::AnaToolHandle<ST::SUSYObjDef_xAOD> objTool;*/
     ST::SUSYObjDef_xAOD* objTool;
 
-    NewObjectDef(asg::SgTEvent* event, ST::SUSYObjDef_xAOD* SUSYTool, xAOD::TStore* store, double mcChannel, double EventNumber, double mcWgt, double m_lumiScaled, std::string systematic, bool doTruthJets);
+    NewObjectDef(asg::SgTEvent* event, ST::SUSYObjDef_xAOD* SUSYTool, xAOD::TStore* store, double mcChannel, double EventNumber, double mcWgt, double m_lumiScaled, std::string systematic, bool doTruthJets, bool m_SUSY5, bool m_SUSY7);
 
     ~NewObjectDef(){
     };
 
     void GetObjects();
-    void GetBaselineObjects();
+    void GetBaselineObjects(bool m_SUSY5, bool m_SUSY7);
     void GetTruthJets();
 
     double getMET(){return MET;};
