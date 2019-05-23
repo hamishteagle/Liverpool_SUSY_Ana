@@ -55,7 +55,7 @@ run_project:
     - deploy-eos #actually copy the files from EOS (part of upper repository)
     - ls -l #make sure the files are there
     #Run tests
-    - ls /home/atlas/ #Where are we
+    - ls /home/atlas/Liverpool_SbottomAnalysis_Rel21/ #Where are we
     - source /home/atlas/release_setup.sh
     - mkdir -p run #this is happening inside the Gitlab runner
     - mkdir -p submitdir #this is happening inside the Gitlab runner
