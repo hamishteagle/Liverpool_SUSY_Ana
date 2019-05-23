@@ -1,0 +1,63 @@
+variables:
+  GIT_SUBMODULE_STRATEGY: recursive
+  ATHENA_RELEASE: 21.2.70
+
+stages:
+  - build
+#  - run
+
+# Build Docker image
+# To see the available commands when building a docker image with Gitlab, see
+# https://gitlab.cern.ch/vcs/gitlabci-docker-builder
+
+build:
+  stage: build
+  only:
+    - master
+  tags:
+    - docker-image-build
+  script: "echo 'Building image ...'"
+  variables:
+    FROM: atlas/analysisbase:$ATHENA_RELEASE
+
+# build_dev:
+#   stage: build
+#   except:
+#     - master
+#   tags:
+#     - docker-image-build
+#   script: "echo 'Building image ...'"
+#   variables:
+#     TO: ${CI_REGISTRY_IMAGE}:${CI_COMMIT_REF_NAME}
+#     FROM: atlas/analysisbase:$ATHENA_RELEASE
+
+# # Run CI tests in the docker image
+
+# .variables_files: &variables_files #these variables are used to copy a file from EOS to the CI
+#   variables:
+#     METHOD: rsync #use rsync if you want to copy stuff FROM EOS
+#     EOS_GET_OR_DEPLOY: GET #get the file from EOS, not push it there
+#     SAMPLE: mc16_13TeV.410470.PhPy8EG_A14_ttbar_hdamp258p75_nonallhad.deriv.DAOD_SUSY5.e6337_s3126_r9364_p3712/
+#     EOS_PATH: /eos/user/a/atlastwmet/$SAMPLE #path on EOS to copy from
+#     CI_BASE_DIR: fromEOS
+#     CI_DIR: $CI_BASE_DIR/$SAMPLE #path at CI level to copy to
+
+# run_project:
+#   stage: run
+#   <<: *variables_files
+#   image: gitlab-registry.cern.ch/bbrueers/ntuplerrun2
+#   script:
+#     #Get file from EOS
+#     - mkdir fromEOS #directory to download the files to
+#     - git clone https://gitlab-ci-token:${CI_JOB_TOKEN}@gitlab.cern.ch/bbrueers/ci-web-deployer.git #this package allows to copy stuff from EOS
+#     - sudo cp ci-web-deployer/bin/* /sbin/ #"install" the binaries
+#     - file-access-eos #actually copy the files from EOS (part of upper repository)
+#     - ls -l #make sure the files are there
+#     #Run tests
+#     - source /home/atlas/release_setup.sh
+#     - mkdir -p run #this is happening inside the Gitlab runner
+#     - cd run
+#     - ATestRun -n -i ../$CI_DIR -d
+#   artifacts:
+#     paths:
+#       - run
