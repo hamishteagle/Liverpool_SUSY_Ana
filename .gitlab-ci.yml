@@ -40,7 +40,7 @@ build_dev:
     SAMPLE: mc16_13TeV/
     EOS_PATH: /eos/user/h/hteagle/ttbar_checkfile_SUSY7/$SAMPLE #path on EOS to copy from
     CI_BASE_DIR: fromEOS
-    CI_DIR: $CI_BASE_DIR/$SAMPLE #path at CI level to copy to
+    CI_OUTPUT_DIR: $CI_BASE_DIR/$SAMPLE #path at CI level to copy to
 
 run_project:
   stage: run
