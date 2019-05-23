@@ -35,27 +35,3 @@ COPY WorkDir/MyAnalysis Liverpool_SbottomAnalysis_Rel21/source/MyxAODAnalysis
 
 # Start the image with BASH by default:
 #CMD /bin/bash
-=======
-COPY CMakeLists.txt LivAnalysis/source/
-COPY Macros LivAnalysis/source/Macros
-COPY NewMT2 LivAnalysis/source/NewMT2
-COPY RestFrames LivAnalysis/source/RestFrames
-COPY MyxAODAnalysis LivAnalysis/source/MyxAODAnalysis
-
-# and set the permissions from root to atlas
-USER root
-RUN chown --recursive atlas:atlas NtuplerRun2
-USER atlas
-
-
-# Build the project inside a build/ directory:
-RUN source /home/atlas/release_setup.sh && \
-    cd LivAnalysis && ls -l && mkdir build && ls -l && cd build/ && ls -l ../source && cmake ../source/ && make
-
-# Set up the environment setup script:
-RUN mv release_setup.sh analysis_release_setup.sh
-COPY CI/release_setup.sh /home/atlas/
-
-# Start the image with BASH by default:
-CMD /bin/bash
->>>>>>> Liverpool_2019_branch_HamishDev

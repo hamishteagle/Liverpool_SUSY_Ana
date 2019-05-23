@@ -264,7 +264,6 @@ EL::StatusCode MyxAODAnalysis :: initialize ()
   ANA_CHECK(objTool->setProperty("DataSource",datasource) );
   if (m_SUSY5){
     ANA_CHECK(objTool->setProperty("ConfigFile",PathResolverFindCalibFile("/MyAnalysis/MyAnalysis/configs/1Lbb_default.conf")));
-    //ANA_CHECK(objTool->setProperty("ConfigFile",PathResolverFindCalibFile("/MyAnalysis/MyAnalysis/configs/topDM_Giulia.conf")));
     ANA_MSG_INFO("This is SUSY5");
   }
   if (m_SUSY7){
