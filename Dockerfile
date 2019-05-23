@@ -12,16 +12,15 @@ FROM atlas/analysisbase:21.2.70
 
 # Copy the project's sources into the image:
 # You need to copy this one by one, else unwanted files will be copied, too
-CMD ls
-#COPY CMakeLists.txt Liverpool_SbottomAnalysis_Rel21/source/
-#COPY Macros Liverpool_SbottomAnalysis_Rel21/source/Macros
-#COPY NewMT2 Liverpool_SbottomAnalysis_Rel21/source/NewMT2
-#COPY RestFrames Liverpool_SbottomAnalysis_Rel21/source/RestFrames
-#COPY MyxAODAnalysis Liverpool_SbottomAnalysis_Rel21/source/MyxAODAnalysis
+COPY WorkDir/CMakeLists.txt Liverpool_SbottomAnalysis_Rel21/source/
+#COPY WorkDir/Macros Liverpool_SbottomAnalysis_Rel21/source/Macros
+#COPY WorkDir/NewMT2 Liverpool_SbottomAnalysis_Rel21/source/NewMT2
+#COPY WorkDir/RestFrames Liverpool_SbottomAnalysis_Rel21/source/RestFrames
+#COPY WorkDir/MyxAODAnalysis Liverpool_SbottomAnalysis_Rel21/source/MyxAODAnalysis
 
 # and set the permissions from root to atlas
 #USER root
-#RUN chown --recursive atlas:atlas NtuplerRun2
+#RUN chown --recursive atlas:atlas Liverpool_SbottomAnalysis_Rel21
 #USER atlas
 
 
