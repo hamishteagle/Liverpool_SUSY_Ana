@@ -16,7 +16,7 @@ COPY WorkDir/CMakeLists.txt Liverpool_SbottomAnalysis_Rel21/source/
 #COPY WorkDir/Macros Liverpool_SbottomAnalysis_Rel21/source/Macros
 COPY WorkDir/NewMT2 Liverpool_SbottomAnalysis_Rel21/source/NewMT2
 COPY WorkDir/RestFrames Liverpool_SbottomAnalysis_Rel21/source/RestFrames
-COPY WorkDir/MyxAODAnalysis Liverpool_SbottomAnalysis_Rel21/source/MyxAODAnalysis
+COPY WorkDir/MyAnalysis Liverpool_SbottomAnalysis_Rel21/source/MyxAODAnalysis
 
 # and set the permissions from root to atlas
 #USER root
