@@ -37,8 +37,8 @@ build_dev:
   variables:
     METHOD: rsync #use rsync if you want to copy stuff FROM EOS
     EOS_GET_OR_DEPLOY: GET #get the file from EOS, not push it there
-    SAMPLE: mc16_13TeV/
-    EOS_PATH: /eos/user/h/hteagle/ttbar_checkfile_SUSY7/$SAMPLE #path on EOS to copy from
+    SAMPLE: mc16_13TeV.410470.PhPy8EG_A14_ttbar_hdamp258p75_nonallhad.deriv.DAOD_SUSY7.e6337_s3126_r9364_p3703/
+    EOS_PATH: /eos/user/h/hteagle/Public/ttbar_checkfile_SUSY7/$SAMPLE #path on EOS to copy from
     CI_BASE_DIR: fromEOS
     CI_OUTPUT_DIR: $CI_BASE_DIR/$SAMPLE #path at CI level to copy to
 
@@ -49,11 +49,10 @@ run_project:
   script:
     #Get file from EOS
     - mkdir fromEOS #directory to download the files to
-    - mkdir fromEOS/mc16_13TeV #directory to download the files to
     - git clone https://gitlab-ci-token:${CI_JOB_TOKEN}@gitlab.cern.ch/ci-tools/ci-web-deployer.git #this package allows to copy stuff from EOS
     - sudo cp ci-web-deployer/bin/* /sbin/ #"install" the binaries
     - deploy-eos #actually copy the files from EOS (part of upper repository)
-    - ls -l #make sure the files are there
+    - ls fromEOS/mc16_13TeV/ #make sure the files are there
     #Run tests
     - ls /home/atlas/Liverpool_SbottomAnalysis_Rel21/ #Where are we
     - source /home/atlas/release_setup.sh
