@@ -1,4 +1,0 @@
-# Target labels
- MyAnalysis
-# Source files and their labels
-/user/hteagle/AnalysisDirectory/Rel21/Base.21.2.72/athena/Projects/WorkDir/MyAnalysis/util/testRunTest.cxx

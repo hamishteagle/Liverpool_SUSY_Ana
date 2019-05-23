@@ -1,9 +1,0 @@
-[release_metadata]
-release:1.0.0
-nightly name:master
-project name:UserAnalysis
-nightly release:44f24ad
-date:2019-05-23T1621
-compiler:GNU-6.2.0
-cxxpath:/cvmfs/sft.cern.ch/lcg/releases/gcc/6.2.0-b9934/x86_64-slc6/bin/g++
-cmake:3.11.0
