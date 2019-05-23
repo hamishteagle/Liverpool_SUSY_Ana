@@ -48,7 +48,7 @@ run_project:
   image: gitlab-registry.cern.ch/hteagle/liverpool_sbottomanalysis_rel21
   script:
     #Get file from EOS
-    - mkdir CI_BASE_DIR/CI_OUTPUT_DIR #directory to download the files to
+    - mkdir $CI_BASE_DIR/$CI_OUTPUT_DIR #directory to download the files to
     - git clone https://gitlab-ci-token:${CI_JOB_TOKEN}@gitlab.cern.ch/ci-tools/ci-web-deployer.git #this package allows to copy stuff from EOS
     - sudo cp ci-web-deployer/bin/* /sbin/ #"install" the binaries
     - deploy-eos #actually copy the files from EOS (part of upper repository)
