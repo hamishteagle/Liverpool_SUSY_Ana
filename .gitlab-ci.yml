@@ -35,7 +35,7 @@ build_dev:
 
 .variables_files: &variables_files #these variables are used to copy a file from EOS to the CI
   variables:
-    METHOD: rsync #use rsync if you want to copy stuff FROM EOS
+    METHOD: xrdcp #use rsync if you want to copy stuff FROM EOS
     EOS_GET_OR_DEPLOY: GET #get the file from EOS, not push it there
     SAMPLE: mc16_13TeV.410470.PhPy8EG_A14_ttbar_hdamp258p75_nonallhad.deriv.DAOD_SUSY7.e6337_s3126_r9364_p3703/
     EOS_PATH: /eos/user/h/hteagle/Public/ttbar_checkfile_SUSY7/$SAMPLE #path on EOS to copy from
