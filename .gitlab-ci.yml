@@ -4,7 +4,7 @@ variables:
 
 stages:
   - build
-#  - run
+  - run
 
 # Build Docker image
 # To see the available commands when building a docker image with Gitlab, see
@@ -42,22 +42,23 @@ build_dev:
     CI_BASE_DIR: fromEOS
     CI_DIR: $CI_BASE_DIR/$SAMPLE #path at CI level to copy to
 
-# run_project:
-#   stage: run
-#   <<: *variables_files
-#   image: gitlab-registry.cern.ch/bbrueers/ntuplerrun2
-#   script:
-#     #Get file from EOS
-#     - mkdir fromEOS #directory to download the files to
-#     - git clone https://gitlab-ci-token:${CI_JOB_TOKEN}@gitlab.cern.ch/bbrueers/ci-web-deployer.git #this package allows to copy stuff from EOS
-#     - sudo cp ci-web-deployer/bin/* /sbin/ #"install" the binaries
-#     - file-access-eos #actually copy the files from EOS (part of upper repository)
-#     - ls -l #make sure the files are there
-#     #Run tests
-#     - source /home/atlas/release_setup.sh
-#     - mkdir -p run #this is happening inside the Gitlab runner
-#     - cd run
-#     - ATestRun -n -i ../$CI_DIR -d
-#   artifacts:
-#     paths:
-#       - run
+run_project:
+  stage: run
+  <<: *variables_files
+  image: gitlab-registry.cern.ch/bbrueers/ntuplerrun2
+  script:
+    #Get file from EOS
+    - mkdir fromEOS #directory to download the files to
+    - git clone https://gitlab-ci-token:${CI_JOB_TOKEN}@gitlab.cern.ch/bbrueers/ci-web-deployer.git #this package allows to copy stuff from EOS
+    - sudo cp ci-web-deployer/bin/* /sbin/ #"install" the binaries
+    - file-access-eos #actually copy the files from EOS (part of upper repository)
+    - ls -l #make sure the files are there
+    #Run tests
+    - source /home/atlas/release_setup.sh
+    - mkdir -p run #this is happening inside the Gitlab runner
+    - mkdir -p submitdir #this is happening inside the Gitlab runner
+    - cd run
+    - testRun -i ../$CI_DIR ../submitdir 0 0 1 -1 hteagle 21.2.74  TYPE 0
+  artifacts:
+    paths:
+      - run
