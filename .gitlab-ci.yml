@@ -55,12 +55,12 @@ run_project:
     - deploy-eos #actually copy the files from EOS (part of upper repository)
     - ls -l #make sure the files are there
     #Run tests
-    - ls -l /home/LivAnalysis/build/ #check what's in the build dir
+    - ls -l /home/atlas/LivAnalysis/build/ #check what's in the build dir
     - source /home/atlas/release_setup.sh
     - mkdir -p run #this is happening inside the Gitlab runner
     - mkdir -p submitdir #this is happening inside the Gitlab runner
     - cd run
-    - testRun -i ../$CI_DIR ../submitdir 0 0 1 -1 hteagle 21.2.74  TYPE 0
+    - testRun -i ../$CI_OUTPUT_DIR ../submitdir 0 0 1 -1 hteagle 21.2.74  TYPE 0
   artifacts:
     paths:
       - run
