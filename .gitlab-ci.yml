@@ -60,7 +60,7 @@ run_project:
     - mkdir -p run #this is happening inside the Gitlab runner
     - mkdir -p submitdir #this is happening inside the Gitlab runner
     - cd run
-    - testRun -i ../$CI_OUTPUT_DIR ../submitdir 0 0 1 -1 hteagle 21.2.74  TYPE 0
+    - testRun ../$CI_OUTPUT_DIR ../submitdir 0 0 1 -1 hteagle 21.2.74  TYPE 0
   artifacts:
     paths:
       - run
