@@ -1,0 +1,19 @@
+{
+	"sources" : 
+	[
+		{
+			"file" : "/user/hteagle/AnalysisDirectory/Rel21/Base.21.2.72/athena/Projects/WorkDir/NewMT2/NewMT2/MT2.h"
+		},
+		{
+			"file" : "/user/hteagle/AnalysisDirectory/Rel21/Base.21.2.72/athena/Projects/WorkDir/NewMT2/Root/MT2.cxx"
+		}
+	],
+	"target" : 
+	{
+		"labels" : 
+		[
+			"NewMT2"
+		],
+		"name" : "NewMT2Lib"
+	}
+}

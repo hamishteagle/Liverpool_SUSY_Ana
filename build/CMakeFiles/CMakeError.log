@@ -1,0 +1,33 @@
+Determining if the pthread_create exist failed with the following output:
+Change Dir: /user/hteagle/AnalysisDirectory/Rel21/Base.21.2.72/athena/Projects/build/CMakeFiles/CMakeTmp
+
+Run Build Command:"/usr/bin/gmake" "cmTC_d4430/fast"
+/usr/bin/gmake -f CMakeFiles/cmTC_d4430.dir/build.make CMakeFiles/cmTC_d4430.dir/build
+gmake[1]: Entering directory `/user/hteagle/AnalysisDirectory/Rel21/Base.21.2.72/athena/Projects/build/CMakeFiles/CMakeTmp'
+Building C object CMakeFiles/cmTC_d4430.dir/CheckSymbolExists.c.o
+/cvmfs/sft.cern.ch/lcg/releases/gcc/6.2.0-b9934/x86_64-slc6/bin/gcc    -o CMakeFiles/cmTC_d4430.dir/CheckSymbolExists.c.o   -c /user/hteagle/AnalysisDirectory/Rel21/Base.21.2.72/athena/Projects/build/CMakeFiles/CMakeTmp/CheckSymbolExists.c
+Linking C executable cmTC_d4430
+/cvmfs/atlas.cern.ch/repo/ATLASLocalRootBase/x86_64/Cmake/3.11.0/Linux-x86_64/bin/cmake -E cmake_link_script CMakeFiles/cmTC_d4430.dir/link.txt --verbose=1
+/cvmfs/sft.cern.ch/lcg/releases/gcc/6.2.0-b9934/x86_64-slc6/bin/gcc     -Wl,--as-needed -Wl,--hash-style=both  CMakeFiles/cmTC_d4430.dir/CheckSymbolExists.c.o  -o cmTC_d4430 
+CMakeFiles/cmTC_d4430.dir/CheckSymbolExists.c.o: In function `main':
+CheckSymbolExists.c:(.text+0x16): undefined reference to `pthread_create'
+collect2: error: ld returned 1 exit status
+gmake[1]: *** [cmTC_d4430] Error 1
+gmake[1]: Leaving directory `/user/hteagle/AnalysisDirectory/Rel21/Base.21.2.72/athena/Projects/build/CMakeFiles/CMakeTmp'
+gmake: *** [cmTC_d4430/fast] Error 2
+
+File /user/hteagle/AnalysisDirectory/Rel21/Base.21.2.72/athena/Projects/build/CMakeFiles/CMakeTmp/CheckSymbolExists.c:
+/* */
+#include <pthread.h>
+
+int main(int argc, char** argv)
+{
+  (void)argv;
+#ifndef pthread_create
+  return ((int*)(&pthread_create))[argc];
+#else
+  (void)argc;
+  return 0;
+#endif
+}
+

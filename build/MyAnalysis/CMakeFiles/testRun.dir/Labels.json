@@ -1,0 +1,16 @@
+{
+	"sources" : 
+	[
+		{
+			"file" : "/user/hteagle/AnalysisDirectory/Rel21/Base.21.2.72/athena/Projects/WorkDir/MyAnalysis/util/testRunTest.cxx"
+		}
+	],
+	"target" : 
+	{
+		"labels" : 
+		[
+			"MyAnalysis"
+		],
+		"name" : "testRun"
+	}
+}

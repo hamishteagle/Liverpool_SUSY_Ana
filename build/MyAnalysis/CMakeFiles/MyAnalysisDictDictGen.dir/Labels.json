@@ -1,0 +1,22 @@
+{
+	"sources" : 
+	[
+		{
+			"file" : "/user/hteagle/AnalysisDirectory/Rel21/Base.21.2.72/athena/Projects/build/MyAnalysis/CMakeFiles/MyAnalysisDictDictGen"
+		},
+		{
+			"file" : "/user/hteagle/AnalysisDirectory/Rel21/Base.21.2.72/athena/Projects/build/MyAnalysis/CMakeFiles/MyAnalysisDictDictGen.rule"
+		},
+		{
+			"file" : "/user/hteagle/AnalysisDirectory/Rel21/Base.21.2.72/athena/Projects/build/MyAnalysis/CMakeFiles/MyAnalysisDict.dsomap.rule"
+		}
+	],
+	"target" : 
+	{
+		"labels" : 
+		[
+			"MyAnalysis"
+		],
+		"name" : "MyAnalysisDictDictGen"
+	}
+}

@@ -1,0 +1,37 @@
+{
+	"sources" : 
+	[
+		{
+			"file" : "/user/hteagle/AnalysisDirectory/Rel21/Base.21.2.72/athena/Projects/build/x86_64-slc6-gcc62-opt/data/MyAnalysis/.DS_Store"
+		},
+		{
+			"file" : "/user/hteagle/AnalysisDirectory/Rel21/Base.21.2.72/athena/Projects/build/x86_64-slc6-gcc62-opt/data/MyAnalysis/._.DS_Store"
+		},
+		{
+			"file" : "/user/hteagle/AnalysisDirectory/Rel21/Base.21.2.72/athena/Projects/build/x86_64-slc6-gcc62-opt/data/MyAnalysis/MyAnalysis"
+		},
+		{
+			"file" : "/user/hteagle/AnalysisDirectory/Rel21/Base.21.2.72/athena/Projects/WorkDir/MyAnalysis/data/.DS_Store"
+		},
+		{
+			"file" : "/user/hteagle/AnalysisDirectory/Rel21/Base.21.2.72/athena/Projects/WorkDir/MyAnalysis/data/._.DS_Store"
+		},
+		{
+			"file" : "/user/hteagle/AnalysisDirectory/Rel21/Base.21.2.72/athena/Projects/build/x86_64-slc6-gcc62-opt/data/MyAnalysis/.DS_Store.rule"
+		},
+		{
+			"file" : "/user/hteagle/AnalysisDirectory/Rel21/Base.21.2.72/athena/Projects/build/x86_64-slc6-gcc62-opt/data/MyAnalysis/._.DS_Store.rule"
+		},
+		{
+			"file" : "/user/hteagle/AnalysisDirectory/Rel21/Base.21.2.72/athena/Projects/build/x86_64-slc6-gcc62-opt/data/MyAnalysis/MyAnalysis.rule"
+		}
+	],
+	"target" : 
+	{
+		"labels" : 
+		[
+			"MyAnalysis"
+		],
+		"name" : "MyAnalysisDataInstall"
+	}
+}

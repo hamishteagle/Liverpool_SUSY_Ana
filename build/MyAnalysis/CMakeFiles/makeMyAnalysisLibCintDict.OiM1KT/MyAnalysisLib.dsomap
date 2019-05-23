@@ -1,0 +1,4 @@
+[ libMyAnalysisLib.so ]
+# List of selected classes
+class MyxAODAnalysis
+header MyAnalysis/MyxAODAnalysis.h

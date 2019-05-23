@@ -1,0 +1,11 @@
+# Target labels
+ MyAnalysis
+# Source files and their labels
+/user/hteagle/AnalysisDirectory/Rel21/Base.21.2.72/athena/Projects/build/x86_64-slc6-gcc62-opt/data/MyAnalysis/.DS_Store
+/user/hteagle/AnalysisDirectory/Rel21/Base.21.2.72/athena/Projects/build/x86_64-slc6-gcc62-opt/data/MyAnalysis/._.DS_Store
+/user/hteagle/AnalysisDirectory/Rel21/Base.21.2.72/athena/Projects/build/x86_64-slc6-gcc62-opt/data/MyAnalysis/MyAnalysis
+/user/hteagle/AnalysisDirectory/Rel21/Base.21.2.72/athena/Projects/WorkDir/MyAnalysis/data/.DS_Store
+/user/hteagle/AnalysisDirectory/Rel21/Base.21.2.72/athena/Projects/WorkDir/MyAnalysis/data/._.DS_Store
+/user/hteagle/AnalysisDirectory/Rel21/Base.21.2.72/athena/Projects/build/x86_64-slc6-gcc62-opt/data/MyAnalysis/.DS_Store.rule
+/user/hteagle/AnalysisDirectory/Rel21/Base.21.2.72/athena/Projects/build/x86_64-slc6-gcc62-opt/data/MyAnalysis/._.DS_Store.rule
+/user/hteagle/AnalysisDirectory/Rel21/Base.21.2.72/athena/Projects/build/x86_64-slc6-gcc62-opt/data/MyAnalysis/MyAnalysis.rule
