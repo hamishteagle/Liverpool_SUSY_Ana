@@ -19,7 +19,7 @@ MCChecks::MCChecks(){
   truthFilterMET = 0;
   jetFilterno = 0;
   jetFilterno_prompt = 0;
-  
+
   pTt1 = 0;
   phit1 = 0;
   etat1 = 0;
@@ -35,7 +35,7 @@ MCChecks::MCChecks(){
   ttbar_W2_decay = -1;
   ttbar_tau2_decay = -1;
 
-  
+
 
   arbitraryDuplicateCheck = 0;
 
@@ -63,7 +63,7 @@ MCChecks::MCChecks(){
 
 }
 
-bool MCChecks::RetrieveWeights(xAOD::TEvent* event) {
+bool MCChecks::RetrieveWeights(asg::SgTEvent* event) {
 
  const xAOD::TruthEventContainer* truthevents = 0;
  if ((event->retrieve( truthevents, "TruthEvents" )).isSuccess()) {
@@ -71,11 +71,11 @@ bool MCChecks::RetrieveWeights(xAOD::TEvent* event) {
    const xAOD::TruthEvent *truthevent = (*truthevents)[0];
    variationweights = truthevent->weights();
   }
- } 
+ }
  return true;
 }
 
-bool MCChecks::SherpaUncertaintyWeights(xAOD::TEvent* event){
+bool MCChecks::SherpaUncertaintyWeights(asg::SgTEvent* event){
 
   const xAOD::TruthEventContainer* truthevents = 0;
 
@@ -83,18 +83,18 @@ bool MCChecks::SherpaUncertaintyWeights(xAOD::TEvent* event){
     {
       std::cout << "Can't retrieve TruthEvents " << std::endl;
     }
-  
-  
+
+
   if (truthevents->size()>0)
     {
       const xAOD::TruthEvent *truthevent = (*truthevents)[0];
 
       variationweights = truthevent->weights();
 
-  
+
       if (variationweights.size()>=11)
 	{
-	  
+
 	  Weight = variationweights[0];
 	  MEWeight = variationweights[1];
 	  WeightNormalisation = variationweights[2];
@@ -106,22 +106,22 @@ bool MCChecks::SherpaUncertaintyWeights(xAOD::TEvent* event){
 	  MUR1_MUF2_PDF261000 = variationweights[8];
 	  MUR2_MUF1_PDF261000 = variationweights[9];
 	  MUR2_MUF2_PDF261000 = variationweights[10];
-	  
-	  
-	}      
-      
+
+
+	}
+
     }
-  
-  
+
+
   return true;
 }
 
-bool MCChecks::VariableForDuplicates(xAOD::TEvent* event)
+bool MCChecks::VariableForDuplicates(asg::SgTEvent* event)
 {
-  
+
   const xAOD::TruthParticleContainer* truthP = 0;
   event->retrieve( truthP, "TruthParticles" );
-  
+
   for (unsigned int j = 0; j < truthP->size(); ++j){
     if ( (*truthP)[j]->pt() > 0){
       arbitraryDuplicateCheck = (*truthP)[j]->pt();
@@ -134,27 +134,27 @@ bool MCChecks::VariableForDuplicates(xAOD::TEvent* event)
 
 
 
-bool MCChecks::SherpaWOR(xAOD::TEvent* event, double ptThreshold) // threshold in GeV
+bool MCChecks::SherpaWOR(asg::SgTEvent* event, double ptThreshold) // threshold in GeV
 {
   TLorentzVector V;
-  
+
   TLorentzVector l1;
   TLorentzVector l2;
-  
+
   bool foundFirst = false;
   bool foundSecond = false;
- 
-  
-  
+
+
+
   const xAOD::TruthParticleContainer* truthP = 0;
   event->retrieve( truthP, "TruthParticles" );
-  
+
   for (unsigned int j = 0; j < truthP->size(); ++j){
-    
+
     // if ((*m_tree->mc_status)[j] == 3 && fabs((*m_tree->mc_pdgId)[j]) >= 11 && fabs((*m_tree->mc_pdgId)[j]) <= 16){
-    
+
     if ( ( (*truthP)[j]->status() == 3 ) && fabs((*truthP)[j]->pdgId())>=11 && fabs((*truthP)[j]->pdgId())<=16 ) {
-      
+
       if (!foundFirst){
 	// l1.SetPtEtaPhiM((*m_tree->mc_pt)[j],(*m_tree->mc_eta)[j], (*m_tree->mc_phi)[j], (*m_tree->mc_m)[j]);
 	l1 = (*truthP)[j]->p4();
@@ -181,24 +181,24 @@ bool MCChecks::SherpaWOR(xAOD::TEvent* event, double ptThreshold) // threshold i
   return res;
 }
 
-bool MCChecks::DiBosonOR(xAOD::TEvent* event)
+bool MCChecks::DiBosonOR(asg::SgTEvent* event)
 {
   bool result = false;
-  
+
   const xAOD::TruthParticleContainer* truthP = 0;
   event->retrieve( truthP, "TruthParticle" );
-  
+
   for (unsigned int j = 0; j < truthP->size(); ++j)
     {
       if ( ( (*truthP)[j]->status() == 3 ) && fabs((*truthP)[j]->pdgId())==5 )
         result = true;
     }
-  
+
   return result;
-  
+
 }
 
-double MCChecks::OverlappingMETSlices(xAOD::TEvent* event)
+double MCChecks::OverlappingMETSlices(asg::SgTEvent* event)
 {
 
 
@@ -208,19 +208,19 @@ double MCChecks::OverlappingMETSlices(xAOD::TEvent* event)
 
   const xAOD::TruthParticleContainer* truthP = 0;
   event->retrieve( truthP, "TruthParticles" );
-  
+
   for(const auto& particle : *truthP) {
-    // find all status=1 neutrinos                                                                                                                                                                          
+    // find all status=1 neutrinos
     bool addpart = false;
     if (particle->status() != 1)
       continue;
     if (!particle->isNeutrino())
       continue;
-    
-    // loop through the parents and see if its from a W, Z or |pdg|<9                                                                                                                                       
+
+    // loop through the parents and see if its from a W, Z or |pdg|<9
     const xAOD::TruthParticle* par = particle->parent(0);
     while ( par ) {
-      // when there is a hadron somewhere we are not interested                                                                                                                                             
+      // when there is a hadron somewhere we are not interested
       if (par->isHadron() )
         break;
 
@@ -246,29 +246,29 @@ double MCChecks::OverlappingMETSlices(xAOD::TEvent* event)
 
 
 
-bool MCChecks::ZpT(xAOD::TEvent* event) // threshold in GeV
+bool MCChecks::ZpT(asg::SgTEvent* event) // threshold in GeV
 {
   TLorentzVector V;
-  
+
   TLorentzVector l1;
   TLorentzVector l2;
-  
+
   bool foundFirst = false;
   bool foundSecond = false;
-  
-  
+
+
   const xAOD::TruthParticleContainer* truthP = 0;
   event->retrieve( truthP, "TruthParticles" );
-  
+
   // for (unsigned int j = 0; j < truthP->size(); ++j){
-    
+
 
   //   if ( ( ((*truthP)[j]->status() == 3) )) {
 
-  
+
   //     // the above assumes we've found a Z-Boson here. Loop over it's children, set the pT of the Z:
   //     for (int i = 0; i < (*truthP)[j]->nChildren(); i++ ){
-	
+
   // 	auto kid = (*truthP)[j]->child(i);
 
   // 	if ( fabs(kid->pdgId()) >= 12 && fabs(kid->pdgId()) <= 16){
@@ -279,29 +279,29 @@ bool MCChecks::ZpT(xAOD::TEvent* event) // threshold in GeV
   // 	    l1 = kid->p4();
   // 	    //std::cout << l1.Pt() << std::endl;
   // 	  }
-  // 	  else if (!foundSecond && foundFirst){ 
+  // 	  else if (!foundSecond && foundFirst){
   // 	    //std::cout << "Found Second Neutrino" << std::endl;
   // 	    foundSecond = true;
   // 	    l2 = kid->p4();
   // 	    //std::cout << l2.Pt() << std::endl;
   // 	  }
-	  
+
   // 	  if (foundSecond && foundFirst) {
   // 	    V = l1+l2;
   // 	    //std::cout << "Z pT: " << V.Pt()*0.001 << std::endl;
   // 	    //std::cout << "Z phi: " << V.Phi() << std::endl;
   // 	    //std::cout << "Z eta: " << V.Eta() << std::endl;
-	    
+
   // 	    pTZBoson = V.Pt()*0.001;
   // 	    phiZBoson = TVector2::Phi_mpi_pi(V.Phi());
   // 	    etaZBoson = V.Eta();
-  // 	    Zll = true;	    
+  // 	    Zll = true;
 
-  // 	    break; 
+  // 	    break;
   // 	  }
   // 	}
 
-	
+
   // 	if ( fabs(kid->pdgId()) >= 1 && fabs(kid->pdgId()) <= 6){
   // 	  if (!foundFirst) {
   // 	    //std::cout << "Found first Neutrino" << std::endl;
@@ -309,45 +309,45 @@ bool MCChecks::ZpT(xAOD::TEvent* event) // threshold in GeV
   // 	    l1 = kid->p4();
   // 	    //std::cout << l1.Pt() << std::endl;
   // 	  }
-  // 	  else if (!foundSecond && foundFirst){ 
+  // 	  else if (!foundSecond && foundFirst){
   // 	    //std::cout << "Found Second Neutrino" << std::endl;
   // 	    foundSecond = true;
   // 	    l2 = kid->p4();
   // 	    //std::cout << l2.Pt() << std::endl;
   // 	  }
-	  
+
   // 	  if (foundSecond && foundFirst) {
   // 	    V = l1+l2;
   // 	    //std::cout << "Z pT: " << V.Pt()*0.001 << std::endl;
   // 	    //std::cout << "Z phi: " << V.Phi() << std::endl;
   // 	    //std::cout << "Z eta: " << V.Eta() << std::endl;
-	    
+
   // 	    pTZBoson = V.Pt()*0.001;
   // 	    phiZBoson = TVector2::Phi_mpi_pi(V.Phi());
   // 	    etaZBoson = V.Eta();
-  // 	    Zqq = true;	    
-	    
-  // 	    break; 
+  // 	    Zqq = true;
+
+  // 	    break;
   // 	  }
   // 	}
-	
-	
+
+
   //     }
-  //    }    
+  //    }
   // }
-  
+
   if (foundSecond) return true;
   else return false;
-  
+
 }
-    
-bool MCChecks::SherpaZpT(xAOD::TEvent* event) // threshold in GeV
+
+bool MCChecks::SherpaZpT(asg::SgTEvent* event) // threshold in GeV
 {
   TLorentzVector V;
-  
+
   TLorentzVector l1;
   TLorentzVector l2;
-  
+
   double Charge1;
   double Charge2;
 
@@ -356,20 +356,20 @@ bool MCChecks::SherpaZpT(xAOD::TEvent* event) // threshold in GeV
 
   bool foundFirst = false;
   bool foundSecond = false;
-  
-  
+
+
   const xAOD::TruthParticleContainer* truthP = 0;
   event->retrieve( truthP, "TruthParticles" );
-  
+
   for (unsigned int j = 0; j < truthP->size(); ++j){
     //std::cout << "Particle status code: " << (*truthP)[j]->status() << std::endl;
     if ( ( ((*truthP)[j]->status() == 3))) {
       //std::cout << "Retrieved Truth Particles with status 3. Passed status code" << std::endl;
       auto kid = ((*truthP)[j]);
 
-      
+
       //std::cout << "Particle is: " << fabs(kid->pdgId())  <<std::endl;
-      
+
 
       if ( fabs(kid->pdgId()) >= 11 && fabs(kid->pdgId()) <= 16){
 	//std::cout << "Found lepton" << std::endl;
@@ -381,7 +381,7 @@ bool MCChecks::SherpaZpT(xAOD::TEvent* event) // threshold in GeV
 	  l1 = kid->p4();
 	  //std::cout << l1.Pt() << std::endl;
 	}
-	else if (!foundSecond && foundFirst ){ 
+	else if (!foundSecond && foundFirst ){
 	  //std::cout << "Found Second Neutrino" << std::endl;
 	  foundSecond = true;
 	  Charge2 = kid->charge();
@@ -389,43 +389,43 @@ bool MCChecks::SherpaZpT(xAOD::TEvent* event) // threshold in GeV
 	  l2 = kid->p4();
 	  //std::cout << l2.Pt() << std::endl;
 	}
-	
+
 	if (foundSecond && foundFirst) {
 	  V = l1+l2;
 	  //std::cout << "Z pT: " << V.Pt()*0.001 << std::endl;
 	  //std::cout << "Z phi: " << V.Phi() << std::endl;
 	  //std::cout << "Z eta: " << V.Eta() << std::endl;
-	  
+
 	  pTZBoson_Sherpa = V.Pt()*0.001;
 	  phiZBoson_Sherpa = TVector2::Phi_mpi_pi(V.Phi());
 	  etaZBoson_Sherpa = V.Eta();
-	  
-	  
-	  break; 
+
+
+	  break;
 	}
       }
-      
+
     }
-  }    
-  
+  }
+
 
   if (foundSecond) return true;
   else return false;
-    
+
 }
 
-bool MCChecks::ttbar_decay(xAOD::TEvent* event) // threshold in GeV
+bool MCChecks::ttbar_decay(asg::SgTEvent* event) // threshold in GeV
 {
   TLorentzVector ttbar;
   TLorentzVector t1;
   TLorentzVector t2;
-  
+
   bool foundFirst = false;
   bool foundSecond = false;
-  
+
 
   //std::cout << "Event" << std::endl;
- 
+
 
   const xAOD::TruthParticleContainer* truthTaus = 0;
   event->retrieve( truthTaus, "TruthTaus" );
@@ -438,7 +438,7 @@ bool MCChecks::ttbar_decay(xAOD::TEvent* event) // threshold in GeV
     if (tau1 == false){
       //std::cout << "status code = " << (*truthTaus)[j]->status() << std::endl;
       tau1 = true;
-      for (int i = 0; i < (*truthTaus)[j]->nChildren(); i++ ){	
+      for (int i = 0; i < (*truthTaus)[j]->nChildren(); i++ ){
       	auto kid = (*truthTaus)[j]->child(i);
 	//std::cout << "First tau decays into: "<< fabs(kid->pdgId()) << std::endl;
 	if (fabs(kid->pdgId()) == 11){
@@ -450,12 +450,12 @@ bool MCChecks::ttbar_decay(xAOD::TEvent* event) // threshold in GeV
 	  //std::cout << "First tau decays via a muon" << std::endl;
 	  ttbar_tau1_decay = 13;
 	  break;
-	} 
+	}
 	else if (fabs(kid->pdgId()) == 16){
 	  //std::cout << "This is the tau decaying to a neutrino" << std::endl;
 	  tau1 = true;
 	  //break;
-	} 	
+	}
 	else {
 	  //std::cout << "First tau decays hadronically" << std::endl;
 	  if (kid->charge() != 0){
@@ -468,7 +468,7 @@ bool MCChecks::ttbar_decay(xAOD::TEvent* event) // threshold in GeV
     else if (tau2 == false){
       //std::cout << "status code = " << (*truthTaus)[j]->status() << std::endl;
       tau2 = true;
-      for (int i = 0; i < (*truthTaus)[j]->nChildren(); i++ ){	
+      for (int i = 0; i < (*truthTaus)[j]->nChildren(); i++ ){
 	auto kid = (*truthTaus)[j]->child(i);
 	//std::cout << "Second tau decays into: "<< fabs(kid->pdgId()) << std::endl;
 	if (fabs(kid->pdgId()) == 11){
@@ -480,12 +480,12 @@ bool MCChecks::ttbar_decay(xAOD::TEvent* event) // threshold in GeV
 	  //std::cout << "Second tau decays via a muon" << std::endl;
 	  ttbar_tau2_decay = 13;
 	  break;
-	} 
+	}
 	else if (fabs(kid->pdgId()) == 16){
 	  //std::cout << "This is the tau decaying to a neutrino" << std::endl;
 	  tau2 = true;
 	  //break;
-	} 
+	}
 	else {
 	  //std::cout << "Second tau decays hadronically" << std::endl;
 	  if (kid->charge() != 0){
@@ -496,18 +496,18 @@ bool MCChecks::ttbar_decay(xAOD::TEvent* event) // threshold in GeV
       }
     }
   }
-  
+
   //std::cout << "Number of prongs for tau one:" << tau_1_prongs << std::endl;
   //std::cout << "Number of prongs for tau two:" << tau_2_prongs << std::endl;
-  
+
   const xAOD::TruthParticleContainer* truthP = 0;
   event->retrieve( truthP, "TruthParticles" );
-  
+
   for (unsigned int j = 0; j < truthP->size(); ++j){
 
-   
+
     // if ((*m_tree->mc_status)[j] == 3 && fabs((*m_tree->mc_pdgId)[j]) >= 11 && fabs((*m_tree->mc_pdgId)[j]) <= 16){
-    
+
     if ( ( ((*truthP)[j]->status() == 62)  || ((*truthP)[j]->status() == 3) ) && fabs((*truthP)[j]->pdgId())== 6 ) {
       auto top = (*truthP)[j];
       if (!foundFirst) {
@@ -518,12 +518,12 @@ bool MCChecks::ttbar_decay(xAOD::TEvent* event) // threshold in GeV
 	phit1 = TVector2::Phi_mpi_pi(t1.Phi());
 	etat1 = t1.Eta();
 	//std::cout << t1.Pt()*0.001 << std::endl;
-	for (int i = 0; i < (*truthP)[j]->nChildren(); i++ ){	
+	for (int i = 0; i < (*truthP)[j]->nChildren(); i++ ){
 	  auto kid = (*truthP)[j]->child(i);
-	  
+
 	  if ( fabs(kid->pdgId()) == 24) {
 	    //std::cout << "Found first W" << std::endl;
-	    for (int k = 0; k < kid->nChildren(); k++ ){	
+	    for (int k = 0; k < kid->nChildren(); k++ ){
 	      auto kid_A = kid->child(i);
 	      if (fabs(kid_A->pdgId()) == 11 ){
 		//std::cout << "First W decays via an electron" << std::endl;
@@ -545,25 +545,25 @@ bool MCChecks::ttbar_decay(xAOD::TEvent* event) // threshold in GeV
 		ttbar_W1_decay = 0;
 		break;
 	      }
-	    }   
+	    }
 	  }
 	}
       }
-      else if (!foundSecond && foundFirst){ 
+      else if (!foundSecond && foundFirst){
 	//std::cout << "Found Second top" << std::endl;
 	foundSecond = true;
 	t2 = top->p4();
 	pTt2 = t2.Pt()*0.001;
 	phit2 = TVector2::Phi_mpi_pi(t2.Phi());
 	etat2 = t2.Eta();
-	
+
 	//std::cout << t2.Pt()*0.001 << std::endl;
-	for (int i = 0; i < (*truthP)[j]->nChildren(); i++ ){	
+	for (int i = 0; i < (*truthP)[j]->nChildren(); i++ ){
 	  auto kid = (*truthP)[j]->child(i);
-	  
+
 	  if ( fabs(kid->pdgId()) == 24) {
 	    //std::cout << "Found second W" << std::endl;
-	    for (int k = 0; k < kid->nChildren(); k++ ){	
+	    for (int k = 0; k < kid->nChildren(); k++ ){
 	      auto kid_A = kid->child(i);
 	      if (fabs(kid_A->pdgId()) == 11 ){
 		//std::cout << "Second W decays via an electron" << std::endl;
@@ -585,62 +585,62 @@ bool MCChecks::ttbar_decay(xAOD::TEvent* event) // threshold in GeV
 		ttbar_W2_decay = 0;
 		break;
 	      }
-	    }   
+	    }
 	  }
 	}
 
-	
+
       }
-    
+
       if (foundSecond && foundFirst) {
 	ttbar = t1+t2;
 	//std::cout << "ttbar pT: " << ttbar.Pt()*0.001 << std::endl;
 	//std::cout << "ttbar phi: " << ttbar.Phi() << std::endl;
 	//std::cout << "ttbar eta: " << ttbar.Eta() << std::endl;
-	
+
 	pTttbar = ttbar.Pt()*0.001;
 	phittbar = TVector2::Phi_mpi_pi(ttbar.Phi());
 	etattbar = ttbar.Eta();
-	
-	
-	//break; 
+
+
+	//break;
       }
     }
-   
-    
+
+
     //}
     //if ( ( ((*truthP)[j]->status() == 62)  || ((*truthP)[j]->status() == 3) ) && fabs((*truthP)[j]->pdgId())== 13 ) {
     //  auto muon = (*truthP)[j];
     //  auto muon_parent = muon->parent(0);
     //  std::cout << "muon parent is:" << fabs(muon_parent->pdgId()) << std::endl;
-    
+
     //}
   }
 
 
   if (foundSecond) return true;
   else return false;
-  
-}    
+
+}
 
 
-bool MCChecks::ttbarpT(xAOD::TEvent* event) // threshold in GeV
+bool MCChecks::ttbarpT(asg::SgTEvent* event) // threshold in GeV
 {
   TLorentzVector ttbar;
   TLorentzVector t1;
   TLorentzVector t2;
-  
+
   bool foundFirst = false;
   bool foundSecond = false;
-  
-  
+
+
   const xAOD::TruthParticleContainer* truthP = 0;
   event->retrieve( truthP, "TruthParticles" );
-  
+
   for (unsigned int j = 0; j < truthP->size(); ++j){
-    
+
     // if ((*m_tree->mc_status)[j] == 3 && fabs((*m_tree->mc_pdgId)[j]) >= 11 && fabs((*m_tree->mc_pdgId)[j]) <= 16){
-    
+
     if ( ( ((*truthP)[j]->status() == 62)  || ((*truthP)[j]->status() == 3) ) && fabs((*truthP)[j]->pdgId())== 6 ) {
       //std::cout << "Found a top" << std::endl;
       auto top = (*truthP)[j];
@@ -653,47 +653,47 @@ bool MCChecks::ttbarpT(xAOD::TEvent* event) // threshold in GeV
 	etat1 = t1.Eta();
 	//std::cout << t1.Pt()*0.001 << std::endl;
       }
-      else if (!foundSecond && foundFirst){ 
+      else if (!foundSecond && foundFirst){
 	//std::cout << "Found Second Neutrino" << std::endl;
 	foundSecond = true;
 	t2 = top->p4();
 	pTt2 = t2.Pt()*0.001;
 	phit2 = TVector2::Phi_mpi_pi(t2.Phi());
 	etat2 = t2.Eta();
-	
+
 	//std::cout << t2.Pt()*0.001 << std::endl;
       }
-      
+
       if (foundSecond && foundFirst) {
 	ttbar = t1+t2;
 	//std::cout << "ttbar pT: " << ttbar.Pt()*0.001 << std::endl;
 	//std::cout << "ttbar phi: " << ttbar.Phi() << std::endl;
 	//std::cout << "ttbar eta: " << ttbar.Eta() << std::endl;
-	
+
 	pTttbar = ttbar.Pt()*0.001;
 	phittbar = TVector2::Phi_mpi_pi(ttbar.Phi());
 	etattbar = ttbar.Eta();
-	
-	
-	break; 
+
+
+	break;
       }
     }
-    
+
   }
 
 
   if (foundSecond) return true;
   else return false;
 
-}    
-    
-int MCChecks::HeavyFlavourFilter_countJets(xAOD::TEvent* event, bool doPrompt){
+}
+
+int MCChecks::HeavyFlavourFilter_countJets(asg::SgTEvent* event, bool doPrompt){
 
   ///count how many hadrons are in a jet///
   // check that this is a sample that we need to do the HF filter on first
 
 
-  
+
   const xAOD::JetContainer* truthJets(nullptr);
   if(!event->retrieve(truthJets,"AntiKt4TruthJets").isSuccess()){
     return 0;
@@ -725,8 +725,8 @@ int MCChecks::HeavyFlavourFilter_countJets(xAOD::TEvent* event, bool doPrompt){
     jptr->getAttribute("HadronConeExclTruthLabelID",truth_flavour);
     m_jet_TruthID.push_back(truth_flavour);
   }
-  
-  
+
+
 
   const xAOD::TruthParticleContainer* truth_particles(0);
   if(!event->retrieve(truth_particles,"TruthParticles").isSuccess()){
@@ -761,7 +761,7 @@ int MCChecks::HeavyFlavourFilter_countJets(xAOD::TEvent* event, bool doPrompt){
     else if ( rest2 >= 4000 && rest2 < 5000 ) flav = 4;
     else if( rest1 >= 400 && rest1 < 500 ) flav = 4;
     else flav = 0;
-    
+
 
     TVector3 hadron, jet;
     hadron.SetPtEtaPhi(part->pt(),part->eta(),part->phi());
@@ -816,7 +816,7 @@ int MCChecks::HeavyFlavourFilter_countJets(xAOD::TEvent* event, bool doPrompt){
 
   int b=0, B=0, c=0, C=0;
   int b_prompt=0, B_prompt=0, c_prompt=0, C_prompt=0;
-  
+
 
   for(unsigned int i=0;i<m_jet_id.size();i++){
     if(m_jet_pt.at(i) < jet_ptCut || fabs(m_jet_eta.at(i)) > jet_etaCut) continue;
@@ -869,7 +869,7 @@ int MCChecks::HeavyFlavourFilter_countJets(xAOD::TEvent* event, bool doPrompt){
     if(fabs(prompt_code)==0){
       jetFilterno_prompt = -100;
     }
-    
+
 
 
     ///MPI and FSR categories///
@@ -890,7 +890,7 @@ int MCChecks::HeavyFlavourFilter_countJets(xAOD::TEvent* event, bool doPrompt){
       }
     }
 
-    
+
     if(fabs(ext_code)>=100){
       jetFilterno = 1;
     }
@@ -923,12 +923,12 @@ int MCChecks::HeavyFlavourFilter_countJets(xAOD::TEvent* event, bool doPrompt){
 }
 
 
-bool MCChecks::TruthTaus(xAOD::TEvent* event) // threshold in GeV
+bool MCChecks::TruthTaus(asg::SgTEvent* event) // threshold in GeV
 {
-  
+
   bool foundFirst = false;
   bool foundSecond = false;
- 
+
 
   const xAOD::TruthParticleContainer* truthTaus = 0;
   event->retrieve( truthTaus, "TruthTaus" );
@@ -939,8 +939,8 @@ bool MCChecks::TruthTaus(xAOD::TEvent* event) // threshold in GeV
     if ((10 == (*truthTaus)[j]->auxdata<unsigned int>("classifierParticleType"))){
       TruthTau.push_back((*truthTaus)[j]->p4()*0.001);
     }
-   
+
   }
-  if (foundSecond) return true;// These two lines were added to solve compilation error, not sure if they are correct. 
+  if (foundSecond) return true;// These two lines were added to solve compilation error, not sure if they are correct.
   else return false;
 }

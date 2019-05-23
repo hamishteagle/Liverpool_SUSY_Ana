@@ -7,7 +7,7 @@
 #include "EventLoop/DirectDriver.h"
 #include "SampleHandler/DiskListLocal.h"
 #include <TSystem.h>
-#include <EventLoopAlgs/NTupleSvc.h> 
+#include <EventLoopAlgs/NTupleSvc.h>
 #include <EventLoop/OutputStream.h>
 #include "testRun.h"
 
@@ -16,137 +16,211 @@
 #include <SampleHandler/SampleGrid.h>
 #include <SampleHandler/SampleHandler.h>
 
-
 #include "MyAnalysis/MyxAODAnalysis.h"
 
 int main( int argc, char* argv[]) {
 
   // Take the submit directory from the input if provided:
-  std::string submitDir = "submitDir2";
-  std::string inputDir;
-  std::string inputFile = "replaceMeSomewhere";
-  
-  bool RunningWithSyst;
-  bool RunningWithPhotons;
-  
-  std::string gridoption = "n";//Option for running on the grid
-  
-
-    if (gridoption == "y")
-      {
-	std::cout<<"Running on the grid (y)"<<std::endl;
-	gridmain(argc, argv);
-	return 0;
-      }
+  std::string submitDir = "";
+  std::string inputDir = "";
+  std::string PhysicsName = "";
+  std::string username = "hteagle";
+  std::string release = "";
+  std::string gridString = "";
+  bool RunningWithSyst = false;
+  bool RunningWithPhotons = false;
+  int NoEvents = -1;
+  bool doTogether = false;
+  std::string inputFile;
+  int counter = 0;
+  bool RunningLocally=true;
 
 
-  submitDir = "/hepstore/hteagle/SubmissionOutputs/";  
-  inputDir = "/hepstore/hteagle/";
+  if (argc > 2) {
+    inputDir = argv[1];
+    inputFile = argv[1];
+    std::cout << "InputFile: "<< inputFile << std::endl;
+    std::cout << "Input dir: " << inputDir << std::endl;
+    PhysicsName = argv[2];
+    std::cout << "Input Type: " << PhysicsName << std::endl;
+    submitDir = argv[3];
+    std::cout << "Submission file: " << submitDir << std::endl;
+    RunningWithSyst = (bool) atoi(argv[4]);
+    std::cout << "RunningWithSyst: " << RunningWithSyst << std::endl;
+    RunningWithPhotons = (bool) atoi(argv[5]);
+    std::cout << "RunningWithPhotons: " << RunningWithPhotons << std::endl;
+    RunningLocally = (bool) atoi(argv[6]);
+    std::cout << "RunningLocally: " << RunningLocally << std::endl;
+    NoEvents = atoi(argv[7]);
+    std::cout << "Running on: " << NoEvents << " events" << std::endl;
+    release = argv[8];
+    std::cout << "AnalysisBase release: " << release << std::endl;
+    doTogether = (bool)atoi(argv[9]);
+    std::cout << "doTogether " << doTogether << std::endl;
 
-  if( argc > 1 ) 
-      {
-	//submitDir = argv[ 1 ];
-	inputFile = argv[ 1 ];
-	if (argc > 2){
-	  std::cout << "Passes argc > 2, with: " << argv[2]  << std::endl;
-	  if ( (std::string(argv[2]) == "1") || (std::string(argv[2]) == "true") || (std::string(argv[2]) == "True")  ) {
-	    RunningWithSyst = true;
-	  }
-	  else{
-	    RunningWithSyst = false;
-	  }
-	  
-	}
-	else{
-	  RunningWithSyst = false;
-	}
-	
-	if (argc > 3){
-	  
-	  std::cout << "Passes argc > 3, with: " << argv[3] <<std::endl;
-	  if ( (std::string(argv[3]) == "1") || (std::string(argv[3]) == "true") || (std::string(argv[3]) == "True")  ) {
-	    RunningWithPhotons = true;
-	  }
-	  else{
-	    RunningWithPhotons = false;
-	  }
-	  
-	}
-	else{
-	  RunningWithPhotons = false;
-	}
-	RunningWithSyst=false;
-	std::cout << "Running with Syst = " << RunningWithSyst << std::endl;
-	std::cout << "Running with Photons = " << RunningWithPhotons << std::endl;
-	submitDir=submitDir+"NoSyst/";
-	std::cout << "The Submission Directory: " << submitDir << std::endl;
-      }
-  else submitDir=submitDir+"Syst/";
-    // Set up the job for xAOD access:
-    xAOD::Init().ignore();
-    // Construct the samples to run on:
-    SH::SampleHandler sh;
+  }
+
+  // Set up the job for xAOD access:
+  xAOD::Init().ignore();
+  // Construct the samples to run on:
+  SH::SampleHandler sh;
+
+  SH::DiskListLocal list (inputDir);
+  SH::scanFiles(sh, list); // specifying one
+  sh.setMetaString ("nc_tree", "CollectionTree");
+
+  sh.print();
+
+
+  // Create an EventLoop job:
+  EL::Job job;
+  job.sampleHandler( sh );
+  //job.options()->setString(EL::Job::optXaodAccessMode,EL::Job::optXaodAccessMode_branch);
+  if(RunningLocally){
+    job.options()->setString(EL::Job::optXaodAccessMode,EL::Job::optXaodAccessMode_class);
+    if (NoEvents != -1) job.options()->setDouble(EL::Job::optMaxEvents, NoEvents);
+    
+    // Add our analysis to the job:
+    MyxAODAnalysis* alg = new MyxAODAnalysis();
     
     
+    EL::OutputStream output  ("output");
     
-    // this is the cutflow file, please do not delete
-    //inputFile = "/hepstore/janders/mc15_13TeV.390146.MGPy8EG_A14N23LO_BB_onestepN2hN1_600_400_60.merge.DAOD_SUSY7.e5671_a766_a821_r7676_p2879";
-    //inputFile = "/scratch/hteagle/ttbar/mc16_13TeV.410501.PowhegPythia8EvtGen_A14_ttbar_hdamp258p75_nonallhad.deriv.DAOD_SUSY1.e5458_s3126_r9781_r9778_p3401";
-    // inputFile=  /hepstore/hteagle/recoSamples/ttbar/mc16_13TeV.410471.PhPy8EG_A14_ttbar_hdamp258p75_allhad.e6337_e5984_s3126_r9364_r9315_p3401
-    //inputFile = "/scratch/hteagle/data16/data16_13TeV.00310969.physics_Main.deriv.DAOD_SUSY1.r9264_p3083_p3372";
-    //inputFile = "/hepstore/hteagle/recoSamples/ttbar/mc16_13TeV.410470.PhPy8EG_A14_ttbar_hdamp258p75_nonallhad.deriv.DAOD_SUSY1.e6337_e5984_s3126_r10201_r10210_p3401";
-    // Change me here
-    //inputFile = "signal/mc16_13TeV.390285.MGPy8EG_A14N23LO_BB_onestepN2hN1_700_680_550.deriv.DAOD_SUSY1.e5671_e5984_a875_r9364_r9315_p3404";
-    //inputFile = "data15_13TeV.periodD.physics_Main.PhysCont.DAOD_SUSY1.grp15_v01_p3372";
-    //inputFile = "temp/mc16_13TeV.363355.Sherpa_221_NNPDF30NNLO_ZqqZvv.deriv.DAOD_SUSY1.e5525_s3126_r9364_r9315_p3401/";
-    //inputFile = "Sbot_multiB/recoSamples/signal/mc16_13TeV.390219.MGPy8EG_A14N23LO_BB_onestepN2hN1_800_795_60.deriv.DAOD_SUSY1.e5671_e5984_a875_r9364_r9315_p3404/";
-    //inputFile = "Wh/recoSamples/mc16_13TeV.410470.PhPy8EG_A14_ttbar_hdamp258p75_nonallhad.deriv.DAOD_SUSY1.e6337_e5984_s3126_r9364_r9315_p3401/";
-    inputFile = "Sbot_multiB/recoSamples/mc16_13TeV.363355.Sherpa_221_NNPDF30NNLO_ZqqZvv.deriv.DAOD_SUSY5.e5525_s3126_r9364_r9315_p3563/";
-    // inputFile = "Wh/recoSamples/mc15_13TeV.392667.MadGraphPythia8EvtGen_A14N23LO_C1N2_Wh_hall_475p0_0p0_lep.merge.DAOD_SUSY5.e4585_a766_a821_r7676_p2949/";
-
-
-    submitDir = submitDir+inputFile;
+    job.outputAdd (output);
+    job.algsAdd( alg );
     
-    inputFile = inputDir+inputFile;
+    //alg->setProperty("SampleName",inputFile);
+    alg->outputName = "outputLabel"; // give the name of the output to our algorithm
+    alg->inputFile = inputFile;
+    alg->doSyst = RunningWithSyst;
+    alg->doPhotons = RunningWithPhotons;
+    // If you want to check that the filtering is working correctly, then set this to false
+    alg->RunningLocally = RunningLocally;
+    alg->setMsgLevel(MSG::VERBOSE);
+    
+    
+    // Run the job using the local/direct driver:
+    EL::DirectDriver driver;
+    job.options()->setDouble (EL::Job::optRemoveSubmitDir, 1);
+    
+    driver.submit( job, submitDir );
+  }
+  else if (!RunningLocally){
+    std::vector<std::string> Months = {"Jan","Feb","Mar","Apr","May","June","July","Aug","Sept","Oct","Nov","Dec"};
+    std::time_t t = time(0);
+    struct tm * now = localtime( & t );
+    
+    int Month = now->tm_mon;
+    std::string CurrentDate = std::to_string(now->tm_mday)+Months[Month];
+    std::string fileType = "";
+    std::string derivationType = "";
+    int found_TRUTH1 = inputFile.find("TRUTH1");
+    if (found_TRUTH1 != std::string::npos){
+      fileType = "TRUTH1";
+      RunningWithSyst = false;
+    }
+    int found_TRUTH3 = inputFile.find("TRUTH3");
+    if (found_TRUTH3 != std::string::npos){
+      fileType = "TRUTH3";
+      RunningWithSyst = false;
+    }
+    int found_SUSY5 = inputFile.find("SUSY5");
+    if (found_SUSY5 != std::string::npos){
+      derivationType = "SUSY5";
+    }
+    int found_SUSY7 = inputFile.find("SUSY7");
+    if (found_SUSY7 != std::string::npos){
+      derivationType = "SUSY7";
+    }
+    int found_data15 = inputFile.find("data15");
+    if (found_data15 != std::string::npos){
+      fileType = "DATA15";
+    }
+    
+    int found_data16 = inputFile.find("data16");
+    if (found_data16 != std::string::npos){
+      fileType = "DATA16";
+    }
+    
+    int found_data17 = inputFile.find("data17");
+    if (found_data17 != std::string::npos){
+      fileType = "DATA17";
+    }
+    
+    int found_data18 = inputFile.find("data18");
+    if (found_data18 != std::string::npos){
+      fileType = "DATA18";
+    }
+    
+    int found_mc16a = inputFile.find("r9364");
+    if(found_mc16a != std::string::npos){
+      fileType = "MC16a";
+    }
+    int found_mc16d = inputFile.find("r10201");
+    if(found_mc16d != std::string::npos){
+      fileType = "MC16d";
+    }
+    int found_mc16e = inputFile.find("r10724");
+    if(found_mc16e != std::string::npos){
+      fileType = "MC16e";
+    }
+    
+    submitDir = CurrentDate+fileType;
+    
+    std::string CreateDir = "/scratch/hteagle/GridSubmissions/"+submitDir;
+    std::string Command = "[ ! -d "+CreateDir+" ] && mkdir "+CreateDir+" || echo \"Directory Exists\"";
+    std::system(Command.c_str());
+    
+    
+    // put everything in scratch
+    submitDir = CreateDir+'/'+inputFile;
+    std::cout << "The Submission Directory: " << submitDir << std::endl;
+    
+    if (!doTogether){
+      // Grid Running from a shell script with a given input file
+      SH::scanRucio (sh, inputFile);
+      sh.setMetaString ("nc_tree", "CollectionTree");    
+    }
+    // else {
+    //   std::unique_ptr<SH::SampleGrid> sample(new SH::SampleGrid("AllMyData"));
+    //   sample->meta()->setString(SH::MetaFields::gridName, gridString);
+    //   sample->meta()->setString(SH::MetaFields::gridFilter, SH::MetaFields::gridFilter_default);
+    //   sh.add(sample.release());
+    //   job.options()->setString (EL::Job::optSubmitFlags, "--addNthFieldOfInDSToLFN=1,2,3 --useContElementBoundary");
+    // }
 
-    SH::DiskListLocal list (inputFile);
-    SH::scanFiles(sh, list); // specifying one 
-
-    sh.setMetaString ("nc_tree", "CollectionTree");
 
     sh.print();
-
-
+    
+    
     // Create an EventLoop job:
     EL::Job job;
     job.sampleHandler( sh );
     //job.options()->setString(EL::Job::optXaodAccessMode,EL::Job::optXaodAccessMode_branch);
     job.options()->setString(EL::Job::optXaodAccessMode,EL::Job::optXaodAccessMode_class);
-    
-    // Add our analysis to the job:
-
+  // Add our analysis to the job:
     MyxAODAnalysis* alg = new MyxAODAnalysis();
- 
-  
+    
     EL::OutputStream output  ("output");
-
     job.outputAdd (output);
+    
     job.algsAdd( alg );
-
     alg->outputName = "outputLabel"; // give the name of the output to our algorithm
     alg->inputFile = inputFile;
     alg->doSyst = RunningWithSyst;
     alg->doPhotons = RunningWithPhotons;
+    alg->RunningLocally = false;
     alg->setMsgLevel(MSG::ERROR);
-    // If you want to check that the filtering is working correctly, then set this to false
-    alg->RunningLocally = true;
-  
-  
-    // Run the job using the local/direct driver:
-    EL::DirectDriver driver;
-    
-    job.options()->setDouble (EL::Job::optRemoveSubmitDir, 1);
+    // Run the job using the griddriver:
+    EL::PrunDriver driver;
+    if (!doTogether){
+      driver.options()->setString("nc_outputSampleName", "user."+username+"."+CurrentDate+"_"+fileType+"%in:name[2]%.%in:name[3]%"+derivationType+release);
+    }
+    driver.options()->setString(EL::Job::optGridNFilesPerJob, "5");
+    // Use submit if you want to see all of the info about the submitted jobs. Use submitOnly if you want to send the jobs then Monitor online with panda
+    driver.submitOnly( job, submitDir );
 
-    driver.submit( job, submitDir );
-    return 0;
+  }
+  return 0;
+
 }

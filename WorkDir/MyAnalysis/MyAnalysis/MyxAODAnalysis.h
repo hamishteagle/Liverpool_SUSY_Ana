@@ -20,12 +20,24 @@
 
 #include "PileupReweighting/PileupReweightingTool.h"
 #include "AsgTools/ToolHandle.h"
+#include "AsgTools/AsgMetadataTool.h"
+
+//#include <AnaAlgorithm/AnaAlgorithm.h>
 
 // Added for new METSig
-#include "METUtilities/METSignificance.h" 
+#include "METUtilities/METSignificance.h"
+
+//PMG xsec tool
+#include "AsgTools/AnaToolHandle.h"
+#include "PMGAnalysisInterfaces/IPMGCrossSectionTool.h"
+#include "PMGTools/PMGCrossSectionTool.h"
+
+//BTaggingSelectionTool
+#include "FTagAnalysisInterfaces/IBTaggingSelectionTool.h"//Interface
+#include "xAODBTaggingEfficiency/BTaggingSelectionTool.h"//tool header for type definition
 
 // GRL inclusion
-class GoodRunsListSelectionTool; 
+class GoodRunsListSelectionTool;
 //class JetCleaningTool;
 //class JERTool;
 
@@ -37,12 +49,12 @@ class PileupReweightingTool;
 }
 
 namespace ST{
-  class SUSYObjDef_xAOD; // SUSYToolsObjectDefinition forward declaration
+  class SUSYObjDef_xAOD; //! // SUSYToolsObjectDefinition forward declaration
   //class CrossSectionDB; // SUSYToolsCrossSectionDataBase forward declaration
 }
 
 namespace SUSY{
-  class CrossSectionDB; // Forward Declaration of Cross Section Database
+  class CrossSectionDB; //! // Forward Declaration of Cross Section Database
 }
 
 
@@ -53,9 +65,9 @@ namespace SUSY{
 class MyxAODAnalysis : public EL::Algorithm
 {
 #ifndef __CINT__
-  ST::SUSYObjDef_xAOD *objTool; //! 
+  std::unique_ptr<ST::SUSYObjDef_xAOD> objTool; //!
 #endif // not __CINT__
-  
+
 #ifndef __CINT__
   SUSY::CrossSectionDB *xSectDataBase; //!
 #endif // not __CINT__
@@ -64,23 +76,23 @@ class MyxAODAnalysis : public EL::Algorithm
 
   //
   //#ifndef __CINT__
-  //CP::MuonCalibrationAndSmearingTool *m_muonCalibrationAndSmearingTool; //!
+  //CP::MuonCalibrationAndSmearingTool *m_muonCalibrationAndSmearingTool;
   //#endif // not__CINT__
 
 #ifndef __CINT__
-  GoodRunsListSelectionTool *m_grl; //!
+  //GoodRunsListSelectionTool *m_grl;
   CP::PileupReweightingTool *pu_tool; //!
-  JetToolRunner* m_jetRecTool_kt12; //!
-  JetToolRunner* m_jetRecTool_kt8; //!
+  //JetToolRunner* m_jetRecTool_kt12; //!
+  //JetToolRunner* m_jetRecTool_kt8; //!
 
 #endif // not__CINT__
 
   //#ifndef __CINT__
-  //JERTool *m_JERTool; //!
+  //JERTool *m_JERTool;
   //#endif // not__CINT__
 
   //#ifndef __CINT__
-  //JetCleaningTool *m_jetCleaning; //!
+  //JetCleaningTool *m_jetCleaning;
   //#endif // not__CINT__
 
   // put your configuration variables here as public variables.
@@ -90,10 +102,10 @@ public:
 
   xAOD::TEvent *m_event; //!
 
-
   TTree *MetaData; //!
   bool m_isDerivation; //!
-  
+  bool m_SUSY5= false; //!
+  bool m_SUSY7= false; //!
 
   int m_eventCounter; //!
   int m_numCleanEvents; //!
@@ -101,35 +113,30 @@ public:
   int m_numMuonEvents; //!
 
   double PUSumOfWeights; //!
-  
+
   int m_runNumber; //!
   int m_lumiBlockNumber; //!
 
   std::string m_fileType;
   std::string m_fileName;
   double m_fileLumi;
-  bool isData;//!
-  bool isAtlfast;//!
-  bool is25ns; //!
-  bool isSignal; //!
+  
 
   int isyst; //!
   int m_totalEvents; //!
 
   double m_lumiScaled; //!
 
-  std::unordered_map<int, double> *eventNumberMap; //!
-
   std::vector<ST::SystInfo> systInfoList; //!
 
-  
+
   std::vector<CP::SystematicSet> m_sysList; //!
-  //TH1 *h_jetPt; //!
+  //TH1 *h_jetPt;
   TH1 *h_cuts; //!
   std::vector <std::string> cutList; //!
   std::vector <std::string> runningOverSysts; //!
   asg::AnaToolHandle<IMETSignificance> m_metSignif; //!
-
+  asg::AnaToolHandle<IBTaggingSelectionTool> m_BTaggingSelectionTool;//!
   //  EL::OutputStream out
 
 
@@ -137,45 +144,36 @@ public:
   // Put our new containers here
   // variables that don't get filled at submission time should be
   // protected from being send from the submission node to the worker
-  // node (done by the //!)
+  // node (done by the )
  public:
-  // Tree *myTree; //!
+  // Tree *myTree;
 
   TH1 *noWeightHist; //!
   TH1 *sherpaWeightHist; //!
   TH1 *h_SumOfWeights; //!
   TH1 *h_SumOfWeightsSquared; //!
-
+  TH1 *h_eventsPerRun; //!
   TH1 *renormedSherpaWeightHist; //!
-
-  // Make the Histos for the full cutflows here then:
-  
-  TH1F *HSRA_noWgt; //!
-  TH1F *HSRA_mcWgt; //!
-  TH1F *HSRA_allWgt; //!
-
-  TH1F *HSRB_noWgt; //!
-  TH1F *HSRB_mcWgt; //!
-  TH1F *HSRB_allWgt; //!
-
-  TH1F *HSRC_noWgt; //!
-  TH1F *HSRC_mcWgt; //!
-  TH1F *HSRC_allWgt; //!
 
   TH1F *HTruthMETFilt; //!
   TH1F *HTruthHTFilt; //!
   TH1F *HSumOfPileUp; //!
 
+  TH1F *h_dPhi_p30; //!
+  TH1F *h_dPhi_p40; //!
+  TH1F *h_dPhi_p80; //!
+  TH1F *h_dPhi_p200; //!
+  TH1F *h_dPhi_H; //!
 
-  bool doSyst;
-  bool doPhotons;
-  bool RunningLocally;
-
+  TH1F *h_dEta_p30; //!
+  TH1F *h_dEta_p40; //!
+  TH1F *h_dEta_p80; //!
+  TH1F *h_dEta_p200; //!
+  TH1F *h_dEta_H; //!
 
   std::string outputName;
-  std::string inputFile;
-  
-  //TTree *tree; //!
+
+  //TTree *tree;
   unsigned long long EventNumber; //!
 
   int mcChannel; //!
@@ -184,24 +182,50 @@ public:
   double m_PUSumOfWeights; //!
   double m_finalSumOfWeights; //!
   double m_initialSumOfWeights; //!
+  double m_averageIntPerX; //!
+  double m_actualIntPerX; //!
   double truth_pT_W; //!
 
-  //  OutputStream *out; //!
+  std::string inputFile;//!
+  int counter = 0;
+  bool RunningLocally=true;
+  bool RunningWithSyst = false;
+  bool RunningWithPhotons = false;
+  bool RunningWithTruthJets = false;
+  int NoEvents = -1;
+  bool firstFile = true;
+  bool firstEvent = true;
+  int doSyst;
+  int doPhotons;
+  int doTruthJets;
+
+  //  OutputStream *out;
 
   // this is a standard constructor
-  MyxAODAnalysis ();
+  MyxAODAnalysis (/*const std::string& name, ISvcLocator* pSvcLocator*/);
 
   // these are the functions inherited from Algorithm
   virtual EL::StatusCode setupJob (EL::Job& job);
   virtual EL::StatusCode fileExecute ();
+  virtual EL::StatusCode beginInputFile (bool firstFile);
   virtual EL::StatusCode histInitialize ();
-  virtual EL::StatusCode changeInput (bool firstFile);
   virtual EL::StatusCode initialize ();
   virtual EL::StatusCode execute ();
   virtual EL::StatusCode postExecute ();
   virtual EL::StatusCode finalize ();
-  virtual EL::StatusCode histFinalize ();
 
+ private:
+
+  bool isData; //!
+  bool isMC; //!
+  bool isAtlfast; //!
+  bool isTruth; //!
+  
+  asg::AnaToolHandle<PMGTools::IPMGCrossSectionTool> m_PMGCrossSectionTool; //!
+  asg::AnaToolHandle<CP::IPileupReweightingTool> m_prw_tool; //!
+  asg::AnaToolHandle<CP::IMuonCalibrationAndSmearingTool> m_muonCalibrationAndSmearingTool; //!
+  /*asg::AnaToolHandle<ST::SUSYObjDef_xAOD> objTool; //!*/
+  asg::AnaToolHandle<IGoodRunsListSelectionTool> m_grl; //!
 
   // put functions here?
  public:

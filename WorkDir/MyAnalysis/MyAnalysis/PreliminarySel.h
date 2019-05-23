@@ -14,9 +14,9 @@ class PreliminarySel
 
 
  public:
-  PreliminarySel(CalculateVariables &objects);
+  PreliminarySel(CalculateVariables &objects, bool &passCleaningCuts);
   
-  bool whichPreliminaryRegion(CalculateVariables &variables);
+  bool whichPreliminaryRegion(CalculateVariables &variables, bool &passCleaningCuts);
 
 
  public:
