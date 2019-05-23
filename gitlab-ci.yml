@@ -45,7 +45,7 @@ build:
 # run_project:
 #   stage: run
 #   <<: *variables_files
-#   image: gitlab-registry.cern.ch/bbrueers/ntuplerrun2
+#   image: gitlab-registry.cern.ch/bbrueers/ntuplerrun2 ##Should be changed to the home-produced docker image
 #   script:
 #     #Get file from EOS
 #     - mkdir fromEOS #directory to download the files to
