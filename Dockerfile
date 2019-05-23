@@ -12,25 +12,25 @@ FROM atlas/analysisbase:21.2.70
 
 # Copy the project's sources into the image:
 # You need to copy this one by one, else unwanted files will be copied, too
-COPY CMakeLists.txt Liverpool_SbottomAnalysis_Rel21/source/
-COPY Macros Liverpool_SbottomAnalysis_Rel21/source/Macros
-COPY NewMT2 Liverpool_SbottomAnalysis_Rel21/source/NewMT2
-COPY RestFrames Liverpool_SbottomAnalysis_Rel21/source/RestFrames
-COPY MyxAODAnalysis Liverpool_SbottomAnalysis_Rel21/source/MyxAODAnalysis
+#COPY CMakeLists.txt Liverpool_SbottomAnalysis_Rel21/source/
+#COPY Macros Liverpool_SbottomAnalysis_Rel21/source/Macros
+#COPY NewMT2 Liverpool_SbottomAnalysis_Rel21/source/NewMT2
+#COPY RestFrames Liverpool_SbottomAnalysis_Rel21/source/RestFrames
+#COPY MyxAODAnalysis Liverpool_SbottomAnalysis_Rel21/source/MyxAODAnalysis
 
 # and set the permissions from root to atlas
-USER root
-RUN chown --recursive atlas:atlas NtuplerRun2
-USER atlas
+#USER root
+#RUN chown --recursive atlas:atlas NtuplerRun2
+#USER atlas
 
 
 # Build the project inside a build/ directory:
-RUN source /home/atlas/release_setup.sh && \
-    cd Liverpool_SbottomAnalysis_Rel21 && ls -l && mkdir build && ls -l && cd build/ && ls -l ../source && cmake ../source/ && make
+#RUN source /home/atlas/release_setup.sh && \
+#    cd Liverpool_SbottomAnalysis_Rel21 && ls -l && mkdir build && ls -l && cd build/ && ls -l ../source && cmake ../source/ && make
 
 # Set up the environment setup script:
-RUN mv release_setup.sh analysis_release_setup.sh
-COPY CI/release_setup.sh /home/atlas/
+#RUN mv release_setup.sh analysis_release_setup.sh
+#COPY CI/release_setup.sh /home/atlas/
 
 # Start the image with BASH by default:
-CMD /bin/bash
+#CMD /bin/bash
