@@ -6,3 +6,6 @@
 	url = https://gitlab.cern.ch/jburr/jb_utils.git
 	branch = master
 
+[submodule "livana-ci-web-deployer"]
+	path = livana-ci-web-deployer
+	url = https://gitlab.cern.ch/hteagle/livana-ci-web-deployer.git
