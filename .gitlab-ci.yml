@@ -20,16 +20,16 @@ build:
   variables:
     FROM: atlas/analysisbase:$ATHENA_RELEASE
 
-# build_dev:
-#   stage: build
-#   except:
-#     - master
-#   tags:
-#     - docker-image-build
-#   script: "echo 'Building image ...'"
-#   variables:
-#     TO: ${CI_REGISTRY_IMAGE}:${CI_COMMIT_REF_NAME}
-#     FROM: atlas/analysisbase:$ATHENA_RELEASE
+build_dev:
+  stage: build
+  except:
+    - master
+  tags:
+    - docker-image-build
+  script: "echo 'Building image ...'"
+  variables:
+    TO: ${CI_REGISTRY_IMAGE}:${CI_COMMIT_REF_NAME}
+    FROM: atlas/analysisbase:$ATHENA_RELEASE
 
 # # Run CI tests in the docker image
 
