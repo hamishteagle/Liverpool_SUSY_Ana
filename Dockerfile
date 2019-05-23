@@ -13,7 +13,7 @@ FROM atlas/analysisbase:21.2.70
 # Copy the project's sources into the image:
 # You need to copy this one by one, else unwanted files will be copied, too
 COPY WorkDir/CMakeLists.txt Liverpool_SbottomAnalysis_Rel21/source/
-COPY WorkDir/Macros Liverpool_SbottomAnalysis_Rel21/source/Macros
+#COPY WorkDir/Macros Liverpool_SbottomAnalysis_Rel21/source/Macros
 COPY WorkDir/NewMT2 Liverpool_SbottomAnalysis_Rel21/source/NewMT2
 COPY WorkDir/RestFrames Liverpool_SbottomAnalysis_Rel21/source/RestFrames
 COPY WorkDir/MyxAODAnalysis Liverpool_SbottomAnalysis_Rel21/source/MyxAODAnalysis
