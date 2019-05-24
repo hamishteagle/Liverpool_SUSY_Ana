@@ -63,4 +63,5 @@ run_project:
     - testRun ../$CI_OUTPUT_DIR ../submitdir 0 0 1 -1 hteagle 21.2.74  TYPE 0
   artifacts:
     paths:
-      - run
+      - submitdir
+#       name: "submitdir_${CI_BUILD_STAGE}"
