@@ -69,6 +69,6 @@ run_project:
 #    name: "submitdir_${CI_BUILD_STAGE}"
 #    expire_in: 1 months
 run_test:
-  stage:test
+  stage: test
   script:
     python Macros/Tests/basic_test.py /home/atlas/Liverpool_SbottomAnalysis_Rel21/submitdir/
