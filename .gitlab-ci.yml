@@ -62,11 +62,12 @@ run_project:
     - mkdir -p submitdir #this is happening inside the Gitlab runner
     - cd run
     - testRun ../$CI_OUTPUT_DIR ../submitdir 0 0 1 -1 hteagle 21.2.74  TYPE 0
-  artifacts:
-    paths:
-      - ../submitdir
-    name: "submitdir_${CI_BUILD_STAGE}"
-    expire_in: 1 months
+    - ls
+#  artifacts:
+#    paths:
+#      - ../submitdir
+#    name: "submitdir_${CI_BUILD_STAGE}"
+#    expire_in: 1 months
 run_test:
   stage:test
   script:
