@@ -1,0 +1,7 @@
+{
+       "ETMiss":">200",
+       "nJets":">=3",
+       "nBJets":">=2",
+       "nLeptons":"==1"
+    
+}
