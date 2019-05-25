@@ -62,5 +62,5 @@ run_project:
     - cd run
     - testRun ../$CI_OUTPUT_DIR ../submitdir 0 0 1 -1 hteagle 21.2.74  TYPE 0
     - cd ../
-    -ls
+    - ls
     - python Macros/Tests/basic_test.py /home/atlas/Liverpool_SbottomAnalysis_Rel21/submitdir/
