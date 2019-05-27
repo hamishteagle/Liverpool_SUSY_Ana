@@ -105,7 +105,7 @@ int main( int argc, char* argv[]) {
         alg->inputFile = sample_name;
         alg->doSyst = RunningWithSyst;
         alg->doPhotons = RunningWithPhotons;
-	alg->doTruthJets= RunningWithTruthJets;
+	alg->doTruthJets = RunningWithTruthJets;
         // If you want to check that the filtering is working correctly, then set this to false
         alg->RunningLocally = RunningLocally;
         alg->setMsgLevel(MSG::VERBOSE);
@@ -153,7 +153,7 @@ int main( int argc, char* argv[]) {
 	  sh.setMetaString ("nc_tree", "CollectionTree");
 	  sh.print();
 	  output_name = sample_name;        
-	  driver.options()->setString("nc_outputSampleName", "user." + username + "." + CurrentDate+"." + physicsName+"_"+fileType+"."+release+".ELv2."+"%in:name[2]%.%in:name[3]%");
+	  driver.options()->setString("nc_outputSampleName", "user." + username + "." + CurrentDate+"." + physicsName+"_"+fileType+"."+release+"."+"%in:name[2]%.%in:name[3]%");
         }
         // Add our analysis to the job:
         MyxAODAnalysis* alg = new MyxAODAnalysis();
@@ -168,6 +168,7 @@ int main( int argc, char* argv[]) {
         alg->doSyst = RunningWithSyst;
         alg->doPhotons = RunningWithPhotons;
         alg->RunningLocally = false;
+	alg->doTruthJets = RunningWithTruthJets;
         alg->setMsgLevel(MSG::DEBUG);
 
         //job.options()->setDouble (EL::Job::optRemoveSubmitDir, 1);

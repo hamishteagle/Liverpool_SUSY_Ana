@@ -450,7 +450,8 @@ EL::StatusCode MyxAODAnalysis :: execute ()
       m_averageIntPerX=1;
       m_actualIntPerX=1;
     }
-
+    
+    
     m_lumiBlockNumber = eventInfo->lumiBlock();
     m_runNumber = eventInfo->runNumber();
     EventNumber = (eventInfo->eventNumber());
@@ -484,7 +485,8 @@ EL::StatusCode MyxAODAnalysis :: execute ()
       if (std::abs(renormedMcWgt) >= 100){
 	renormedMcWgt = 1;
       }
-      
+
+
       // This can get all of the PDF info etc if it's required at any point
       //const xAOD::TruthEventContainer *truthE = 0;
       //m_event->retrieve(truthE, "TruthEvents" );
@@ -505,6 +507,7 @@ EL::StatusCode MyxAODAnalysis :: execute ()
 
     auto objs = std::make_unique<NewObjectDef>(evtStore(), objTool.get(), store, mcChannel, EventNumber, mcWgt, m_lumiBlockNumber, syst.name(), doTruthJets, m_SUSY5, m_SUSY7);
     if (firstEvent == true) firstEvent = false;
+
 
     bool passGRL = false;
 
@@ -742,7 +745,6 @@ EL::StatusCode MyxAODAnalysis :: execute ()
 	std::cout<<"WARNING, both single lep triggers fired but no di-lepton trigger, your SFs are not prepared for this!!"<<std::endl;
       }
     }
-    
 
 
     //All cleaning cuts before trigger
@@ -750,10 +752,8 @@ EL::StatusCode MyxAODAnalysis :: execute ()
     if(coreFlag && sctFlag && LArTileFlag && passedPrimVertex && passedJetClean && passedCosmicMu && passedMuonClean){
       passedCleaningCuts=true;
     }
-
     auto m_varCalc = std::make_unique<CalculateVariables>( objs.get(), m_BTaggingSelectionTool, store, isTruth, doPhotons, isData);
     auto m_regions = std::make_unique<PreliminarySel>(*m_varCalc, passedCleaningCuts);
-
 
 
     double SFmctbbll = 1;
@@ -764,14 +764,12 @@ EL::StatusCode MyxAODAnalysis :: execute ()
     else{
       PUSumOfWeights = 0;
     }
-
     //Checking the number of events against the lumi
     if (isData) {
       if(isyst==0) {
         h_eventsPerRun->Fill(m_runNumber,1);
       }
     }
-
     //Filling truthJet-recoJet information
     double dR_init = 99;
     double dEta_init = -99;
@@ -779,6 +777,7 @@ EL::StatusCode MyxAODAnalysis :: execute ()
     double P_init = -99;
     if (doTruthJets){
       //Compare truth jets and reco jets
+      std::cout<<"Inside truthJets....Shouldn't be here"<<std::endl;
       for (auto truth_jet: (*objs->getTruthJets())){
 	for (auto reco_jet: (*objs->getGoodJets())){
 	  double dR = truth_jet->p4().DeltaR(reco_jet->p4());
@@ -825,7 +824,6 @@ EL::StatusCode MyxAODAnalysis :: execute ()
       }
     }
     
-
 
     isyst++;
     store->clear();

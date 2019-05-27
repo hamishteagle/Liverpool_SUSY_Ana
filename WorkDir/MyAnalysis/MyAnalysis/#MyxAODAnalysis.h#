@@ -87,13 +87,6 @@ class MyxAODAnalysis : public EL::Algorithm
 
 #endif // not__CINT__
 
-  //#ifndef __CINT__
-  //JERTool *m_JERTool;
-  //#endif // not__CINT__
-
-  //#ifndef __CINT__
-  //JetCleaningTool *m_jetCleaning;
-  //#endif // not__CINT__
 
   // put your configuration variables here as public variables.
   // that way they can be set directly from CINT and python.
