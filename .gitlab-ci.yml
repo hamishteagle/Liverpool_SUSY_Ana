@@ -61,6 +61,6 @@ run_project:
     - mkdir -p submitdir #this is happening inside the Gitlab runner
     - cd run
     - testRun ../$CI_OUTPUT_DIR ../submitdir 0 0 1 -1 hteagle 21.2.74  TYPE 0
-    - cd WorkDir
+    - cd ../WorkDir
     - ls -l
     - python Macros/Tests/basic_test.py /home/atlas/Liverpool_SbottomAnalysis_Rel21/submitdir/
