@@ -133,6 +133,7 @@ void NewObjectDef::GetBaselineObjects(bool m_SUSY5, bool m_SUSY7) {
   xAOD::MuonContainer* muons(muons_nominal);
   xAOD::JetContainer* jets(jets_nominal);
   xAOD::TauJetContainer* taus(taus_nominal);
+
   // Get MET
   //Only jets electrons muons, NoPhotons, NoTaus
   if (m_SUSY5) objTool->GetMET(*met_nominal, jets_nominal, electrons_nominal, muons_nominal, photons_nominal, NULL, true);
@@ -145,7 +146,7 @@ void NewObjectDef::GetBaselineObjects(bool m_SUSY5, bool m_SUSY7) {
   METvector = std::make_unique<TVector2>((*met_it)->mpx(),(*met_it)->mpy());
   MET = (*met_it)->met();
   METphi = (*met_it)->phi();
-  objTool->GetMETSig(*met_nominal, METsig, false, false);
+  objTool->GetMETSig(*met_nominal, METsig, true, false);
   
   //Fill preOR electrons
   for (const auto &el_itr: *electrons) {
