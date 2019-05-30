@@ -179,7 +179,6 @@ def RatioPlot(variable, xaxislabel, xmin, xmax, rebin, ymax, selection, director
     if(not sigOnly):
         ttV = ROOT.TFile(ttVFile)
         ttVTree = ttV.Get(treeName)
-        ttVTree.SetAlias("mcID","mcChannel")
         ttVTree.SetAlias("YearWeight","year==2018 ? 58.5/139 :(year==2017 ? 44.3/139 : 36.2/139)")
         #ttVTree.SetAlias("YearWeight","year==2018 ? 58.5/139 :(year==2017 ? 80.5/139 : 0./139)")#d and e only
         #ttVTree.SetAlias("YearWeight","year==2017 ? 44.3/80 : 36.2/80")
@@ -189,7 +188,6 @@ def RatioPlot(variable, xaxislabel, xmin, xmax, rebin, ymax, selection, director
         
         SingleTop = ROOT.TFile(singleTopFile)
         SingleTopTree = SingleTop.Get(treeName)
-        SingleTopTree.SetAlias("mcID","mcChannel")
         SingleTopTree.SetAlias("YearWeight","year==2018 ? 58.5/139 :(year==2017 ? 44.3/139 : 36.2/139)")
         #SingleTopTree.SetAlias("YearWeight","year==2018 ? 58.5/139 :(year==2017 ? 80.5/139 : 0./139)")
         #SingleTopTree.SetAlias("YearWeight","year==2017 ? 44.3/80 : 36.2/80")
@@ -199,7 +197,6 @@ def RatioPlot(variable, xaxislabel, xmin, xmax, rebin, ymax, selection, director
                 
         DiBoson = ROOT.TFile(DiBosonFile)
         DiBosonTree = DiBoson.Get(treeName)
-        DiBosonTree.SetAlias("mcID","mcChannel")
         DiBosonTree.SetAlias("YearWeight","year==2018 ? 58.5/139 :(year==2017 ? 44.3/139 : 36.2/139)")
         #DiBosonTree.SetAlias("YearWeight","year==2018 ? 58.5/139 :(year==2017 ? 80.5/139 : 0./139)")
         #DiBosonTree.SetAlias("YearWeight","year==2017 ? 44.3/80 : 36.2/80")
@@ -209,7 +206,6 @@ def RatioPlot(variable, xaxislabel, xmin, xmax, rebin, ymax, selection, director
         
         Higgs = ROOT.TFile(HiggsFile)
         HiggsTree = Higgs.Get(treeName)
-        HiggsTree.SetAlias("mcID","mcChannel")
         HiggsTree.SetAlias("YearWeight","year==2018 ? 58.5/139 :(year==2017 ? 44.3/139 : 36.2/139)")
         #HiggsTree.SetAlias("YearWeight","year==2018 ? 58.5/139 :(year==2017 ? 80.5/139 : 0./139)")
         #HiggsTree.SetAlias("YearWeight","year==2017 ? 44.3/80 : 36.2/80")
@@ -219,7 +215,6 @@ def RatioPlot(variable, xaxislabel, xmin, xmax, rebin, ymax, selection, director
                 
         DiJet = ROOT.TFile(DiJetFile)
         DiJetTree = DiJet.Get(treeName)
-        DiJetTree.SetAlias("mcID","mcChannel")
         DiJetTree.SetAlias("YearWeight","year==2018 ? 58.5/139 :(year==2017 ? 44.3/139 : 36.2/139)")
         #DiJetTree.SetAlias("YearWeight","year==2018 ? 58.5/139 :(year==2017 ? 80.5/139 : 0./139)")
         #DiJetTree.SetAlias("YearWeight","year==2017 ? 44.3/80 : 36.2/80")
@@ -229,7 +224,6 @@ def RatioPlot(variable, xaxislabel, xmin, xmax, rebin, ymax, selection, director
                 
         Wjets = ROOT.TFile(WjetsFile)
         WjetsTree = Wjets.Get(treeName)
-        WjetsTree.SetAlias("mcID","mcChannel")
         WjetsTree.SetAlias("YearWeight","year==2018 ? 58.5/139 :(year==2017 ? 44.3/139 : 36.2/139)")
         #WjetsTree.SetAlias("YearWeight","year==2018 ? 58.5/139 :(year==2017 ? 80.5/139 : 0./139)")
         #WjetsTree.SetAlias("YearWeight","year==2017 ? 44.3/80 : 36.2/80")
@@ -239,7 +233,6 @@ def RatioPlot(variable, xaxislabel, xmin, xmax, rebin, ymax, selection, director
                 
         Zjets = ROOT.TFile(ZjetsFile)
         ZjetsTree = Zjets.Get(treeName)
-        ZjetsTree.SetAlias("mcID","mcChannel")
         ZjetsTree.SetAlias("YearWeight","year==2018 ? 58.5/139 :(year==2017 ? 44.3/139 : 36.2/139)")
         #ZjetsTree.SetAlias("YearWeight","year==2018 ? 58.5/139 :(year==2017 ? 80.5/139 : 0./139)")
         #ZjetsTree.SetAlias("YearWeight","year==2017 ? 44.3/80 : 36.2/80")
@@ -249,7 +242,6 @@ def RatioPlot(variable, xaxislabel, xmin, xmax, rebin, ymax, selection, director
         
         ttbar = ROOT.TFile(ttbarFile)
         ttbarTree = ttbar.Get(treeName)
-        ttbarTree.SetAlias("mcID","mcChannel")
         ttbarTree.SetAlias("YearWeight","year==2018 ? 58.5/139 :(year==2017 ? 44.3/139 : 36.2/139)")
         #ttbarTree.SetAlias("YearWeight","year==2018 ? 58.5/139 :(year==2017 ? 80.5/139 : 0./139)")#16ade
         #ttbarTree.SetAlias("YearWeight","year==2017 ? 44.3/80 : 36.2/80")#16ad
@@ -259,9 +251,8 @@ def RatioPlot(variable, xaxislabel, xmin, xmax, rebin, ymax, selection, director
                 
         Data = ROOT.TFile(datafile)
         DataTree = Data.Get(treeName)
-        DataTree.SetAlias("mcID","mcChannel")
         DataTree.SetAlias("YearWeight","mcID==0 ? 1:0")
-        #DataTree.SetAlias("YearWeight","mcChannel==0 ? 1:0")
+        DataTree.SetAlias("YearWeight","mcChannel==0 ? 1:0")
 
         
         blind = False
@@ -395,37 +386,21 @@ def RatioPlot(variable, xaxislabel, xmin, xmax, rebin, ymax, selection, director
 
     print( "length of signalFiles: "+str(len(signalFiles)))
     for i in range (0,len(signalFiles)):
-        
         TruthBool=False
-        print("Drawing signalPlot"+str(i))
         signalTree = signalFiles["signalFile_"+str(i)].Get(treeName)
-        signalTree.SetAlias("mcID","mcChannel")
         if (inputSignalFiles[i].find("Truth") != -1 or inputSignalFiles[i].find("TMVATuples")!= -1 or inputSignalFiles[i].find("SimpleAnalysis")!=-1):
             print("Setting Aliases for TruthFile"+str(inputSignalFiles[i]))
-            if (inputSignalFiles[i].find("Truth") != -1):
+            if (inputSignalFiles[i].find("C1N2_Wh_hbb") == -1):
                 TruthBool = True
-                signalTree.SetAlias("YearWeight","mcChannel>0 ? 1:0")
-                signalTree.SetAlias("JVTSF","mcChannel>0 ? 1:0")
-                signalTree.SetAlias("puWgt","mcChannel>0 ? 1:0")
-                signalTree.SetAlias("bJetSF","mcChannel>0 ? 1:0")
-                signalTree.SetAlias("muonSF","mcChannel>0 ? 1:0")
-                signalTree.SetAlias("electronSF","mcChannel>0 ? 1:0")
-                signalTree.SetAlias("mcEventWeight","eventWeight")
-            signalTree.SetAlias("nLeptons","nLep_signal")
-            signalTree.SetAlias("nJets","nJet25")
-            signalTree.SetAlias("nBJets","nBJet25_MV2c10")
-            signalTree.SetAlias("ETMiss","met")
-            signalTree.SetAlias("m_bb","mbb")
-            signalTree.SetAlias("m_T","mt")
-            signalTree.SetAlias("m_b1l","mlb1")
-            signalTree.SetAlias("m_b2l","mlb2")
-            signalTree.SetAlias("pTl1","lep1Pt")
-            signalTree.SetAlias("pTb1","bjet1Pt")
-            signalTree.SetAlias("pTb2","bjet2Pt")
-            
+                signalTree.SetAlias("YearWeight","mcID>0 ? 1:0")
+                signalTree.SetAlias("JVTSF","mcID>0 ? 1:0")
+                signalTree.SetAlias("puWgt","mcID>0 ? 1:0")
+                signalTree.SetAlias("bJetSF","mcID>0 ? 1:0")
+                signalTree.SetAlias("muonSF","mcID>0 ? 1:0")
+                signalTree.SetAlias("electronSF","mcID>0 ? 1:0")
         else:
             print("Setting Aliases for recoFile"+str(inputSignalFiles[i]))
-            signalTree.SetAlias("mcEventWeight","eventWeight")
+            #signalTree.SetAlias("mcEventWeight","eventWeight")
             if inputSignalFiles[i].find("C1N2_Wh_hbb")!=-1:
                 signalTree.SetAlias("YearWeight","year==2018 ? 58.5/139 :(year==2017 ? 44.3/139 : 36.2/139)")
             elif inputSignalFiles[i].find("DAOD_SUSY5.root"):
@@ -718,23 +693,13 @@ def RatioPlot(variable, xaxislabel, xmin, xmax, rebin, ymax, selection, director
 
         else:
             #Legend.AddEntry(signalPlots["signalPlot_"+str(j)],"(m_{#tilde{b}}, m_{#tilde{#chi}}_{1}^{0}) = (800,1)GeV", "L")
-            if TruthBool and not SmearedBool and not EtaPhiBool:
-                Legend.AddEntry(signalPlots["signalPlot_"+str(j)],"400_250_Truth", "L")
-            if (inputSignalFile.find("mct")!=-1):
-                Legend.AddEntry(signalPlots["signalPlot_"+str(j)],"400_250_TruthSmeared_uncorrected mCT", "L")
-            elif SmearedBool and not EtaPhiBool:
-                Legend.AddEntry(signalPlots["signalPlot_"+str(j)],"400_250_TruthSmeared", "L")
-            elif EtaPhiBool and not EtaPhiPsmearBool:
-                Legend.AddEntry(signalPlots["signalPlot_"+str(j)],"400_250_TruthSmeared_EtaPhi", "L")
-            elif EtaPhiPsmearBool: 
-                Legend.AddEntry(signalPlots["signalPlot_"+str(j)],"400_250_TruthSmeared_EtaPhipSmear", "L")
+
+            if j==0:
+                Legend.AddEntry(signalPlots["signalPlot_"+str(j)],"300_150_reco", "L")
+            elif j==1:
+                Legend.AddEntry(signalPlots["signalPlot_"+str(j)],"300_150_truthSmeared", "L")
             else:
-                if j==0:
-                    Legend.AddEntry(signalPlots["signalPlot_"+str(j)],"300_150", "L")
-                elif j==1:
-                    Legend.AddEntry(signalPlots["signalPlot_"+str(j)],"400_250", "L")
-                else:
-                    Legend.AddEntry(signalPlots["signalPlot_"+str(j)],"ttbar", "L")
+                Legend.AddEntry(signalPlots["signalPlot_"+str(j)],"ttbar", "L")
         
         j+=1
     Legend.SetTextSize(0.02)

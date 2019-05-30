@@ -174,6 +174,7 @@ TreeService::TreeService(TTree *outputTree, TDirectory *OutDir){
   tree->Branch("tauTriggerSF", &tauTriggerSF);
   tree->Branch("photonSF", &photonSF);
   tree->Branch("bJetSF", &bJetSF);
+  tree->Branch("bJetSF_PC", &bJetSF_PC);
   tree->Branch("JVTSF", &JVTSF);
   tree->Branch("puWgt", &puWgt);
   //tree->Branch("muonRecoSF", &muonRecoSF);
@@ -584,6 +585,7 @@ void TreeService::fillTree(NewObjectDef *objects , xAOD::TStore *evtStore, Preli
   tauTriggerSF = objects->getTauTriggerSF();
   photonSF = objects->getPhotonSF();
   bJetSF = objects->getBJetSF();
+  bJetSF_PC = variables.bJetSF_PC;
   JVTSF = objects->getJVTSF();
   leptonTriggerSF = LeptonTriggerSF;
 

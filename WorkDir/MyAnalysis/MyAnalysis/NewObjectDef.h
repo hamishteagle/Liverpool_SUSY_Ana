@@ -131,6 +131,7 @@ class NewObjectDef
     double tauTriggerSF;
     double photonSF;
     double bJetSF;
+    double bJetSF_PC;
     double JVTSF;
     double muonTriggerSF;
     double dilepTriggerSF;

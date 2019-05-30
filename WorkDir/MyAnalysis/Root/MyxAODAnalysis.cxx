@@ -328,7 +328,15 @@ EL::StatusCode MyxAODAnalysis :: initialize ()
   ANA_CHECK( m_BTaggingSelectionTool.setProperty("JetAuthor",      "AntiKt4EMTopoJets" ) );
   ANA_CHECK( m_BTaggingSelectionTool.initialize() );
   std::cout<<"After BTaggingTool tool"<<std::endl;
-
+  //BTaggingEfficiency setup
+  ASG_SET_ANA_TOOL_TYPE( m_BTaggingEfficiencyTool, BTaggingEfficiencyTool);
+  m_BTaggingEfficiencyTool.setName("myBTaggingEfficiencyTool");
+  ANA_CHECK( m_BTaggingEfficiencyTool.setProperty( "ScaleFactorFileName","xAODBTaggingEfficiency/13TeV/2017-21-13TeV-MC16-CDI-2018-02-09_v1.root" ) ); //this is the CDI file 
+  ANA_CHECK( m_BTaggingEfficiencyTool.setProperty("TaggerName",    "MV2c10"  ) );
+  ANA_CHECK( m_BTaggingEfficiencyTool.setProperty("OperatingPoint", "Continuous") );
+  ANA_CHECK( m_BTaggingEfficiencyTool.setProperty("JetAuthor",      "AntiKt4EMTopoJets" ) );
+  ANA_CHECK( m_BTaggingEfficiencyTool.initialize() );
+  std::cout<<"After BTaggingEfficiencyTool tool"<<std::endl;
   return StatusCode::SUCCESS;
 }
 
@@ -752,7 +760,7 @@ EL::StatusCode MyxAODAnalysis :: execute ()
     if(coreFlag && sctFlag && LArTileFlag && passedPrimVertex && passedJetClean && passedCosmicMu && passedMuonClean){
       passedCleaningCuts=true;
     }
-    auto m_varCalc = std::make_unique<CalculateVariables>( objs.get(), m_BTaggingSelectionTool, store, isTruth, doPhotons, isData);
+    auto m_varCalc = std::make_unique<CalculateVariables>( objs.get(), m_BTaggingSelectionTool, m_BTaggingEfficiencyTool, store, isTruth, doPhotons, isData);
     auto m_regions = std::make_unique<PreliminarySel>(*m_varCalc, passedCleaningCuts);
 
 

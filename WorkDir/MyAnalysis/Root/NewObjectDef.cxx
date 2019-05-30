@@ -232,6 +232,7 @@ void NewObjectDef::GetObjects() {
   baselinePhotons->sort(pT_Sorter);
   goodPhotons->sort(pT_Sorter);
   //Fill jets
+  objTool->setProperty("BtagWP", "FixedCutBEff_77");  //set the nominal 
   bJetSF = 1;
   JVTSF = 1;
   for (const auto& jet_itr: *preOR_baselineJets) {
@@ -241,11 +242,13 @@ void NewObjectDef::GetObjects() {
       if (jet_itr->auxdata<char>("signal") && jet_itr->auxdata<char>("baseline")) {
         goodJets->push_back(jet_itr);
         if (jet_itr->auxdata<char>("bjet")) BJets->push_back(jet_itr);
-        if (!(jet_itr)->auxdata<char>("bjet")) nonBJets->push_back(jet_itr);
+	if (!(jet_itr)->auxdata<char>("bjet")) nonBJets->push_back(jet_itr);
       }
     }
   }
+  //Get the b-tagging SF for nominal b-jets
   if (!objTool->isData()) bJetSF = objTool->BtagSF(goodJets.get());
+  //Get the b-tagging SF for PC usage
   if (!objTool->isData()) JVTSF = objTool->JVT_SF(preOR_baselineJets.get());
   goodJetsBeforeOR->sort(pT_Sorter);
   badJets->sort(pT_Sorter);

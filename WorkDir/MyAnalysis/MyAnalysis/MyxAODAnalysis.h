@@ -35,7 +35,9 @@
 //BTaggingSelectionTool
 #include "FTagAnalysisInterfaces/IBTaggingSelectionTool.h"//Interface
 #include "xAODBTaggingEfficiency/BTaggingSelectionTool.h"//tool header for type definition
-
+//BTaggingEfficiencyTool
+#include "FTagAnalysisInterfaces/IBTaggingEfficiencyTool.h"
+#include "xAODBTaggingEfficiency/BTaggingEfficiencyTool.h"//tool header for type definition
 // GRL inclusion
 class GoodRunsListSelectionTool;
 //class JetCleaningTool;
@@ -137,6 +139,7 @@ public:
   std::vector <std::string> runningOverSysts; //!
   asg::AnaToolHandle<IMETSignificance> m_metSignif; //!
   asg::AnaToolHandle<IBTaggingSelectionTool> m_BTaggingSelectionTool;//!
+  asg::AnaToolHandle<IBTaggingEfficiencyTool> m_BTaggingEfficiencyTool;//!
   //  EL::OutputStream out
 
 

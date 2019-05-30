@@ -5,18 +5,19 @@
 #include "NewObjectDef.h"
 
 #include "TMctLib.h"
-#include "FTagAnalysisInterfaces/IBTaggingSelectionTool.h"//Interface
+#include "FTagAnalysisInterfaces/IBTaggingSelectionTool.h"//Interface -do we need this??
+#include "FTagAnalysisInterfaces/IBTaggingEfficiencyTool.h"//Interface -do we need this??
 class CalculateVariables
 
 {
  public:
-  CalculateVariables(NewObjectDef *objects, asg::AnaToolHandle<IBTaggingSelectionTool> m_BTaggingSelectionTool, xAOD::TStore* evtStore, bool isTruth, bool doPhotons, bool isData);
+  CalculateVariables(NewObjectDef *objects, asg::AnaToolHandle<IBTaggingSelectionTool> m_BTaggingSelectionTool, asg::AnaToolHandle<IBTaggingEfficiencyTool> m_BTaggingEfficiencyTool, xAOD::TStore* evtStore, bool isTruth, bool doPhotons, bool isData);
 
   void CalculateOneLepVariables(NewObjectDef *objects, TLorentzVector b1v, TLorentzVector b2v, TLorentzVector tj1v);
   void CalculateTwoLepVariables(NewObjectDef *objects, TLorentzVector b1v, TLorentzVector b2v);
   void CalculatePhotonMET(NewObjectDef *objects);
   
-  bool CalculatePseudoContBTagging(NewObjectDef *objects, asg::AnaToolHandle<IBTaggingSelectionTool> m_BTaggingSelectionTool);
+  bool CalculatePseudoContBTagging(NewObjectDef *objects, asg::AnaToolHandle<IBTaggingSelectionTool> m_BTaggingSelectionTool, asg::AnaToolHandle<IBTaggingEfficiencyTool> m_BTaggingEfficiencyTool);
 
   void CalculateShapeVariables(NewObjectDef *objects);
   void CalculateRazorVariables(NewObjectDef *objects);
@@ -200,6 +201,7 @@ class CalculateVariables
   int b1_bQuantile;
   int b2_bQuantile;
 
+  double bJetSF_PC;
 
   double pTZ; //
   double etaZ; //

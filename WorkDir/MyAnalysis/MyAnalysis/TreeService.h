@@ -375,6 +375,7 @@ class TreeService
   double tauSF;
   double tauTriggerSF;
   double bJetSF;
+  double bJetSF_PC;
   double JVTSF;
   double photonSF;
   double leptonTriggerSF;

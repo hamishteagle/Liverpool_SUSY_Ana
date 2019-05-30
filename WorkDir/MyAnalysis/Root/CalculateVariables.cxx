@@ -47,7 +47,7 @@ bool btag_wgt_Sorter( const xAOD::Jet* j1, const xAOD::Jet* j2 ) {
 
 
 
-CalculateVariables::CalculateVariables(NewObjectDef *objects, asg::AnaToolHandle<IBTaggingSelectionTool> m_BTaggingSelectionTool, xAOD::TStore* evtStore, bool isTruth, bool doPhotons, bool isData){
+CalculateVariables::CalculateVariables(NewObjectDef *objects, asg::AnaToolHandle<IBTaggingSelectionTool> m_BTaggingSelectionTool, asg::AnaToolHandle<IBTaggingEfficiencyTool> m_BTaggingEfficiencyTool, xAOD::TStore* evtStore, bool isTruth, bool doPhotons, bool isData){
 
   // Initialise the variables to sensible numbers
   
@@ -126,7 +126,7 @@ CalculateVariables::CalculateVariables(NewObjectDef *objects, asg::AnaToolHandle
 
   //PseudoContinuos b-tagging
   if (nJets>0){
-    if (!this->CalculatePseudoContBTagging(objects, m_BTaggingSelectionTool))
+    if (!this->CalculatePseudoContBTagging(objects, m_BTaggingSelectionTool, m_BTaggingEfficiencyTool))
       {
 	Error("execute()","BTaggingSelectionTool exception caught");
       }
@@ -1526,15 +1526,20 @@ void CalculateVariables::CalculateTwoLepVariables(NewObjectDef *objects, TLorent
 
 }
 
-bool CalculateVariables::CalculatePseudoContBTagging(NewObjectDef *objects, asg::AnaToolHandle<IBTaggingSelectionTool> m_BTaggingSelectionTool){
+bool CalculateVariables::CalculatePseudoContBTagging(NewObjectDef *objects, asg::AnaToolHandle<IBTaggingSelectionTool> m_BTaggingSelectionTool, asg::AnaToolHandle<IBTaggingEfficiencyTool> m_BTaggingEfficiencyTool){
 
   int quantile=-1;
+  float sf;
+  bJetSF_PC = 1;
   std::vector<int> jet_quantiles;
   std::vector<int> bjet_quantiles;
-  //get the quantiles for the jets 
+  //Get the quantiles for the jets 
   for (const xAOD::Jet *jet :(*goodJet_cont)){
     try {
       jet_quantiles.push_back(m_BTaggingSelectionTool->getQuantile(*jet));
+      //Get the scale factors here (try to avoid many SUSYTools instances, this is what SUSYTools does)
+      m_BTaggingEfficiencyTool->getScaleFactor(*jet, sf);
+      bJetSF_PC *= sf;
     }catch(...)
       {
 	return false;
@@ -1567,8 +1572,11 @@ bool CalculateVariables::CalculatePseudoContBTagging(NewObjectDef *objects, asg:
   if (bjet_quantiles.size()>1){
     b2_bQuantile = bjet_quantiles[1];
   }
+  //Get the scale factors here (try to avoid many SUSYTools instances)
+  
   bjet_quantiles.clear();
   jet_quantiles.clear();
+  
   return true;
 }
 
