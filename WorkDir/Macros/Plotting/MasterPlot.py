@@ -146,7 +146,7 @@ def main():
     directory = options.date+'/'
     print ("Output Directory is: ", directory)
     #############################
-    label = "preSelection_2j>25_2bMET200_METTrig"
+    label = "preSelection_2j>25_MET200_METTrig"
     #############################
     EventCounter = True
 
@@ -159,8 +159,8 @@ def main():
     # make sure that SR is contained in the label variable, which will blind the distribution
     if label == "noSelection_SR":
         cutstouse = "1"
-    elif label == "preSelection_2j>25_2bMET200_METTrig":
-        cutstouse = preCuts+"(ETMiss>200)*(nLeptons==1)*(nJets ==2 || nJets ==3)*(pTj1>25 && pTj2>25)*(pTl1>27)*(nBJets==2)"
+    elif label == "preSelection_2j>25_MET200_METTrig":
+        cutstouse = preCuts+"(ETMiss>200)*(nLeptons==1)*(nJets ==2 || nJets ==3)*(pTj1>25 && pTj2>25)*(pTl1>27)"
     elif label == "ISR":
         cutstouse = "(nLeptons==1)*(nBJets==2)*(ETMiss>200)*(nJets==3)"
 
@@ -250,9 +250,10 @@ def main():
         #RatioPlot.RatioPlot("j2_bQuantile", "j2_quantile", 0, 6, 6, ymax, cutstouse, directory, label, True, ttVFile, singleTopFile, DiBosonFile, TriBosonFile, HiggsFile, wJetFile, zJetFile, ttbarFile, DiJetFile, dataFile, signalFiles, False, False, luminosity_liv, True,True)
         #RatioPlot.RatioPlot("b1_bQuantile", "b1_quantile", 0, 6, 6, ymax, cutstouse, directory, label, True, ttVFile, singleTopFile, DiBosonFile, TriBosonFile, HiggsFile, wJetFile, zJetFile, ttbarFile, DiJetFile, dataFile, signalFiles, False, False, luminosity_liv, False,False)
         #RatioPlot.RatioPlot("b2_bQuantile", "b2_quantile", 0, 6, 6, ymax, cutstouse, directory, label, True, ttVFile, singleTopFile, DiBosonFile, TriBosonFile, HiggsFile, wJetFile, zJetFile, ttbarFile, DiJetFile, dataFile, signalFiles, False, False, luminosity_liv, False,False)
-        RatioPlot.RatioPlot("m_bb", "m_{bb}", 0, 800, 20, ymax, cutstouse, directory, label, True, ttVFile, singleTopFile, DiBosonFile, TriBosonFile, HiggsFile, wJetFile, zJetFile, ttbarFile, DiJetFile, dataFile, signalFiles, False, False, luminosity_liv, False,False)
+        #RatioPlot.RatioPlot("m_bb", "m_{bb}", 0, 800, 20, ymax, cutstouse, directory, label, True, ttVFile, singleTopFile, DiBosonFile, TriBosonFile, HiggsFile, wJetFile, zJetFile, ttbarFile, DiJetFile, dataFile, signalFiles, False, False, luminosity_liv, False,False)
         #RatioPlot.RatioPlot("1", "1", 0.5,1.5, 1, ymax, cutstouse, directory, label, False, ttVFile, singleTopFile, DiBosonFile, TriBosonFile, HiggsFile, wJetFile, zJetFile, ttbarFile, DiJetFile, dataFile, signalFiles, False, False, luminosity_liv, False,False)
         RatioPlot.RatioPlot("ETMiss", "E_{T}^{miss}", 0, 1000, 20, ymax, cutstouse, directory, label, True, ttVFile, singleTopFile, DiBosonFile, TriBosonFile, HiggsFile, wJetFile, zJetFile, ttbarFile, DiJetFile, dataFile, signalFiles, False, False, luminosity_liv, False,False)
+        RatioPlot.RatioPlot("nBJets", "N_{bjets}", -0.5, 9.5, 10, ymax, cutstouse, directory, label, False, ttVFile, singleTopFile, DiBosonFile, TriBosonFile, HiggsFile, wJetFile, zJetFile, ttbarFile, DiJetFile, dataFile, signalFiles, False, False, luminosity_liv, False,False)
         #RatioPlot.RatioPlot("m_actualIntPerX", "#mu actual", 0, 100, 50, ymax, cutstouse, directory, label, False, ttVFile, singleTopFile, DiBosonFile, TriBosonFile, HiggsFile, wJetFile, zJetFile, ttbarFile, DiJetFile, dataFile, signalFiles, False, False, luminosity_liv, False,False)   
         #RatioPlot.RatioPlot("m_averageIntPerX", "#mu avg", 0, 100, 50, ymax, cutstouse, directory, label, False, ttVFile, singleTopFile, DiBosonFile, TriBosonFile, HiggsFile, wJetFile, zJetFile, ttbarFile, DiJetFile, dataFile, signalFiles, False, False, luminosity_liv, False,False)   
         RatioPlot.RatioPlot("pTj1", "p_{T}^{j1}", 0, 800, 20, ymax, cutstouse, directory, label, False, ttVFile, singleTopFile, DiBosonFile, TriBosonFile, HiggsFile, wJetFile, zJetFile, ttbarFile, DiJetFile, dataFile, signalFiles, False, False, luminosity_liv, False,False)
