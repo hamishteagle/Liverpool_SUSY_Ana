@@ -233,7 +233,6 @@ void NewObjectDef::GetObjects() {
   baselinePhotons->sort(pT_Sorter);
   goodPhotons->sort(pT_Sorter);
   //Fill jets
-  objTool->setProperty("BtagWP", "FixedCutBEff_77");  //set the nominal 
   bJetSF = 1;
   JVTSF = 1;
   for (const auto& jet_itr: *preOR_baselineJets) {
