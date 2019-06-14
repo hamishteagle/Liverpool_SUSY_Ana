@@ -31,31 +31,31 @@ export FRONTIER_LOG_LEVEL="warning"
 export ATLAS_POOLCOND_PATH="/cvmfs/atlas-condb.cern.ch/repo/conditions"
 export ATLAS_DB_AREA="/cvmfs/atlas.cern.ch/repo/sw/database"
 export DBRELEASE_OVERRIDE="current"
-export GAUDI_ROOT="/cvmfs/atlas-nightlies.cern.ch/repo/sw/21.2/2019-05-30T0322/GAUDI/21.2.76/InstallArea/x86_64-slc6-gcc62-opt"
+export GAUDI_ROOT="/cvmfs/atlas-nightlies.cern.ch/repo/sw/21.2/2019-06-01T0321/GAUDI/21.2.77/InstallArea/x86_64-slc6-gcc62-opt"
 export SITEROOT="/cvmfs/atlas-nightlies.cern.ch/repo/sw/21.2"
-export AtlasBaseDir="/cvmfs/atlas-nightlies.cern.ch/repo/sw/21.2/2019-05-30T0322"
+export AtlasBaseDir="/cvmfs/atlas-nightlies.cern.ch/repo/sw/21.2/2019-06-01T0321"
 export LCG_RELEASE_BASE="/cvmfs/atlas-nightlies.cern.ch/repo/sw/21.2/sw/lcg/releases"
-export AtlasBuildStamp="2019-05-30T0322"
+export AtlasBuildStamp="2019-06-01T0321"
 export AtlasReleaseType="nightly"
 export AtlasBuildBranch="21.2"
 export AtlasProject="AthAnalysis"
 export TDAQ_RELEASE_BASE="/cvmfs/atlas-nightlies.cern.ch/repo/sw/21.2"
-export ATLAS_RELEASE_BASE="/cvmfs/atlas-nightlies.cern.ch/repo/sw/21.2/2019-05-30T0322"
+export ATLAS_RELEASE_BASE="/cvmfs/atlas-nightlies.cern.ch/repo/sw/21.2/2019-06-01T0321"
 export ATLAS_RELEASEDATA="/cvmfs/atlas-nightlies.cern.ch/repo/sw/21.2/atlas/offline/ReleaseData"
-export AtlasArea="/cvmfs/atlas-nightlies.cern.ch/repo/sw/21.2/2019-05-30T0322/AthAnalysis/21.2.76"
-export AtlasVersion="21.2.76"
-source /cvmfs/atlas-nightlies.cern.ch/repo/sw/21.2/2019-05-30T0322/AthAnalysis/21.2.76/InstallArea/x86_64-slc6-gcc62-opt/setup.sh
+export AtlasArea="/cvmfs/atlas-nightlies.cern.ch/repo/sw/21.2/2019-06-01T0321/AthAnalysis/21.2.77"
+export AtlasVersion="21.2.77"
+source /cvmfs/atlas-nightlies.cern.ch/repo/sw/21.2/2019-06-01T0321/AthAnalysis/21.2.77/InstallArea/x86_64-slc6-gcc62-opt/setup.sh
 asetup_status=$?
 if [ ${asetup_status} -ne 0 ]; then
-    \echo "AtlasSetup(ERROR): sourcing release setup script (/cvmfs/atlas-nightlies.cern.ch/repo/sw/21.2/2019-05-30T0322/AthAnalysis/21.2.76/InstallArea/x86_64-slc6-gcc62-opt/setup.sh) failed"
+    \echo "AtlasSetup(ERROR): sourcing release setup script (/cvmfs/atlas-nightlies.cern.ch/repo/sw/21.2/2019-06-01T0321/AthAnalysis/21.2.77/InstallArea/x86_64-slc6-gcc62-opt/setup.sh) failed"
 fi
 source /cvmfs/atlas.cern.ch/repo/ATLASLocalRootBase/x86_64/AtlasSetup/V01-00-33/AtlasSetup/scripts/sys_exe-alias.sh emacs
-export TestArea="/user/hteagle/AnalysisDirectory/Rel21/Base.21.2.72/athena/Projects"
+export TestArea="/user/hteagle/AnalysisDirectory/Rel21/Base.21.2.72/athena/Projects/WorkDir"
 
 #Release Summary as follows:
-#Release base=/cvmfs/atlas-nightlies.cern.ch/repo/sw/21.2/2019-05-30T0322
+#Release base=/cvmfs/atlas-nightlies.cern.ch/repo/sw/21.2/2019-06-01T0321
 #Release project=AthAnalysis
-#Release releaseNum=21.2.76
+#Release releaseNum=21.2.77
 #Release asconfig=x86_64-slc6-gcc62-opt
 
 # Execute user-specified epilog

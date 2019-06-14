@@ -249,7 +249,6 @@ void NewObjectDef::GetObjects() {
   }
   //Get the b-tagging SF for nominal b-jets
   if (!objTool->isData()) bJetSF = objTool->BtagSF(goodJets.get());
-  //Get the b-tagging SF for PC usage
   if (!objTool->isData()) JVTSF = objTool->JVT_SF(preOR_baselineJets.get());
   goodJetsBeforeOR->sort(pT_Sorter);
   badJets->sort(pT_Sorter);

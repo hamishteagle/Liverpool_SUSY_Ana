@@ -2,9 +2,9 @@
 
 
 function runmissing_a(){
-    file="SampleLists_SUSY5/mc16a/missing_zJets.txt"
+    file="SampleLists_SUSY5/mc16a/missing.txt"
     if [  -f $file ]; then
-	python listsubmission.py -i $file -t ZJets
+	python listsubmission.py -i $file -t TTV
 	echo "fine"
     else 
     echo $file 'does not exist!!'
@@ -412,12 +412,12 @@ runsignal_a
 wait
 }
 function runmc16d(){
-runttbar_d
-wait
-runsingleTop_d
-wait
-runwJets_d
-wait
+#runttbar_d
+#wait
+#runsingleTop_d
+#wait
+#runwJets_d
+#wait
 runzJets_d
 wait
 rundiBoson_d
@@ -471,17 +471,18 @@ rundata18
 wait
 }
 
-runttbar_a
+runsignal_e
 wait
-
+#runmissing_a
+#wait
 #runmc16a
+#wait
+#rundata
 #wait
 #runmc16d
 #wait 
 #runmc16e
 #wait
-#rundata
-
 
 echo "Completed all processes!"
 #  LocalWords:  runttbar
