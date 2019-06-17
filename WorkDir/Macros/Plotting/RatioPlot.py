@@ -222,9 +222,9 @@ def RatioPlot(variable, xaxislabel, xmin, xmax, rebin, ymax, selection, director
         #HiggsTree.SetAlias("YearWeight","year==2018 ? 1 : 0")
         #HiggsTree.SetAlias("YearWeight","year>0 ? 1 : 0")
                 
-        DiJet = ROOT.TFile(DiJetFile)
-        DiJetTree = DiJet.Get(treeName)
-        DiJetTree.SetAlias("YearWeight","year==2018 ? 58.5/139 :(year==2017 ? 44.3/139 : 36.2/139)")
+        #DiJet = ROOT.TFile(DiJetFile)
+        #DiJetTree = DiJet.Get(treeName)
+        #DiJetTree.SetAlias("YearWeight","year==2018 ? 58.5/139 :(year==2017 ? 44.3/139 : 36.2/139)")
         #DiJetxTree.SetAlias("YearWeight","year==2018 ? 58.5/139 :(year==2017 ? 80.5/139 : 0./139)")
         #DiJetTree.SetAlias("YearWeight","year==2017 ? 44.3/80 : 36.2/80")
         #DiJetTree.SetAlias("YearWeight","year<2017 ? 1 : 0")
@@ -261,7 +261,7 @@ def RatioPlot(variable, xaxislabel, xmin, xmax, rebin, ymax, selection, director
         Data = ROOT.TFile(datafile)
         DataTree = Data.Get(treeName)
         DataTree.SetAlias("YearWeight","mcID==0 ? 1:0")
-        DataTree.SetAlias("YearWeight","mcChannel==0 ? 1:0")
+        #DataTree.SetAlias("YearWeight","mcChannel==0 ? 1:0")
 
         
         blind = False
@@ -269,8 +269,7 @@ def RatioPlot(variable, xaxislabel, xmin, xmax, rebin, ymax, selection, director
             blind = True 
             Data = ROOT.TFile(inputSignalFiles[0])
             DataTree = Data.Get(treeName)
-            DataTree.SetAlias("mcID","mcChannel")
-            DataTree.SetAlias("YearWeight","mcChannel==0 ? 1:0")
+            DataTree.SetAlias("YearWeight","mcID==0 ? 1:0")
             
         
     crblind =False
@@ -442,8 +441,8 @@ def RatioPlot(variable, xaxislabel, xmin, xmax, rebin, ymax, selection, director
         print("Drawn triBoson")
         HiggsTree.Draw(variabletoplot+">>HiggsPlot",cutstouse)
         print("Drawn higgs")
-        DiJetTree.Draw(variabletoplot+">>DiJetPlot",cutstouse)
-        print("Drawn diJet")
+        #DiJetTree.Draw(variabletoplot+">>DiJetPlot",cutstouse)
+        #print("Drawn diJet")
         WjetsTree.Draw(variabletoplot+">>WjetsPlot",cutstouse)
         print("Drawn wJets")
         ZjetsTree.Draw(variabletoplot+">>ZjetsPlot",cutstouse)
@@ -455,7 +454,7 @@ def RatioPlot(variable, xaxislabel, xmin, xmax, rebin, ymax, selection, director
         DiBosonTree.Draw(variabletoplot+">>DiBosonTempPlot",cutstouse)
         TriBosonTree.Draw(variabletoplot+">>TriBosonTempPlot",cutstouse)
         HiggsTree.Draw(variabletoplot+">>HiggsTempPlot",cutstouse)
-        DiJetTree.Draw(variabletoplot+">>DiJetTempPlot",cutstouse)
+        #DiJetTree.Draw(variabletoplot+">>DiJetTempPlot",cutstouse)
         SingleTopTree.Draw(variabletoplot+">>SingleTopTempPlot",cutstouse)
         print("Drawing temp wJets")        
         WjetsTree.Draw(variabletoplot+">>WjetsTempPlot",cutstouse)
@@ -472,7 +471,7 @@ def RatioPlot(variable, xaxislabel, xmin, xmax, rebin, ymax, selection, director
         SMBkgPlot.Add(DiBosonTempPlot)
         SMBkgPlot.Add(TriBosonTempPlot)
         SMBkgPlot.Add(HiggsTempPlot)
-        SMBkgPlot.Add(DiJetTempPlot)
+        #SMBkgPlot.Add(DiJetTempPlot)
         SMBkgPlot.Add(WjetsTempPlot)
 
 
@@ -661,8 +660,8 @@ def RatioPlot(variable, xaxislabel, xmin, xmax, rebin, ymax, selection, director
         TempRatioPlot.Divide(SMCheck)
     
         # Add the Histograms to the Stack Order Matters
-        StackedPlot.Add(DiJetPlot)
-        print( "Added DiJet")
+        #StackedPlot.Add(DiJetPlot)
+        #print( "Added DiJet")
         StackedPlot.Add(TriBosonPlot)
         print( "Added TriBoson")
         StackedPlot.Add(ttVPlot)
@@ -693,7 +692,7 @@ def RatioPlot(variable, xaxislabel, xmin, xmax, rebin, ymax, selection, director
         Legend.AddEntry(DiBosonPlot,"DiBoson", "F")
         Legend.AddEntry(TriBosonPlot,"TriBoson", "F")
         Legend.AddEntry(HiggsPlot,"Higgs", "F")
-        Legend.AddEntry(DiJetPlot,"DiJet", "F")
+        #Legend.AddEntry(DiJetPlot,"DiJet", "F")
     j=0
     for inputSignalFile in inputSignalFiles:
         SmearedBool = False

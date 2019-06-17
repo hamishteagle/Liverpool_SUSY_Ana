@@ -37,18 +37,19 @@ def main():
 
 
     ## Liv ntuples_wh 21.2.75
-    DiJetFile = "/scratch/hteagle/Wh_Liv/ntuples_21.2.75/MC16d/diJet.root"
-    ttVFile = "/scratch/hteagle/Wh_Liv/ntuples_21.2.75/MC16d/ttV.root"
-    wJetFile = "/scratch/hteagle/Wh_Liv/ntuples_21.2.75/MC16d/wJets.root"
-    zJetFile = "/scratch/hteagle/Wh_Liv/ntuples_21.2.75/MC16d/zJets.root"
-    ttbarFile = "/scratch/hteagle/Wh_Liv/ntuples_21.2.75/MC16d/ttbar.root"
-    #singleTopFile = "/scratch/hteagle/Wh_Liv/ntuples_21.2.75/MC16d/singleTop.root"
-    singleTopFile = "/scratch/hteagle/Wh_Liv/ntuples_21.2.75/MC16d/singleTop_nominal.root"
-    DiBosonFile = "/scratch/hteagle/Wh_Liv/ntuples_21.2.75/MC16d/diBoson.root"
-    TriBosonFile = "/scratch/hteagle/Wh_Liv/ntuples_21.2.75/MC16d/triBoson.root"
-    HiggsFile = "/scratch/hteagle/Wh_Liv/ntuples_21.2.75/MC16d/higgs.root"
-    dataFile = "/scratch/hteagle/Wh_Liv/ntuples_21.2.75/data/31May.DATA.Combined.DATA17.SUSY5.21.2.75_output.root"
-    #dataFile = "/scratch/hteagle/Wh_Liv/ntuples_21.2.75/data.root"
+    DiJetFile = "/scratch/hteagle/Wh_Liv/ntuples_21.2.75/triBoson.root"##ignore this
+    ttVFile = "/scratch/hteagle/Wh_Liv/ntuples_21.2.75/ttV.root"
+    wJetFile = "/scratch/hteagle/Wh_Liv/ntuples_21.2.75/wJets.root"
+    zJetFile = "/scratch/hteagle/Wh_Liv/ntuples_21.2.75/zJets.root"
+    ttbarFile = "/scratch/hteagle/Wh_Liv/ntuples_21.2.75/ttbar.root"
+    singleTopFile = "/scratch/hteagle/Wh_Liv/ntuples_21.2.75/singleTop.root"
+    #singleTopFile = "/scratch/hteagle/Wh_Liv/ntuples_21.2.75/singleTop_nominal.root"
+    DiBosonFile = "/scratch/hteagle/Wh_Liv/ntuples_21.2.75/diBoson.root"
+    TriBosonFile = "/scratch/hteagle/Wh_Liv/ntuples_21.2.75/triBoson.root"
+    HiggsFile = "/scratch/hteagle/Wh_Liv/ntuples_21.2.75/higgs.root"
+    #dataFile = "/scratch/hteagle/Wh_Liv/ntuples_21.2.75/data/31May.DATA.Combined.DATA1516.SUSY5.21.2.75_output.root"
+    #dataFile = "/scratch/hteagle/Wh_Liv/ntuples_21.2.75/data/31May.DATA.Combined.DATA18.SUSY5.21.2.75_output.root"
+    dataFile = "/scratch/hteagle/Wh_Liv/ntuples_21.2.75/data.root"
 
 
     #Liv ntuples_wh_21.2.60_BDT
@@ -81,10 +82,10 @@ def main():
 
     
 
-    signalFiles.append('/scratch/hteagle/Wh_Liv/ntuples_21.2.75/MC16d/4June.SIGNAL_MC16d.21.2.75.396716.MadGraphPythia8EvtGen_A14N23LO_C1N2_Wh_hbb_300p0_150p0_lep_output.root')
-    signalFiles.append('/scratch/hteagle/Wh_Liv/ntuples_21.2.75/MC16d/4June.SIGNAL_MC16d.21.2.75.396725.MadGraphPythia8EvtGen_A14N23LO_C1N2_Wh_hbb_350p0_200p0_lep_output.root')
-    signalFiles.append('/scratch/hteagle/Wh_Liv/ntuples_21.2.75/MC16d/4June.SIGNAL_MC16d.21.2.75.396734.MadGraphPythia8EvtGen_A14N23LO_C1N2_Wh_hbb_400p0_250p0_lep_output.root')
-    signalFiles.append('/scratch/hteagle/Wh_Liv/ntuples_21.2.75/MC16d/4June.SIGNAL_MC16d.21.2.75.396742.MadGraphPythia8EvtGen_A14N23LO_C1N2_Wh_hbb_450p0_300p0_lep_output.root')
+    signalFiles.append('/scratch/hteagle/Wh_Liv/ntuples_21.2.75/21.2.75.396716.MadGraphPythia8EvtGen_A14N23LO_C1N2_Wh_hbb_300p0_150p0_lep_output.root')
+    #signalFiles.append('/scratch/hteagle/Wh_Liv/ntuples_21.2.75/MC16a/31May.SIGNAL_MC16a.21.2.75.396725.MadGraphPythia8EvtGen_A14N23LO_C1N2_Wh_hbb_350p0_200p0_lep_output.root')
+    #signalFiles.append('/scratch/hteagle/Wh_Liv/ntuples_21.2.75/MC16a/31May.SIGNAL_MC16a.21.2.75.396734.MadGraphPythia8EvtGen_A14N23LO_C1N2_Wh_hbb_400p0_250p0_lep_output.root')
+    #signalFiles.append('/scratch/hteagle/Wh_Liv/ntuples_21.2.75/MC16a/31May.SIGNAL_MC16a.21.2.75.396742.MadGraphPythia8EvtGen_A14N23LO_C1N2_Wh_hbb_450p0_300p0_lep_output.root')
 
     
     #signalFiles.append('/user/hteagle/liverpool-ml/TMVATuples/reco_train_.60/400_250_TruthSmeared.root')    
@@ -120,47 +121,46 @@ def main():
                 foundSignalInput = ((signalFile.split("/")[6]).split(".")[4]).split("_")[4]+"_"+((signalFile.split("/")[6]).split(".")[4]).split("_")[5]+"_"+((signalFile.split("/")[6]).split(".")[4]).split("_")[6]
 
 
-    #Liv Cleaning cuts
+    isttbarOK = "( (mcID != 410470 || truthFilterMET < 200)&&(mcID != 407345 || (truthFilterMET >= 200 && truthFilterMET < 300))&&(mcID != 407346 || (truthFilterMET >= 300 && truthFilterMET < 400))&&(mcID != 407347 || truthFilterMET > 400) )*"
+    issingleTopOK = "( year==2018 || ((mcID != 407019 && mcID != 407021) || truthFilterMET >=200) && ((mcID != 410646 && mcID != 410647) || truthFilterMET<200) )*"
+
+
+    #Liv luminosity and weights
     cleaningCuts = "(coreFlag)*(sctFlag)*(LArTileFlag)*(passedPrimVertex)*(passedJetClean)*(passedMuonClean)*"
-    #weights = 'mcEventWeight*HFScale*JVTSF*puWgt*bJetSF*muonSF*electronSF*YearWeight*(electronTriggerSF+1*(electronTriggerSF==0))*(muonTriggerSF+1*(muonTriggerSF==0))*' 
-    #weights = 'mcEventWeight*HFScale*JVTSF*puWgt*bJetSF*muonSF*electronSF*YearWeight*muonTriggerSF_fix*electronTriggerSF_fix*' 
-    weights = 'mcEventWeight*HFScale*JVTSF*puWgt*bJetSF*muonSF*electronSF*YearWeight*' 
-    #Liv luminosity and -weights
+    weights = 'mcEventWeight*HFScale*JVTSF*puWgt*bJetSF*muonSF*electronSF*YearWeight*muonTriggerSF*electronTriggerSF*' 
+    preCuts = isttbarOK+"(passedElTrigger || passedMuTrigger)*(mcID!=361021)*"
+
     luminosity_liv ="139*"+weights
     luminosity_Shef ="139000*LumiWeight*pileupweight*jvtweight*btagweight*AnalysisWeight*YearWeight*"
-
     luminosity_Truth = "140.5*mcEventWeight*HFScale*"
+
     cutstouse = ""
 
 
-    isttbarOK = "( (mcID != 410470 || truthFilterMET < 200)&&(mcID != 407345 || (truthFilterMET >= 200 && truthFilterMET < 300))&&(mcID != 407346 || (truthFilterMET >= 300 && truthFilterMET < 400))&&(mcID != 407347 || truthFilterMET > 400) )*"
-
-    issingleTopOK = "( year==2018 || ((mcID != 407019 && mcID != 407021) || truthFilterMET >=200) && ((mcID != 410646 && mcID != 410647) || truthFilterMET<200) )*"
 
     
     ymax = 800000
-    doLog = False
 
 
     # Change this to put the output directory somewhere else
     directory = options.date+'/'
     print ("Output Directory is: ", directory)
     #############################
-    label = "preSelection_2j>25_MET200_METTrig"
+    label = "preSelection_3j_2b_METsig"
     #############################
     EventCounter = True
 
     #preCuts = isttbarOK+issingleTopOK+"(passedElTrigger || passedMuTrigger)*"
-    #preCuts = isttbarOK+"(passedElTrigger || passedMuTrigger)*"
-    preCuts = isttbarOK+"(passedMETTrigger)*"
+
+    #preCuts = isttbarOK+"(passedMETTrigger)*"
     
     # Preliminary Sbottom Multi B regions here:
     # Change the "cutstouse" variable to produce different distributions for a given selection. If plotting a SR distribution,
     # make sure that SR is contained in the label variable, which will blind the distribution
     if label == "noSelection_SR":
         cutstouse = "1"
-    elif label == "preSelection_2j>25_MET200_METTrig":
-        cutstouse = preCuts+"(ETMiss>200)*(nLeptons==1)*(nJets ==2 || nJets ==3)*(pTj1>25 && pTj2>25)*(pTl1>27)"
+    elif label == "preSelection_3j_2b_METsig":
+        cutstouse = preCuts+"(ETMiss>50)*(nLeptons==1)*(nJets ==2 || nJets==3)*(pTl1>27)*(nBJets==2)*(metsig_New>5)"
     elif label == "ISR":
         cutstouse = "(nLeptons==1)*(nBJets==2)*(ETMiss>200)*(nJets==3)"
 
@@ -195,7 +195,7 @@ def main():
     elif label =="SRLM":
         cutstouse = preCuts+"(nLeptons==1)*(nBJets==2)*(m_bb>100 && m_bb<140)*(nJets<4)*(ETMiss>240)*(m_T>100 && m_T<160)*(m_CTcorr>180 && m_CTcorr<230)"
     elif label == "cutflow_2j":
-        cutstouse = preCuts+"(nLeptons==1)*(nJets == 2)*(ETMiss>200)"
+        cutstouse = "(nLeptons==1)*(nJets == 2)*(ETMiss>200)"
         
 
 
