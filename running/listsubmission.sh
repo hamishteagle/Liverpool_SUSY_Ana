@@ -408,16 +408,16 @@ runttH_a
 wait
 runttV_a
 wait
-runsignal_a
-wait
+#runsignal_a
+#wait
 }
 function runmc16d(){
-#runttbar_d
-#wait
-#runsingleTop_d
-#wait
-#runwJets_d
-#wait
+runttbar_d
+wait
+runsingleTop_d
+wait
+runwJets_d
+wait
 runzJets_d
 wait
 rundiBoson_d
@@ -432,8 +432,8 @@ runttH_d
 wait
 runttV_d
 wait
-runsignal_d
-wait
+#runsignal_d
+#wait
 }
 function runmc16e(){
 runttbar_e
@@ -456,8 +456,8 @@ runttH_e
 wait
 runttV_e
 wait
-runsignal_e
-wait
+#runsignal_e
+#wait
 }
 
 function rundata(){
@@ -471,17 +471,13 @@ rundata18
 wait
 }
 
-runsignal_e
+runmc16a
 wait
-#runmissing_a
-#wait
-#runmc16a
-#wait
+runmc16d
+wait 
+runmc16e
+wait
 #rundata
-#wait
-#runmc16d
-#wait 
-#runmc16e
 #wait
 
 echo "Completed all processes!"
