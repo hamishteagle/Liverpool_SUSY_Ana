@@ -14,7 +14,7 @@ import contourPlotter
 
 drawTheorySysts = False
 
-plot = contourPlotter.contourPlotter("/user/hteagle/SummerAnalysis/Summer_Student_Analysis/histograms/ContourPlots/CutAndCount",800,600)
+plot = contourPlotter.contourPlotter("/user/hteagle/SummerAnalysis/Summer_Student_Analysis/histograms/ContourPlots/FitBoth",800,600)
 
 plot.processLabel = "#tilde{#chi}_{1}^{#pm}/#tilde{#chi}_{2}^{0} production, #rightarrow W hbb"
 plot.lumiLabel = "#sqrt{s}=13 TeV, 139 fb^{-1}, All limits at 95% CL"
@@ -27,7 +27,7 @@ f.ls()
 
 ## Axes
 
-plot.drawAxes( [0,0,1000,500] )
+plot.drawAxes( [150,0,1100,500] )
 
 ## Other limits to draw
 

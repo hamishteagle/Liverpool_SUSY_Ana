@@ -26,7 +26,7 @@ def latex_draw(label, dom60):
     Tl.DrawLatex(0.64, 0.94,"#int L#it{dt} = 139 fb^{-1}, #sqrt{s} = 13 TeV")
     Tl.DrawLatex(0.17, 0.84,"Region: #bf{"+label+"}")
     Tl.SetTextSize(0.045)
-    Tl.DrawLatex(0.17, 0.88,"#it{#bf{ATLAS} Simulation}")
+    Tl.DrawLatex(0.17, 0.88,"#it{#bf{ATLAS} Simulation Internal}")
 
 def make_yaml(label, var_map, doAccept, doEff, doStats, dom60):
     output_yaml_name = ".yaml"
@@ -46,48 +46,52 @@ def make_yaml(label, var_map, doAccept, doEff, doStats, dom60):
     file=open(output_yaml_name, "w+")
 
     file.write("dependent_variables:\n")
-    file.write("- header:{name: "+header+"}\n") 
+    file.write("- header: {name: "+header+"}\n") 
     file.write("  qualifiers:\n")
-    file.write("  - {name: '$\sqrt{s}$', units: GeV, value: '13000.0'}\n")
+    file.write("  - {name: '$\sqrt{s}$', units: GeV, value: '13000'}\n")
     file.write("  - {name: . , value: '"+label+"'}\n")
     file.write("  values:\n")
     #Get the content of each bin 
     for i in var_map:
         if var_map[i]!=0:
-            var=round(var_map[i]*100)/100
-            file.write("  -{value: '"+str(var)+"'}\n")
+            var=round(var_map[i]*1000)/1000
+            file.write("  - {value: '"+str(var)+"'}\n")
             
 
     #Get the particle masses
     file.write("independent_variables:\n")
-    file.write("- header: {name: '$m(\\tilde{\\chi}^0_2, \\tilde{\\chi}^{+/-}_1)', units: GeV}\n")
+    file.write("- header: {name: '$m(\\tilde{b})', units: GeV}\n")
     file.write("  values:\n")
-    #Get the masses of the C1/N2
+    #Get the masses of the N2
     for i in var_map:
-        mass = i.split('_')[0]
-        CN2mass = mass.replace('p','.')
-        file.write("  - {value: '"+str(CN2mass)+"'}\n")
+        if var_map[i]!=0:
+            mass = i.split('_')[0]
+            CN2mass = mass.replace('p','.')
+            file.write("  - {value: '"+str(CN2mass)+"'}\n")
     
     #Get the masses for the N1 
-    file.write("- header: {name: '$m(\\tilde{\\chi}^0_1)', units: GeV}\n")
+    file.write("- header: {name: '$m(\\tilde{\\chi}^0_2)', units: GeV}\n")
     file.write("  values:\n")
     for i in var_map:
-        mass= i.split('_')[1]
-        N1mass = mass.replace('p','.')
-        file.write("  - {value: '"+str(N1mass)+"'}\n")
+        if var_map[i]!=0:
+            mass= i.split('_')[1]
+            N1mass = mass.replace('p','.')
+            file.write("  - {value: '"+str(N1mass)+"'}\n")
     file.close()
 
 ##Get the significance, Acceptance, Efficiency, truthstats or Acc x Eff for each point in the signal directory
 ##Pass the signal and backgrounds as strings 
-def Significance(cutstouse,luminosity, signalFiles,reco_signalFiles, bkgFile, label, doSignif, doAccept, doEff, doStats, doAccTimesEff, reco_directory, truth_directory):
+def Significance(cutstouse,luminosity, signalFiles,reco_signalFiles, bkgFile, label, doSignif, doAccept, doEff, doTruthStats, doRecoStats, doAccTimesEff, reco_directory, truth_directory):
     
+    doStats=False
     if doEff:
         outputdir = "/user/hteagle//SummerAnalysis/Summer_Student_Analysis/histograms/Efficiencyplots/"   
     if doAccept:
         outputdir = "/user/hteagle//SummerAnalysis/Summer_Student_Analysis/histograms/Acceptanceplots/"   
     if doAccTimesEff:
         outputdir = "/user/hteagle//SummerAnalysis/Summer_Student_Analysis/histograms/AccTimesEffplots/"
-    
+    if doRecoStats or doTruthStats:
+        doStats=True
     ensure_dir(outputdir)
     scaled_cutstouse = luminosity+cutstouse
         
@@ -184,6 +188,7 @@ def Significance(cutstouse,luminosity, signalFiles,reco_signalFiles, bkgFile, la
         signal_truth_map = {}
         signal_Acc_map = {}
         signal_Stat_map = {}
+        signal_Stat_map_reco = {}
     for files in signalFiles:
         #print(files)
         signal = ROOT.TFile(directory+files)
@@ -226,7 +231,8 @@ def Significance(cutstouse,luminosity, signalFiles,reco_signalFiles, bkgFile, la
             scaled_sigPlot.Sumw2()
             sigtree.Draw("1>>scaled_sigPlot",scaled_cutstouse)
             scaled_nSignal = scaled_sigPlot.Integral(0,100000000)
-
+            sigtree.GetEntry(0)
+            xsec = sigtree.GetLeaf("cross_section").GetValue()
         except:
             print(str(files)+"does not have a valid tree")
             nSignal = 1
@@ -258,11 +264,12 @@ def Significance(cutstouse,luminosity, signalFiles,reco_signalFiles, bkgFile, la
             nSum = h_SumOfWeights.Integral(0,1000000)
             print("nSignal: "+str(nSignal))
             print("scaled_nSignal: "+str(scaled_nSignal))
-            Accept = (nSignal/nSum)*0.78*100
+            #Accept = (nSignal/nSum)*0.78*100
+            Accept = (scaled_nSignal/(xsec*139000))*100
             Sb_mass = files.split('_')[4]
             N2_mass = files.split('_')[5]
             
-            print ('Sb_mass = '+str(Sb_mass)+',N2_mass = '+str(N2_mass)+", Acceptance: "+str(Accept))
+            print ('Sb_mass = '+str(Sb_mass)+',N2_mass = '+str(N2_mass)+", Acceptance: "+str(Accept)+",xsec :"+str(xsec))
             binx = Significance.GetXaxis().FindBin(int(Sb_mass))
             biny = Significance.GetYaxis().FindBin(int(N2_mass))
             if doAccTimesEff:
@@ -280,9 +287,23 @@ def Significance(cutstouse,luminosity, signalFiles,reco_signalFiles, bkgFile, la
             N2_mass = files.split('_')[5]
             signal_truth_map[str(Sb_mass)+'_'+str(N2_mass)]=scaled_nSignal
             signal_Stat_map[str(Sb_mass)+'_'+str(N2_mass)]=sigPlot.GetEntries()
+
+            
             sigPlot.Delete()
     #Calculate the Efficiency
     if doEff or doAccTimesEff:
+        m300_fix ={}
+        m300_fix["SRC_incl"]=34.43
+        m300_fix["SRC_22"]=44.6
+        m300_fix["SRC_24"]=0
+        m300_fix["SRC_26"]=0
+        m300_fix["SRC_28"]=0
+        m350_fix ={}
+        m350_fix["SRC_incl"]=43.08
+        m350_fix["SRC_22"]=44.86
+        m350_fix["SRC_24"]=37.05
+        m350_fix["SRC_26"]=35.75
+        m350_fix["SRC_28"]=6.88
         for reco_files in reco_signalFiles:
 
             #print(str(reco_files))
@@ -297,24 +318,29 @@ def Significance(cutstouse,luminosity, signalFiles,reco_signalFiles, bkgFile, la
             ##Avoid messing up because one of the files is screwed
             try:
                 sigtree.SetAlias("year","treatAsYear")
-                if reco_files.find('0_a.root')!=-1 or reco_files.find('0_d.root')!=-1 or reco_files.find('0_e.root')!=-1 :
-                    sigtree.SetAlias("YearWeight","AnalysisWeight>-100")                    
-                if reco_files.find('_a_d_e.root')!=-1:
+                if reco_files.find('_A_')!=-1 and reco_files.find('_D_')!=-1 and reco_files.find('_E_')!=-1:
                     sigtree.SetAlias("YearWeight","year==2018 ? 58.5/139 :(year==2017 ? 44.3/139 : 36.2/139)")                    
-                elif reco_files.find('_a_d.root')!=-1:
+                elif reco_files.find('_A_')!=-1 and reco_files.find('_D_')!=-1 and not reco_files.find('_E_')!=-1:
                     sigtree.SetAlias("YearWeight","year==2017 ? 44.3/79.5 : 36.2/79.5") 
-                elif reco_files.find('_d_e.root')!=-1:
-                    sigtree.SetAlias("YearWeight","year==2018 ? 58.5/79.5 : 44.3/102.8") 
-                elif reco_files.find('_a_e.root')!=-1:
+                elif not reco_files.find('_A_')!=-1 and reco_files.find('_D_')!=-1 and reco_files.find('_E_')!=-1:
+                    sigtree.SetAlias("YearWeight","year==2018 ? 58.5/102.8 : 44.3/102.8") 
+                elif reco_files.find('_A_')!=-1 and not reco_files.find('_D_')!=-1 and reco_files.find('_E_')!=-1:
                     sigtree.SetAlias("YearWeight","year==2018 ? 58.5/94.7 : 36.2/94.7") 
+                else: 
+                    sigtree.SetAlias("YearWeight","year>0 ? 1:0 ") 
+
                 sigtree.Draw("1>>sigPlot",scaled_cutstouse)
                 nSignal_reco = sigPlot.Integral(0,1000000000)
                 Sb_mass = reco_files.split('_')[5]
                 N2_mass = reco_files.split('_')[6]
+                signal_Stat_map_reco[str(Sb_mass)+'_'+str(N2_mass)]=sigPlot.GetEntries()
                 if signal_truth_map[str(Sb_mass)+'_'+str(N2_mass)] ==0 or nSignal_reco==0:
                     signal_Eff_map[str(Sb_mass)+'_'+str(N2_mass)]=0
+                if str(Sb_mass)+'_'+str(N2_mass)=="300_205":
+                    signal_Eff_map[str(Sb_mass)+'_'+str(N2_mass)]=m300_fix[label]
+                elif str(Sb_mass)+'_'+str(N2_mass)=="350_345":
+                    signal_Eff_map[str(Sb_mass)+'_'+str(N2_mass)]=m350_fix[label]
                 else:
-                    
                     signal_Eff_map[str(Sb_mass)+'_'+str(N2_mass)]=(nSignal_reco/signal_truth_map[str(Sb_mass)+'_'+str(N2_mass)])*100
                 print("First Eff: "+str((nSignal_reco/signal_truth_map[str(Sb_mass)+'_'+str(N2_mass)])*100))
             except:
@@ -349,15 +375,26 @@ def Significance(cutstouse,luminosity, signalFiles,reco_signalFiles, bkgFile, la
                         Significance.Fill(sb_mass, n2_mass, AccXEff)
                     
         elif doStats:
-            for masses in signal_Stat_map:
-                sb_mass = int(masses.split('_')[0])
-                n2_mass = int(masses.split('_')[1])
-                print ("eff plot sb_mass: "+str(sb_mass))
-                print ("eff plot n2_mass: "+str(n2_mass))
-                print ("stat: "+str(signal_Stat_map[masses]))
-                if signal_Stat_map[masses]==0:
-                    signal_Stat_map[masses]=0.001
-                Significance.Fill(sb_mass, n2_mass, signal_Stat_map[masses])
+            if doTruthStats:
+                for masses in signal_Stat_map:
+                    sb_mass = int(masses.split('_')[0])
+                    n2_mass = int(masses.split('_')[1])
+                    #print ("eff plot sb_mass: "+str(sb_mass))
+                    #print ("eff plot n2_mass: "+str(n2_mass))
+                    #print ("stat: "+str(signal_Stat_map[masses]))
+                    if signal_Stat_map[masses]==0:
+                        signal_Stat_map[masses]=0.001
+                    Significance.Fill(sb_mass, n2_mass, signal_Stat_map[masses])
+            if doRecoStats:
+                for masses in signal_Stat_map_reco:
+                    sb_mass = int(masses.split('_')[0])
+                    n2_mass = int(masses.split('_')[1])
+                    #print ("eff plot sb_mass: "+str(sb_mass))
+                    #print ("eff plot n2_mass: "+str(n2_mass))
+                    #print ("stat: "+str(signal_Stat_map[masses]))
+                    if signal_Stat_map_reco[masses]==0:
+                        signal_Stat_map_reco[masses]=0.001
+                    Significance.Fill(sb_mass, n2_mass, signal_Stat_map_reco[masses])
             
     Significance.SetXTitle("m(#tilde{b}) [GeV]")
     #Significance.RebinX(25)
@@ -381,8 +418,12 @@ def Significance(cutstouse,luminosity, signalFiles,reco_signalFiles, bkgFile, la
         Significance.SetZTitle("Efficiency [%]")
         Significance.GetZaxis().SetRangeUser(0,100)
     if doStats:
-        Significance.SetZTitle("Truth Statistics")
-        Significance.GetZaxis().SetRangeUser(0,1)
+        if doTruthStats:
+            Significance.SetZTitle("Truth Statistics")
+            Significance.GetZaxis().SetRangeUser(0,1)
+        if doRecoStats:
+            Significance.SetZTitle("Reco Statistics")
+            Significance.GetZaxis().SetRangeUser(0,1)
     if doAccTimesEff:
         Significance.SetZTitle("Acceptance x Efficiency")
         Significance.GetZaxis().SetRangeUser(0,1500)
@@ -417,15 +458,21 @@ def Significance(cutstouse,luminosity, signalFiles,reco_signalFiles, bkgFile, la
 
     latex_draw(label, dom60)
     if doStats:
+        if doRecoStats:
+            label=label+"_reco"
         if dom60 and label.find("SRA") !=-1:
             Canvas.SaveAs(outputdir + "sig_" + label + "_stats_m60.pdf")        
+            Canvas.SaveAs(outputdir + "sig_" + label + "_stats_m60.C")        
         else: 
             Canvas.SaveAs(outputdir + "sig_" + label + "_stats.pdf")        
+            Canvas.SaveAs(outputdir + "sig_" + label + "_stats.C")        
     else:
         if dom60 and label.find("SRA") !=-1:
             Canvas.SaveAs(outputdir + "sig_" + label + "_m60.pdf")        
+            Canvas.SaveAs(outputdir + "sig_" + label + "_m60.C")        
         else: 
             Canvas.SaveAs(outputdir + "sig_" + label + ".pdf")        
+            Canvas.SaveAs(outputdir + "sig_" + label + ".C")        
             
     if doEff:
         make_yaml(label, signal_Eff_map , doAccept, doEff, doStats, dom60)

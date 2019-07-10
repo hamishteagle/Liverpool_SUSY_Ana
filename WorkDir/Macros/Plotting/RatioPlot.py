@@ -172,7 +172,7 @@ def latex_draw(label, sigOnly):
     Tl.DrawLatex(0.195, 0.92,"#it{#bf{ATLAS}} Internal")
     Tl.DrawLatex(0.195, 0.82,label)
    
-def RatioPlot(variable, xaxislabel, xmin, xmax, rebin, ymax, selection, directory, label, doEctCounter, ttVFile, singleTopFile, DiBosonFile, TriBosonFile, HiggsFile, WjetsFile, ZjetsFile, ttbarFile, DiJetFile, datafile, inputSignalFiles, phiplot, etaplot, luminosity, sigOnly, ratioSig):
+def RatioPlot(variable, xaxislabel, xmin, xmax, rebin, ymax, selection, directory, label, doEctCounter, ttVFile, singleTopFile, DiBosonFile, TriBosonFile, HiggsFile, WjetsFile, ZjetsFile, ttbarFile, DiJetFile, datafile, inputSignalFiles, phiplot, etaplot, luminosity, sigOnly, ratioSig, signal_sample_names):
 
     treeName = "CollectionTree_"
           
@@ -399,7 +399,7 @@ def RatioPlot(variable, xaxislabel, xmin, xmax, rebin, ymax, selection, director
     for i in range (0,len(signalFiles)):
         TruthBool=False
         signalTree = signalFiles["signalFile_"+str(i)].Get(treeName)
-        if (inputSignalFiles[i].find("Truth") != -1 or inputSignalFiles[i].find("TMVATuples")!= -1 or inputSignalFiles[i].find("SimpleAnalysis")!=-1):
+        if (inputSignalFiles[i].find("TRUTH") != -1 or inputSignalFiles[i].find("SimpleAnalysis")!=-1):
             print("Setting Aliases for TruthFile"+str(inputSignalFiles[i]))
             if (inputSignalFiles[i].find("C1N2_Wh_hbb") == -1 and inputSignalFiles[i].find("DAOD")==-1):
                 TruthBool = True
@@ -409,7 +409,8 @@ def RatioPlot(variable, xaxislabel, xmin, xmax, rebin, ymax, selection, director
                 signalTree.SetAlias("bJetSF","mcID>0 ? 1:0")
                 signalTree.SetAlias("muonSF","mcID>0 ? 1:0")
                 signalTree.SetAlias("electronSF","mcID>0 ? 1:0")
-                signalTree.SetAlias("electronSF","mcID>0 ? 1:0")                
+                signalTree.SetAlias("electronTriggerSF_fix","mcID>0 ? 1:0")                
+                signalTree.SetAlias("muonTriggerSF_fix","mcID>0 ? 1:0")                
                 signalTree.SetAlias("truthFlavb1","mcID>0 ? 5:0")
                 signalTree.SetAlias("truthFlavb2","mcID>0 ? 5:0")
 
@@ -418,6 +419,7 @@ def RatioPlot(variable, xaxislabel, xmin, xmax, rebin, ymax, selection, director
             #signalTree.SetAlias("mcEventWeight","eventWeight")
             if inputSignalFiles[i].find("C1N2_Wh_hbb")!=-1:
                 signalTree.SetAlias("YearWeight","year==2018 ? 58.5/139 :(year==2017 ? 44.3/139 : 36.2/139)")
+                #signalTree.SetAlias("YearWeight","year==2016 ? 1 :(year==2015 ? 1 : 0)")
             elif inputSignalFiles[i].find("DAOD_SUSY5.root"):
                 signalTree.SetAlias("YearWeight","mcID>0 ? 1:0")
         signalPlots["signalPlot_"+str(i)] = ROOT.TH1D("signalPlot_"+str(i),"Title",numberofbins,xmin,xmax)
@@ -550,8 +552,12 @@ def RatioPlot(variable, xaxislabel, xmin, xmax, rebin, ymax, selection, director
         #pad2.SetLogx()
 
     pad1.cd()
+    
 
-    Legend = ROOT.TLegend(0.60,0.66,0.80,0.94)
+    if sigOnly:
+        Legend = ROOT.TLegend(0.60,0.76,0.80,0.94)
+    else: 
+        Legend = ROOT.TLegend(0.60,0.66,0.80,0.94)
    
     otherColor = ROOT.TColor(3004,168./255, 164./255, 150./255)
     ZColor = ROOT.TColor(3005,253./255, 175./255, 9./255)
@@ -628,8 +634,10 @@ def RatioPlot(variable, xaxislabel, xmin, xmax, rebin, ymax, selection, director
         DataPlot.GetXaxis().SetRangeUser(minvalue,maxvalue)
     for signalPlot in signalPlots:
         signalPlots[signalPlot].GetXaxis().SetRangeUser(minvalue,maxvalue)
-        #signalPlots[signalPlot].Scale(1/signalPlots[signalPlot].Integral())
-        #signalPlots[signalPlot].SetMinimum(0.01)
+        if sigOnly:
+            signalPlots[signalPlot].Scale(1/signalPlots[signalPlot].Integral())
+            #signalPlots[signalPlot].SetMinimum(0.1)
+            #signalPlots[signalPlot].SetMaximum(1E10)
 
 
 
@@ -719,15 +727,7 @@ def RatioPlot(variable, xaxislabel, xmin, xmax, rebin, ymax, selection, director
             Legend.AddEntry(signalPlots["signalPlot_"+str(j)],"(m_{#tilde{#chi}_{2}^{0}}/m_{#tilde{#chi}_{1}^{#pm}}, m_{#tilde{#chi}_{1}^{0}}) = ("+signalmass+")GeV", "L")
 
         else:
-            #Legend.AddEntry(signalPlots["signalPlot_"+str(j)],"(m_{#tilde{b}}, m_{#tilde{#chi}}_{1}^{0}) = (800,1)GeV", "L")
-
-            if j==0:
-                Legend.AddEntry(signalPlots["signalPlot_"+str(j)],"300_150_truthSmear", "L")
-            elif j==1:
-                Legend.AddEntry(signalPlots["signalPlot_"+str(j)],"300_150_reco", "L")
-            else:
-                Legend.AddEntry(signalPlots["signalPlot_"+str(j)],"300_150_reco", "L")
-        
+            Legend.AddEntry(signalPlots["signalPlot_"+str(j)],signal_sample_names[j], "L")
         j+=1
     Legend.SetTextSize(0.02)
     #Legend.SetTextFont(2)

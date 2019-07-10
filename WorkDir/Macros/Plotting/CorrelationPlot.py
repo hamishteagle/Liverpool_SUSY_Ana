@@ -197,14 +197,14 @@ def getLinCorrelationPlot(variable1, variable2, xaxislabel, yaxislabel,xbins,xmi
     for entry in range(inTree.GetEntries()):
         inTree.GetEntry(entry)
         if xvariabletoplot.find("+")!=-1:
-            print ("Splitting x varible into:"+str(xvariabletoplot.split("+")[0])+" and "+str(xvariabletoplot.split("+")[1]))
+            #print ("Splitting x varible into:"+str(xvariabletoplot.split("+")[0])+" and "+str(xvariabletoplot.split("+")[1]))
             x1 = inTree.GetLeaf(xvariabletoplot.split("+")[0]).GetValue()
             x1 = inTree.GetLeaf(xvariabletoplot.split("+")[1]).GetValue()
             x = x1+x1
         else:
             x = inTree.GetLeaf(xvariabletoplot).GetValue()
         if yvariabletoplot.find("+")!=-1:
-            print ("Splitting y varible into:"+str(yvariabletoplot.split("+")[0])+" and "+str(yvariabletoplot.split("+")[0]))
+            #print ("Splitting y varible into:"+str(yvariabletoplot.split("+")[0])+" and "+str(yvariabletoplot.split("+")[0]))
             y1 = inTree.GetLeaf(yvariabletoplot.split("+")[0]).GetValue()
             y1 = inTree.GetLeaf(yvariabletoplot.split("+")[1]).GetValue()
             y = y1+y1
@@ -282,9 +282,9 @@ def LinCorrelationPlot(variable1, variable2, xaxislabel, yaxislabel, xmin, xmax,
     Legend.SetFillStyle(0)
     Legend.SetBorderSize(0)
 
-    Legend.AddEntry(sigPlot,"300_150","L")
-    Legend.AddEntry(sigPlot_Truth,"400_250","L")
-    Legend.AddEntry(sigPlot_TruthSmeared,"ttbar","L")
+    Legend.AddEntry(sigPlot,"300_150_Truth","L")
+    #Legend.AddEntry(sigPlot_Truth,"300_150_Truth","L")
+    Legend.AddEntry(sigPlot_TruthSmeared,"300_150_Reco","L")
 #    Legend.AddEntry(sigPlot_reco,"reco","L")
 
     sigPlot.DrawNormalized("Hist,E")

@@ -51,10 +51,10 @@ myInputParser.add_option('', '--doFit', dest = 'doFit', default = 'True')
 #doFit = options.doFit ##Fix InputParser
 
 doFit = True
-doCutAndCount = True
+doCutAndCount = False
 doFitXGB = False
 doFitS = False
-doFitBoth = False
+doFitBoth = True
 whichSR = options.SRnum
 
 #---------------------------------------------------------------------------------------------
@@ -101,7 +101,7 @@ elif doFit:
     elif doFitBoth:
         configMgr.analysisName = "OneLbb_MVA_Both"
     elif doFitXGB:
-        configMgr.analysisName = "OneLbb_MVA_Fit"
+        configMgr.analysisName = "OneLbb_MVA_Fit_10bin"
 
 # Scaling calculated by outputLumi / inputLumi
 configMgr.inputLumi = 1. # Luminosity of input TTree after weighting
@@ -119,7 +119,7 @@ testFiles = []
 newSigFiles = []
 testSamples = []
 if configMgr.readFromTree:
-    directory = "/user/hteagle/liverpool-ml/TMVATuples/reco_full/"
+    directory = "/user/hteagle/liverpool-ml/TMVATuples/21.2.75_tested/"
     #directory = "/hepstore/hteagle/Wh/ntuples_21.2.60/"
     bgdFiles.append(directory+"ttbar.root")
     bgdFiles.append(directory+"singleTop.root")
@@ -128,20 +128,20 @@ if configMgr.readFromTree:
     bgdFiles.append(directory+"diBoson.root")
     bgdFiles.append(directory+"triBoson.root")
     bgdFiles.append(directory+"higgs.root")   
-    bgdFiles.append(directory+"diJet.root")
+    #bgdFiles.append(directory+"diJet.root")
     bgdFiles.append(directory+"zJets.root")   
     
 
     dataFiles.append(directory+"data.root")
     
     listOfFiles = os.listdir(directory)
-    pattern = "396734*.root"
-    pattern = "3*C1*.root"
+    #pattern = "*396734*C1*.root"
+    pattern = "*C1N2*.root"
     for entry in listOfFiles:
         if fnmatch.fnmatch(entry,pattern):
             print ("signal File: "+str(directory+entry))
             testFiles.append(directory+entry)
-            mass_0 = entry.strip("_lep_output.root")
+            mass_0 = entry.strip("_lep_output_A__D__E_.root")
             mass_1 = 'm'+mass_0.split('hbb_')[1]
             mass=mass_1.replace('p','.')
             print ("has mass: "+str(mass))
@@ -152,51 +152,52 @@ else:
 
 
 # Dictionary of cuts for Tree->hist
-isttbarOK = "((mcChannel != 410470 || truthFilterMET < 100)&&(mcChannel != 345935 || (truthFilterMET >= 100 && truthFilterMET < 200))&&(mcChannel != 407345 || (truthFilterMET >= 200 && truthFilterMET < 300))&&(mcChannel != 407346 || (truthFilterMET >= 300 && truthFilterMET < 400))&&(mcChannel != 407347 || truthFilterMET > 400))*"
-issingleTopOK = "((year==2018) ||(((mcChannel != 407019 || truthFilterMET >=200)&&(mcChannel != 407021 || truthFilterMET >=200))&&(mcChannel >410647||mcChannel <410644 || truthFilterMET<200)&&(mcChannel!=410658 ||mcChannel!=410659 || truthFilterMET<200)))*"
+isttbarOK ="( (mcID != 410470 || truthFilterMET < 200)&&(mcID != 407345 || (truthFilterMET >= 200 && truthFilterMET < 300))&&(mcID != 407346 || (truthFilterMET >= 300 && truthFilterMET < 400))&&(mcID != 407347 || truthFilterMET > 400) )*"
+
 cleaningCuts = "(coreFlag)*(sctFlag)*(LArTileFlag)*(passedPrimVertex)*(passedJetClean)*(passedCosmicMu)*(passedMuonClean)*"
-weights = 'eventWeight*HFScale*JVTSF*puWgt*bJetSF*muonSF*electronSF*YearWeight*'
+weights = 'eventWeight*HFScale*JVTSF*puWgt*bJetSF*muonSF*electronSF*muonTriggerSF*electronTriggerSF*YearWeight*'
 #Set the year weight here
 YearWeight = "(year==2018 ? 58.5/139 :(year==2017 ? 44.3/139 : 36.2/139))"
 
-preCuts = cleaningCuts+isttbarOK+issingleTopOK
+#preCuts = "(passedMuTrigger || passedElTrigger)*"+isttbarOK
+preCuts = isttbarOK
 
 ##XGB one-bin fit
-configMgr.cutsDict["SR1"] = preCuts+"(400_250_Nominal_nominal_class2>0.99)*(nJet25==2)*(400_250_Nominal_nominal_class2<1)*(metsig_New>8)"
+configMgr.cutsDict["SR1"] = preCuts+"(3Sig_FS_RW_HFscaled_PC_class2>0.996)*(m_CTcorr>100)*(3Sig_FS_RW_HFscaled_PC_class2<1)*(metsig_New>8)"
 
 ##XGB output fit regions
-configMgr.cutsDict["SR1_fitXGB"]  = preCuts+"(nJet25==2)*(400_250_Nominal_nominal_class2<1)*(metsig_New>8)"
+#configMgr.cutsDict["SR1_fitXGB"]  = preCuts+"(m_CTcorr>100)*(3Sig_FS_RW_HFscaled_PC_class2>0.99)*(3Sig_FS_RW_HFscaled_PC_class2<1)*(metsig_New>8)"
+configMgr.cutsDict["SR1_fitXGB"]  = preCuts+"(m_CTcorr>150)*(3Sig_FS_RW_HFscaled_PC_class2>0.95)*(3Sig_FS_RW_HFscaled_PC_class2<1)*(metsig_New>12)"
 
 ## metsig fit regions
-configMgr.cutsDict["SR1_fitS"]    = preCuts+"(nJet25==2)*(400_250_Nominal_nominal_class2>0.99)*(400_250_Nominal_nominal_class2<1)"
+configMgr.cutsDict["SR1_fitS"]    = preCuts+"(nJets==2)*(400_250_Nominal_shuffled_relWgt_fix_class2>0.99)*(400_250_Nominal_shuffled_relWgt_fix_class2<1)"
 
-##XGB + metsig fit regions
-configMgr.cutsDict["SR0_fitBoth"] = preCuts+"*(nJet25==2)*(400_250_Nominal_nominal_class2<1)*(metsig_New>6)*(metsig_New<9)"
-configMgr.cutsDict["SR1_fitBoth"] = preCuts+"*(nJet25==2)*(400_250_Nominal_nominal_class2<1)*(metsig_New>9)*(metsig_New<11)"
-configMgr.cutsDict["SR2_fitBoth"] = preCuts+"*(nJet25==2)*(400_250_Nominal_nominal_class2<1)*(metsig_New>11)*(metsig_New<14)"
-configMgr.cutsDict["SR3_fitBoth"] = preCuts+"*(nJet25==2)*(400_250_Nominal_nominal_class2<1)*(metsig_New>14)*(metsig_New<17)"
-configMgr.cutsDict["SR4_fitBoth"] = preCuts+"*(nJet25==2)*(400_250_Nominal_nominal_class2<1)*(metsig_New>17)*(metsig_New<20)"
-configMgr.cutsDict["SR5_fitBoth"] = preCuts+"*(nJet25==2)*(400_250_Nominal_nominal_class2<1)*(metsig_New>20)"
+##XGB + mCT fit regions
+configMgr.cutsDict["SR0_fitBoth"] = preCuts+"*(3Sig_FS_RW_HFscaled_PC_class2<1)*(3Sig_FS_RW_HFscaled_PC_class2>0.98)*(m_CTcorr>0)*(m_CTcorr<100)"
+configMgr.cutsDict["SR1_fitBoth"] = preCuts+"*(3Sig_FS_RW_HFscaled_PC_class2<1)*(3Sig_FS_RW_HFscaled_PC_class2>0.98)*(m_CTcorr>100)*(m_CTcorr<200)"
+configMgr.cutsDict["SR2_fitBoth"] = preCuts+"*(3Sig_FS_RW_HFscaled_PC_class2<1)*(3Sig_FS_RW_HFscaled_PC_class2>0.98)*(m_CTcorr>200)*(m_CTcorr<300)"
+configMgr.cutsDict["SR3_fitBoth"] = preCuts+"*(3Sig_FS_RW_HFscaled_PC_class2<1)*(3Sig_FS_RW_HFscaled_PC_class2>0.98)*(m_CTcorr>300)"
 
 #Preliminary control regions
-configMgr.cutsDict["CRttbar"] = preCuts+"(400_250_Nominal_nominal_class2>0.6 && 400_250_Nominal_nominal_class2<0.8)*(400_250_Nominal_nominal_class3<0.1)*(nJet25==2)*(metsig_New>8)*(400_250_Nominal_nominal_class0>0.3)*(400_250_Nominal_nominal_class1<0.15)"
-configMgr.cutsDict["CRsingleTop"] = preCuts+"(400_250_Nominal_nominal_class2>0.5)*(400_250_Nominal_nominal_class2<0.8)*(400_250_Nominal_nominal_class3<0.1)*(nJet25==2)*(metsig_New>8)*(400_250_Nominal_nominal_class0>0)*(400_250_Nominal_nominal_class1>0.13)*(mt>90)" 
-configMgr.cutsDict["CRwJets"] = preCuts+"(400_250_Nominal_nominal_class2>0.5)*(400_250_Nominal_nominal_class2<0.8)*(nJet25==2)*(metsig_New>8)*(400_250_Nominal_nominal_class3>0.12)"
+configMgr.cutsDict["CRttbar"] = preCuts+"(3Sig_FS_RW_HFscaled_PC_class2>0.6 && 3Sig_FS_RW_HFscaled_PC_class2<0.8)*(400_250_Nominal_class3<0.1)*(nJets==2)*(metsig_New>8)*(400_250_Nominal_class0>0.3)*(400_250_Nominal_class1<0.15)"
+configMgr.cutsDict["CRsingleTop"] = preCuts+"(3Sig_FS_RW_HFscaled_PC_class2>0.5)*(3Sig_FS_RW_HFscaled_PC_class2<0.8)*(400_250_Nominal_class3<0.1)*(nJets==2)*(metsig_New>8)*(400_250_Nominal_class0>0)*(400_250_Nominal_class1>0.13)*(m_T>90)" 
+configMgr.cutsDict["CRwJets"] = preCuts+"(3Sig_FS_RW_HFscaled_PC_class2>0.5)*(3Sig_FS_RW_HFscaled_PC_class2<0.8)*(nJets==2)*(metsig_New>8)*(400_250_Nominal_class3>0.12)"
 
 
 #Nominal analysis regions
-configMgr.cutsDict["SRLM_1"] = preCuts+"(nLep_signal==1)*(nBJet25_MV2c10==2)*(mbb>100 && mbb<140)*(nJet25<4)*(met>240)*(mt>100 && mt<160)*(m_CTcorr>180 && m_CTcorr<230)"
-configMgr.cutsDict["SRLM_2"] = preCuts+"(nLep_signal==1)*(nBJet25_MV2c10==2)*(mbb>100 && mbb<140)*(nJet25<4)*(met>240)*(mt>100 && mt<160)*(m_CTcorr>230 && m_CTcorr<280)"
-configMgr.cutsDict["SRLM_3"] = preCuts+"(nLep_signal==1)*(nBJet25_MV2c10==2)*(mbb>100 && mbb<140)*(nJet25<4)*(met>240)*(mt>100 && mt<160)*(m_CTcorr>280)"
-configMgr.cutsDict["SRMM_1"] = preCuts+"(nLep_signal==1)*(nBJet25_MV2c10==2)*(mbb>100 && mbb<140)*(nJet25<4)*(met>240)*(mt>160 && mt<240)*(m_CTcorr>180 && m_CTcorr<230)"
-configMgr.cutsDict["SRMM_2"] = preCuts+"(nLep_signal==1)*(nBJet25_MV2c10==2)*(mbb>100 && mbb<140)*(nJet25<4)*(met>240)*(mt>160 && mt<240)*(m_CTcorr>230 && m_CTcorr<280)"
-configMgr.cutsDict["SRMM_3"] = preCuts+"(nLep_signal==1)*(nBJet25_MV2c10==2)*(mbb>100 && mbb<140)*(nJet25<4)*(met>240)*(mt>160 && mt<240)*(m_CTcorr>280)"
-configMgr.cutsDict["SRHM_1"] = preCuts+"(nLep_signal==1)*(nBJet25_MV2c10==2)*(mbb>100 && mbb<140)*(nJet25<4)*(met>240)*(mt>240)*(mlb1>120)*(m_CTcorr>180 && m_CTcorr<230)"
-configMgr.cutsDict["SRHM_2"] = preCuts+"(nLep_signal==1)*(nBJet25_MV2c10==2)*(mbb>100 && mbb<140)*(nJet25<4)*(met>240)*(mt>240)*(mlb1>120)*(m_CTcorr>230 && m_CTcorr<280)"
-configMgr.cutsDict["SRHM_3"] = preCuts+"(nLep_signal==1)*(nBJet25_MV2c10==2)*(mbb>100 && mbb<140)*(nJet25<4)*(met>240)*(mt>240)*(mlb1>120)*(m_CTcorr>280)"
+configMgr.cutsDict["SRLM_1"] = preCuts+"(nLeptons==1)*(nBJets==2)*(m_bb>100 && m_bb<140)*(nJets<4)*(ETMiss>240)*(m_T>100 && m_T<160)*(m_CTcorr>180 && m_CTcorr<230)"
+configMgr.cutsDict["SRLM_2"] = preCuts+"(nLeptons==1)*(nBJets==2)*(m_bb>100 && m_bb<140)*(nJets<4)*(ETMiss>240)*(m_T>100 && m_T<160)*(m_CTcorr>230 && m_CTcorr<280)"
+configMgr.cutsDict["SRLM_3"] = preCuts+"(nLeptons==1)*(nBJets==2)*(m_bb>100 && m_bb<140)*(nJets<4)*(ETMiss>240)*(m_T>100 && m_T<160)*(m_CTcorr>280)"
+configMgr.cutsDict["SRMM_1"] = preCuts+"(nLeptons==1)*(nBJets==2)*(m_bb>100 && m_bb<140)*(nJets<4)*(ETMiss>240)*(m_T>160 && m_T<240)*(m_CTcorr>180 && m_CTcorr<230)"
+configMgr.cutsDict["SRMM_2"] = preCuts+"(nLeptons==1)*(nBJets==2)*(m_bb>100 && m_bb<140)*(nJets<4)*(ETMiss>240)*(m_T>160 && m_T<240)*(m_CTcorr>230 && m_CTcorr<280)"
+configMgr.cutsDict["SRMM_3"] = preCuts+"(nLeptons==1)*(nBJets==2)*(m_bb>100 && m_bb<140)*(nJets<4)*(ETMiss>240)*(m_T>160 && m_T<240)*(m_CTcorr>280)"
+configMgr.cutsDict["SRHM_1"] = preCuts+"(nLeptons==1)*(nBJets==2)*(m_bb>100 && m_bb<140)*(nJets<4)*(ETMiss>240)*(m_T>240)*(mlb1>120)*(m_CTcorr>180 && m_CTcorr<230)"
+configMgr.cutsDict["SRHM_2"] = preCuts+"(nLeptons==1)*(nBJets==2)*(m_bb>100 && m_bb<140)*(nJets<4)*(ETMiss>240)*(m_T>240)*(mlb1>120)*(m_CTcorr>230 && m_CTcorr<280)"
+configMgr.cutsDict["SRHM_3"] = preCuts+"(nLeptons==1)*(nBJets==2)*(m_bb>100 && m_bb<140)*(nJets<4)*(ETMiss>240)*(m_T>240)*(mlb1>120)*(m_CTcorr>280)"
 
 # Tuples of nominal weights without and with b-jet selection
-configMgr.weights = ("eventWeight","HFScale", "JVTSF","bJetSF","muonSF","electronSF",YearWeight) 
+#configMgr.weights = ("mcEventWeight","HFScale", "JVTSF","bJetSF","muonSF","electronSF","electronTriggerSF","muonTriggerSF",YearWeight) 
+configMgr.weights = ("mcEventWeight","HFScale", "JVTSF","bJetSF","muonSF","electronSF",YearWeight) 
 
 
 
@@ -211,31 +212,39 @@ configMgr.nomName = ""
 # List of samples and their plotting colours
 #
 topSample = Sample("Top",kGreen-9)
+topSample.setNormByTheory()
 topSample.setStatConfig(False)
 #
 singletopSample = Sample("SingleTop", kOrange - 9)
+singletopSample.setNormByTheory()
 singletopSample.setStatConfig(False)
 #
 wjetsSample = Sample("Wjets",kRed-9)
+wjetsSample.setNormByTheory()
 wjetsSample.setStatConfig(False)
 #wjetsSample.addSampleSpecificWeight("2.0 * 1.22")
 #
 ttVSample = Sample("ttV",kRed-9)
+ttVSample.setNormByTheory()
 ttVSample.setStatConfig(False)
 #
 dibosonSample = Sample("Diboson",kRed-9)
+dibosonSample.setNormByTheory()
 dibosonSample.setStatConfig(False)
 #
 tribosonSample = Sample("Triboson",kRed-9)
+tribosonSample.setNormByTheory()
 tribosonSample.setStatConfig(False)
 #
 higgsSample = Sample("Higgs",kRed-9)
+higgsSample.setNormByTheory()
 higgsSample.setStatConfig(False)
 #
-diJetSample = Sample("Dijet",kRed-9)
-diJetSample.setStatConfig(False)
+#diJetSample = Sample("Dijet",kRed-9)
+#diJetSample.setStatConfig(False)
 #
 zJetsSample = Sample("Zjets",kRed-9)
+zJetsSample.setNormByTheory()
 zJetsSample.setStatConfig(False)
 #
 dataSample = Sample("Data",kBlack)
@@ -244,7 +253,7 @@ dataSample.setData()
 
 ## set the file from which the samples should be taken
 index = 0
-for entry in [topSample,singletopSample,wjetsSample,dibosonSample,ttVSample,tribosonSample,higgsSample,diJetSample,zJetsSample]:
+for entry in [topSample,singletopSample,wjetsSample,dibosonSample,ttVSample,tribosonSample,higgsSample,zJetsSample]:
     temp = []
     fileName = ""
     fileName = str(bgdFiles[index])    
@@ -330,13 +339,13 @@ if myFitType==FitType.Exclusion:
     #Setup fit config
     ex = configMgr.addFitConfig("Exclusion")
     configMgr.blindSR = True
-    configMgr.useSignalInBlindedData=True
+    configMgr.useSignalInBlindedData=False
     meas=ex.addMeasurement(name="NormalMeasurement",lumi=1.0,lumiErr=0.032)
     meas.addPOI("mu_SIG")
     meas.addParamSetting("Lumi","const",1)
 
     #Samples
-    ex.addSamples([topSample,singletopSample,wjetsSample,ttVSample,dibosonSample,tribosonSample,higgsSample,diJetSample,zJetsSample,dataSample])
+    ex.addSamples([topSample,singletopSample,wjetsSample,ttVSample,dibosonSample,tribosonSample,higgsSample,zJetsSample,dataSample])
     
 
 
@@ -346,7 +355,7 @@ if myFitType==FitType.Exclusion:
     ex.getSample("Wjets").addSystematic(bkg_syst)
     ex.getSample("ttV").addSystematic(bkg_syst)
     ex.getSample("Diboson").addSystematic(bkg_syst)
-    # ex.getSample("Triboson").addSystematic(bkg_syst)
+    ex.getSample("Triboson").addSystematic(bkg_syst)
     ex.getSample("Higgs").addSystematic(bkg_syst)
     #ex.getSample("Dijet").addSystematic(bkg_syst)
     ex.getSample("Zjets").addSystematic(bkg_syst)
@@ -354,24 +363,24 @@ if myFitType==FitType.Exclusion:
     #Channels
     if doFit: 
         if doFitXGB:
-            sr1          = ex.addChannel("400_250_Nominal_nominal_class2",["SR1_fitXGB"],10,0.90,1.)
+            sr1          = ex.addChannel("3Sig_FS_RW_HFscaled_PC_class2",["SR1_fitXGB"],10,0.9,1.)
             ex.addSignalChannels([sr1])
         elif doFitS:
             sr1          = ex.addChannel("metsig_New",["SR1_fitS"],10,2,22)
             ex.addSignalChannels([sr1])
         elif doFitBoth:
-            sr0          = ex.addChannel("400_250_Nominal_nominal_class2",["SR0_fitBoth"],5,0.95,1.)
-            sr1          = ex.addChannel("400_250_Nominal_nominal_class2",["SR1_fitBoth"],5,0.95,1.)
-            sr2          = ex.addChannel("400_250_Nominal_nominal_class2",["SR2_fitBoth"],5,0.95,1.)
-            sr3          = ex.addChannel("400_250_Nominal_nominal_class2",["SR3_fitBoth"],5,0.95,1.)
-            sr4          = ex.addChannel("400_250_Nominal_nominal_class2",["SR4_fitBoth"],5,0.95,1.)
-            sr5          = ex.addChannel("400_250_Nominal_nominal_class2",["SR5_fitBoth"],5,0.95,1.)
+            sr0          = ex.addChannel("3Sig_FS_RW_HFscaled_PC_class2",["SR0_fitBoth"],5,0.98,1.)
+            sr1          = ex.addChannel("3Sig_FS_RW_HFscaled_PC_class2",["SR1_fitBoth"],5,0.98,1.)
+            sr2          = ex.addChannel("3Sig_FS_RW_HFscaled_PC_class2",["SR2_fitBoth"],5,0.98,1.)
+            sr3          = ex.addChannel("3Sig_FS_RW_HFscaled_PC_class2",["SR3_fitBoth"],5,0.98,1.)
+            #sr4          = ex.addChannel("3Sig_FS_RW_HFscaled_PC_class2",["SR4_fitBoth"],5,0.95,1.)
+            #sr5          = ex.addChannel("3Sig_FS_RW_HFscaled_PC_class2",["SR5_fitBoth"],5,0.95,1.)
             ex.addSignalChannels([sr0])
             ex.addSignalChannels([sr1])
             ex.addSignalChannels([sr2])
             ex.addSignalChannels([sr3])
-            ex.addSignalChannels([sr4])
-            ex.addSignalChannels([sr5])
+            #ex.addSignalChannels([sr4])
+            #ex.addSignalChannels([sr5])
         elif doCutAndCount:
             srL_1 = ex.addChannel("cuts",["SRLM_1"],1,0.,1.5)
             srL_2 = ex.addChannel("cuts",["SRLM_2"],1,0.,1.5)
