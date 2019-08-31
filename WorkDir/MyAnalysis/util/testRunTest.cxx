@@ -153,7 +153,7 @@ int main( int argc, char* argv[]) {
 	  sh.setMetaString ("nc_tree", "CollectionTree");
 	  sh.print();
 	  output_name = sample_name;        
-	  driver.options()->setString("nc_outputSampleName", "user." + username + "." + CurrentDate+"." + physicsName+"_"+fileType+"."+release+"."+"%in:name[2]%.%in:name[3]%");
+	  driver.options()->setString("nc_outputSampleName", "user." + username + "." + CurrentDate+"." + physicsName+"_"+fileType+"."+release+".v1."+"%in:name[2]%.%in:name[3]%");
         }
         // Add our analysis to the job:
         MyxAODAnalysis* alg = new MyxAODAnalysis();
@@ -173,7 +173,7 @@ int main( int argc, char* argv[]) {
 
         //job.options()->setDouble (EL::Job::optRemoveSubmitDir, 1);
         job.sampleHandler( sh );
-        driver.options()->setString(EL::Job::optGridNFilesPerJob, "5");
+        driver.options()->setString(EL::Job::optGridNFilesPerJob, "10");
         // Use submit if you want to see all of the info about the submitted jobs. Use submitOnly if you want to send the jobs then Monitor online with panda
         std::string out_dir = CreateDir + "/" + output_name;
 	//std::cout<<"Would submit grid job with this output_name: "<<output_name<<std::endl;

@@ -417,11 +417,8 @@ def RatioPlot(variable, xaxislabel, xmin, xmax, rebin, ymax, selection, director
         else:
             print("Setting Aliases for recoFile"+str(inputSignalFiles[i]))
             #signalTree.SetAlias("mcEventWeight","eventWeight")
-            if inputSignalFiles[i].find("C1N2_Wh_hbb")!=-1:
-                signalTree.SetAlias("YearWeight","year==2018 ? 58.5/139 :(year==2017 ? 44.3/139 : 36.2/139)")
-                #signalTree.SetAlias("YearWeight","year==2016 ? 1 :(year==2015 ? 1 : 0)")
-            elif inputSignalFiles[i].find("DAOD_SUSY5.root"):
-                signalTree.SetAlias("YearWeight","mcID>0 ? 1:0")
+            #signalTree.SetAlias("YearWeight","year==2018 ? 58.5/139 :(year==2017 ? 44.3/139 : 36.2/139)")
+
         signalPlots["signalPlot_"+str(i)] = ROOT.TH1D("signalPlot_"+str(i),"Title",numberofbins,xmin,xmax)
         if (inputSignalFiles[i].find("mct") != -1):
 
