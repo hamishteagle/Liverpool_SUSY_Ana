@@ -129,11 +129,11 @@ function runsignal_a(){
     echo $file 'does not exist!!'
     fi
 }
-function runsignal_a_temp(){
-    file="SampleLists_SUSY5/signal_mc16a_temp.txt" 
+function runalternatives_a(){
+    file="SampleLists_SUSY5/mc16a/alternatives.txt" 
     if [  -f $file ]; then
-	python listsubmission.py -i $file -t SIGNAL 
-	echo "fine"
+	python listsubmission.py -i $file -t SINGLETOP
+ 	echo "fine"
     else 
     echo $file 'does not exist!!'
     fi
@@ -241,6 +241,15 @@ function runsignal_d(){
     echo $file 'does not exist!!'
     fi
 }
+function runalternatives_d(){
+    file="SampleLists_SUSY5/mc16d/alternatives.txt" 
+    if [  -f $file ]; then
+	python listsubmission.py -i $file -t SINGLETOP
+ 	echo "fine"
+    else 
+    echo $file 'does not exist!!'
+    fi
+}
 
 
 #############  mc16e samples ################
@@ -343,7 +352,15 @@ function runsignal_e(){
     echo $file 'does not exist!!'
     fi
 }
-
+function runalternatives_e(){
+    file="SampleLists_SUSY5/mc16e/alternatives.txt" 
+    if [  -f $file ]; then
+	python listsubmission.py -i $file -t SINGLETOP
+ 	echo "fine"
+    else 
+    echo $file 'does not exist!!'
+    fi
+}
 
 
 ###### data full campaigns################
@@ -408,8 +425,8 @@ runttH_a
 wait
 runttV_a
 wait
-#runsignal_a
-#wait
+runsignal_a
+wait
 }
 function runmc16d(){
 runttbar_d
@@ -432,8 +449,8 @@ runttH_d
 wait
 runttV_d
 wait
-#runsignal_d
-#wait
+runsignal_d
+wait
 }
 function runmc16e(){
 runttbar_e
@@ -456,8 +473,16 @@ runttH_e
 wait
 runttV_e
 wait
-#runsignal_e
-#wait
+runsignal_e
+wait
+}
+function runalternatives(){
+runalternatives_a
+wait
+runalternatives_d
+wait
+runalternatives_e
+wait
 }
 
 function rundata(){
@@ -471,14 +496,17 @@ rundata18
 wait
 }
 
-runmc16a
-wait
-runmc16d
-wait 
-runmc16e
-wait
+#runmc16a
+#wait
+#runmc16d
+#wait 
+#runmc16e
+#wait
 #rundata
 #wait
-
+#rundata18
+#wait
+runalternatives
+wait
 echo "Completed all processes!"
 #  LocalWords:  runttbar
