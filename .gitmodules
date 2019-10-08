@@ -1,6 +1,3 @@
-[submodule "HistFitter"]
-	path = HistFitter
-	url = https://gitlab.cern.ch/HistFitter/HistFitter.git
 [submodule "jb_utils"]
 	path = jb_utils
 	url = https://gitlab.cern.ch/jburr/jb_utils.git
@@ -9,3 +6,8 @@
 [submodule "livana-ci-web-deployer"]
 	path = livana-ci-web-deployer
 	url = https://gitlab.cern.ch/hteagle/livana-ci-web-deployer.git
+
+[submodule "PyAnalysisUtils"]
+	path = PyAnalysisUtils
+	url = https://gitlab.cern.ch/Shef-Analysis/PyAnalysisUtils.git
+	branch = HamishDev
