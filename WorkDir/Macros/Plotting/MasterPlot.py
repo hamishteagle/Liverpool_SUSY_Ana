@@ -197,9 +197,6 @@ def main():
 
 
 
-
-
-
 ##SbottomMB regions
     elif label == "SRB":
         cutstouse = "(passMETtriggers)*(nbaselineLep==0)*(nj_good>=4)*(num_bjets>=4)*(eT_miss_orig>350)*(dphimin4_orig>0.4)*(SRB3_mbb_avg>75 && SRB3_mbb_avg<175)*(!leadb1)*(pT_1jet>350)*(fabs(dPhi_1jet)>2.8) *(meff>1000)*(passtauveto==1)"
@@ -434,8 +431,8 @@ def main():
     if options.doSignif:
         print ("Going to do Significance")
 
-        directory = "/scratch/hteagle/Wh_Mun/truth/run/"
-        directory_reco = "/scratch/hteagle/Wh_Mun/reco/user.eschanet/"
+        directory = "/hepstore/hteagle/Wh_Mun/truth/run/"
+        directory_reco = "/hepstore/hteagle/Wh_Mun/reco/user.eschanet/"
 
         luminosity_Mun="138965.20*pileupWeight*leptonWeight*eventWeight*jvtWeight*bTagWeight*genWeight*"
         bkgFile = directory+"410470.root"
@@ -475,7 +472,7 @@ def main():
         for label,cutstouse in reversed(regions.items()):
             print(label)
             #print(cutstouse)
-            Significance.Significance(cutstouse,luminosity_Mun ,signalFiles, reco_signalFiles, bkgFile, label, False, False, True, False,False, False, directory_reco, directory)
+            Significance.Significance(cutstouse,luminosity_Mun ,signalFiles, reco_signalFiles, bkgFile, label, False, False, True, False, False, False, directory_reco, directory)
             #exit()
 
 
@@ -549,3 +546,4 @@ def main():
 
 if __name__ == '__main__':
     main()
+
