@@ -5,20 +5,20 @@ variables:
 stages:
   - build
   - run
-  
+
 # Build Docker image
 # To see the available commands when building a docker image with Gitlab, see
 # https://gitlab.cern.ch/vcs/gitlabci-docker-builder
 
-build:
-  stage: build
-  only:
-    - master
-  tags:
-    - docker-image-build
-  script: "echo 'Building image ...'"
-  variables:
-    FROM: atlas/analysisbase:$ATHENA_RELEASE
+# build:
+#   stage: build
+#   only:
+#     - master
+#   tags:
+#     - docker-image-build
+#   script: "echo 'Building image ...'"
+#   variables:
+#     FROM: atlas/analysisbase:$ATHENA_RELEASE
 
 build_dev:
   stage: build
