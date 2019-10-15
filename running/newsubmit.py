@@ -14,7 +14,7 @@ class submit:
 
         parser = argparse.ArgumentParser(description='Analysis submission script')
         parser.add_argument( '-i', '--input_file', dest='input_file', action = 'store', help = 'Input file/directory for EventLoop', default='/hepstore/hteagle/reco_test_files/mc16_13TeV.410470.PhPy8EG_A14_ttbar_hdamp258p75_nonallhad.deriv.DAOD_SUSY5.e6337_s3126_r9364_p3712/')
-        parser.add_argument( '-s', '--submission-dir', dest = 'submission_dir', action = 'store', help = 'Submission directory for EventLoop',default=current+path+'/submitdir' )
+        parser.add_argument( '-s', '--submission-dir', dest = 'submission_dir', action = 'store', help = 'Submission directory for EventLoop',default=current_path+'/submitdir' )
         parser.add_argument('-l','--local', dest = 'local', type = int, default = True)
         parser.add_argument('--type',dest = 'PhysicsName', type = str, default = 'TYPE')
         parser.add_argument('--syst', dest = 'syst', type = bool, default = False)
@@ -24,8 +24,8 @@ class submit:
         parser.add_argument('--doTruthJets', dest = 'doTruthJets', type = int, default= 0)
         args = parser.parse_args()
 
-        # Make input file name accessible
 
+        # Make input file name accessible
         self.input = args.input_file
         slashes = len(self.input.split('/'))
 
@@ -36,7 +36,7 @@ class submit:
         PhysicsName = str(args.PhysicsName)
         doTruthJets = int(args.doTruthJets)
         #Get the release directly from asetup (you will need to change the path to the build dir)
-        release_string = os.popen('(cd /user/hteagle/AnalysisDirectory/Rel21/Base.21.2.72/build/ &&  source $AtlasSetup/scripts/asetup.sh $@ --printLast)').read()
+        release_string = os.popen('(cd '+current_path.replace('running','build')+' &&  source $AtlasSetup/scripts/asetup.sh $@ --printLast)').read()
         pos=release_string.find('Base/')
         release = release_string[pos+5:pos+5+8]
 
@@ -50,7 +50,7 @@ class submit:
         multi_submit += '\"'
 
         outdir = args.submission_dir
-
+        ensure_dir(outdir)
 
         command = 'testRun '
         if doMultiSubmit :
@@ -77,6 +77,11 @@ class submit:
         command += str(doTruthJets)
         print str(command)
         os.system(command)
+
+
+def ensure_dir(d):
+    if not os.path.isdir(d):
+        os.makedirs(d)
 
 if __name__=='__main__':
   submit().main()
