@@ -214,14 +214,6 @@ class TreeService
   double pTj7;
   double pTj8;
 
-  int j1_bQuantile;
-  int j2_bQuantile;
-  int j3_bQuantile;
-  int j4_bQuantile;
-
-  int b1_bQuantile;
-  int b2_bQuantile;
-
   //ISR variables
   double delPhi1;
   double delPhi2;
@@ -375,7 +367,6 @@ class TreeService
   double tauSF;
   double tauTriggerSF;
   double bJetSF;
-  double bJetSF_PC;
   double JVTSF;
   double photonSF;
   double leptonTriggerSF;

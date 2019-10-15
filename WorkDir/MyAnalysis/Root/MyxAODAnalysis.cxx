@@ -132,7 +132,7 @@ EL::StatusCode MyxAODAnalysis :: fileExecute ()
       }
     }
 
-    
+
     double cbksumOfWeights        = allEventsCBK->sumOfEventWeights();
     double cbksumOfWeightsSquared = allEventsCBK->sumOfEventWeightsSquared();
 
@@ -231,7 +231,7 @@ EL::StatusCode MyxAODAnalysis :: initialize ()
   if(isMC16d){lumicalcFiles.push_back(PathResolverFindCalibFile("GoodRunsLists/data17_13TeV/20180619/physics_25ns_Triggerno17e33prim.lumicalc.OflLumi-13TeV-010.root"));}
   if(isMC16e){lumicalcFiles.push_back(PathResolverFindCalibFile("GoodRunsLists/data18_13TeV/20190219/ilumicalc_histograms_None_348885-364292_OflLumi-13TeV-010.root"));}
 
-
+  //Initialise SUSYTools instances
   objTool = std::make_unique<ST::SUSYObjDef_xAOD>("SUSYObjDef_xAOD");
 
   //Get the metadata using SUSYTools
@@ -244,7 +244,7 @@ EL::StatusCode MyxAODAnalysis :: initialize ()
     isAtlfast = (simFlavour == "AtlfastII");
     ANA_MSG_INFO ("%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%");
     ANA_MSG_INFO ("simFlavour = " << simFlavour );
-  }  
+  }
   else {
     ANA_MSG_INFO ("%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%");
     ANA_MSG_INFO ("This is data");
@@ -255,12 +255,11 @@ EL::StatusCode MyxAODAnalysis :: initialize ()
   fmd->value(xAOD::FileMetaData::dataType, dataType);
   m_SUSY5= (dataType == "StreamDAOD_SUSY5") ;
   m_SUSY7= (dataType == "StreamDAOD_SUSY7") ;
-  
 
-
-
+  //Set the data type
   ST::ISUSYObjDef_xAODTool::DataSource datasource = (isData ? ST::ISUSYObjDef_xAODTool::Data : (isAtlfast ? ST::ISUSYObjDef_xAODTool::AtlfastII : ST::ISUSYObjDef_xAODTool::FullSim));
-  
+
+  //Set the config according to the Derivation
   ANA_CHECK(objTool->setProperty("DataSource",datasource) );
   if (m_SUSY5){
     ANA_CHECK(objTool->setProperty("ConfigFile",PathResolverFindCalibFile("/MyAnalysis/MyAnalysis/configs/1Lbb_default.conf")));
@@ -268,10 +267,10 @@ EL::StatusCode MyxAODAnalysis :: initialize ()
   }
   if (m_SUSY7){
     ANA_CHECK(objTool->setProperty("ConfigFile",PathResolverFindCalibFile("/MyAnalysis/MyAnalysis/configs/topDM_Giulia.conf")));
-    ANA_MSG_INFO("This is SUSY7"); 
+    ANA_MSG_INFO("This is SUSY7");
   }
   ANA_CHECK(objTool->setProperty("UseBtagging", true));
-  
+
   if (!isTruth){
     ANA_CHECK(objTool->setProperty("PRWLumiCalcFiles",lumicalcFiles));
     ANA_CHECK(objTool->setProperty("AutoconfigurePRWTool",true));
@@ -285,7 +284,6 @@ EL::StatusCode MyxAODAnalysis :: initialize ()
     infodef.affectsWeights = false;
     infodef.affectsType = ST::Unknown;
     systInfoList.push_back(infodef);
-
   }
   else {
     ANA_MSG_INFO("Running with systematics.");
@@ -311,32 +309,12 @@ EL::StatusCode MyxAODAnalysis :: initialize ()
     Temp->Write();
   }
 
-  
+
   //PMGCrossSectionTool setup
-  std::cout<<"Before cross-sections tool"<<std::endl;
   ASG_SET_ANA_TOOL_TYPE( m_PMGCrossSectionTool, PMGTools::PMGCrossSectionTool);
   m_PMGCrossSectionTool.setName("myCrossSectionTool");
   ANA_CHECK(m_PMGCrossSectionTool.retrieve());
   m_PMGCrossSectionTool->readInfosFromDir("/cvmfs/atlas.cern.ch/repo/sw/database/GroupData/dev/PMGTools/");
-  std::cout<<"After cross-sections tool"<<std::endl;
-  //BTaggingSelectionTool setup
-  ASG_SET_ANA_TOOL_TYPE( m_BTaggingSelectionTool, BTaggingSelectionTool);
-  m_BTaggingSelectionTool.setName("myBTaggingSelectionTool");
-  ANA_CHECK( m_BTaggingSelectionTool.setProperty( "FlvTagCutDefinitionsFileName","/cvmfs/atlas.cern.ch/repo/sw/database/GroupData/xAODBTaggingEfficiency/13TeV/2017-21-13TeV-MC16-CDI-2018-10-19_v1.root" ) ); //CDI file might need updating..
-  ANA_CHECK( m_BTaggingSelectionTool.setProperty("TaggerName",    "MV2c10"  ) );
-  ANA_CHECK( m_BTaggingSelectionTool.setProperty("OperatingPoint", "Continuous") );
-  ANA_CHECK( m_BTaggingSelectionTool.setProperty("JetAuthor",      "AntiKt4EMTopoJets" ) );
-  ANA_CHECK( m_BTaggingSelectionTool.initialize() );
-  std::cout<<"After BTaggingTool tool"<<std::endl;
-  //BTaggingEfficiency setup
-  ASG_SET_ANA_TOOL_TYPE( m_BTaggingEfficiencyTool, BTaggingEfficiencyTool);
-  m_BTaggingEfficiencyTool.setName("myBTaggingEfficiencyTool");
-  ANA_CHECK( m_BTaggingEfficiencyTool.setProperty( "ScaleFactorFileName","xAODBTaggingEfficiency/13TeV/2017-21-13TeV-MC16-CDI-2018-02-09_v1.root" ) ); //this is the CDI file 
-  ANA_CHECK( m_BTaggingEfficiencyTool.setProperty("TaggerName",    "MV2c10"  ) );
-  ANA_CHECK( m_BTaggingEfficiencyTool.setProperty("OperatingPoint", "Continuous") );
-  ANA_CHECK( m_BTaggingEfficiencyTool.setProperty("JetAuthor",      "AntiKt4EMTopoJets" ) );
-  ANA_CHECK( m_BTaggingEfficiencyTool.initialize() );
-  std::cout<<"After BTaggingEfficiencyTool tool"<<std::endl;
   return StatusCode::SUCCESS;
 }
 
@@ -391,7 +369,7 @@ EL::StatusCode MyxAODAnalysis :: histInitialize ()
     h_dEta_p80= new TH1F("h_dEta_p80","h_dEta_p80",1000, -0.5 , 0.5);
     h_dEta_p200= new TH1F("h_dEta_p200","h_dEta_p200",1000, -0.5 , 0.5);
     h_dEta_H= new TH1F("h_dEta_H","h_dEta_H",1000, -0.5 , 0.5);
-    
+
     h_dPhi_p30->SetDirectory(wk()->getOutputFile("output"));
     h_dPhi_p40->SetDirectory(wk()->getOutputFile("output"));
     h_dPhi_p80->SetDirectory(wk()->getOutputFile("output"));
@@ -403,7 +381,7 @@ EL::StatusCode MyxAODAnalysis :: histInitialize ()
     h_dEta_p80->SetDirectory(wk()->getOutputFile("output"));
     h_dEta_p200->SetDirectory(wk()->getOutputFile("output"));
     h_dEta_H->SetDirectory(wk()->getOutputFile("output"));
-    
+
   }
 
 
@@ -458,8 +436,8 @@ EL::StatusCode MyxAODAnalysis :: execute ()
       m_averageIntPerX=1;
       m_actualIntPerX=1;
     }
-    
-    
+
+
     m_lumiBlockNumber = eventInfo->lumiBlock();
     m_runNumber = eventInfo->runNumber();
     EventNumber = (eventInfo->eventNumber());
@@ -479,7 +457,7 @@ EL::StatusCode MyxAODAnalysis :: execute ()
     if (isMC){
       mcChannel = eventInfo->mcChannelNumber();
       puWgt = objTool->GetPileupWeight();
-      
+
       try {
         xsec = m_PMGCrossSectionTool->getAMIXsection(mcChannel);
         filteff = m_PMGCrossSectionTool->getFilterEff(mcChannel);
@@ -487,7 +465,7 @@ EL::StatusCode MyxAODAnalysis :: execute ()
       } catch (...) {
         if (counter == 1) Error("execute()", "PMGCrossSectionTool exception caught");
       }
-      
+
       mcWgt = eventInfo->mcEventWeight();
       renormedMcWgt = mcWgt;
       if (std::abs(renormedMcWgt) >= 100){
@@ -498,7 +476,7 @@ EL::StatusCode MyxAODAnalysis :: execute ()
       // This can get all of the PDF info etc if it's required at any point
       //const xAOD::TruthEventContainer *truthE = 0;
       //m_event->retrieve(truthE, "TruthEvents" );
-      
+
       //for(const auto& evt : *truthE) {
 	//float x1, x2, pdf1, pdf2, scalePDF, Q;
       //int id1, id2;
@@ -594,7 +572,7 @@ EL::StatusCode MyxAODAnalysis :: execute ()
       store->clear();
       continue;
     }
-    
+
 
 
 
@@ -618,8 +596,8 @@ EL::StatusCode MyxAODAnalysis :: execute ()
     std::vector<int> dilepton_decisions;
 
     double leptonTriggerSF =1;
-    
-    
+
+
     //NEW TRIGGER IMPLEMENTATION
     //Note:diMuon triggers only require 1 L1 muon.
     std::vector<std::string> single_el_2015 = {"HLT_e24_lhmedium_L1EM20VH", "HLT_e60_lhmedium", "HLT_e120_lhloose"};
@@ -760,7 +738,7 @@ EL::StatusCode MyxAODAnalysis :: execute ()
     if(coreFlag && sctFlag && LArTileFlag && passedPrimVertex && passedJetClean && passedCosmicMu && passedMuonClean){
       passedCleaningCuts=true;
     }
-    auto m_varCalc = std::make_unique<CalculateVariables>( objs.get(), m_BTaggingSelectionTool, m_BTaggingEfficiencyTool, store, isTruth, doPhotons, isData);
+    auto m_varCalc = std::make_unique<CalculateVariables>( objs.get(), store, isTruth, doPhotons, isData);
     auto m_regions = std::make_unique<PreliminarySel>(*m_varCalc, passedCleaningCuts);
 
 
@@ -801,23 +779,23 @@ EL::StatusCode MyxAODAnalysis :: execute ()
 	  }
 	}
 	if (P_init>0){
-	  if (truth_jet->e()*0.001<30){	
+	  if (truth_jet->e()*0.001<30){
 	    h_dPhi_p30->Fill(dPhi_init);
 	    h_dEta_p30->Fill(dEta_init);
 	  }
-	  if (P_init*0.001<40){	
+	  if (P_init*0.001<40){
 	    h_dPhi_p40->Fill(dPhi_init);
 	    h_dEta_p40->Fill(dEta_init);
 	  }
-	  if (P_init*0.001<80){	
+	  if (P_init*0.001<80){
 	    h_dPhi_p80->Fill(dPhi_init);
 	    h_dEta_p80->Fill(dEta_init);
 	  }
-	  if (P_init*0.001<200){	
+	  if (P_init*0.001<200){
 	    h_dPhi_p200->Fill(dPhi_init);
 	    h_dEta_p200->Fill(dEta_init);
 	  }
-	  if (P_init*0.001>200){	
+	  if (P_init*0.001>200){
 	    h_dPhi_H->Fill(dPhi_init);
 	    h_dEta_H->Fill(dEta_init);
 	  }
@@ -831,7 +809,7 @@ EL::StatusCode MyxAODAnalysis :: execute ()
       	(m_treeServiceVector[isyst])->fillTree(objs.get(), store ,*m_regions, *m_varCalc,m_finalSumOfWeights, m_initialSumOfWeights, puWgt, SFmctbbll, passedMETTrigger, passedSingleMuTrigger, passedSingleElTrigger, passedDiLeptonTrigger, passedGammaTrigger, passedMultiJetTrigger, muon_triggers, muon_decisions, electron_triggers, electron_decisions, dilepton_triggers, dilepton_decisions,leptonTriggerSF, PUSumOfWeights, truthfilt_MET, truthfilt_HT, coreFlag, sctFlag, LArTileFlag, passGRL, passedPrimVertex, passedJetClean, passedCosmicMu, passedMuonClean, m_runNumber, renormedMcWgt, year, m_averageIntPerX, m_actualIntPerX, xsec, filteff, kfactor);
       }
     }
-    
+
 
     isyst++;
     store->clear();
