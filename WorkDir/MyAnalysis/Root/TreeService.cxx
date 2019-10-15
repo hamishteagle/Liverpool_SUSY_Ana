@@ -71,8 +71,8 @@ TreeService::TreeService(TTree *outputTree, TDirectory *OutDir){
   tree->Branch("h_T", &h_T);
   tree->Branch("m_T", &m_T);
   tree->Branch("m_lbb", &m_lbb);
-  
-  
+
+
 
   //tree->Branch("njet20" ,&njet20);
   //tree->Branch("njet25" ,&njet25);
@@ -148,7 +148,7 @@ TreeService::TreeService(TTree *outputTree, TDirectory *OutDir){
 
   //tree->Branch("m_finalWeightSum", &m_finalWeightSum);
   //tree->Branch("m_intialWeightSum", &m_intialWeightSum);
-  
+
   tree->Branch("dPhij1MET",&dPhij1MET);
   tree->Branch("minDPhijMET_4",&minDPhijMET_4);
   tree->Branch("m_jj", &m_jj);
@@ -174,7 +174,6 @@ TreeService::TreeService(TTree *outputTree, TDirectory *OutDir){
   tree->Branch("tauTriggerSF", &tauTriggerSF);
   tree->Branch("photonSF", &photonSF);
   tree->Branch("bJetSF", &bJetSF);
-  tree->Branch("bJetSF_PC", &bJetSF_PC);
   tree->Branch("JVTSF", &JVTSF);
   tree->Branch("puWgt", &puWgt);
   //tree->Branch("muonRecoSF", &muonRecoSF);
@@ -189,14 +188,6 @@ TreeService::TreeService(TTree *outputTree, TDirectory *OutDir){
   //tree->Branch("minb1MV2weight", &minbMV2weight);
   //tree->Branch("b1_ntrk", &b1_ntrk);
   //tree->Branch("b2_ntrk", &b2_ntrk);
-
-  tree->Branch("j1_bQuantile", &j1_bQuantile);
-  tree->Branch("j2_bQuantile", &j2_bQuantile);
-  tree->Branch("j3_bQuantile", &j3_bQuantile);
-  tree->Branch("j4_bQuantile", &j4_bQuantile);
-
-  tree->Branch("b1_bQuantile", &b1_bQuantile);
-  tree->Branch("b2_bQuantile", &b2_bQuantile);
 
   //ISR varibles
   tree->Branch("delPhi1",&delPhi1);
@@ -360,15 +351,6 @@ void TreeService::fillTree(NewObjectDef *objects , xAOD::TStore *evtStore, Preli
   pTj6 = variables.pTj6;
   pTj7 = variables.pTj7;
   pTj8 = variables.pTj8;
-
-  j1_bQuantile = variables.j1_bQuantile;
-  j2_bQuantile = variables.j2_bQuantile;
-  j3_bQuantile = variables.j3_bQuantile;
-  j4_bQuantile = variables.j4_bQuantile;
-
-  b1_bQuantile = variables.b1_bQuantile;
-  b2_bQuantile = variables.b2_bQuantile;
-  
 
   njet20 = variables.njet20;
   njet25 = variables.njet25;
@@ -548,12 +530,12 @@ void TreeService::fillTree(NewObjectDef *objects , xAOD::TStore *evtStore, Preli
   m_b1l = variables.m_b1l;
   m_b2l = variables.m_b2l;
   m_lbb = variables.m_lbb;
-  
+
   //ISR variables
   delPhi1 = variables.delPhi1;
   delPhi2 = variables.delPhi2;
   delPhi3 = variables.delPhi3;
-  
+
   minm_bl = variables.minm_bl;
   maxm_bl = variables.maxm_bl;
 
@@ -585,7 +567,6 @@ void TreeService::fillTree(NewObjectDef *objects , xAOD::TStore *evtStore, Preli
   tauTriggerSF = objects->getTauTriggerSF();
   photonSF = objects->getPhotonSF();
   bJetSF = objects->getBJetSF();
-  bJetSF_PC = variables.bJetSF_PC;
   JVTSF = objects->getJVTSF();
   leptonTriggerSF = LeptonTriggerSF;
 
@@ -606,7 +587,7 @@ void TreeService::fillTree(NewObjectDef *objects , xAOD::TStore *evtStore, Preli
   el_decisions = electron_decisions;
   dilep_triggers = dilepton_triggers;
   dilep_decisions = dilepton_decisions;
-  
+
 
   b1m = variables.b1m;
   b2m = variables.b2m;

@@ -5,20 +5,14 @@
 #include "NewObjectDef.h"
 
 #include "TMctLib.h"
-#include "FTagAnalysisInterfaces/IBTaggingSelectionTool.h"//Interface -do we need this??
-#include "FTagAnalysisInterfaces/IBTaggingEfficiencyTool.h"//Interface -do we need this??
 class CalculateVariables
 
 {
  public:
-  CalculateVariables(NewObjectDef *objects, asg::AnaToolHandle<IBTaggingSelectionTool> m_BTaggingSelectionTool, asg::AnaToolHandle<IBTaggingEfficiencyTool> m_BTaggingEfficiencyTool, xAOD::TStore* evtStore, bool isTruth, bool doPhotons, bool isData);
-
+ CalculateVariables(NewObjectDef *objects, xAOD::TStore* evtStore, bool isTruth, bool doPhotons, bool isData);
   void CalculateOneLepVariables(NewObjectDef *objects, TLorentzVector b1v, TLorentzVector b2v, TLorentzVector tj1v);
   void CalculateTwoLepVariables(NewObjectDef *objects, TLorentzVector b1v, TLorentzVector b2v);
   void CalculatePhotonMET(NewObjectDef *objects);
-  
-  bool CalculatePseudoContBTagging(NewObjectDef *objects, asg::AnaToolHandle<IBTaggingSelectionTool> m_BTaggingSelectionTool, asg::AnaToolHandle<IBTaggingEfficiencyTool> m_BTaggingEfficiencyTool);
-
   void CalculateShapeVariables(NewObjectDef *objects);
   void CalculateRazorVariables(NewObjectDef *objects);
 
@@ -37,8 +31,8 @@ class CalculateVariables
   xAOD::JetContainer *goodJet_cont = nullptr;
   xAOD::JetContainer *goodJet_beforeOR_cont = nullptr;
   xAOD::JetContainer *baselineJet_cont = nullptr;
-  xAOD::JetContainer *bJet_cont = nullptr; 
-  xAOD::JetContainer *nonBJet_cont = nullptr; 
+  xAOD::JetContainer *bJet_cont = nullptr;
+  xAOD::JetContainer *nonBJet_cont = nullptr;
   TVector2 *METvector_cont = nullptr;
 
 
@@ -192,16 +186,6 @@ class CalculateVariables
   double phij2; //
   double phij3; //
   double phij4; //
-
-  int j1_bQuantile;
-  int j2_bQuantile;
-  int j3_bQuantile;
-  int j4_bQuantile;
-
-  int b1_bQuantile;
-  int b2_bQuantile;
-
-  double bJetSF_PC;
 
   double pTZ; //
   double etaZ; //

@@ -32,12 +32,6 @@
 #include "PMGAnalysisInterfaces/IPMGCrossSectionTool.h"
 #include "PMGTools/PMGCrossSectionTool.h"
 
-//BTaggingSelectionTool
-#include "FTagAnalysisInterfaces/IBTaggingSelectionTool.h"//Interface
-#include "xAODBTaggingEfficiency/BTaggingSelectionTool.h"//tool header for type definition
-//BTaggingEfficiencyTool
-#include "FTagAnalysisInterfaces/IBTaggingEfficiencyTool.h"
-#include "xAODBTaggingEfficiency/BTaggingEfficiencyTool.h"//tool header for type definition
 // GRL inclusion
 class GoodRunsListSelectionTool;
 //class JetCleaningTool;
@@ -52,7 +46,6 @@ class PileupReweightingTool;
 
 namespace ST{
   class SUSYObjDef_xAOD; //! // SUSYToolsObjectDefinition forward declaration
-  //class CrossSectionDB; // SUSYToolsCrossSectionDataBase forward declaration
 }
 
 namespace SUSY{
@@ -68,6 +61,7 @@ class MyxAODAnalysis : public EL::Algorithm
 {
 #ifndef __CINT__
   std::unique_ptr<ST::SUSYObjDef_xAOD> objTool; //!
+
 #endif // not __CINT__
 
 #ifndef __CINT__
@@ -88,14 +82,6 @@ class MyxAODAnalysis : public EL::Algorithm
   //JetToolRunner* m_jetRecTool_kt8; //!
 
 #endif // not__CINT__
-
-  //#ifndef __CINT__
-  //JERTool *m_JERTool;
-  //#endif // not__CINT__
-
-  //#ifndef __CINT__
-  //JetCleaningTool *m_jetCleaning;
-  //#endif // not__CINT__
 
   // put your configuration variables here as public variables.
   // that way they can be set directly from CINT and python.
@@ -122,7 +108,7 @@ public:
   std::string m_fileType;
   std::string m_fileName;
   double m_fileLumi;
-  
+
 
   int isyst; //!
   int m_totalEvents; //!
@@ -138,10 +124,7 @@ public:
   std::vector <std::string> cutList; //!
   std::vector <std::string> runningOverSysts; //!
   asg::AnaToolHandle<IMETSignificance> m_metSignif; //!
-  asg::AnaToolHandle<IBTaggingSelectionTool> m_BTaggingSelectionTool;//!
-  asg::AnaToolHandle<IBTaggingEfficiencyTool> m_BTaggingEfficiencyTool;//!
   //  EL::OutputStream out
-
 
 
   // Put our new containers here
@@ -223,7 +206,7 @@ public:
   bool isMC; //!
   bool isAtlfast; //!
   bool isTruth; //!
-  
+
   asg::AnaToolHandle<PMGTools::IPMGCrossSectionTool> m_PMGCrossSectionTool; //!
   asg::AnaToolHandle<CP::IPileupReweightingTool> m_prw_tool; //!
   asg::AnaToolHandle<CP::IMuonCalibrationAndSmearingTool> m_muonCalibrationAndSmearingTool; //!

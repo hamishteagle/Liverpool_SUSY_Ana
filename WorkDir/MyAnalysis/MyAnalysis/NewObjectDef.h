@@ -78,8 +78,8 @@ class NewObjectDef
     xAOD::PhotonContainer* getGoodPhotons(){return goodPhotons.get();};
 
     xAOD::JetContainer* getTruthJets(){return goodTruthJets;};
-    
-    
+
+
     asg::SgTEvent* currentEvent;
     xAOD::TStore* eventStore;
     std::string systematic;
@@ -106,7 +106,7 @@ class NewObjectDef
     std::unique_ptr<xAOD::TauJetContainer> baselineTaus = nullptr;
     std::unique_ptr<xAOD::MuonContainer> baselineMuons = nullptr;
     std::unique_ptr<xAOD::PhotonContainer> baselinePhotons = nullptr;
-    
+
     std::unique_ptr<xAOD::JetContainer> goodJets = nullptr;
     std::unique_ptr<xAOD::ElectronContainer> goodElectrons = nullptr;
     std::unique_ptr<xAOD::TauJetContainer> goodTaus = nullptr;
@@ -115,9 +115,9 @@ class NewObjectDef
     std::unique_ptr<xAOD::JetContainer> BJets = nullptr;
     std::unique_ptr<xAOD::JetContainer> nonBJets = nullptr;
 
-    
+
     xAOD::JetContainer* goodTruthJets = nullptr;
-    
+
   private:
     double MET;
     double METphi;
@@ -131,12 +131,11 @@ class NewObjectDef
     double tauTriggerSF;
     double photonSF;
     double bJetSF;
-    double bJetSF_PC;
     double JVTSF;
     double muonTriggerSF;
     double dilepTriggerSF;
-    
-    
+
+
     int nVertex = 0;
     int nBadMuons = 0;
     int nCosmicMuons = 0;
