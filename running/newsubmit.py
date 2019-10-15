@@ -2,7 +2,7 @@
 
 import argparse, ROOT, os
 from datetime import datetime
-
+current_path = os.path.dirname(os.path.abspath(__file__))
 class submit:
 
     def __init__(self):
@@ -13,8 +13,8 @@ class submit:
       # Parse arguments
 
         parser = argparse.ArgumentParser(description='Analysis submission script')
-        parser.add_argument( '-i', '--input_file', dest='input_file', action = 'store', help = 'Input file/directory for EventLoop', default='/scratch/hteagle/Wh_Liv/recoSamples/mc16_13TeV.410470.PhPy8EG_A14_ttbar_hdamp258p75_nonallhad.deriv.DAOD_SUSY5.e6337_s3126_r9364_p3703')
-        parser.add_argument( '-s', '--submission-dir', dest = 'submission_dir', action = 'store', help = 'Submission directory for EventLoop',default='/user/hteagle/AnalysisDirectory/Rel21/Base.21.2.72/run/submitdir_ttbarCheck' )
+        parser.add_argument( '-i', '--input_file', dest='input_file', action = 'store', help = 'Input file/directory for EventLoop', default='/hepstore/hteagle/reco_test_files/mc16_13TeV.410470.PhPy8EG_A14_ttbar_hdamp258p75_nonallhad.deriv.DAOD_SUSY5.e6337_s3126_r9364_p3712/')
+        parser.add_argument( '-s', '--submission-dir', dest = 'submission_dir', action = 'store', help = 'Submission directory for EventLoop',default=current+path+'/submitdir' )
         parser.add_argument('-l','--local', dest = 'local', type = int, default = True)
         parser.add_argument('--type',dest = 'PhysicsName', type = str, default = 'TYPE')
         parser.add_argument('--syst', dest = 'syst', type = bool, default = False)
@@ -48,7 +48,7 @@ class submit:
                 multi_submit += line.replace('\n',',')
         multi_submit = multi_submit.rstrip(',')
         multi_submit += '\"'
-        
+
         outdir = args.submission_dir
 
 
@@ -61,12 +61,12 @@ class submit:
         command += outdir
         command += ' '
         command += str(doSysts)
-        command += ' ' 
+        command += ' '
         command += str(doPhotons)
         command += ' '
         command += str(local)
         command += ' '
-        command += str(args.events) 
+        command += str(args.events)
         command += ' '
         command += str(args.username)
         command += ' '
