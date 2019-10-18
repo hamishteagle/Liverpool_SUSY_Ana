@@ -51,7 +51,7 @@ run_project:
     name: "weights_plots"
     expire_in: "1 month"
     paths:
-    - "/home/atlas/Liverpool_SbottomAnalysis_Rel21/WorkDir/Macros/Tests/default/*.pdf"
+    - "/home/atlas/WorkDir/Macros/Tests/default/*.pdf"
   stage: run
   <<: *variables_files
   image: gitlab-registry.cern.ch/hteagle/liverpool_sbottomanalysis_rel21
@@ -64,13 +64,12 @@ run_project:
     - deploy-eos #actually copy the files from EOS (part of upper repository)
     - ls fromEOS/mc16_13TeV.410470.PhPy8EG_A14_ttbar_hdamp258p75_nonallhad.deriv.DAOD_SUSY5.e6337_s3126_r9364_p3712/ #make sure the files are there
     #Run tests
-    - ls
-    - ls /home/atlas/Liverpool_SbottomAnalysis_Rel21/ #Where are we
+    - ls /home/atlas/ #Where are we
     - source /home/atlas/release_setup.sh
     - mkdir -p run #this is happening inside the Gitlab runner
-    - mkdir -p /home/atlas/Liverpool_SbottomAnalysis_Rel21/submitdir/ #this is happening inside the Gitlab runner
+    - mkdir -p /home/atlas/submitdir/ #this is happening inside the Gitlab runner
     - cd run
-    - testRun ../$CI_OUTPUT_DIR /home/atlas/Liverpool_SbottomAnalysis_Rel21/submitdir/ 0 0 1 -1 hteagle 21.2.74  TYPE 0
+    - testRun ../$CI_OUTPUT_DIR /home/atlas/submitdir/ 0 0 1 -1 hteagle 21.2.74  TYPE 0
     - cd ../WorkDir
-    - ls -l /home/atlas/Liverpool_SbottomAnalysis_Rel21/submitdir/
-    - python Macros/Tests/basic_test.py -s /home/atlas/Liverpool_SbottomAnalysis_Rel21/submitdir/data-output/
+    - ls -l /home/atlas/submitdir/
+    - python Macros/Tests/basic_test.py -s /home/atlas/submitdir/data-output/
