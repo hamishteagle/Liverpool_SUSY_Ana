@@ -8,7 +8,7 @@
 
 # Set up the base image:
 # This is overwritten in the gitlab-ci, in order to have the most up-to-date release always set it in the gitlab_ci.yaml?
-FROM atlas/analysisbase:21.2.88   
+FROM atlas/analysisbase:21.2.88
 
 # Copy the project's sources into the image:
 # You need to copy this one by one, else unwanted files will be copied, too
@@ -26,7 +26,7 @@ USER atlas
 
 # Build the project inside a build/ directory:
 RUN source /home/atlas/release_setup.sh && \
-    cd Liverpool_SbottomAnalysis_Rel21 && ls -l && mkdir build && ls -l && cd build/ && ls -l ../source && cmake ../source/ && make
+    cd Liverpool_SbottomAnalysis_Rel21 && ls -l && mkdir build && ls -l && cd build/ && ls -l ../source && cmake ../source/ && make && cd /home/atlas/ && ls - l
 
 # Set up the environment setup script:
 RUN mv release_setup.sh analysis_release_setup.sh
