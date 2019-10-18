@@ -46,11 +46,10 @@ build:
 run_project:
   only:
     - master
-    - merge_requests
   artifacts:
     name: "weights_plots"
     expire_in: "1 month"
-    paths: 
+    paths:
     - "/home/atlas/Liverpool_SbottomAnalysis_Rel21/WorkDir/Macros/Tests/default/*.pdf"
   stage: run
   <<: *variables_files
@@ -64,6 +63,7 @@ run_project:
     - deploy-eos #actually copy the files from EOS (part of upper repository)
     - ls fromEOS/mc16_13TeV.410470.PhPy8EG_A14_ttbar_hdamp258p75_nonallhad.deriv.DAOD_SUSY5.e6337_s3126_r9364_p3712/ #make sure the files are there
     #Run tests
+    - ls
     - ls /home/atlas/Liverpool_SbottomAnalysis_Rel21/ #Where are we
     - source /home/atlas/release_setup.sh
     - mkdir -p run #this is happening inside the Gitlab runner
