@@ -46,6 +46,7 @@ build:
 run_project:
   only:
     - master
+    - merge_requests
   artifacts:
     name: "weights_plots"
     expire_in: "1 month"
