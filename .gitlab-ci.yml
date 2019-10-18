@@ -14,6 +14,7 @@ build:
   stage: build
   only:
     - master
+    - merge_requests
   tags:
     - docker-image-build
   script: "echo 'Building image ...'"
@@ -43,11 +44,13 @@ build:
     CI_OUTPUT_DIR: $CI_BASE_DIR/$SAMPLE #path at CI level to copy to
 
 run_project:
+  only:
+    - master
+    - merge_requests
   artifacts:
     name: "weights_plots"
     expire_in: "1 month"
-    paths: 
-    - "/home/atlas/Liverpool_SbottomAnalysis_Rel21/WorkDir/Macros/Tests/default/*.pdf"
+    paths: '/home/atlas/Liverpool_SbottomAnalysis_Rel21/WorkDir/Macros/Tests/default/*.pdf'
   stage: run
   <<: *variables_files
   image: gitlab-registry.cern.ch/hteagle/liverpool_sbottomanalysis_rel21
