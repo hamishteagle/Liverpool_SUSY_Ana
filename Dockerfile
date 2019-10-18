@@ -29,7 +29,7 @@ RUN source /home/atlas/release_setup.sh && \
     cd Liverpool_SbottomAnalysis_Rel21 && ls -l && mkdir build && ls -l && cd build/ && ls -l ../source && cmake ../source/ && make && cd /home/atlas/ && ls -l
 
 # Set up the environment setup script:
-RUN mv release_setup.sh analysis_release_setup.sh
+#RUN mv release_setup.sh analysis_release_setup.sh
 COPY CI/release_setup.sh /home/atlas/
 
 # Start the image with BASH by default:
