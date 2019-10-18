@@ -45,7 +45,7 @@ build:
 run_project:
   artifacts:
     name: "weights_plots"
-    expire_in: 1 month
+    expire_in: "1 month"
     paths: '/home/atlas/Liverpool_SbottomAnalysis_Rel21/WorkDir/Macros/Tests/default/*.pdf'
   stage: run
   <<: *variables_files
