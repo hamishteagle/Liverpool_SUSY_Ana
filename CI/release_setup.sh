@@ -6,7 +6,6 @@
 source ~/analysis_release_setup.sh
 
 # Set up the GitLabCITests installation:
-#source /home/atlas/LivAnalysis/build/*-opt/setup.sh
 source build/*-opt/setup.sh
 echo "Configured LivAnalysis from: build/*-opt/setup.sh it worked"
 
