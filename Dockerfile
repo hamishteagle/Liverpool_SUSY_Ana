@@ -25,9 +25,6 @@ USER atlas
 
 
 # Build the project inside a build/ directory:
-RUN source /home/atlas/release_setup.sh && \
-    cd Liverpool_SbottomAnalysis_Rel21 && ls -l && mkdir build && ls -l && cd build/ && ls -l ../source && cmake ../source/ && make
-
 # Set up the environment setup script:
 RUN mv /home/atlas/release_setup.sh /home/atlas/analysis_release_setup.sh
 COPY CI/release_setup.sh /home/atlas/
