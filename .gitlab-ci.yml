@@ -23,8 +23,6 @@ stages:
 
 build_dev:
   stage: build
-  except:
-    - master
   tags:
     - docker-image-build
   script: "echo 'Building image ...'"
@@ -44,9 +42,6 @@ build_dev:
     CI_OUTPUT_DIR: $CI_BASE_DIR/$SAMPLE #path at CI level to copy to
 
 run_project:
-  only:
-    - master
-    - merge_requests
   artifacts:
     name: "weights_plots"
     expire_in: "1 month"
