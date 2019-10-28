@@ -12,6 +12,8 @@ stages:
 
 build_dev:
   stage: build
+  only:
+  - master
   tags:
     - docker-image-build
   script: "echo 'Building image ...'"
@@ -53,7 +55,7 @@ run_project:
     - mkdir -p /home/atlas/submitdir/ #this is happening inside the Gitlab runner
     - mkdir -p build
     - source /home/atlas/release_setup.sh
-    - cd build; cmake ../WorkDir; make; 
+    - cd build; cmake ../WorkDir; make;
     - source *-opt/setup.sh
     - cd ../run
     - testRun ../$CI_OUTPUT_DIR /home/atlas/submitdir/ 0 0 1 -1 hteagle 21.2.88  TYPE 0
