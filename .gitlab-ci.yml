@@ -37,7 +37,7 @@ run_project:
     name: "weights_plots"
     expire_in: "1 month"
     paths:
-    - "/home/atlas/WorkDir/Macros/Tests/default/*.pdf"
+    - "/builds/hteagle/Liverpool_SbottomAnalysis_Rel21/WorkDir/Macros/Tests/default/*.pdf"
   stage: run
   <<: *variables_files
   image: gitlab-registry.cern.ch/hteagle/liverpool_sbottomanalysis_rel21
