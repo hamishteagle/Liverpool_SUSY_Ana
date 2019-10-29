@@ -10,26 +10,16 @@ stages:
 # To see the available commands when building a docker image with Gitlab, see
 # https://gitlab.cern.ch/vcs/gitlabci-docker-builder
 
-build:
+build_image:
   stage: build
   only:
-    - master
+  - master
   tags:
     - docker-image-build
   script: "echo 'Building image ...'"
   variables:
+    TO: ${CI_REGISTRY_IMAGE}:${CI_COMMIT_REF_NAME}
     FROM: atlas/analysisbase:$ATHENA_RELEASE
-
-# build_dev:
-#   stage: build
-#   except:
-#     - master
-#   tags:
-#     - docker-image-build
-#   script: "echo 'Building image ...'"
-#   variables:
-#     TO: ${CI_REGISTRY_IMAGE}:${CI_COMMIT_REF_NAME}
-#     FROM: atlas/analysisbase:$ATHENA_RELEASE
 
 # # Run CI tests in the docker image
 
@@ -37,16 +27,17 @@ build:
   variables:
     METHOD: rsync #use rsync if you want to copy stuff FROM EOS
     EOS_GET_OR_DEPLOY: GET #get the file from EOS, not push it there
-    SAMPLE: mc16_13TeV.410470.PhPy8EG_A14_ttbar_hdamp258p75_nonallhad.deriv.DAOD_SUSY7.e6337_s3126_r9364_p3703/
+    SAMPLE: mc16_13TeV.410470.PhPy8EG_A14_ttbar_hdamp258p75_nonallhad.deriv.DAOD_SUSY5.e6337_s3126_r9364_p3712/
     EOS_PATH: /eos/user/l/livana/Public/$SAMPLE #path on EOS to copy from
     CI_BASE_DIR: fromEOS
     CI_OUTPUT_DIR: $CI_BASE_DIR/$SAMPLE #path at CI level to copy to
 
 run_project:
   artifacts:
-    expire_in: 1 month
-    paths: '/home/atlas/Liverpool_SbottomAnalysis_Rel21/WorkDir/Macros/Tests/default/*.pdf'
-    - ''
+    name: "weights_plots"
+    expire_in: "1 month"
+    paths:
+    - "/home/atlas/WorkDir/Macros/Tests/default/*.pdf"
   stage: run
   <<: *variables_files
   image: gitlab-registry.cern.ch/hteagle/liverpool_sbottomanalysis_rel21
@@ -54,17 +45,20 @@ run_project:
     #Get file from EOS
     - mkdir fromEOS #directory to download the files to
     - mkdir fromEOS/mc16_13TeV.410470.PhPy8EG_A14_ttbar_hdamp258p75_nonallhad.deriv.DAOD_SUSY5.e6337_s3126_r9364_p3712/ #directory to download the files to
-    - git clone https://gitlab-ci-token:${CI_JOB_TOKEN}@gitlab.cern.ch/hteagle/livana-ci-web-deployer.git #this package allows to copy stuff from EOS
+    - git clone https://gitlab-ci-token:${CI_JOB_TOKEN}@gitlab.cern.ch/hteagle/livana-ci-web-deployer.git #this package allows us to copy stuff from EOS
     - sudo cp livana-ci-web-deployer/bin/* /sbin/ #"install" the binaries
     - deploy-eos #actually copy the files from EOS (part of upper repository)
     - ls fromEOS/mc16_13TeV.410470.PhPy8EG_A14_ttbar_hdamp258p75_nonallhad.deriv.DAOD_SUSY5.e6337_s3126_r9364_p3712/ #make sure the files are there
     #Run tests
-    - ls /home/atlas/Liverpool_SbottomAnalysis_Rel21/ #Where are we
-    - source /home/atlas/release_setup.sh
+    - pwd
     - mkdir -p run #this is happening inside the Gitlab runner
-    - mkdir -p /home/atlas/Liverpool_SbottomAnalysis_Rel21/submitdir/ #this is happening inside the Gitlab runner
-    - cd run
-    - testRun ../$CI_OUTPUT_DIR /home/atlas/Liverpool_SbottomAnalysis_Rel21/submitdir/ 0 0 1 -1 hteagle 21.2.74  TYPE 0
+    - mkdir -p /home/atlas/submitdir/ #this is happening inside the Gitlab runner
+    - mkdir -p build
+    - source /home/atlas/release_setup.sh
+    - cd build; cmake ../WorkDir; make;
+    - source *-opt/setup.sh
+    - cd ../run
+    - testRun ../$CI_OUTPUT_DIR /home/atlas/submitdir/ 0 0 1 -1 hteagle 21.2.88  TYPE 0
     - cd ../WorkDir
-    - ls -l /home/atlas/Liverpool_SbottomAnalysis_Rel21/submitdir/
-    - python Macros/Tests/basic_test.py -s /home/atlas/Liverpool_SbottomAnalysis_Rel21/submitdir/data-output/
+    - ls -l /home/atlas/submitdir/
+    - python Macros/Tests/basic_test.py -s /home/atlas/submitdir/data-output/
