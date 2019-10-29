@@ -56,12 +56,6 @@ MyxAODAnalysis :: MyxAODAnalysis (/*const std::string& name,
   // called on both the submission and the worker node.  Most of your
   // initialization code will go into histInitialize() and
   // initialize().
-
-  //declareProperty( "doSyst", doSyst = 1, "Do systematics?");
-  //declareProperty( "doPhotons", doPhotons = 1, "Do photons?");
-  //declareProperty( "RunningLocally", RunningLocally = 1, "Running locally?");
-  //declareProperty( "inputFile", inputFile = "", "Input file name?");
-
 }
 
 EL::StatusCode MyxAODAnalysis :: setupJob (EL::Job& job)

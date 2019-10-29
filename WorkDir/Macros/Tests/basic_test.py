@@ -1,6 +1,7 @@
 import ROOT
 ROOT.PyConfig.IgnoreCommandLineOptions = True
 ROOT.gROOT.SetBatch(True)
+ROOT.gStyle.SetOptStat(0)
 import json, collections
 import os
 import glob
@@ -79,20 +80,25 @@ class Livana(unittest.TestCase):
             nbins = int(weights_dict[weight].split(",")[0])
             xmin = float(weights_dict[weight].split(",")[1])
             xmax = float(weights_dict[weight].split(",")[2])
-            h = ROOT.TH1F("weight","Title",nbins,xmin,xmax)
-            h_current = ROOT.TH1F("weight_current","Title",nbins,xmin,xmax)
+            h = ROOT.TH1F("weight",str(weight),nbins,xmin,xmax)
+            h_current = ROOT.TH1F("weight_current",str(weight),nbins,xmin,xmax)
             for bin_entry in current_weights[weight]:
                 bin  = h_current.SetBinContent(h_current.GetBin(int(bin_entry)),float(current_weights[weight][bin_entry]))
             self.t.Draw(weight+">>weight")
 
 
             c = ROOT.TCanvas("Canvas1","Canvas1",0,0,900,900)
+            Legend = ROOT.TLegend(0.60,0.76,0.80,0.94)
+
             saveString =  os.path.join(Livana.__location__,'default',weight+'.pdf')
             h_current.SetLineColor(ROOT.kGreen)
             h_current.SetLineWidth(5)
             h.SetLineColor(ROOT.kRed)
             h_current.Draw("hist")
             h.Draw("hist,same")
+            Legend.AddEntry(h_current,"Current","l")
+            Legend.AddEntry(h,"Commit","l")
+            Legend.Draw()
             c.SaveAs(saveString)
             #Write the bins to the output dictionary
             for bin in range(nbins+1):
@@ -101,7 +107,10 @@ class Livana(unittest.TestCase):
             del h_current
             del c
         self.write_weights()
-        self.assertDictEqual(self.weights_output_dict,current_weights, msg="weights don't match!!")
+        if not Livana.args["force"]:
+            self.assertDictEqual(self.weights_output_dict,current_weights, msg="weights don't match!!")
+        os.remove(self.__location__+"/default/current_weights.json")
+        os.rename(self.__location__+"/default/checkout_weights.json", self.__location__+"/default/current_weights.json")
 
 
     def test_cutflow(self):
@@ -123,7 +132,8 @@ class Livana(unittest.TestCase):
         with open(self.__location__+"/default/checkout_flow.json",'r') as ofile:
             test_flow = json.load(ofile, object_pairs_hook=collections.OrderedDict)#Get the cuts from the json in the correct order
 
-        self.assertDictEqual(current_flow, test_flow, msg="cutflows don't match!!:"+str(current_flow))
+        if not Livana.args["force"]:
+            self.assertDictEqual(current_flow, test_flow, msg="cutflows don't match!!:"+str(current_flow))
         #replace the current cutflow file with the new one. Need a metod to allow small changes here
         os.remove(self.__location__+"/default/current_flow.json")
         os.rename(self.__location__+"/default/checkout_flow.json", self.__location__+"/default/current_flow.json")
@@ -132,6 +142,7 @@ class Livana(unittest.TestCase):
 
 parser = argparse.ArgumentParser()
 parser.add_argument('-s','--submit-dir', required=False, metavar='submit_dir', type=str, help='Submit directory location', default='submitDir')
+parser.add_argument('-f','--force', required=False, metavar='force', help='Force the submission (do not run the checks->Only run this if you want to update the nominal)', default=False)
 
 Livana.args = vars(parser.parse_args())
 
