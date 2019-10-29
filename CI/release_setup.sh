@@ -7,7 +7,7 @@ source ~/analysis_release_setup.sh
 
 # Set up the GitLabCITests installation:
 #source /home/atlas/LivAnalysis/build/*-opt/setup.sh
-source /home/atlas/Liverpool_SbottomAnalysis_Rel21/build/*-opt/setup.sh
+#source /home/atlas/Liverpool_SbottomAnalysis_Rel21/build/*-opt/setup.sh
 echo "Configured LivAnalysis from: /home/atlas/Liverpool_SbottomAnalysis_Rel21//build/*-opt/setup.sh it worked"
 
 # Set up the prompt:
