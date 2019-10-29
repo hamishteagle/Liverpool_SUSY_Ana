@@ -27,7 +27,7 @@ NewObjectDef::NewObjectDef(asg::SgTEvent* event, ST::SUSYObjDef_xAOD* SUSYTool, 
   baselineMuons = std::make_unique<xAOD::MuonContainer>(SG::VIEW_ELEMENTS);
   baselineTaus = std::make_unique<xAOD::TauJetContainer>(SG::VIEW_ELEMENTS);
   baselinePhotons = std::make_unique<xAOD::PhotonContainer>(SG::VIEW_ELEMENTS);
- 
+
   goodElectrons = std::make_unique<xAOD::ElectronContainer>(SG::VIEW_ELEMENTS);
   goodMuons = std::make_unique<xAOD::MuonContainer>(SG::VIEW_ELEMENTS);
   goodTaus = std::make_unique<xAOD::TauJetContainer>(SG::VIEW_ELEMENTS);
@@ -42,13 +42,13 @@ NewObjectDef::NewObjectDef(asg::SgTEvent* event, ST::SUSYObjDef_xAOD* SUSYTool, 
 
   //Get the objects after the OR with baseline
   this->GetObjects();
-  
+
   //Get the truth jets (no overlap removal atm)
   if (doTruthJets){
     goodTruthJets = new xAOD::JetContainer(SG::VIEW_ELEMENTS);
     this->GetTruthJets();
   }
-  
+
   eventStore->record(baselineElectrons.release(),"baselineElectrons"+systematic);
   eventStore->record(baselineMuons.release(),"baselineMuons"+systematic);
   eventStore->record(baselineTaus.release(),"baselineTaus"+systematic);
@@ -64,11 +64,11 @@ NewObjectDef::NewObjectDef(asg::SgTEvent* event, ST::SUSYObjDef_xAOD* SUSYTool, 
   eventStore->record(BJets.release(),"BJets"+systematic);
   eventStore->record(nonBJets.release(),"nonBJets"+systematic);
   eventStore->record(METvector.release(),"METvector"+systematic);
-  
+
 
 
 }
- 
+
 bool pT_Sorter( const xAOD::IParticle* j1, const xAOD::IParticle* j2 ) {
   double pT1 = 0;
   double pT2 = 0;
@@ -102,7 +102,7 @@ void NewObjectDef::GetBaselineObjects(bool m_SUSY5, bool m_SUSY7) {
   preOR_baselinePhotons = std::make_unique<xAOD::PhotonContainer>(SG::VIEW_ELEMENTS);
   preOR_baselineJets = std::make_unique<xAOD::JetContainer>(SG::VIEW_ELEMENTS);
 
- 
+
   // Setup MET containers
   xAOD::MissingETContainer* met_nominal = new xAOD::MissingETContainer;
   xAOD::MissingETAuxContainer*  met_nominal_aux = new xAOD::MissingETAuxContainer;
@@ -147,7 +147,7 @@ void NewObjectDef::GetBaselineObjects(bool m_SUSY5, bool m_SUSY7) {
   MET = (*met_it)->met();
   METphi = (*met_it)->phi();
   objTool->GetMETSig(*met_nominal, METsig, true, false);
-  
+
   //Fill preOR electrons
   for (const auto &el_itr: *electrons) {
       if (el_itr->auxdata<char>("baseline")) preOR_baselineElectrons->push_back(el_itr);
@@ -241,8 +241,8 @@ void NewObjectDef::GetObjects() {
       if (jet_itr->auxdata<char>("bad")) badJets->push_back(jet_itr);
       if (jet_itr->auxdata<char>("signal") && jet_itr->auxdata<char>("baseline")) {
         goodJets->push_back(jet_itr);
-        if (jet_itr->auxdata<char>("bjet")) BJets->push_back(jet_itr);
-	if (!(jet_itr)->auxdata<char>("bjet")) nonBJets->push_back(jet_itr);
+        if (jet_itr->auxdata<char>("bjet")>=3) BJets->push_back(jet_itr);
+        else if ((jet_itr)->auxdata<char>("bjet")<3) nonBJets->push_back(jet_itr);
       }
     }
   }
@@ -266,7 +266,7 @@ void NewObjectDef::GetObjects() {
       nVertex++ ;
     }
   }
- 
+
   //Lepton trigger SFs
   //If only one 1-lepton trigger has fired, take this scale factor, if both e and mu fire, then dilep should fire and we take this as the scale factor.
   //cout events to check if the muon trigger and electron trigger fire without the mu_e trigger firing (should never happen)
@@ -292,11 +292,11 @@ void NewObjectDef::GetObjects() {
     }
   }
 
-  return; 
+  return;
 }
 
 
- 
+
 void NewObjectDef::GetTruthJets(){
 
   //Get the truth Jets a' la SUSYTools
@@ -309,7 +309,7 @@ void NewObjectDef::GetTruthJets(){
   truthJetContainer = shallowcopy.first;//shallow copy to truthJet temp container
   truthJetContainer_aux = shallowcopy.second;//same with aux temp container
 
-  
+
   for (const auto &jet: *truthJetContainer){
     if (jet->pt()>20000 && fabs(jet->eta())<2.8){
       goodTruthJets->push_back(jet);
