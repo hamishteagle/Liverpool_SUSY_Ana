@@ -10,7 +10,7 @@ stages:
 # To see the available commands when building a docker image with Gitlab, see
 # https://gitlab.cern.ch/vcs/gitlabci-docker-builder
 
-build_dev:
+build_image:
   stage: build
   only:
   - master
