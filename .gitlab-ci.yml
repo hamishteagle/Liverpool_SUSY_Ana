@@ -54,7 +54,7 @@ run_project:
     - mkdir -p run #this is happening inside the Gitlab runner
     - mkdir -p /home/atlas/submitdir/ #this is happening inside the Gitlab runner
     - mkdir -p build
-    - source /home/atlas/release_setup.sh
+    - source ~/analysis_release_setup.sh
     - cd build; cmake ../WorkDir; make;
     - source *-opt/setup.sh
     - cd ../run
