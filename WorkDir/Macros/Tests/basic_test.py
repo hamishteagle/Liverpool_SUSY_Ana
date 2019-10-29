@@ -123,7 +123,7 @@ class Livana(unittest.TestCase):
         with open(self.__location__+"/default/checkout_flow.json",'r') as ofile:
             test_flow = json.load(ofile, object_pairs_hook=collections.OrderedDict)#Get the cuts from the json in the correct order
 
-        self.assertDictEqual(current_flow, test_flow, msg="cutflows don't match!!:"+current_flow)
+        self.assertDictEqual(current_flow, test_flow, msg="cutflows don't match!!:"+str(current_flow))
         #replace the current cutflow file with the new one. Need a metod to allow small changes here
         os.remove(self.__location__+"/default/current_flow.json")
         os.rename(self.__location__+"/default/checkout_flow.json", self.__location__+"/default/current_flow.json")
