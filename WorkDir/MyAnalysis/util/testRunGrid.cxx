@@ -35,53 +35,53 @@ int main( int argc, char* argv[] ) {
   std::string CurrentDate = std::to_string(now->tm_mday)+Months[Month];
   std::string fileType = "";
 
-  int found_TRUTH1 = inputFile.find("TRUTH1");
+  std::size_t found_TRUTH1 = inputFile.find("TRUTH1");
   if (found_TRUTH1 != std::string::npos){
 	   fileType = "TRUTH1";
 	   RunningWithSyst = false;
   }
-  int found_TRUTH3 = inputFile.find("TRUTH3");
+  std::size_t found_TRUTH3 = inputFile.find("TRUTH3");
   if (found_TRUTH3 != std::string::npos){
 	   fileType = "TRUTH3";
 	   RunningWithSyst = false;
   }
-  int found_SUSY5 = inputFile.find("SUSY5");
+  std::size_t found_SUSY5 = inputFile.find("SUSY5");
   if (found_SUSY5 != std::string::npos){
      fileType = "SUSY5";
   }
-  int found_SUSY7 = inputFile.find("SUSY7");
+  std::size_t found_SUSY7 = inputFile.find("SUSY7");
   if (found_SUSY7 != std::string::npos){
      fileType = "SUSY7";
   }
-  int found_data15 = inputFile.find("data15");
+  std::size_t found_data15 = inputFile.find("data15");
   if (found_data15 != std::string::npos){
 	   fileType = "DATA15";
   }
 
-  int found_data16 = inputFile.find("data16");
+  std::size_t found_data16 = inputFile.find("data16");
   if (found_data16 != std::string::npos){
 	   fileType = "DATA16";
   }
 
-  int found_data17 = inputFile.find("data17");
+  std::size_t found_data17 = inputFile.find("data17");
   if (found_data17 != std::string::npos){
 	   fileType = "DATA17";
   }
 
-  int found_data18 = inputFile.find("data18");
+  std::size_t found_data18 = inputFile.find("data18");
   if (found_data18 != std::string::npos){
 	   fileType = "DATA18";
   }
 
-  int found_mc16a = inputFile.find("r9364");
+  std::size_t found_mc16a = inputFile.find("r9364");
   if(found_mc16a != std::string::npos){
 	   fileType = "MC16a";
   }
-  int found_mc16d = inputFile.find("r10201");
+  std::size_t found_mc16d = inputFile.find("r10201");
   if(found_mc16d != std::string::npos){
 	   fileType = "MC16d";
   }
-  int found_mc16e = inputFile.find("r10724");
+  std::size_t found_mc16e = inputFile.find("r10724");
   if(found_mc16e != std::string::npos){
 	   fileType = "MC16e";
   }

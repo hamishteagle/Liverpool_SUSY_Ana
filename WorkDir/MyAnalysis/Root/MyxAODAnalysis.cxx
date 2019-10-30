@@ -225,7 +225,7 @@ EL::StatusCode MyxAODAnalysis :: initialize ()
   if(isMC16d){lumicalcFiles.push_back(PathResolverFindCalibFile("GoodRunsLists/data17_13TeV/20180619/physics_25ns_Triggerno17e33prim.lumicalc.OflLumi-13TeV-010.root"));}
   if(isMC16e){lumicalcFiles.push_back(PathResolverFindCalibFile("GoodRunsLists/data18_13TeV/20190219/ilumicalc_histograms_None_348885-364292_OflLumi-13TeV-010.root"));}
 
-  //Initialise SUSYTools instances
+  //Initialise the nominal SUSYTools instance->We use this to get the metadata
   objTool = std::make_unique<ST::SUSYObjDef_xAOD>("SUSYObjDef_xAOD");
 
   //Get the metadata using SUSYTools
@@ -253,22 +253,33 @@ EL::StatusCode MyxAODAnalysis :: initialize ()
   //Set the data type
   ST::ISUSYObjDef_xAODTool::DataSource datasource = (isData ? ST::ISUSYObjDef_xAODTool::Data : (isAtlfast ? ST::ISUSYObjDef_xAODTool::AtlfastII : ST::ISUSYObjDef_xAODTool::FullSim));
 
+  //Initialse the other SUSYTools instances
+  objTool_PFlow = std::make_unique<ST::SUSYObjDef_xAOD>("SUSYObjDef_xAOD");
+
   //Set the config according to the Derivation
   ANA_CHECK(objTool->setProperty("DataSource",datasource) );
+  ANA_CHECK(objTool_PFlow->setProperty("DataSource",datasource) );
   if (m_SUSY5){
     ANA_CHECK(objTool->setProperty("ConfigFile",PathResolverFindCalibFile("/MyAnalysis/MyAnalysis/configs/1Lbb_default.conf")));
+    ANA_CHECK(objTool_PFlow->setProperty("ConfigFile",PathResolverFindCalibFile("/MyAnalysis/MyAnalysis/configs/1Lbb_PFlow.conf")));
     ANA_MSG_INFO("This is SUSY5");
   }
   if (m_SUSY7){
     ANA_CHECK(objTool->setProperty("ConfigFile",PathResolverFindCalibFile("/MyAnalysis/MyAnalysis/configs/topDM_Giulia.conf")));
+    ANA_CHECK(objTool_PFlow->setProperty("ConfigFile",PathResolverFindCalibFile("/MyAnalysis/MyAnalysis/configs/topDM_Giulia.conf")));
     ANA_MSG_INFO("This is SUSY7");
   }
-  ANA_CHECK(objTool->setProperty("UseBtagging", true));
 
   if (!isTruth){
     ANA_CHECK(objTool->setProperty("PRWLumiCalcFiles",lumicalcFiles));
     ANA_CHECK(objTool->setProperty("AutoconfigurePRWTool",true));
     ANA_CHECK(objTool->initialize());
+    ANA_MSG_INFO("Initialised Nominal SUSYTools instance");
+
+    //Add different settings in SUSYTools instances
+    ANA_CHECK(objTool_PFlow->setProperty("PRWLumiCalcFiles",lumicalcFiles));
+    ANA_CHECK(objTool_PFlow->setProperty("AutoconfigurePRWTool",true));
+    ANA_CHECK(objTool_PFlow->initialize());
   }
 
   if(!doSyst) {
@@ -284,23 +295,25 @@ EL::StatusCode MyxAODAnalysis :: initialize ()
     systInfoList = objTool->getSystInfoList();
   }
 
+  std::vector<std::string> output_trees = {"CollectionTree_","CollectionTree_PFlow"};
+  for (const auto& output_tree_string: output_trees){
+    for(const auto& sysInfo : systInfoList){
 
-  for(const auto& sysInfo : systInfoList){
+      const CP::SystematicSet& sys = sysInfo.systset;
 
-    const CP::SystematicSet& sys = sysInfo.systset;
+      std::string temp = "On systematic: " + sys.name();
+      ANA_MSG_INFO(temp);
 
-    std::string temp = "On systematic: " + sys.name();
-    ANA_MSG_INFO(temp);
+      TDirectory *out_TDir = (TDirectory*) wk()->getOutputFile ("output");
 
-    TDirectory *out_TDir = (TDirectory*) wk()->getOutputFile ("output");
+      std::string treeName = output_tree_string+std::string(sys.name());
+      const char * cName = treeName.c_str();
+      TTree *Temp = new TTree(cName, cName);
+      TreeService *Tree_Service = new TreeService(Temp, out_TDir);
 
-    std::string treeName = "CollectionTree_"+std::string(sys.name());
-    const char * cName = treeName.c_str();
-    TTree *Temp = new TTree(cName, cName);
-    TreeService *Tree_Service = new TreeService(Temp, out_TDir);
-
-    m_treeServiceVector.push_back(Tree_Service);
-    Temp->Write();
+      m_treeServiceVector.push_back(Tree_Service);
+      Temp->Write();
+    }
   }
 
 
@@ -393,427 +406,440 @@ EL::StatusCode MyxAODAnalysis :: execute ()
 
 
   isyst = 0;
+  std::vector<std::string>output_trees = {"CollectionTree_","CollectionTree_PFlow"};
+  for (const auto& output_tree_string: output_trees){
+      for (const auto& sysInfo : systInfoList){
 
-  for (const auto& sysInfo : systInfoList){
+      const CP::SystematicSet& syst = sysInfo.systset;
 
-    const CP::SystematicSet& syst = sysInfo.systset;
+      int year = 0;
 
-    int year = 0;
+      if (!isTruth){
+        objTool->ApplyPRWTool();
+        year = objTool->treatAsYear();
 
-    if (!isTruth){
-      objTool->ApplyPRWTool();
-      year = objTool->treatAsYear();
-
-      if (objTool->resetSystematics() != CP::SystematicCode::Ok) {
-        Error(APP_NAME, "Cannot reset SUSYTools systematics" );
-        exit(-2);
-      }
-
-      if (objTool->applySystematicVariation(syst) != CP::SystematicCode::Ok) {
-        std::string temp = "Cannot configure SUSYTools for systematic: " + syst.name();
-        ANA_MSG_INFO(temp);
-      }
-    }
-
-    const xAOD::EventInfo* eventInfo =0;
-    if (! evtStore()->retrieve(eventInfo, "EventInfo").isSuccess() ){
-      Error("execute()","Failed to retrieve event info collection, exiting!!");
-      isyst++;
-      continue;
-    }
-
-    if(!isTruth && !isData){
-      m_averageIntPerX=eventInfo->averageInteractionsPerCrossing();
-      m_actualIntPerX=eventInfo->actualInteractionsPerCrossing();
-    }
-    else {
-      m_averageIntPerX=1;
-      m_actualIntPerX=1;
-    }
-
-
-    m_lumiBlockNumber = eventInfo->lumiBlock();
-    m_runNumber = eventInfo->runNumber();
-    EventNumber = (eventInfo->eventNumber());
-
-    xAOD::TStore* store = wk()->xaodStore();
-    mcChannel = 0;
-    double puWgt = 1;
-    double mcWgt = 1;
-    double truthfilt_MET = 0;
-    double truthfilt_HT = 0;
-    double renormedMcWgt = 1;
-    double xsec = -1;
-    double filteff = -1;
-    double kfactor = -1;
-
-
-    if (isMC){
-      mcChannel = eventInfo->mcChannelNumber();
-      puWgt = objTool->GetPileupWeight();
-
-      try {
-        xsec = m_PMGCrossSectionTool->getAMIXsection(mcChannel);
-        filteff = m_PMGCrossSectionTool->getFilterEff(mcChannel);
-        kfactor = m_PMGCrossSectionTool->getKfactor(mcChannel);
-      } catch (...) {
-        if (counter == 1) Error("execute()", "PMGCrossSectionTool exception caught");
-      }
-
-      mcWgt = eventInfo->mcEventWeight();
-      renormedMcWgt = mcWgt;
-      if (std::abs(renormedMcWgt) >= 100){
-	renormedMcWgt = 1;
-      }
-
-
-      // This can get all of the PDF info etc if it's required at any point
-      //const xAOD::TruthEventContainer *truthE = 0;
-      //m_event->retrieve(truthE, "TruthEvents" );
-
-      //for(const auto& evt : *truthE) {
-	//float x1, x2, pdf1, pdf2, scalePDF, Q;
-      //int id1, id2;
-      //evt->pdfInfoParameter(id1, xAOD::TruthEvent::PDGID1);
-      //evt->pdfInfoParameter(id2, xAOD::TruthEvent::PDGID2);
-      //evt->pdfInfoParameter(x1, xAOD::TruthEvent::X1);
-      //evt->pdfInfoParameter(x2, xAOD::TruthEvent::X2);
-      //evt->pdfInfoParameter(pdf1, xAOD::TruthEvent::PDFID1);
-      //evt->pdfInfoParameter(pdf2, xAOD::TruthEvent::PDFID2);
-      //evt->pdfInfoParameter(scalePDF, xAOD::TruthEvent::SCALE);
-      //evt->pdfInfoParameter(Q, xAOD::TruthEvent::Q);
-      //      }
-    }
-
-    auto objs = std::make_unique<NewObjectDef>(evtStore(), objTool.get(), store, mcChannel, EventNumber, mcWgt, m_lumiBlockNumber, syst.name(), doTruthJets, m_SUSY5, m_SUSY7);
-    if (firstEvent == true) firstEvent = false;
-
-
-    bool passGRL = false;
-
-    if (!isMC){
-
-      if(!(m_grl->passRunLB(*eventInfo))){
-	store->clear();
-	continue;
-      }
-      else if (m_grl->passRunLB(*eventInfo)) {
-        passGRL = true;
-      }
-    }
-
-    if (isMC) {
-      truthfilt_MET = 0.001*eventInfo->auxdata< float >("GenFiltMET");
-      truthfilt_HT = 0.001*eventInfo->auxdata< float>("GenFiltHT");
-    }
-
-    bool coreFlag = true;
-    bool sctFlag = true;
-    bool LArTileFlag=true;
-
-    if (!isMC){
-      if ((eventInfo->errorState(xAOD::EventInfo::SCT) == xAOD::EventInfo::Error )){
-    	  sctFlag = false;
-    	  isyst++;
-	  store->clear();
-	  continue;
-      }
-      if (eventInfo->isEventFlagBitSet(xAOD::EventInfo::Core,18)){
-      	coreFlag = false;
-      	isyst++;
-	store->clear();
-      	continue;
-      }
-      if ((eventInfo->errorState(xAOD::EventInfo::LAr)==xAOD::EventInfo::Error) || (eventInfo->errorState(xAOD::EventInfo::Tile) == xAOD::EventInfo::Error)){
-      	LArTileFlag=false;
-      	isyst++;
-      	store->clear();
-	continue;
-      }
-    }
-
-    bool passedPrimVertex=true;
-    if (objs->getPrimVertex() < 1){
-      passedPrimVertex=false;
-      isyst++;
-      store->clear();
-      continue;
-    }
-    double nBadJet = objs->getNBadJets();
-    double nCosmicMu = objs->getNCosmicMuons();
-    double nBadMu = objs->getNBadMuons();
-
-    bool passedJetClean=true;
-    if (nBadJet > 0){
-      passedJetClean=false;
-      isyst++;
-      store->clear();
-      continue;
-    }
-
-    bool passedCosmicMu=true;
-    if (nCosmicMu > 0){
-      passedCosmicMu=false;
-      isyst++;
-      store->clear();
-      continue;
-    }
-
-    bool passedMuonClean=true;
-    if (nBadMu > 0){
-      passedMuonClean=false;
-      isyst++;
-      store->clear();
-      continue;
-    }
-
-
-
-
-    // Put the trigger here:
-    bool passedMETTrigger = false;
-    bool passedGammaTrigger = false;
-    bool passedMultiJetTrigger = false;
-    bool passedSingleMuTrigger = false;
-    bool passedSingleElTrigger = false;
-    bool passedDiLeptonTrigger = false;
-
-    int mu_triggers = 0;
-    int el_triggers = 0;
-    int dilep_triggers = 0;
-
-    std::vector<std::string> muon_triggers;
-    std::vector<std::string> electron_triggers;
-    std::vector<std::string>dilepton_triggers;
-    std::vector<int> muon_decisions;
-    std::vector<int> electron_decisions;
-    std::vector<int> dilepton_decisions;
-
-    double leptonTriggerSF =1;
-
-
-    //NEW TRIGGER IMPLEMENTATION
-    //Note:diMuon triggers only require 1 L1 muon.
-    std::vector<std::string> single_el_2015 = {"HLT_e24_lhmedium_L1EM20VH", "HLT_e60_lhmedium", "HLT_e120_lhloose"};
-    std::vector<std::string> single_mu_2015 = {"HLT_mu20_iloose_L1MU15", "HLT_mu50"};
-    std::vector<std::string> di_lepton_2015 = {"HLT_2e12_lhloose_L12EM10VH", "HLT_mu18_mu8noL1", "HLT_e17_lhloose_mu14"};
-    std::vector<std::string> single_el_2016 = {"HLT_e26_lhtight_nod0_ivarloose", "HLT_e60_lhmedium_nod0", "HLT_e140_lhloose_nod0"};
-    std::vector<std::string> single_mu_2016 = {"HLT_mu26_ivarmedium","HLT_mu50"};
-    std::vector<std::string> di_lepton_2016 = {"HLT_2e17_lhvloose_nod0","HLT_mu22_mu8noL1","HLT_e17_lhloose_nod0_mu14 "};
-    std::vector<std::string> single_el_2017 = {"HLT_e26_lhtight_nod0_ivarloose", "HLT_e60_lhmedium_nod0", "HLT_e140_lhloose_nod0"};
-    std::vector<std::string> single_mu_2017 = {"HLT_mu26_ivarmedium","HLT_mu50"};
-    std::vector<std::string> di_lepton_2017 = {"HLT_2e17_lhvloose_nod0_L12EM15VHI","HLT_mu22_mu8noL1", "HLT_e17_lhloose_nod0_mu14"};
-    std::vector<std::string> single_el_2018 = {"HLT_e26_lhtight_nod0_ivarloose", "HLT_e60_lhmedium_nod0", "HLT_e140_lhloose_nod0"};
-    std::vector<std::string> single_mu_2018 = {"HLT_mu26_ivarmedium","HLT_mu50"};
-    std::vector<std::string> di_lepton_2018 = {"HLT_2e17_lhvloose_nod0_L12EM15VHI","HLT_2e24_lhvloose_nod0","HLT_mu22_mu8noL1","HLT_e17_lhloose_nod0_mu14"};
-    //Use IsMETTriggerPassed() function which should chec the lowest un-prescaled triggers
-    if (isTruth){
-      passedMETTrigger = true;
-      passedGammaTrigger = true;
-      passedMultiJetTrigger = true;
-      passedSingleMuTrigger = true;
-      passedSingleElTrigger = true;
-      passedDiLeptonTrigger = true;
-    }
-    else {
-      if (year == 2015) {
-        for (auto mu_trig: single_mu_2015) {
-          int trigDecision = objTool->IsTrigPassed(mu_trig);
-          mu_triggers += trigDecision;
-          muon_triggers.push_back(mu_trig);
-          muon_decisions.push_back(trigDecision);
+        if (objTool->resetSystematics() != CP::SystematicCode::Ok) {
+          Error(APP_NAME, "Cannot reset SUSYTools systematics" );
+          exit(-2);
         }
-        for (auto el_trig: single_el_2015) {
-          int trigDecision = objTool->IsTrigPassed(el_trig);
-          el_triggers += trigDecision;
-          electron_triggers.push_back(el_trig);
-          electron_decisions.push_back(trigDecision);
-        }
-        for (auto dilep_trig: di_lepton_2015) {
-          int trigDecision = objTool->IsTrigPassed(dilep_trig);
-          dilep_triggers += trigDecision;
-          dilepton_triggers.push_back(dilep_trig);
-          dilepton_decisions.push_back(trigDecision);
+
+        if (objTool->applySystematicVariation(syst) != CP::SystematicCode::Ok) {
+          std::string temp = "Cannot configure SUSYTools for systematic: " + syst.name();
+          ANA_MSG_INFO(temp);
         }
       }
-      if (year == 2016) {
-        for (auto mu_trig: single_mu_2016) {
-          int trigDecision = objTool->IsTrigPassed(mu_trig);
-          mu_triggers += trigDecision;
-          muon_triggers.push_back(mu_trig);
-          muon_decisions.push_back(trigDecision);
+
+      const xAOD::EventInfo* eventInfo =0;
+      if (! evtStore()->retrieve(eventInfo, "EventInfo").isSuccess() ){
+        Error("execute()","Failed to retrieve event info collection, exiting!!");
+        isyst++;
+        continue;
+      }
+
+      if(!isTruth && !isData){
+        m_averageIntPerX=eventInfo->averageInteractionsPerCrossing();
+        m_actualIntPerX=eventInfo->actualInteractionsPerCrossing();
+      }
+      else {
+        m_averageIntPerX=1;
+        m_actualIntPerX=1;
+      }
+
+
+      m_lumiBlockNumber = eventInfo->lumiBlock();
+      m_runNumber = eventInfo->runNumber();
+      EventNumber = (eventInfo->eventNumber());
+
+      xAOD::TStore* store = wk()->xaodStore();
+      mcChannel = 0;
+      double puWgt = 1;
+      double mcWgt = 1;
+      double truthfilt_MET = 0;
+      double truthfilt_HT = 0;
+      double renormedMcWgt = 1;
+      double xsec = -1;
+      double filteff = -1;
+      double kfactor = -1;
+
+
+      if (isMC){
+        mcChannel = eventInfo->mcChannelNumber();
+        puWgt = objTool->GetPileupWeight();
+
+        try {
+          xsec = m_PMGCrossSectionTool->getAMIXsection(mcChannel);
+          filteff = m_PMGCrossSectionTool->getFilterEff(mcChannel);
+          kfactor = m_PMGCrossSectionTool->getKfactor(mcChannel);
+        } catch (...) {
+          if (counter == 1) Error("execute()", "PMGCrossSectionTool exception caught");
         }
-        for (auto el_trig: single_el_2016) {
-          int trigDecision = objTool->IsTrigPassed(el_trig);
-          el_triggers += trigDecision;
-          electron_triggers.push_back(el_trig);
-          electron_decisions.push_back(trigDecision);
+
+        mcWgt = eventInfo->mcEventWeight();
+        renormedMcWgt = mcWgt;
+        if (std::abs(renormedMcWgt) >= 100){
+  	renormedMcWgt = 1;
         }
-        for (auto dilep_trig: di_lepton_2016) {
-          int trigDecision = objTool->IsTrigPassed(dilep_trig);
-          dilep_triggers += trigDecision;
-          dilepton_triggers.push_back(dilep_trig);
-          dilepton_decisions.push_back(trigDecision);
+
+
+        // This can get all of the PDF info etc if it's required at any point
+        //const xAOD::TruthEventContainer *truthE = 0;
+        //m_event->retrieve(truthE, "TruthEvents" );
+
+        //for(const auto& evt : *truthE) {
+  	//float x1, x2, pdf1, pdf2, scalePDF, Q;
+        //int id1, id2;
+        //evt->pdfInfoParameter(id1, xAOD::TruthEvent::PDGID1);
+        //evt->pdfInfoParameter(id2, xAOD::TruthEvent::PDGID2);
+        //evt->pdfInfoParameter(x1, xAOD::TruthEvent::X1);
+        //evt->pdfInfoParameter(x2, xAOD::TruthEvent::X2);
+        //evt->pdfInfoParameter(pdf1, xAOD::TruthEvent::PDFID1);
+        //evt->pdfInfoParameter(pdf2, xAOD::TruthEvent::PDFID2);
+        //evt->pdfInfoParameter(scalePDF, xAOD::TruthEvent::SCALE);
+        //evt->pdfInfoParameter(Q, xAOD::TruthEvent::Q);
+        //      }
+      }
+      std::unique_ptr<NewObjectDef> objs;
+      if (output_tree_string=="CollectionTree_"){
+        objs.reset(new NewObjectDef(evtStore(), objTool.get(), store, mcChannel, EventNumber, mcWgt, m_lumiBlockNumber, syst.name(), doTruthJets, m_SUSY5, m_SUSY7));
+        //auto objs = std::make_unique<NewObjectDef>(evtStore(), objTool.get(), store, mcChannel, EventNumber, mcWgt, m_lumiBlockNumber, syst.name(), doTruthJets, m_SUSY5, m_SUSY7);
+      }
+      else if (output_tree_string=="CollectionTree_PFlow"){
+        objs.reset(new NewObjectDef(evtStore(), objTool_PFlow.get(), store, mcChannel, EventNumber, mcWgt, m_lumiBlockNumber, syst.name(), doTruthJets, m_SUSY5, m_SUSY7));
+        //auto objs = std::make_unique<NewObjectDef>(evtStore(), objTool_PFlow.get(), store, mcChannel, EventNumber, mcWgt, m_lumiBlockNumber, syst.name(), doTruthJets, m_SUSY5, m_SUSY7);
+      }
+      else{
+      ANA_MSG_ERROR("Didn't pick up a correct output_tree_string...exiting");
+      return StatusCode::FAILURE;
+      }
+      if (firstEvent == true) firstEvent = false;
+
+
+      bool passGRL = false;
+
+      if (!isMC){
+
+        if(!(m_grl->passRunLB(*eventInfo))){
+          store->clear();
+          continue;
+        }
+        else if (m_grl->passRunLB(*eventInfo)) {
+          passGRL = true;
         }
       }
-      if (year == 2017) {
-        for (auto mu_trig: single_mu_2017) {
-          int trigDecision = objTool->IsTrigPassed(mu_trig);
-          mu_triggers += trigDecision;
-          muon_triggers.push_back(mu_trig);
-          muon_decisions.push_back(trigDecision);
-        }
-        for (auto el_trig: single_el_2017) {
-          int trigDecision = objTool->IsTrigPassed(el_trig);
-          el_triggers += trigDecision;
-          electron_triggers.push_back(el_trig);
-          electron_decisions.push_back(trigDecision);
-        }
-	if (m_runNumber>=326834 && m_runNumber <=328393){
-	  int trigDecision = objTool->IsTrigPassed("HLT_2e24_lhvloose_nod0");
-          dilep_triggers += trigDecision;
-          dilepton_triggers.push_back("HLT_2e24_lhvloose_nod0");
-          dilepton_decisions.push_back(trigDecision);
-	}
-	else{
-	  for (auto dilep_trig: di_lepton_2017) {
-	    int trigDecision = objTool->IsTrigPassed(dilep_trig);
-	    dilep_triggers += trigDecision;
-	    dilepton_triggers.push_back(dilep_trig);
-	    dilepton_decisions.push_back(trigDecision);
-	  }
-	}
+
+      if (isMC) {
+        truthfilt_MET = 0.001*eventInfo->auxdata< float >("GenFiltMET");
+        truthfilt_HT = 0.001*eventInfo->auxdata< float>("GenFiltHT");
       }
-      if (year == 2018) {
-        for (auto mu_trig: single_mu_2018) {
-          int trigDecision = objTool->IsTrigPassed(mu_trig);
-          mu_triggers += trigDecision;
-          muon_triggers.push_back(mu_trig);
-          muon_decisions.push_back(trigDecision);
+
+      bool coreFlag = true;
+      bool sctFlag = true;
+      bool LArTileFlag=true;
+
+      if (!isMC){
+        if ((eventInfo->errorState(xAOD::EventInfo::SCT) == xAOD::EventInfo::Error )){
+      	  sctFlag = false;
+      	  isyst++;
+  	  store->clear();
+  	  continue;
         }
-        for (auto el_trig: single_el_2018) {
-          int trigDecision = objTool->IsTrigPassed(el_trig);
-          el_triggers += trigDecision;
-          electron_triggers.push_back(el_trig);
-          electron_decisions.push_back(trigDecision);
+        if (eventInfo->isEventFlagBitSet(xAOD::EventInfo::Core,18)){
+        	coreFlag = false;
+        	isyst++;
+          store->clear();
+        	continue;
         }
-        for (auto dilep_trig: di_lepton_2018) {
-          int trigDecision = objTool->IsTrigPassed(dilep_trig);
-          dilep_triggers += trigDecision;
-          dilepton_triggers.push_back(dilep_trig);
-          dilepton_decisions.push_back(trigDecision);
+        if ((eventInfo->errorState(xAOD::EventInfo::LAr)==xAOD::EventInfo::Error) || (eventInfo->errorState(xAOD::EventInfo::Tile) == xAOD::EventInfo::Error)){
+        	LArTileFlag=false;
+        	isyst++;
+        	store->clear();
+  	       continue;
         }
       }
-      if (mu_triggers > 0) {
-        passedSingleMuTrigger = true;
-	leptonTriggerSF = objs->getMuonTriggerSF();
+
+      bool passedPrimVertex=true;
+      if (objs->getPrimVertex() < 1){
+        passedPrimVertex=false;
+        isyst++;
+        store->clear();
+        continue;
       }
-      if (el_triggers > 0) {
-        passedSingleElTrigger = true;
-	leptonTriggerSF = objs->getElectronTriggerSF();
+      double nBadJet = objs->getNBadJets();
+      double nCosmicMu = objs->getNCosmicMuons();
+      double nBadMu = objs->getNBadMuons();
+
+      bool passedJetClean=true;
+      if (nBadJet > 0){
+        passedJetClean=false;
+        isyst++;
+        store->clear();
+        continue;
       }
-      if (dilep_triggers >0) {
-	passedDiLeptonTrigger = true;
-	leptonTriggerSF = objs->getDilepTriggerSF();
+
+      bool passedCosmicMu=true;
+      if (nCosmicMu > 0){
+        passedCosmicMu=false;
+        isyst++;
+        store->clear();
+        continue;
       }
-      if (objTool->IsMETTrigPassed()) {
+
+      bool passedMuonClean=true;
+      if (nBadMu > 0){
+        passedMuonClean=false;
+        isyst++;
+        store->clear();
+        continue;
+      }
+
+
+
+
+      // Put the trigger here:
+      bool passedMETTrigger = false;
+      bool passedGammaTrigger = false;
+      bool passedMultiJetTrigger = false;
+      bool passedSingleMuTrigger = false;
+      bool passedSingleElTrigger = false;
+      bool passedDiLeptonTrigger = false;
+
+      int mu_triggers = 0;
+      int el_triggers = 0;
+      int dilep_triggers = 0;
+
+      std::vector<std::string> muon_triggers;
+      std::vector<std::string> electron_triggers;
+      std::vector<std::string>dilepton_triggers;
+      std::vector<int> muon_decisions;
+      std::vector<int> electron_decisions;
+      std::vector<int> dilepton_decisions;
+
+      double leptonTriggerSF =1;
+
+
+      //NEW TRIGGER IMPLEMENTATION
+      //Note:diMuon triggers only require 1 L1 muon.
+      std::vector<std::string> single_el_2015 = {"HLT_e24_lhmedium_L1EM20VH", "HLT_e60_lhmedium", "HLT_e120_lhloose"};
+      std::vector<std::string> single_mu_2015 = {"HLT_mu20_iloose_L1MU15", "HLT_mu50"};
+      std::vector<std::string> di_lepton_2015 = {"HLT_2e12_lhloose_L12EM10VH", "HLT_mu18_mu8noL1", "HLT_e17_lhloose_mu14"};
+      std::vector<std::string> single_el_2016 = {"HLT_e26_lhtight_nod0_ivarloose", "HLT_e60_lhmedium_nod0", "HLT_e140_lhloose_nod0"};
+      std::vector<std::string> single_mu_2016 = {"HLT_mu26_ivarmedium","HLT_mu50"};
+      std::vector<std::string> di_lepton_2016 = {"HLT_2e17_lhvloose_nod0","HLT_mu22_mu8noL1","HLT_e17_lhloose_nod0_mu14 "};
+      std::vector<std::string> single_el_2017 = {"HLT_e26_lhtight_nod0_ivarloose", "HLT_e60_lhmedium_nod0", "HLT_e140_lhloose_nod0"};
+      std::vector<std::string> single_mu_2017 = {"HLT_mu26_ivarmedium","HLT_mu50"};
+      std::vector<std::string> di_lepton_2017 = {"HLT_2e17_lhvloose_nod0_L12EM15VHI","HLT_mu22_mu8noL1", "HLT_e17_lhloose_nod0_mu14"};
+      std::vector<std::string> single_el_2018 = {"HLT_e26_lhtight_nod0_ivarloose", "HLT_e60_lhmedium_nod0", "HLT_e140_lhloose_nod0"};
+      std::vector<std::string> single_mu_2018 = {"HLT_mu26_ivarmedium","HLT_mu50"};
+      std::vector<std::string> di_lepton_2018 = {"HLT_2e17_lhvloose_nod0_L12EM15VHI","HLT_2e24_lhvloose_nod0","HLT_mu22_mu8noL1","HLT_e17_lhloose_nod0_mu14"};
+      //Use IsMETTriggerPassed() function which should chec the lowest un-prescaled triggers
+      if (isTruth){
         passedMETTrigger = true;
+        passedGammaTrigger = true;
+        passedMultiJetTrigger = true;
+        passedSingleMuTrigger = true;
+        passedSingleElTrigger = true;
+        passedDiLeptonTrigger = true;
       }
-    }
-    if(passedSingleMuTrigger ==true && passedSingleElTrigger== true){
-      if(passedDiLeptonTrigger !=true && passedSingleMuTrigger ==true && passedSingleElTrigger== true){
-	std::cout<<"WARNING, both single lep triggers fired but no di-lepton trigger, your SFs are not prepared for this!!"<<std::endl;
+      else {
+        if (year == 2015) {
+          for (auto mu_trig: single_mu_2015) {
+            int trigDecision = objTool->IsTrigPassed(mu_trig);
+            mu_triggers += trigDecision;
+            muon_triggers.push_back(mu_trig);
+            muon_decisions.push_back(trigDecision);
+          }
+          for (auto el_trig: single_el_2015) {
+            int trigDecision = objTool->IsTrigPassed(el_trig);
+            el_triggers += trigDecision;
+            electron_triggers.push_back(el_trig);
+            electron_decisions.push_back(trigDecision);
+          }
+          for (auto dilep_trig: di_lepton_2015) {
+            int trigDecision = objTool->IsTrigPassed(dilep_trig);
+            dilep_triggers += trigDecision;
+            dilepton_triggers.push_back(dilep_trig);
+            dilepton_decisions.push_back(trigDecision);
+          }
+        }
+        if (year == 2016) {
+          for (auto mu_trig: single_mu_2016) {
+            int trigDecision = objTool->IsTrigPassed(mu_trig);
+            mu_triggers += trigDecision;
+            muon_triggers.push_back(mu_trig);
+            muon_decisions.push_back(trigDecision);
+          }
+          for (auto el_trig: single_el_2016) {
+            int trigDecision = objTool->IsTrigPassed(el_trig);
+            el_triggers += trigDecision;
+            electron_triggers.push_back(el_trig);
+            electron_decisions.push_back(trigDecision);
+          }
+          for (auto dilep_trig: di_lepton_2016) {
+            int trigDecision = objTool->IsTrigPassed(dilep_trig);
+            dilep_triggers += trigDecision;
+            dilepton_triggers.push_back(dilep_trig);
+            dilepton_decisions.push_back(trigDecision);
+          }
+        }
+        if (year == 2017) {
+          for (auto mu_trig: single_mu_2017) {
+            int trigDecision = objTool->IsTrigPassed(mu_trig);
+            mu_triggers += trigDecision;
+            muon_triggers.push_back(mu_trig);
+            muon_decisions.push_back(trigDecision);
+          }
+          for (auto el_trig: single_el_2017) {
+            int trigDecision = objTool->IsTrigPassed(el_trig);
+            el_triggers += trigDecision;
+            electron_triggers.push_back(el_trig);
+            electron_decisions.push_back(trigDecision);
+          }
+  	     if (m_runNumber>=326834 && m_runNumber <=328393){
+  	     int trigDecision = objTool->IsTrigPassed("HLT_2e24_lhvloose_nod0");
+            dilep_triggers += trigDecision;
+            dilepton_triggers.push_back("HLT_2e24_lhvloose_nod0");
+            dilepton_decisions.push_back(trigDecision);
+  	      }
+  	      else{
+        	  for (auto dilep_trig: di_lepton_2017) {
+        	    int trigDecision = objTool->IsTrigPassed(dilep_trig);
+        	    dilep_triggers += trigDecision;
+        	    dilepton_triggers.push_back(dilep_trig);
+        	    dilepton_decisions.push_back(trigDecision);
+  	      }
+  	     }
+        }
+        if (year == 2018) {
+          for (auto mu_trig: single_mu_2018) {
+            int trigDecision = objTool->IsTrigPassed(mu_trig);
+            mu_triggers += trigDecision;
+            muon_triggers.push_back(mu_trig);
+            muon_decisions.push_back(trigDecision);
+          }
+          for (auto el_trig: single_el_2018) {
+            int trigDecision = objTool->IsTrigPassed(el_trig);
+            el_triggers += trigDecision;
+            electron_triggers.push_back(el_trig);
+            electron_decisions.push_back(trigDecision);
+          }
+          for (auto dilep_trig: di_lepton_2018) {
+            int trigDecision = objTool->IsTrigPassed(dilep_trig);
+            dilep_triggers += trigDecision;
+            dilepton_triggers.push_back(dilep_trig);
+            dilepton_decisions.push_back(trigDecision);
+          }
+        }
+        if (mu_triggers > 0) {
+          passedSingleMuTrigger = true;
+  	      leptonTriggerSF = objs->getMuonTriggerSF();
+        }
+        if (el_triggers > 0) {
+          passedSingleElTrigger = true;
+  	      leptonTriggerSF = objs->getElectronTriggerSF();
+        }
+        if (dilep_triggers >0) {
+  	      passedDiLeptonTrigger = true;
+  	      leptonTriggerSF = objs->getDilepTriggerSF();
+        }
+        if (objTool->IsMETTrigPassed()) {
+          passedMETTrigger = true;
+        }
       }
-    }
-
-
-    //All cleaning cuts before trigger
-    bool passedCleaningCuts=false;
-    if(coreFlag && sctFlag && LArTileFlag && passedPrimVertex && passedJetClean && passedCosmicMu && passedMuonClean){
-      passedCleaningCuts=true;
-    }
-    auto m_varCalc = std::make_unique<CalculateVariables>( objs.get(), store, isTruth, doPhotons, isData);
-    auto m_regions = std::make_unique<PreliminarySel>(*m_varCalc, passedCleaningCuts);
-
-
-    double SFmctbbll = 1;
-
-    if (!isData && !isTruth) {
-      PUSumOfWeights = objTool->GetSumOfWeights(mcChannel);
-    }
-    else{
-      PUSumOfWeights = 0;
-    }
-    //Checking the number of events against the lumi
-    if (isData) {
-      if(isyst==0) {
-        h_eventsPerRun->Fill(m_runNumber,1);
+      if(passedSingleMuTrigger ==true && passedSingleElTrigger== true){
+        if(passedDiLeptonTrigger !=true && passedSingleMuTrigger ==true && passedSingleElTrigger== true){
+  	      std::cout<<"WARNING, both single lep triggers fired but no di-lepton trigger, your SFs are not prepared for this!!"<<std::endl;
+        }
       }
-    }
-    //Filling truthJet-recoJet information
-    double dR_init = 99;
-    double dEta_init = -99;
-    double dPhi_init = -99;
-    double P_init = -99;
-    if (doTruthJets){
-      //Compare truth jets and reco jets
-      std::cout<<"Inside truthJets....Shouldn't be here"<<std::endl;
-      for (auto truth_jet: (*objs->getTruthJets())){
-	for (auto reco_jet: (*objs->getGoodJets())){
-	  double dR = truth_jet->p4().DeltaR(reco_jet->p4());
-	  double dEta = truth_jet->eta()-reco_jet->eta();
-	  double dPhi = truth_jet->phi()-reco_jet->phi();
-	  double dP = fabs(truth_jet->e()-reco_jet->e())/(reco_jet->e()+truth_jet->e());
-	  double truthP = sqrt((truth_jet->px()*truth_jet->px())+(truth_jet->pz()*truth_jet->py())+(truth_jet->pz()*truth_jet->pz()));
-	  if (fabs(dR)<dR_init && dR<0.4 && dP <0.2){
-	    dR_init=dR;
-	    dEta_init = dEta;
-	    P_init = truthP;
-	    dPhi_init = dPhi;
-	  }
-	}
-	if (P_init>0){
-	  if (truth_jet->e()*0.001<30){
-	    h_dPhi_p30->Fill(dPhi_init);
-	    h_dEta_p30->Fill(dEta_init);
-	  }
-	  if (P_init*0.001<40){
-	    h_dPhi_p40->Fill(dPhi_init);
-	    h_dEta_p40->Fill(dEta_init);
-	  }
-	  if (P_init*0.001<80){
-	    h_dPhi_p80->Fill(dPhi_init);
-	    h_dEta_p80->Fill(dEta_init);
-	  }
-	  if (P_init*0.001<200){
-	    h_dPhi_p200->Fill(dPhi_init);
-	    h_dEta_p200->Fill(dEta_init);
-	  }
-	  if (P_init*0.001>200){
-	    h_dPhi_H->Fill(dPhi_init);
-	    h_dEta_H->Fill(dEta_init);
-	  }
-	}
+
+
+      //All cleaning cuts before trigger
+      bool passedCleaningCuts=false;
+      if(coreFlag && sctFlag && LArTileFlag && passedPrimVertex && passedJetClean && passedCosmicMu && passedMuonClean){
+        passedCleaningCuts=true;
       }
-    }
+      auto m_varCalc = std::make_unique<CalculateVariables>( objs.get(), store, isTruth, doPhotons, isData);
+      auto m_regions = std::make_unique<PreliminarySel>(*m_varCalc, passedCleaningCuts);
 
 
-    if (!isTruth){
-      if (m_regions->interestingRegion || RunningLocally){
-      	(m_treeServiceVector[isyst])->fillTree(objs.get(), store ,*m_regions, *m_varCalc,m_finalSumOfWeights, m_initialSumOfWeights, puWgt, SFmctbbll, passedMETTrigger, passedSingleMuTrigger, passedSingleElTrigger, passedDiLeptonTrigger, passedGammaTrigger, passedMultiJetTrigger, muon_triggers, muon_decisions, electron_triggers, electron_decisions, dilepton_triggers, dilepton_decisions,leptonTriggerSF, PUSumOfWeights, truthfilt_MET, truthfilt_HT, coreFlag, sctFlag, LArTileFlag, passGRL, passedPrimVertex, passedJetClean, passedCosmicMu, passedMuonClean, m_runNumber, renormedMcWgt, year, m_averageIntPerX, m_actualIntPerX, xsec, filteff, kfactor);
+      double SFmctbbll = 1;
+
+      if (!isData && !isTruth) {
+        PUSumOfWeights = objTool->GetSumOfWeights(mcChannel);
       }
+      else{
+        PUSumOfWeights = 0;
+      }
+      //Checking the number of events against the lumi
+      if (isData) {
+        if(isyst==0) {
+          h_eventsPerRun->Fill(m_runNumber,1);
+        }
+      }
+      //Filling truthJet-recoJet information
+      double dR_init = 99;
+      double dEta_init = -99;
+      double dPhi_init = -99;
+      double P_init = -99;
+      if (doTruthJets){
+        //Compare truth jets and reco jets
+        std::cout<<"Inside truthJets....Shouldn't be here"<<std::endl;
+        for (auto truth_jet: (*objs->getTruthJets())){
+  	     for (auto reco_jet: (*objs->getGoodJets())){
+        	  double dR = truth_jet->p4().DeltaR(reco_jet->p4());
+        	  double dEta = truth_jet->eta()-reco_jet->eta();
+        	  double dPhi = truth_jet->phi()-reco_jet->phi();
+        	  double dP = fabs(truth_jet->e()-reco_jet->e())/(reco_jet->e()+truth_jet->e());
+        	  double truthP = sqrt((truth_jet->px()*truth_jet->px())+(truth_jet->pz()*truth_jet->py())+(truth_jet->pz()*truth_jet->pz()));
+        	  if (fabs(dR)<dR_init && dR<0.4 && dP <0.2){
+        	    dR_init=dR;
+        	    dEta_init = dEta;
+        	    P_init = truthP;
+        	    dPhi_init = dPhi;
+  	         }
+  	     }
+      	if (P_init>0){
+      	  if (truth_jet->e()*0.001<30){
+      	    h_dPhi_p30->Fill(dPhi_init);
+      	    h_dEta_p30->Fill(dEta_init);
+      	  }
+      	  if (P_init*0.001<40){
+      	    h_dPhi_p40->Fill(dPhi_init);
+      	    h_dEta_p40->Fill(dEta_init);
+      	  }
+      	  if (P_init*0.001<80){
+      	    h_dPhi_p80->Fill(dPhi_init);
+      	    h_dEta_p80->Fill(dEta_init);
+      	  }
+      	  if (P_init*0.001<200){
+      	    h_dPhi_p200->Fill(dPhi_init);
+      	    h_dEta_p200->Fill(dEta_init);
+      	  }
+      	  if (P_init*0.001>200){
+      	    h_dPhi_H->Fill(dPhi_init);
+      	    h_dEta_H->Fill(dEta_init);
+      	  }
+      	}
+        }
+      }
+
+
+      if (!isTruth){
+        if (m_regions->interestingRegion || RunningLocally){
+        	(m_treeServiceVector[isyst])->fillTree(objs.get(), store ,*m_regions, *m_varCalc,m_finalSumOfWeights, m_initialSumOfWeights, puWgt, SFmctbbll, passedMETTrigger, passedSingleMuTrigger, passedSingleElTrigger, passedDiLeptonTrigger, passedGammaTrigger, passedMultiJetTrigger, muon_triggers, muon_decisions, electron_triggers, electron_decisions, dilepton_triggers, dilepton_decisions,leptonTriggerSF, PUSumOfWeights, truthfilt_MET, truthfilt_HT, coreFlag, sctFlag, LArTileFlag, passGRL, passedPrimVertex, passedJetClean, passedCosmicMu, passedMuonClean, m_runNumber, renormedMcWgt, year, m_averageIntPerX, m_actualIntPerX, xsec, filteff, kfactor);
+        }
+      }
+
+
+      isyst++;
+      store->clear();
+      //trigger decisions
+      electron_triggers.clear();
+      electron_decisions.clear();
+      muon_triggers.clear();
+      muon_decisions.clear();
+      dilepton_triggers.clear();
+      dilepton_decisions.clear();
     }
-
-
-    isyst++;
-    store->clear();
-    //trigger decisions
-    electron_triggers.clear();
-    electron_decisions.clear();
-    muon_triggers.clear();
-    muon_decisions.clear();
-    dilepton_triggers.clear();
-    dilepton_decisions.clear();
   }
   return StatusCode::SUCCESS;
 }

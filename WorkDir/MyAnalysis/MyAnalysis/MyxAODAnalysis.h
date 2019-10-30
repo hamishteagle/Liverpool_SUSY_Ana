@@ -61,6 +61,7 @@ class MyxAODAnalysis : public EL::Algorithm
 {
 #ifndef __CINT__
   std::unique_ptr<ST::SUSYObjDef_xAOD> objTool; //!
+  std::unique_ptr<ST::SUSYObjDef_xAOD> objTool_PFlow; //!
 
 #endif // not __CINT__
 
