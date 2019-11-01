@@ -9,7 +9,7 @@ class CalculateVariables
 
 {
  public:
- CalculateVariables(NewObjectDef *objects, xAOD::TStore* evtStore, bool isTruth, bool doPhotons, bool isData);
+ CalculateVariables(NewObjectDef *objects, xAOD::TStore* evtStore, bool isTruth, bool doPhotons, bool isData, std::string systematic);
   void CalculateOneLepVariables(NewObjectDef *objects, TLorentzVector b1v, TLorentzVector b2v, TLorentzVector tj1v);
   void CalculateTwoLepVariables(NewObjectDef *objects, TLorentzVector b1v, TLorentzVector b2v);
   void CalculatePhotonMET(NewObjectDef *objects);

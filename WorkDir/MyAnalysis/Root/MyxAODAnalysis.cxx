@@ -18,6 +18,7 @@
 #include <exception>
 #include <AsgTools/MessageCheck.h>
 #include <memory>
+#include <algorithm>
 
 #include <string.h>
 #include <fstream>
@@ -295,14 +296,38 @@ EL::StatusCode MyxAODAnalysis :: initialize ()
     systInfoList = objTool->getSystInfoList();
   }
 
-  std::vector<std::string> output_trees = {"CollectionTree_","CollectionTree_PFlow"};
-  for (const auto& output_tree_string: output_trees){
-    for(const auto& sysInfo : systInfoList){
+  std::vector<std::string> output_trees = {"CollectionTree_","CollectionTree_PFlow_"};
 
-      const CP::SystematicSet& sys = sysInfo.systset;
+  for (const auto& output_tree_string: output_trees){
+    for(auto sysInfo : systInfoList){
+
+      CP::SystematicSet& sys = sysInfo.systset;
 
       std::string temp = "On systematic: " + sys.name();
       ANA_MSG_INFO(temp);
+
+      bool syst_affects_electrons = ST::testAffectsObject(xAOD::Type::Electron, sysInfo.affectsType);
+      bool syst_affects_muons = ST::testAffectsObject(xAOD::Type::Muon, sysInfo.affectsType);
+      bool syst_affects_jets = ST::testAffectsObject(xAOD::Type::Jet, sysInfo.affectsType);
+      bool syst_affects_photons = ST::testAffectsObject(xAOD::Type::Photon, sysInfo.affectsType);
+      bool syst_affects_taus = ST::testAffectsObject(xAOD::Type::Tau, sysInfo.affectsType);
+      bool syst_affects_kinematics = sysInfo.affectsKinematics;
+      bool syst_affects_weights = sysInfo.affectsWeights;
+
+      //Remove systematic trees for variations that won't affect us
+      if(sys.name()!=""){
+        if((!syst_affects_jets && !syst_affects_muons && !syst_affects_electrons && !syst_affects_kinematics && !syst_affects_weights )||
+          (syst_affects_photons && !syst_affects_electrons) ||
+          syst_affects_taus
+          ){
+          std::string remove_syst = "Removing systematic: " + sys.name();
+          ANA_MSG_INFO(remove_syst);
+          systInfoList.erase(std::remove_if(systInfoList.begin(),systInfoList.end(),[sys](const ST::SystInfo & my_syst){
+            return (my_syst.systset).name()==sys.name();}
+          ),systInfoList.end());
+          continue;
+        }
+      }
 
       TDirectory *out_TDir = (TDirectory*) wk()->getOutputFile ("output");
 
@@ -402,14 +427,10 @@ EL::StatusCode MyxAODAnalysis :: execute ()
   // histograms and trees.  This is where most of your actual analysis
   // code will go.
 
-  const char* APP_NAME = "MyxAODAnalysis";
-
-
   isyst = 0;
-  std::vector<std::string>output_trees = {"CollectionTree_","CollectionTree_PFlow"};
+  std::vector<std::string>output_trees = {"CollectionTree_","CollectionTree_PFlow_"};
   for (const auto& output_tree_string: output_trees){
-      for (const auto& sysInfo : systInfoList){
-
+    for (const auto& sysInfo : systInfoList){
       const CP::SystematicSet& syst = sysInfo.systset;
 
       int year = 0;
@@ -418,15 +439,11 @@ EL::StatusCode MyxAODAnalysis :: execute ()
         objTool->ApplyPRWTool();
         year = objTool->treatAsYear();
 
-        if (objTool->resetSystematics() != CP::SystematicCode::Ok) {
-          Error(APP_NAME, "Cannot reset SUSYTools systematics" );
-          exit(-2);
-        }
+        ANA_CHECK(objTool->resetSystematics());
+        ANA_CHECK(objTool_PFlow->resetSystematics());
 
-        if (objTool->applySystematicVariation(syst) != CP::SystematicCode::Ok) {
-          std::string temp = "Cannot configure SUSYTools for systematic: " + syst.name();
-          ANA_MSG_INFO(temp);
-        }
+        ANA_CHECK(objTool->applySystematicVariation(syst));
+        ANA_CHECK(objTool_PFlow->applySystematicVariation(syst));
       }
 
       const xAOD::EventInfo* eventInfo =0;
@@ -499,13 +516,14 @@ EL::StatusCode MyxAODAnalysis :: execute ()
         //      }
       }
       std::unique_ptr<NewObjectDef> objs;
-      if (output_tree_string=="CollectionTree_"){
+      size_t found_nominal = output_tree_string.find("CollectionTree_");
+      size_t found_PFlow = output_tree_string.find("CollectionTree_PFlow_");
+
+      if (found_nominal != std::string::npos){
         objs.reset(new NewObjectDef(evtStore(), objTool.get(), store, mcChannel, EventNumber, mcWgt, m_lumiBlockNumber, syst.name(), doTruthJets, m_SUSY5, m_SUSY7));
-        //auto objs = std::make_unique<NewObjectDef>(evtStore(), objTool.get(), store, mcChannel, EventNumber, mcWgt, m_lumiBlockNumber, syst.name(), doTruthJets, m_SUSY5, m_SUSY7);
       }
-      else if (output_tree_string=="CollectionTree_PFlow"){
+      else if (found_PFlow != std::string::npos){
         objs.reset(new NewObjectDef(evtStore(), objTool_PFlow.get(), store, mcChannel, EventNumber, mcWgt, m_lumiBlockNumber, syst.name(), doTruthJets, m_SUSY5, m_SUSY7));
-        //auto objs = std::make_unique<NewObjectDef>(evtStore(), objTool_PFlow.get(), store, mcChannel, EventNumber, mcWgt, m_lumiBlockNumber, syst.name(), doTruthJets, m_SUSY5, m_SUSY7);
       }
       else{
       ANA_MSG_ERROR("Didn't pick up a correct output_tree_string...exiting");
@@ -757,7 +775,7 @@ EL::StatusCode MyxAODAnalysis :: execute ()
       if(coreFlag && sctFlag && LArTileFlag && passedPrimVertex && passedJetClean && passedCosmicMu && passedMuonClean){
         passedCleaningCuts=true;
       }
-      auto m_varCalc = std::make_unique<CalculateVariables>( objs.get(), store, isTruth, doPhotons, isData);
+      auto m_varCalc = std::make_unique<CalculateVariables>( objs.get(), store, isTruth, doPhotons, isData, syst.name());
       auto m_regions = std::make_unique<PreliminarySel>(*m_varCalc, passedCleaningCuts);
 
 

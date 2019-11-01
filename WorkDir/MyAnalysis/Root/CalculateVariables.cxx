@@ -47,7 +47,7 @@ bool btag_wgt_Sorter( const xAOD::Jet* j1, const xAOD::Jet* j2 ) {
 
 
 
-CalculateVariables::CalculateVariables(NewObjectDef *objects,xAOD::TStore* evtStore, bool isTruth, bool doPhotons, bool isData){
+CalculateVariables::CalculateVariables(NewObjectDef *objects,xAOD::TStore* evtStore, bool isTruth, bool doPhotons, bool isData, std::string systematic){
 
   // Initialise the variables to sensible numbers
 
@@ -55,19 +55,19 @@ CalculateVariables::CalculateVariables(NewObjectDef *objects,xAOD::TStore* evtSt
   calculatePhotons = doPhotons;
 
   //Retrieve objects from the eventStore, (we should add +systematic v soon!)
-  evtStore->retrieve(goodMuon_cont, "goodMuons");
-  evtStore->retrieve(badMuon_cont, "badMuons");
-  evtStore->retrieve(baselineMuon_cont, "baselineMuons");
-  evtStore->retrieve(goodElectron_cont, "goodElectrons");
-  evtStore->retrieve(baselineElectron_cont, "baselineElectrons");
-  evtStore->retrieve(goodTau_cont, "goodTaus");
-  evtStore->retrieve(baselineTau_cont, "baselineTaus");
-  evtStore->retrieve(goodPhoton_cont, "goodPhotons");
-  evtStore->retrieve(goodJet_cont, "goodJets");
-  evtStore->retrieve(goodJet_beforeOR_cont, "goodJets_beforeOR");
-  evtStore->retrieve(bJet_cont, "BJets");
-  evtStore->retrieve(nonBJet_cont, "nonBJets");
-  evtStore->retrieve(METvector_cont, "METvector");
+  evtStore->retrieve(goodMuon_cont, "goodMuons"+systematic);
+  evtStore->retrieve(badMuon_cont, "badMuons"+systematic);
+  evtStore->retrieve(baselineMuon_cont, "baselineMuons"+systematic);
+  evtStore->retrieve(goodElectron_cont, "goodElectrons"+systematic);
+  evtStore->retrieve(baselineElectron_cont, "baselineElectrons"+systematic);
+  evtStore->retrieve(goodTau_cont, "goodTaus"+systematic);
+  evtStore->retrieve(baselineTau_cont, "baselineTaus"+systematic);
+  evtStore->retrieve(goodPhoton_cont, "goodPhotons"+systematic);
+  evtStore->retrieve(goodJet_cont, "goodJets"+systematic);
+  evtStore->retrieve(goodJet_beforeOR_cont, "goodJets_beforeOR"+systematic);
+  evtStore->retrieve(bJet_cont, "BJets"+systematic);
+  evtStore->retrieve(nonBJet_cont, "nonBJets"+systematic);
+  evtStore->retrieve(METvector_cont, "METvector"+systematic);
 
   nMuon = goodMuon_cont->size();
   nBadMuon = badMuon_cont->size();
