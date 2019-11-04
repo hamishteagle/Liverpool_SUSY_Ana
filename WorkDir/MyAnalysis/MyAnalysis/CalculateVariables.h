@@ -368,6 +368,7 @@ class CalculateVariables
   double all_Meff;
   double nextrajets50;
   double amT2;
+  double metsig_New;
 
   bool calculatePhotons;
 

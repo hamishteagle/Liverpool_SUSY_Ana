@@ -21,7 +21,7 @@ TreeService::TreeService(TTree *outputTree, TDirectory *OutDir){
   tree->Branch("mcEventWeight", &mcEventWeight);
   tree->Branch("RenormedMcEventWeight", &RenormedMcEventWeight);
   //tree->Branch("weightsVector", &weightsVector);
-  tree->Branch("sampleSFmCTbbll",&sampleSFmCTbbll);
+  //tree->Branch("sampleSFmCTbbll",&sampleSFmCTbbll);
   tree->Branch("pileUpSumOfWeights",&pileUpSumOfWeights);
   tree->Branch("m_averageIntPerX",&m_averageIntPerX);
   tree->Branch("m_actualIntPerX",&m_actualIntPerX);
@@ -170,9 +170,9 @@ TreeService::TreeService(TTree *outputTree, TDirectory *OutDir){
   tree->Branch("muonSF", &muonSF);
   tree->Branch("electronSF", &electronSF);
   tree->Branch("electronTriggerSF", &electronTriggerSF);
-  tree->Branch("tauSF", &tauSF);
-  tree->Branch("tauTriggerSF", &tauTriggerSF);
-  tree->Branch("photonSF", &photonSF);
+  //tree->Branch("tauSF", &tauSF);
+  //tree->Branch("tauTriggerSF", &tauTriggerSF);
+  //tree->Branch("photonSF", &photonSF);
   tree->Branch("bJetSF", &bJetSF);
   tree->Branch("JVTSF", &JVTSF);
   tree->Branch("puWgt", &puWgt);
@@ -216,6 +216,44 @@ TreeService::TreeService(TTree *outputTree, TDirectory *OutDir){
 
 }
 
+void TreeService::fillTreeWeights(NewObjectDef *objects, double puWeight_sys, double LeptonTriggerSF, ST::SystInfo systInfo_weight){
+
+  std::string syst_name = systInfo_weight.systset.name();
+  std::set<unsigned int> syst_set = systInfo_weight.affectedWeights;
+  //PRW
+  if (syst_name.find("PRW") != std::string::npos)  tree->Branch(("puWgt_"+syst_name).c_str(), &puWeight_sys);
+  //Muons
+  if(syst_set.find(1101)!=syst_set.end() || syst_set.find(1102)!=syst_set.end() || syst_set.find(1103)!=syst_set.end() ){
+    muonSF_sys = objects->getMuonSF();
+    tree->Branch(("muonSF_"+syst_name).c_str(), &muonSF_sys);
+  }
+  //Electrons
+  if(syst_set.find(1201)!=syst_set.end() ||syst_set.find(1202)!=syst_set.end() || syst_set.find(1203)!=syst_set.end() || syst_set.find(1205)!=syst_set.end()){
+    electronSF_sys = objects->getElectronSF();
+    tree->Branch(("electronSF_"+syst_name).c_str(), &electronSF_sys);
+  }
+  if(syst_set.find(1001)!=syst_set.end()){
+    tree->Branch(("bJetSF_"+syst_name).c_str(), &bJetSF_sys);
+    bJetSF_sys = objects->getBJetSF();
+  }
+  if(syst_set.find(1002)!=syst_set.end()){
+    tree->Branch(("JVTSF_"+syst_name).c_str(), &JVTSF_sys);
+    JVTSF_sys = objects->getJVTSF();
+  }
+  //Triggers (El/Mu)
+  if (syst_set.find(1204)!=syst_set.end() || syst_set.find(1104)!=syst_set.end()){
+  muonTriggerSF_sys = objects->getMuonTriggerSF();
+  electronTriggerSF_sys = objects->getElectronTriggerSF();
+  if (syst_set.find(1104)!=syst_set.end()) tree->Branch(("muonTriggerSF_"+syst_name).c_str(), &muonTriggerSF_sys);
+  if (syst_set.find(1204)!=syst_set.end()) tree->Branch(("electronTriggerSF_"+syst_name).c_str(), &electronTriggerSF_sys);
+  leptonTriggerSF_sys = LeptonTriggerSF;
+  tree->Branch(("leptonTriggerSF_"+syst_name).c_str(),&leptonTriggerSF_sys);
+  }
+  //dilepTriggerSF_sys = objects->getDilepTriggerSF();
+  //tree->Branch(("dilepTriggerSF_"+syst_name).c_str(),&dilepTriggerSF_sys);//Leave this out for now
+
+  writeTree();
+}
 
 void TreeService::fillTree(NewObjectDef *objects , xAOD::TStore *evtStore, PreliminarySel &region, CalculateVariables &variables, double mFinalWeight, double mInitialWeight, double puWeight, double SFmCTbbll, bool TrigMET, bool TrigMu, bool TrigEl, bool TrigDilep, bool TrigGamma, bool Trig6j, std::vector<std::string> muon_triggers, std::vector<int> muon_decisions, std::vector<std::string> electron_triggers, std::vector<int> electron_decisions, std::vector<std::string> dilepton_triggers, std::vector<int> dilepton_decisions, double LeptonTriggerSF, double puSumWeights, double TRUTHMET, double TRUTHHT, bool CoreFlags, bool SCTFlag,bool LArTileFlags, bool passGRL, bool passedPrimVertexes, bool passedJetCleans, bool passedCosmicMus, bool passedMuonCleans, double RNo,  double RenormedMCWgt, int LumiYear, double m_averageIntPerCrossing, double m_actualIntPerCrossing, double m_xsec, double m_filteff, double m_kfactor){
 

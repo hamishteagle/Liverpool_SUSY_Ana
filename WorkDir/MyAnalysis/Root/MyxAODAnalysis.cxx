@@ -296,7 +296,8 @@ EL::StatusCode MyxAODAnalysis :: initialize ()
     systInfoList = objTool->getSystInfoList();
   }
 
-  std::vector<std::string> output_trees = {"CollectionTree_","CollectionTree_PFlow_"};
+  //std::vector<std::string> output_trees = {"CollectionTree_","CollectionTree_PFlow_"};
+  std::vector<std::string> output_trees = {"CollectionTree_"};
 
   for (const auto& output_tree_string: output_trees){
     for(auto sysInfo : systInfoList){
@@ -326,8 +327,10 @@ EL::StatusCode MyxAODAnalysis :: initialize ()
           systInfoList.erase(std::remove_if(systInfoList.begin(),systInfoList.end(),[sys](const ST::SystInfo & my_syst){
             return (my_syst.systset).name()==sys.name();}
           ),systInfoList.end());
-          if (syst_affects_weights){
-            systInfoList_weights.push_back(sysInfo)//Fill the vector of weights systs to append to nominal tree
+          if (syst_affects_weights && !syst_affects_taus && !syst_affects_photons){
+            std::string push_back_string = "Adding systematic " +sys.name()+ " to systInfoList_weights";
+            ANA_MSG_INFO(push_back_string);
+            systInfoList_weights.push_back(sysInfo);//Fill the vector of weights systs to append to nominal tree
           }
           continue;
         }
@@ -432,7 +435,8 @@ EL::StatusCode MyxAODAnalysis :: execute ()
   // code will go.
 
   isyst = 0;
-  std::vector<std::string>output_trees = {"CollectionTree_","CollectionTree_PFlow_"};
+  //std::vector<std::string>output_trees = {"CollectionTree_","CollectionTree_PFlow_"};
+  std::vector<std::string>output_trees = {"CollectionTree_"};
   for (const auto& output_tree_string: output_trees){
     for (const auto& sysInfo : systInfoList){
       const CP::SystematicSet& syst = sysInfo.systset;
@@ -520,8 +524,8 @@ EL::StatusCode MyxAODAnalysis :: execute ()
         //      }
       }
       std::unique_ptr<NewObjectDef> objs;
-      found_nominal  = (output_tree_string.find("CollectionTree_") != std::string::npos);
-      found_PFlow = (output_tree_string.find("CollectionTree_PFlow_"!= std::string::npos));
+      bool found_nominal = (output_tree_string.find("CollectionTree_") != std::string::npos);
+      bool found_PFlow   = (output_tree_string.find("CollectionTree_PFlow_")!= std::string::npos);
 
       if (found_nominal){
         objs.reset(new NewObjectDef(evtStore(), objTool.get(), store, mcChannel, EventNumber, mcWgt, m_lumiBlockNumber, syst.name(), doTruthJets, m_SUSY5, m_SUSY7));
@@ -849,6 +853,24 @@ EL::StatusCode MyxAODAnalysis :: execute ()
       if (!isTruth){
         if (m_regions->interestingRegion || RunningLocally){
         	(m_treeServiceVector[isyst])->fillTree(objs.get(), store ,*m_regions, *m_varCalc,m_finalSumOfWeights, m_initialSumOfWeights, puWgt, SFmctbbll, passedMETTrigger, passedSingleMuTrigger, passedSingleElTrigger, passedDiLeptonTrigger, passedGammaTrigger, passedMultiJetTrigger, muon_triggers, muon_decisions, electron_triggers, electron_decisions, dilepton_triggers, dilepton_decisions,leptonTriggerSF, PUSumOfWeights, truthfilt_MET, truthfilt_HT, coreFlag, sctFlag, LArTileFlag, passGRL, passedPrimVertex, passedJetClean, passedCosmicMu, passedMuonClean, m_runNumber, renormedMcWgt, year, m_averageIntPerX, m_actualIntPerX, xsec, filteff, kfactor);
+          //Loop through weights systematics and write to the nominal
+          if (output_tree_string=="CollectionTree_"){
+            for(auto systInfo_weight: systInfoList_weights){
+              const CP::SystematicSet& syst_weight = systInfo_weight.systset;
+              ANA_CHECK(objTool->resetSystematics());
+              ANA_CHECK(objTool->applySystematicVariation(syst_weight));
+              objs->GetScaleFactors();//We don't need to get all the objects again, just re-calculate the scale factors
+
+              if ((syst_weight.name()).find("PRW") != std::string::npos){
+                objTool->ApplyPRWTool();//Reset PRW weights
+                puWgt = objTool->GetPileupWeight();
+              }
+              if (mu_triggers > 0)   leptonTriggerSF = objs->getMuonTriggerSF();
+              if (el_triggers > 0)   leptonTriggerSF = objs->getElectronTriggerSF();
+              if (dilep_triggers >0) leptonTriggerSF = objs->getDilepTriggerSF();
+              (m_treeServiceVector[isyst])->fillTreeWeights(objs.get(), puWgt, leptonTriggerSF, systInfo_weight);
+            }
+          }
         }
       }
 

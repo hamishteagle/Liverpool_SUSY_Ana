@@ -23,6 +23,8 @@ class TreeService
  public:
   TreeService(TTree *outputTree, TDirectory *OutDir);
 
+  void fillTreeWeights(NewObjectDef *objects, double puWeight_sys, double LeptonTriggerSF, ST::SystInfo systInfo_weight);
+
   void fillTree(NewObjectDef *objects, xAOD::TStore *evtStore, PreliminarySel &region, CalculateVariables &variables , double mFinalWeight, double mInitialWeight, double puWeight, double SFmCTbbll, bool TrigMET, bool TrigMu, bool TrigEl, bool TrigDilep, bool TrigGamma, bool Trig6j, std::vector<std::string> muon_triggers, std::vector<int> muon_decisions, std::vector<std::string> electron_triggers, std::vector<int> electron_decisions, std::vector<std::string> dilepton_triggers, std::vector<int> dilepton_decisions, double LeptonTriggerSF, double puSumWeights, double TRUTHMET, double TRUTHHT ,bool CoreFlags, bool SCTFlag, bool LArTileFlag, bool passGRL, bool passedPrimVertex, bool passedJetClean, bool passedCosmicMu, bool passedMuonClean, double RNo, double RenormedMCWgt, int LumiYear, double m_averageIntPerCrossing, double m_actualIntPerCrossing, double m_xsec, double m_filteff, double m_kfactor);
 
   void writeTree();
@@ -33,7 +35,6 @@ class TreeService
   // Store our Trees. Need to set up the structure in the initialise
 
   TTree *tree;
-
 
   // General Variables
 
@@ -371,7 +372,15 @@ class TreeService
   double photonSF;
   double leptonTriggerSF;
 
-
+  //Scale Factor variations
+  double muonSF_sys ;
+  double muonTriggerSF_sys;
+  double dilepTriggerSF_sys;
+  double electronSF_sys;
+  double electronTriggerSF_sys;
+  double bJetSF_sys;
+  double JVTSF_sys;
+  double leptonTriggerSF_sys;
 
   double b1m;
   double b2m;

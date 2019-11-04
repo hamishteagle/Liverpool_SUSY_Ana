@@ -54,7 +54,7 @@ CalculateVariables::CalculateVariables(NewObjectDef *objects,xAOD::TStore* evtSt
   TruthFile = isTruth;
   calculatePhotons = doPhotons;
 
-  //Retrieve objects from the eventStore, (we should add +systematic v soon!)
+  //Retrieve objects from the eventStore
   evtStore->retrieve(goodMuon_cont, "goodMuons"+systematic);
   evtStore->retrieve(badMuon_cont, "badMuons"+systematic);
   evtStore->retrieve(baselineMuon_cont, "baselineMuons"+systematic);
@@ -168,6 +168,7 @@ CalculateVariables::CalculateVariables(NewObjectDef *objects,xAOD::TStore* evtSt
   bJetSF = objects->getBJetSF();
   JVTSF = objects->getJVTSF();
   electronSF = objects->getElectronSF();
+  metsig_New = objects->getMETsig();
 
   // trigger matching
   elTriggerMatch = objects->elTriggerMatch();

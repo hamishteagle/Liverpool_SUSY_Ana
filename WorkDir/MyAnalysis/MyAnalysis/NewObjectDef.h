@@ -29,7 +29,7 @@ class NewObjectDef
 
     ~NewObjectDef(){
     };
-
+    void GetScaleFactors();
     void GetObjects();
     void GetBaselineObjects(bool m_SUSY5, bool m_SUSY7);
     void GetTruthJets();
@@ -78,6 +78,13 @@ class NewObjectDef
     xAOD::PhotonContainer* getGoodPhotons(){return goodPhotons.get();};
 
     xAOD::JetContainer* getTruthJets(){return goodTruthJets;};
+
+
+    xAOD::JetContainer *preOR_baselineJets_sf = nullptr ;
+    xAOD::JetContainer *goodJets_sf = nullptr ;
+    xAOD::MuonContainer *goodMuons_sf = nullptr ;
+    xAOD::ElectronContainer *goodElectrons_sf = nullptr ;
+
 
 
     asg::SgTEvent* currentEvent;

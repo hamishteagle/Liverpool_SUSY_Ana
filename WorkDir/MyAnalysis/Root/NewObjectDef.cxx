@@ -15,40 +15,35 @@ NewObjectDef::NewObjectDef(asg::SgTEvent* event, ST::SUSYObjDef_xAOD* SUSYTool, 
   currentEvent = event;
 
 
-  //Things not passed to the event store, set these as unique pointers:
+  //Things not passed to the event store
   cosmicMuons =       std::make_unique<xAOD::MuonContainer>(SG::VIEW_ELEMENTS);
   badJets =           std::make_unique<xAOD::JetContainer>(SG::VIEW_ELEMENTS);
   badMuons =          std::make_unique<xAOD::MuonContainer>(SG::VIEW_ELEMENTS);
   goodJetsBeforeOR =  std::make_unique<xAOD::JetContainer>(SG::VIEW_ELEMENTS);
 
 
-  //Things that are passed to the event store, set these as raw pointers(eventStore takes ownership of memory)
+  //Things that are passed to the event store
   baselineElectrons = std::make_unique<xAOD::ElectronContainer>(SG::VIEW_ELEMENTS);
-  baselineMuons = std::make_unique<xAOD::MuonContainer>(SG::VIEW_ELEMENTS);
-  baselineTaus = std::make_unique<xAOD::TauJetContainer>(SG::VIEW_ELEMENTS);
-  baselinePhotons = std::make_unique<xAOD::PhotonContainer>(SG::VIEW_ELEMENTS);
+  baselineMuons =     std::make_unique<xAOD::MuonContainer>(SG::VIEW_ELEMENTS);
+  baselineTaus =      std::make_unique<xAOD::TauJetContainer>(SG::VIEW_ELEMENTS);
+  baselinePhotons =   std::make_unique<xAOD::PhotonContainer>(SG::VIEW_ELEMENTS);
 
-  goodElectrons = std::make_unique<xAOD::ElectronContainer>(SG::VIEW_ELEMENTS);
-  goodMuons = std::make_unique<xAOD::MuonContainer>(SG::VIEW_ELEMENTS);
-  goodTaus = std::make_unique<xAOD::TauJetContainer>(SG::VIEW_ELEMENTS);
-  goodPhotons = std::make_unique<xAOD::PhotonContainer>(SG::VIEW_ELEMENTS);
-  goodJets = std::make_unique<xAOD::JetContainer>(SG::VIEW_ELEMENTS);
-  BJets = std::make_unique<xAOD::JetContainer>(SG::VIEW_ELEMENTS);
-  nonBJets = std::make_unique<xAOD::JetContainer>(SG::VIEW_ELEMENTS);
+  goodElectrons =     std::make_unique<xAOD::ElectronContainer>(SG::VIEW_ELEMENTS);
+  goodMuons =         std::make_unique<xAOD::MuonContainer>(SG::VIEW_ELEMENTS);
+  goodTaus =          std::make_unique<xAOD::TauJetContainer>(SG::VIEW_ELEMENTS);
+  goodPhotons =       std::make_unique<xAOD::PhotonContainer>(SG::VIEW_ELEMENTS);
+  goodJets =          std::make_unique<xAOD::JetContainer>(SG::VIEW_ELEMENTS);
+  BJets =             std::make_unique<xAOD::JetContainer>(SG::VIEW_ELEMENTS);
+  nonBJets =          std::make_unique<xAOD::JetContainer>(SG::VIEW_ELEMENTS);
+
+  //Weights to be passed to the eventstore
 
 
   //Do the baseline get here, pass this to the OR
   this->GetBaselineObjects(m_SUSY5, m_SUSY7);
-
   //Get the objects after the OR with baseline
   this->GetObjects();
-
-  //Get the truth jets (no overlap removal atm)
-  if (doTruthJets){
-    goodTruthJets = new xAOD::JetContainer(SG::VIEW_ELEMENTS);
-    this->GetTruthJets();
-  }
-
+  eventStore->record(preOR_baselineJets.release(),"preOR_baselineJets"+systematic);
   eventStore->record(baselineElectrons.release(),"baselineElectrons"+systematic);
   eventStore->record(baselineMuons.release(),"baselineMuons"+systematic);
   eventStore->record(baselineTaus.release(),"baselineTaus"+systematic);
@@ -65,7 +60,14 @@ NewObjectDef::NewObjectDef(asg::SgTEvent* event, ST::SUSYObjDef_xAOD* SUSYTool, 
   eventStore->record(nonBJets.release(),"nonBJets"+systematic);
   eventStore->record(METvector.release(),"METvector"+systematic);
 
+  //Get the scale factors using the good objects
+  this->GetScaleFactors();
 
+  //Get the truth jets (no overlap removal atm)
+  if (doTruthJets){
+    goodTruthJets = new xAOD::JetContainer(SG::VIEW_ELEMENTS);
+    this->GetTruthJets();
+  }
 
 }
 
@@ -177,7 +179,6 @@ void NewObjectDef::GetBaselineObjects(bool m_SUSY5, bool m_SUSY7) {
 
 void NewObjectDef::GetObjects() {
 
-
   // Fill electrons
   for (const auto &el_itr: *preOR_baselineElectrons) {
     if (el_itr->auxdata<char>("passOR")) {
@@ -187,10 +188,6 @@ void NewObjectDef::GetObjects() {
   }
   baselineElectrons->sort(pT_Sorter);
   goodElectrons->sort(pT_Sorter);
-  electronSF = 1;
-  if (objTool->isData() == 0) {
-    electronSF = objTool->GetTotalElectronSF(*goodElectrons,true,true,false,true,"", false);
-  }
   // Fill muons
   for (const auto& mu_itr: *preOR_baselineMuons) {
     if (mu_itr->auxdata<char>("passOR")) {
@@ -210,10 +207,6 @@ void NewObjectDef::GetObjects() {
   //badMuons->sort(pT_Sorter);
   nBadMuons=badMuons->size();
   goodMuons->sort(pT_Sorter);
-  muonSF = 1;
-  if (objTool->isData() == 0 ) {
-    muonSF = objTool->GetTotalMuonSF(*goodMuons,true,true,"");
-  }
   // Fill taus
   for (const auto& tau_itr: *preOR_baselineTaus) {
     if (tau_itr->auxdata<char>("passOR")) {
@@ -233,8 +226,6 @@ void NewObjectDef::GetObjects() {
   baselinePhotons->sort(pT_Sorter);
   goodPhotons->sort(pT_Sorter);
   //Fill jets
-  bJetSF = 1;
-  JVTSF = 1;
   for (const auto& jet_itr: *preOR_baselineJets) {
     if (jet_itr->auxdata<char>("signal")) goodJetsBeforeOR->push_back(jet_itr);
     if (jet_itr->auxdata<char>("passOR")) {
@@ -246,9 +237,6 @@ void NewObjectDef::GetObjects() {
       }
     }
   }
-  //Get the b-tagging SF for nominal b-jets
-  if (!objTool->isData()) bJetSF = objTool->BtagSF(goodJets.get());
-  if (!objTool->isData()) JVTSF = objTool->JVT_SF(preOR_baselineJets.get());
   goodJetsBeforeOR->sort(pT_Sorter);
   badJets->sort(pT_Sorter);
   nBadJets = badJets->size();
@@ -266,30 +254,46 @@ void NewObjectDef::GetObjects() {
       nVertex++ ;
     }
   }
+return;
+}
+void NewObjectDef::GetScaleFactors(){
+  //As we have released the goodObject pointers to the evtstore already they are not available locally and we need to get them again
+  //Use normal pointers, the eventStore should take care of the memory for these objects
+  eventStore->retrieve(goodMuons_sf, "goodMuons"+systematic);
+  eventStore->retrieve(goodElectrons_sf, "goodElectrons"+systematic);
+  eventStore->retrieve(goodJets_sf, "goodJets"+systematic);
+  eventStore->retrieve(preOR_baselineJets_sf, "preOR_baselineJets"+systematic);
 
-  //Lepton trigger SFs
-  //If only one 1-lepton trigger has fired, take this scale factor, if both e and mu fire, then dilep should fire and we take this as the scale factor.
-  //cout events to check if the muon trigger and electron trigger fire without the mu_e trigger firing (should never happen)
+  electronSF = 1;
+  muonSF = 1;
+  bJetSF = 1;
+  JVTSF = 1;
   electronTriggerSF = 1;
   muonTriggerSF = 1;
   dilepTriggerSF = 1;
-
-  if (objTool->isData() == 0) {
-    if (goodElectrons->size() == 1) {
-      electronTriggerSF = objTool->GetTotalElectronSF(*goodElectrons,false,false,true,false,"singleLepton", false);
-    }
-    if (goodMuons->size() == 1) {
-      int year = objTool->treatAsYear();
-      if (year == 2015) {
-        muonTriggerSF = objTool->GetTotalMuonSF(*goodMuons,false, false, "HLT_mu20_iloose_L1MU15_OR_HLT_mu50");
+  if (!objTool->isData()){
+    electronSF = objTool->GetTotalElectronSF(*goodElectrons_sf,true,true,false,true,"", false);
+    muonSF = objTool->GetTotalMuonSF(*goodMuons_sf,true,true,"");
+    bJetSF = objTool->BtagSF(goodJets_sf);
+    JVTSF = objTool->JVT_SF(preOR_baselineJets_sf);
+    //Lepton trigger SFs
+    //If only one 1-lepton trigger has fired, take this scale factor, if both e and mu fire, then dilep should fire and we take this as the scale factor.
+    //cout events to check if the muon trigger and electron trigger fire without the mu_e trigger firing (should never happen)
+    if (goodElectrons_sf->size() == 1) {
+        electronTriggerSF = objTool->GetTotalElectronSF(*goodElectrons_sf,false,false,true,false,"singleLepton", false);
       }
-      else {
-        muonTriggerSF = objTool->GetTotalMuonSF(*goodMuons,false,false, "HLT_mu26_ivarmedium_OR_HLT_mu50");
+      if (goodMuons_sf->size() == 1) {
+        int year = objTool->treatAsYear();
+        if (year == 2015) {
+          muonTriggerSF = objTool->GetTotalMuonSF(*goodMuons_sf,false, false, "HLT_mu20_iloose_L1MU15_OR_HLT_mu50");
+        }
+        else {
+          muonTriggerSF = objTool->GetTotalMuonSF(*goodMuons_sf,false,false, "HLT_mu26_ivarmedium_OR_HLT_mu50");
+        }
       }
-    }
-    if ((goodElectrons->size() + goodMuons->size()) >= 2) {
-      dilepTriggerSF = objTool->GetTriggerGlobalEfficiencySF(*goodElectrons, *goodMuons, "diLepton");
-    }
+      if ((goodElectrons_sf->size() + goodMuons_sf->size()) >= 2) {
+        dilepTriggerSF = objTool->GetTriggerGlobalEfficiencySF(*goodElectrons_sf, *goodMuons_sf, "diLepton");
+      }
   }
 
   return;
