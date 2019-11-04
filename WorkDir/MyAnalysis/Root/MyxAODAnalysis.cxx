@@ -316,15 +316,19 @@ EL::StatusCode MyxAODAnalysis :: initialize ()
 
       //Remove systematic trees for variations that won't affect us
       if(sys.name()!=""){
-        if((!syst_affects_jets && !syst_affects_muons && !syst_affects_electrons && !syst_affects_kinematics && !syst_affects_weights )||
+        if((!syst_affects_jets && !syst_affects_muons && !syst_affects_electrons && !syst_affects_kinematics)||
           (syst_affects_photons && !syst_affects_electrons) ||
-          syst_affects_taus
+          syst_affects_taus ||
+          syst_affects_weights
           ){
           std::string remove_syst = "Removing systematic: " + sys.name();
           ANA_MSG_INFO(remove_syst);
           systInfoList.erase(std::remove_if(systInfoList.begin(),systInfoList.end(),[sys](const ST::SystInfo & my_syst){
             return (my_syst.systset).name()==sys.name();}
           ),systInfoList.end());
+          if (syst_affects_weights){
+            systInfoList_weights.push_back(sysInfo)//Fill the vector of weights systs to append to nominal tree
+          }
           continue;
         }
       }
@@ -516,13 +520,13 @@ EL::StatusCode MyxAODAnalysis :: execute ()
         //      }
       }
       std::unique_ptr<NewObjectDef> objs;
-      size_t found_nominal = output_tree_string.find("CollectionTree_");
-      size_t found_PFlow = output_tree_string.find("CollectionTree_PFlow_");
+      found_nominal  = (output_tree_string.find("CollectionTree_") != std::string::npos);
+      found_PFlow = (output_tree_string.find("CollectionTree_PFlow_"!= std::string::npos));
 
-      if (found_nominal != std::string::npos){
+      if (found_nominal){
         objs.reset(new NewObjectDef(evtStore(), objTool.get(), store, mcChannel, EventNumber, mcWgt, m_lumiBlockNumber, syst.name(), doTruthJets, m_SUSY5, m_SUSY7));
       }
-      else if (found_PFlow != std::string::npos){
+      else if (found_PFlow){
         objs.reset(new NewObjectDef(evtStore(), objTool_PFlow.get(), store, mcChannel, EventNumber, mcWgt, m_lumiBlockNumber, syst.name(), doTruthJets, m_SUSY5, m_SUSY7));
       }
       else{
@@ -775,6 +779,7 @@ EL::StatusCode MyxAODAnalysis :: execute ()
       if(coreFlag && sctFlag && LArTileFlag && passedPrimVertex && passedJetClean && passedCosmicMu && passedMuonClean){
         passedCleaningCuts=true;
       }
+
       auto m_varCalc = std::make_unique<CalculateVariables>( objs.get(), store, isTruth, doPhotons, isData, syst.name());
       auto m_regions = std::make_unique<PreliminarySel>(*m_varCalc, passedCleaningCuts);
 

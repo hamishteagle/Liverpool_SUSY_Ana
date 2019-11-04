@@ -117,9 +117,9 @@ public:
   double m_lumiScaled; //!
 
   std::vector<ST::SystInfo> systInfoList; //!
+  std::vector<ST::SystInfo> systInfoList_weights; //!
 
 
-  std::vector<CP::SystematicSet> m_sysList; //!
   //TH1 *h_jetPt;
   TH1 *h_cuts; //!
   std::vector <std::string> cutList; //!

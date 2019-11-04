@@ -559,8 +559,6 @@ void TreeService::fillTree(NewObjectDef *objects , xAOD::TStore *evtStore, Preli
   muonSF = objects->getMuonSF();
   muonTriggerSF = objects->getMuonTriggerSF();
   dilepTriggerSF = objects->getDilepTriggerSF();
-  //  muonRecoSF = objects->getMuonRecoSF();
-  //  oldMuonSF = objects->getOldMuonSF();
   electronSF = objects->getElectronSF();
   electronTriggerSF = objects->getElectronTriggerSF();
   tauSF = objects->getTauSF();
@@ -631,122 +629,11 @@ void TreeService::fillTree(NewObjectDef *objects , xAOD::TStore *evtStore, Preli
   SRB_Higgsino_minDR = variables.SRB_Higgsino_minDR;
   SRB_Higgsino_Hmbb = variables.SRB_Higgsino_Hmbb;
 
-  //Don't think we need all of this stuff as it's mainly done in Calculate variables
-  /*jet_pT.clear();
-  jet_eta.clear();
-  jet_phi.clear();
-  jet_E.clear();
-  jet_M.clear();
-  jet_flav.clear();
-  jet_bWgt.clear();
-  jet_truflav.clear();
-
-  el_pT.clear();
-  el_eta.clear();
-  el_phi.clear();
-  el_E.clear();
-
-  mu_pT.clear();
-  mu_eta.clear();
-  mu_phi.clear();
-  mu_E.clear();
-
-
-
-
-  int maxJet = goodJet_cont->size();
-  for (int iJet = 0; iJet < maxJet; iJet++)
-    {
-      jet_pT.push_back(0.001*(*(goodJet_cont))[iJet]->pt());
-      jet_eta.push_back((*(goodJet_cont))[iJet]->eta());
-      jet_phi.push_back((*(goodJet_cont))[iJet]->phi());
-      jet_E.push_back(0.001*(*(goodJet_cont))[iJet]->e());
-      jet_M.push_back(0.001*(*(goodJet_cont))[iJet]->m());
-      double flav= ( ((*(goodJet_cont))[iJet]->auxdata< char >("bjet") == true ) && fabs((*(goodJet_cont))[iJet]->eta())<2.5 ) ? 5 : 0;
-      jet_flav.push_back(flav);
-      if (flav != 5)
-	{
-	  std::vector<int> ntrk;
-	  (*(goodJet_cont))[iJet]->getAttribute(xAOD::JetAttribute::NumTrkPt500,ntrk);
-	  if(ntrk.size()>0)
-	    {
-	      jet_ntrks.push_back(ntrk[0]);
-	      if (ntrk[0]<=4)
-		{
-		  double dphi = TVector2::Phi_mpi_pi(ETMissPhi - (*(goodJet_cont))[iJet]->phi());
-		}
-	    }
-	}
-      int flavour = -1;
-      // mcid == 0 for Data
-      if(mcID > 0){(*(goodJet_cont))[iJet]->btagging()->MVx_discriminant("MV2c10", MV2c10wgt);}
-      jet_bWgt.push_back(MV2c10wgt);
-    }
-
-
-
-  int maxEl = goodElectron_cont->size();
-  for (int iel = 0; iel < maxEl; iel++){
-    el_pT.push_back(0.001*(*(goodElectron_cont))[iel]->pt());
-    el_eta.push_back((*(goodElectron_cont))[iel]->eta());
-    el_phi.push_back((*(goodElectron_cont))[iel]->phi());
-    el_E.push_back(0.001*(*(goodElectron_cont))[iel]->e());
-  }
-
-  int maxMu = goodMuon_cont->size();
-  for (int imu = 0; imu < maxMu; imu++){
-    mu_pT.push_back(0.001*(*(goodMuon_cont))[imu]->pt());
-    mu_eta.push_back((*(goodMuon_cont))[imu]->eta());
-    mu_phi.push_back((*(goodMuon_cont))[imu]->phi());
-    mu_E.push_back(0.001*(*(goodMuon_cont))[imu]->e());
-  }
-  */
-
-  // tau_pT.clear();
-  // tau_eta.clear();
-  // tau_phi.clear();
-  // tau_E.clear();
-  // tau_SmallestDR.clear();
-  // tau_associatedTrue.clear();
-
-  // int maxTau = objects->getGoodTaus()->size();
-  // for (int itau = 0; itau < maxTau; itau++){
-  //   tau_pT.push_back(0.001*(*(objects->getGoodTaus()))[itau]->pt());
-  //   tau_eta.push_back((*(objects->getGoodTaus()))[itau]->eta());
-  //   tau_phi.push_back((*(objects->getGoodTaus()))[itau]->phi());
-  //   tau_E.push_back(0.001*(*(objects->getGoodTaus()))[itau]->e());
-
-  //   // do truth matching here with the first tau. Probably should have a Vector of taus in the truth tau part of MCChecks at some point
-  //   TLorentzVector tau(0,0,0,0);
-  //   tau.SetPtEtaPhiE(0.001*(*(objects->getGoodTaus()))[itau]->pt(),(*(objects->getGoodTaus()))[itau]->eta(),(*(objects->getGoodTaus()))[itau]->phi(),(*(objects->getGoodTaus()))[itau]->e());
-
-  //   double smallestDR_1 = 99;
-  //   int truthtau_x = 0;
-  //   //for (int iTrueTau = 0; iTrueTau < MCTruthInfo.TruthTau.size(); iTrueTau++ ){
-  //   //  if (tau.DeltaR(MCTruthInfo.TruthTau[iTrueTau]) < smallestDR_1){
-  //   //	smallestDR_1 = tau.DeltaR(MCTruthInfo.TruthTau[iTrueTau]);
-  //   //	truthtau_x = iTrueTau;
-  //   // }
-  //   //}
-
-  //   for (int iTrueJet = 0; iTrueJet < MCTruthInfo.m_jet_pt.size(); iTrueJet++ ){
-  //     TLorentzVector trueJet(0,0,0,0);
-  //     trueJet.SetPtEtaPhiM(0.001*MCTruthInfo.m_jet_pt[iTrueJet], MCTruthInfo.m_jet_eta[iTrueJet], MCTruthInfo.m_jet_phi[iTrueJet], MCTruthInfo.m_jet_m[iTrueJet]);
-  //     if (tau.DeltaR(trueJet) < smallestDR_1 && std::fabs(MCTruthInfo.m_jet_TruthID[iTrueJet]) == 15){
-  // 	smallestDR_1 = tau.DeltaR(trueJet);
-  // 	truthtau_x = iTrueJet;
-  //     }
-  //   }
-
-
-  //   tau_SmallestDR.push_back(smallestDR_1);
-  //   tau_associatedTrue.push_back(truthtau_x);
-  // }
-
   metsig_New = objects->getMETsig();
 
   multiJetTriggerPlateau = variables.inMultiJetTriggerPlateau;
   multiJetTriggerPassed = Trig6j;
+
 
   tree->Fill();
 
