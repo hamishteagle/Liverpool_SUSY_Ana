@@ -107,8 +107,8 @@ int main( int argc, char* argv[]) {
         alg->doPhotons = RunningWithPhotons;
 	      alg->doTruthJets = RunningWithTruthJets;
         // If you want to check that the filtering is working correctly, then set this to false
-        //alg->RunningLocally = RunningLocally;
-        alg->RunningLocally = false;
+        alg->RunningLocally = true;
+        //alg->RunningLocally = false;
         alg->setMsgLevel(MSG::VERBOSE);
 
         EL::DirectDriver driver;

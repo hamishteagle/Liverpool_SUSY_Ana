@@ -319,8 +319,8 @@ EL::StatusCode MyxAODAnalysis :: initialize ()
   }
   ),systInfoList.end());
 
-  //std::vector<std::string> output_trees = {"CollectionTree_","CollectionTree_PFlow_"};
-  std::vector<std::string> output_trees = {"CollectionTree_"};
+  std::vector<std::string> output_trees = {"CollectionTree_","CollectionTree_PFlow_"};
+  //std::vector<std::string> output_trees = {"CollectionTree_"};
 
   for (const auto& output_tree_string: output_trees){
     for(auto sysInfo : systInfoList){
@@ -424,8 +424,8 @@ EL::StatusCode MyxAODAnalysis :: execute ()
   // code will go.
 
   isyst = 0;
-  //std::vector<std::string>output_trees = {"CollectionTree_","CollectionTree_PFlow_"};
-  std::vector<std::string>output_trees = {"CollectionTree_"};
+  std::vector<std::string>output_trees = {"CollectionTree_","CollectionTree_PFlow_"};
+  //std::vector<std::string>output_trees = {"CollectionTree_"};
   for (const auto& output_tree_string: output_trees){
     for (const auto& sysInfo : systInfoList){
       const CP::SystematicSet& syst = sysInfo.systset;
@@ -530,7 +530,7 @@ EL::StatusCode MyxAODAnalysis :: execute ()
       return StatusCode::FAILURE;
       }
       auto m_regions = std::make_unique<PreliminarySel>(objs.get(), store, syst.name());
-      if(! m_regions->interestingRegion || RunningLocally){
+      if(!m_regions->interestingRegion && !RunningLocally){
         isyst++;
         store->clear();
         continue;
