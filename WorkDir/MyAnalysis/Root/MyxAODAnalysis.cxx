@@ -295,60 +295,49 @@ EL::StatusCode MyxAODAnalysis :: initialize ()
     ANA_MSG_INFO("Running with systematics.");
     systInfoList = objTool->getSystInfoList();
   }
+  //Build the weights systematics list
+  for (auto sysInfo: systInfoList){
+    if(sysInfo.affectsWeights && sysInfo.systset.name()!="") {
+      if (!ST::testAffectsObject(xAOD::Type::Tau, sysInfo.affectsType) && !ST::testAffectsObject(xAOD::Type::Photon, sysInfo.affectsType)){
+        std::string push_back_string = "Adding systematic " +sysInfo.systset.name()+ " to systInfoList_weights";
+        ANA_MSG_INFO(push_back_string);
+        systInfoList_weights.push_back(sysInfo);//Fill the vector of weights systs to append to nominal tree
+      }
+    }
+  }
+  //Remove the variations we don't need
+  systInfoList.erase(std::remove_if(systInfoList.begin(),systInfoList.end(),[](const ST::SystInfo & my_syst){
+    bool syst_affects_electrons = ST::testAffectsObject(xAOD::Type::Electron, my_syst.affectsType);
+    bool syst_affects_photons = ST::testAffectsObject(xAOD::Type::Photon, my_syst.affectsType);
+    bool syst_affects_taus = ST::testAffectsObject(xAOD::Type::Tau, my_syst.affectsType);
+    if (syst_affects_taus || (syst_affects_photons && !syst_affects_electrons) || my_syst.affectsWeights){
+      std::string remove_syst = "Removing systematic: " + my_syst.systset.name();
+      std::cout<<remove_syst<<std::endl;
+      return true;
+    }
+    else return false;
+  }
+  ),systInfoList.end());
 
   //std::vector<std::string> output_trees = {"CollectionTree_","CollectionTree_PFlow_"};
   std::vector<std::string> output_trees = {"CollectionTree_"};
 
   for (const auto& output_tree_string: output_trees){
     for(auto sysInfo : systInfoList){
-
       CP::SystematicSet& sys = sysInfo.systset;
-
       std::string temp = "On systematic: " + sys.name();
       ANA_MSG_INFO(temp);
 
-      bool syst_affects_electrons = ST::testAffectsObject(xAOD::Type::Electron, sysInfo.affectsType);
-      bool syst_affects_muons = ST::testAffectsObject(xAOD::Type::Muon, sysInfo.affectsType);
-      bool syst_affects_jets = ST::testAffectsObject(xAOD::Type::Jet, sysInfo.affectsType);
-      bool syst_affects_photons = ST::testAffectsObject(xAOD::Type::Photon, sysInfo.affectsType);
-      bool syst_affects_taus = ST::testAffectsObject(xAOD::Type::Tau, sysInfo.affectsType);
-      bool syst_affects_kinematics = sysInfo.affectsKinematics;
-      bool syst_affects_weights = sysInfo.affectsWeights;
-
-      //Remove systematic trees for variations that won't affect us
-      if(sys.name()!=""){
-        if((!syst_affects_jets && !syst_affects_muons && !syst_affects_electrons && !syst_affects_kinematics)||
-          (syst_affects_photons && !syst_affects_electrons) ||
-          syst_affects_taus ||
-          syst_affects_weights
-          ){
-          std::string remove_syst = "Removing systematic: " + sys.name();
-          ANA_MSG_INFO(remove_syst);
-          systInfoList.erase(std::remove_if(systInfoList.begin(),systInfoList.end(),[sys](const ST::SystInfo & my_syst){
-            return (my_syst.systset).name()==sys.name();}
-          ),systInfoList.end());
-          if (syst_affects_weights && !syst_affects_taus && !syst_affects_photons){
-            std::string push_back_string = "Adding systematic " +sys.name()+ " to systInfoList_weights";
-            ANA_MSG_INFO(push_back_string);
-            systInfoList_weights.push_back(sysInfo);//Fill the vector of weights systs to append to nominal tree
-          }
-          continue;
-        }
-      }
-
+      //Make a separate tree if we need to re-calculate everything
       TDirectory *out_TDir = (TDirectory*) wk()->getOutputFile ("output");
-
       std::string treeName = output_tree_string+std::string(sys.name());
       const char * cName = treeName.c_str();
       TTree *Temp = new TTree(cName, cName);
-      TreeService *Tree_Service = new TreeService(Temp, out_TDir);
-
+      TreeService *Tree_Service = new TreeService(Temp, out_TDir, doSyst, sys.name()=="", systInfoList_weights);
       m_treeServiceVector.push_back(Tree_Service);
       Temp->Write();
     }
   }
-
-
   //PMGCrossSectionTool setup
   ASG_SET_ANA_TOOL_TYPE( m_PMGCrossSectionTool, PMGTools::PMGCrossSectionTool);
   m_PMGCrossSectionTool.setName("myCrossSectionTool");
@@ -441,6 +430,9 @@ EL::StatusCode MyxAODAnalysis :: execute ()
     for (const auto& sysInfo : systInfoList){
       const CP::SystematicSet& syst = sysInfo.systset;
 
+
+      // std::string temp = "On systematic: " + syst.name();
+      // ANA_MSG_INFO(temp);
       int year = 0;
 
       if (!isTruth){
@@ -471,11 +463,12 @@ EL::StatusCode MyxAODAnalysis :: execute ()
       }
 
 
+
       m_lumiBlockNumber = eventInfo->lumiBlock();
       m_runNumber = eventInfo->runNumber();
       EventNumber = (eventInfo->eventNumber());
 
-      xAOD::TStore* store = wk()->xaodStore();
+
       mcChannel = 0;
       double puWgt = 1;
       double mcWgt = 1;
@@ -502,16 +495,14 @@ EL::StatusCode MyxAODAnalysis :: execute ()
         mcWgt = eventInfo->mcEventWeight();
         renormedMcWgt = mcWgt;
         if (std::abs(renormedMcWgt) >= 100){
-  	renormedMcWgt = 1;
+          renormedMcWgt = 1;
         }
-
-
         // This can get all of the PDF info etc if it's required at any point
         //const xAOD::TruthEventContainer *truthE = 0;
         //m_event->retrieve(truthE, "TruthEvents" );
 
         //for(const auto& evt : *truthE) {
-  	//float x1, x2, pdf1, pdf2, scalePDF, Q;
+        //float x1, x2, pdf1, pdf2, scalePDF, Q;
         //int id1, id2;
         //evt->pdfInfoParameter(id1, xAOD::TruthEvent::PDGID1);
         //evt->pdfInfoParameter(id2, xAOD::TruthEvent::PDGID2);
@@ -523,10 +514,11 @@ EL::StatusCode MyxAODAnalysis :: execute ()
         //evt->pdfInfoParameter(Q, xAOD::TruthEvent::Q);
         //      }
       }
+      //Do the trimming before we do anything else
+      xAOD::TStore* store = wk()->xaodStore();
       std::unique_ptr<NewObjectDef> objs;
       bool found_nominal = (output_tree_string.find("CollectionTree_") != std::string::npos);
       bool found_PFlow   = (output_tree_string.find("CollectionTree_PFlow_")!= std::string::npos);
-
       if (found_nominal){
         objs.reset(new NewObjectDef(evtStore(), objTool.get(), store, mcChannel, EventNumber, mcWgt, m_lumiBlockNumber, syst.name(), doTruthJets, m_SUSY5, m_SUSY7));
       }
@@ -537,14 +529,21 @@ EL::StatusCode MyxAODAnalysis :: execute ()
       ANA_MSG_ERROR("Didn't pick up a correct output_tree_string...exiting");
       return StatusCode::FAILURE;
       }
-      if (firstEvent == true) firstEvent = false;
+      auto m_regions = std::make_unique<PreliminarySel>(objs.get(), store, syst.name());
+      if(! m_regions->interestingRegion || RunningLocally){
+        isyst++;
+        store->clear();
+        continue;
+        }
 
+      if (firstEvent == true) firstEvent = false;
 
       bool passGRL = false;
 
       if (!isMC){
 
         if(!(m_grl->passRunLB(*eventInfo))){
+          isyst++;
           store->clear();
           continue;
         }
@@ -564,10 +563,10 @@ EL::StatusCode MyxAODAnalysis :: execute ()
 
       if (!isMC){
         if ((eventInfo->errorState(xAOD::EventInfo::SCT) == xAOD::EventInfo::Error )){
-      	  sctFlag = false;
-      	  isyst++;
-  	  store->clear();
-  	  continue;
+          sctFlag = false;
+          isyst++;
+          store->clear();
+          continue;
         }
         if (eventInfo->isEventFlagBitSet(xAOD::EventInfo::Core,18)){
         	coreFlag = false;
@@ -576,10 +575,10 @@ EL::StatusCode MyxAODAnalysis :: execute ()
         	continue;
         }
         if ((eventInfo->errorState(xAOD::EventInfo::LAr)==xAOD::EventInfo::Error) || (eventInfo->errorState(xAOD::EventInfo::Tile) == xAOD::EventInfo::Error)){
-        	LArTileFlag=false;
-        	isyst++;
-        	store->clear();
-  	       continue;
+          LArTileFlag=false;
+          isyst++;
+          store->clear();
+          continue;
         }
       }
 
@@ -784,8 +783,8 @@ EL::StatusCode MyxAODAnalysis :: execute ()
         passedCleaningCuts=true;
       }
 
-      auto m_varCalc = std::make_unique<CalculateVariables>( objs.get(), store, isTruth, doPhotons, isData, syst.name());
-      auto m_regions = std::make_unique<PreliminarySel>(*m_varCalc, passedCleaningCuts);
+      auto m_varCalc = std::make_unique<CalculateVariables>(objs.get(), store, isTruth, doPhotons, isData, syst.name());
+
 
 
       double SFmctbbll = 1;
@@ -851,27 +850,25 @@ EL::StatusCode MyxAODAnalysis :: execute ()
 
 
       if (!isTruth){
-        if (m_regions->interestingRegion || RunningLocally){
-        	(m_treeServiceVector[isyst])->fillTree(objs.get(), store ,*m_regions, *m_varCalc,m_finalSumOfWeights, m_initialSumOfWeights, puWgt, SFmctbbll, passedMETTrigger, passedSingleMuTrigger, passedSingleElTrigger, passedDiLeptonTrigger, passedGammaTrigger, passedMultiJetTrigger, muon_triggers, muon_decisions, electron_triggers, electron_decisions, dilepton_triggers, dilepton_decisions,leptonTriggerSF, PUSumOfWeights, truthfilt_MET, truthfilt_HT, coreFlag, sctFlag, LArTileFlag, passGRL, passedPrimVertex, passedJetClean, passedCosmicMu, passedMuonClean, m_runNumber, renormedMcWgt, year, m_averageIntPerX, m_actualIntPerX, xsec, filteff, kfactor);
-          //Loop through weights systematics and write to the nominal
-          if (output_tree_string=="CollectionTree_"){
-            for(auto systInfo_weight: systInfoList_weights){
-              const CP::SystematicSet& syst_weight = systInfo_weight.systset;
-              ANA_CHECK(objTool->resetSystematics());
-              ANA_CHECK(objTool->applySystematicVariation(syst_weight));
-              objs->GetScaleFactors();//We don't need to get all the objects again, just re-calculate the scale factors
+        //Loop through weights systematics and write to the nominal
+        if (output_tree_string=="CollectionTree_"){
+          for(auto systInfo_weight: systInfoList_weights){
+            const CP::SystematicSet& syst_weight = systInfo_weight.systset;
+            ANA_CHECK(objTool->resetSystematics());
+            ANA_CHECK(objTool->applySystematicVariation(syst_weight));
+            objs->GetScaleFactors();//We don't need to get all the objects again, just re-calculate the scale factors
 
-              if ((syst_weight.name()).find("PRW") != std::string::npos){
-                objTool->ApplyPRWTool();//Reset PRW weights
-                puWgt = objTool->GetPileupWeight();
-              }
-              if (mu_triggers > 0)   leptonTriggerSF = objs->getMuonTriggerSF();
-              if (el_triggers > 0)   leptonTriggerSF = objs->getElectronTriggerSF();
-              if (dilep_triggers >0) leptonTriggerSF = objs->getDilepTriggerSF();
-              (m_treeServiceVector[isyst])->fillTreeWeights(objs.get(), puWgt, leptonTriggerSF, systInfo_weight);
+            if ((syst_weight.name()).find("PRW") != std::string::npos){
+              objTool->ApplyPRWTool();//Reset PRW weights
+              puWgt = objTool->GetPileupWeight();
             }
+            if (mu_triggers > 0)   leptonTriggerSF = objs->getMuonTriggerSF();
+            if (el_triggers > 0)   leptonTriggerSF = objs->getElectronTriggerSF();
+            if (dilep_triggers >0) leptonTriggerSF = objs->getDilepTriggerSF();
+            (m_treeServiceVector[isyst])->fillTreeWeights(objs.get(), puWgt, leptonTriggerSF, systInfo_weight);
           }
         }
+      	(m_treeServiceVector[isyst])->fillTree(objs.get(), store ,*m_regions, *m_varCalc,m_finalSumOfWeights, m_initialSumOfWeights, puWgt, SFmctbbll, passedMETTrigger, passedSingleMuTrigger, passedSingleElTrigger, passedDiLeptonTrigger, passedGammaTrigger, passedMultiJetTrigger, muon_triggers, muon_decisions, electron_triggers, electron_decisions, dilepton_triggers, dilepton_decisions,leptonTriggerSF, PUSumOfWeights, truthfilt_MET, truthfilt_HT, coreFlag, sctFlag, LArTileFlag, passGRL, passedPrimVertex, passedJetClean, passedCosmicMu, passedMuonClean, m_runNumber, renormedMcWgt, year, m_averageIntPerX, m_actualIntPerX, xsec, filteff, kfactor);
       }
 
 

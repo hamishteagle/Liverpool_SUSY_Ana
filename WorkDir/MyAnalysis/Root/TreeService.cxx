@@ -6,9 +6,15 @@
 #include "xAODEgamma/Electron.h"
 #include "xAODMuon/Muon.h"
 
-TreeService::TreeService(TTree *outputTree, TDirectory *OutDir){
+TreeService::TreeService(TTree *outputTree, TDirectory *OutDir, bool do_syst, bool isNominal, std::vector<ST::SystInfo> systInfoList_weights){
 
   tree = outputTree;
+
+  if (do_syst && isNominal){
+    for(auto sysInfo : systInfoList_weights){
+      InitialiseWeightsBranches(sysInfo);
+    }
+  }
 
   tree->SetDirectory(OutDir);
   tree->SetAutoFlush(500);
@@ -49,11 +55,11 @@ TreeService::TreeService(TTree *outputTree, TDirectory *OutDir){
 
 
   //tree->Branch("muon_triggers",&mu_triggers);
-  tree->Branch("muon_decisions", &mu_decisions);
+  //tree->Branch("muon_decisions", &mu_decisions);
   //tree->Branch("electron_triggers",&el_triggers);
-  tree->Branch("electron_decisions", &el_decisions);
+  //tree->Branch("electron_decisions", &el_decisions);
   //tree->Branch("dilepton_triggers", &dilep_triggers);
-  tree->Branch("dilepton_decisions", &dilep_decisions);
+  //tree->Branch("dilepton_decisions", &dilep_decisions);
 
 
   //Trigger matching
@@ -216,43 +222,48 @@ TreeService::TreeService(TTree *outputTree, TDirectory *OutDir){
 
 }
 
-void TreeService::fillTreeWeights(NewObjectDef *objects, double puWeight_sys, double LeptonTriggerSF, ST::SystInfo systInfo_weight){
+void TreeService::InitialiseWeightsBranches(ST::SystInfo systInfo_weight){
 
   std::string syst_name = systInfo_weight.systset.name();
   std::set<unsigned int> syst_set = systInfo_weight.affectedWeights;
   //PRW
-  if (syst_name.find("PRW") != std::string::npos)  tree->Branch(("puWgt_"+syst_name).c_str(), &puWeight_sys);
+  if (syst_name.find("PRW") != std::string::npos){
+    weights_map.insert(std::pair<std::string, double>("puWgt_"+syst_name,1.0));
+    tree->Branch(("puWgt_"+syst_name).c_str(), &weights_map["puWgt_"+syst_name]);
+  }
   //Muons
   if(syst_set.find(1101)!=syst_set.end() || syst_set.find(1102)!=syst_set.end() || syst_set.find(1103)!=syst_set.end() ){
-    muonSF_sys = objects->getMuonSF();
-    tree->Branch(("muonSF_"+syst_name).c_str(), &muonSF_sys);
+    weights_map.insert(std::pair<std::string, double>("muonSF_"+syst_name,1.0));
+    tree->Branch(("muonSF_"+syst_name).c_str(), &weights_map["muonSF_"+syst_name]);
   }
   //Electrons
   if(syst_set.find(1201)!=syst_set.end() ||syst_set.find(1202)!=syst_set.end() || syst_set.find(1203)!=syst_set.end() || syst_set.find(1205)!=syst_set.end()){
-    electronSF_sys = objects->getElectronSF();
-    tree->Branch(("electronSF_"+syst_name).c_str(), &electronSF_sys);
+    weights_map.insert(std::pair<std::string, double>("electronSF_"+syst_name,1.0));
+    tree->Branch(("electronSF_"+syst_name).c_str(), &weights_map["electronSF_"+syst_name]);
   }
+  //bjetSF
   if(syst_set.find(1001)!=syst_set.end()){
-    tree->Branch(("bJetSF_"+syst_name).c_str(), &bJetSF_sys);
-    bJetSF_sys = objects->getBJetSF();
+    weights_map.insert(std::pair<std::string, double>("bJetSF_"+syst_name,1.0));
+    tree->Branch(("bJetSF_"+syst_name).c_str(), &weights_map["bJetSF_"+syst_name]);
   }
+  //JVTSF
   if(syst_set.find(1002)!=syst_set.end()){
-    tree->Branch(("JVTSF_"+syst_name).c_str(), &JVTSF_sys);
-    JVTSF_sys = objects->getJVTSF();
+    weights_map.insert(std::pair<std::string, double>("JVTSF_"+syst_name,1.0));
+    tree->Branch(("JVTSF_"+syst_name).c_str(), &weights_map["JVTSF_"+syst_name]);
   }
   //Triggers (El/Mu)
   if (syst_set.find(1204)!=syst_set.end() || syst_set.find(1104)!=syst_set.end()){
-  muonTriggerSF_sys = objects->getMuonTriggerSF();
-  electronTriggerSF_sys = objects->getElectronTriggerSF();
-  if (syst_set.find(1104)!=syst_set.end()) tree->Branch(("muonTriggerSF_"+syst_name).c_str(), &muonTriggerSF_sys);
-  if (syst_set.find(1204)!=syst_set.end()) tree->Branch(("electronTriggerSF_"+syst_name).c_str(), &electronTriggerSF_sys);
-  leptonTriggerSF_sys = LeptonTriggerSF;
-  tree->Branch(("leptonTriggerSF_"+syst_name).c_str(),&leptonTriggerSF_sys);
+    if (syst_set.find(1104)!=syst_set.end()){
+      weights_map.insert(std::pair<std::string, double>("muonTriggerSF_"+syst_name,1.0));
+      tree->Branch(("muonTriggerSF_"+syst_name).c_str(), &weights_map["muonTriggerSF_"+syst_name]);
+    }
+    if (syst_set.find(1204)!=syst_set.end()){
+      weights_map.insert(std::pair<std::string, double>("electronTriggerSF_"+syst_name,1.0));
+      tree->Branch(("electronTriggerSF_"+syst_name).c_str(), &weights_map["electronTriggerSF_"+syst_name]);
+    }
+    weights_map.insert(std::pair<std::string, double>("leptonTriggerSF_"+syst_name,1.0));
+    tree->Branch(("leptonTriggerSF_"+syst_name).c_str(),&weights_map["leptonTriggerSF_"+syst_name]);
   }
-  //dilepTriggerSF_sys = objects->getDilepTriggerSF();
-  //tree->Branch(("dilepTriggerSF_"+syst_name).c_str(),&dilepTriggerSF_sys);//Leave this out for now
-
-  writeTree();
 }
 
 void TreeService::fillTree(NewObjectDef *objects , xAOD::TStore *evtStore, PreliminarySel &region, CalculateVariables &variables, double mFinalWeight, double mInitialWeight, double puWeight, double SFmCTbbll, bool TrigMET, bool TrigMu, bool TrigEl, bool TrigDilep, bool TrigGamma, bool Trig6j, std::vector<std::string> muon_triggers, std::vector<int> muon_decisions, std::vector<std::string> electron_triggers, std::vector<int> electron_decisions, std::vector<std::string> dilepton_triggers, std::vector<int> dilepton_decisions, double LeptonTriggerSF, double puSumWeights, double TRUTHMET, double TRUTHHT, bool CoreFlags, bool SCTFlag,bool LArTileFlags, bool passGRL, bool passedPrimVertexes, bool passedJetCleans, bool passedCosmicMus, bool passedMuonCleans, double RNo,  double RenormedMCWgt, int LumiYear, double m_averageIntPerCrossing, double m_actualIntPerCrossing, double m_xsec, double m_filteff, double m_kfactor){
@@ -676,6 +687,7 @@ void TreeService::fillTree(NewObjectDef *objects , xAOD::TStore *evtStore, Preli
   tree->Fill();
 
   //Clear all the used vectors here.
+  weights_map.clear();
   mu_triggers.clear();
   mu_decisions.clear();
   el_triggers.clear();
@@ -683,10 +695,40 @@ void TreeService::fillTree(NewObjectDef *objects , xAOD::TStore *evtStore, Preli
   dilep_triggers.clear();
   dilep_decisions.clear();
 
-
-
 }
+void TreeService::fillTreeWeights(NewObjectDef *objects, double puWgt, double leptonTriggerSF, ST::SystInfo systInfo_weight){
 
+  std::string syst_name = systInfo_weight.systset.name();
+  std::set<unsigned int> syst_set = systInfo_weight.affectedWeights;
+  //PRW
+  if (syst_name.find("PRW") != std::string::npos){
+    weights_map["puWgt_"+syst_name]=puWgt;
+  }
+  //Muons
+  if(syst_set.find(1101)!=syst_set.end() || syst_set.find(1102)!=syst_set.end() || syst_set.find(1103)!=syst_set.end() ){
+    weights_map["muonSF_"+syst_name]=objects->getMuonSF();
+  }
+  //Electrons
+  if(syst_set.find(1201)!=syst_set.end() ||syst_set.find(1202)!=syst_set.end() || syst_set.find(1203)!=syst_set.end() || syst_set.find(1205)!=syst_set.end()){
+    weights_map["electronSF_"+syst_name] = objects->getElectronSF();
+  }
+  if(syst_set.find(1001)!=syst_set.end()){
+    weights_map["bJetSF_"+syst_name] = objects->getBJetSF();
+  }
+  if(syst_set.find(1002)!=syst_set.end()){
+    weights_map["JVTSF_"+syst_name] = objects->getJVTSF();
+  }
+  //Triggers (El/Mu)
+  if (syst_set.find(1204)!=syst_set.end() || syst_set.find(1104)!=syst_set.end()){
+    if (syst_set.find(1104)!=syst_set.end()){
+      weights_map["muonTriggerSF_"+syst_name] = objects->getMuonTriggerSF();
+    }
+    if (syst_set.find(1204)!=syst_set.end()){
+      weights_map["electronTriggerSF_"+syst_name] = objects->getElectronTriggerSF();
+    }
+    weights_map["leptonTriggerSF_"+syst_name] = leptonTriggerSF;
+  }
+}
 
 
 void TreeService::writeTree(){
