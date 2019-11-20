@@ -1,0 +1,2 @@
+mc16_13TeV.410654.PowhegPythia8EvtGen_A14_Wt_DS_inclusive_top.deriv.DAOD_SUSY5.e6552_s3126_r10724_p3712
+mc16_13TeV.410655.PowhegPythia8EvtGen_A14_Wt_DS_inclusive_antitop.deriv.DAOD_SUSY5.e6552_s3126_r10724_p3712
