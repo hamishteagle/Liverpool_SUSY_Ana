@@ -11,11 +11,12 @@ def first(dict):
 
 def get_available_ptag_map():
     global_ptag_map = {}
-    for in_file in glob.glob('Rucio/mc16*/*_rucio.txt'):
+    for in_file in glob.glob('Rucio/data/*_rucio.txt'):
         local_ptag_map = {}
         with  open(in_file, 'r') as file:
             name = in_file.replace("_rucio.txt","")
-            #global_ptag_map[name]={}
+            if 'data' in name:
+                name = in_file.replace("_rucio.txt","")[:-2]
             for line in file:
                 dsid = line.split('.')[1]
                 ptag = int(line[-5:])
@@ -26,9 +27,11 @@ def get_available_ptag_map():
     return global_ptag_map
 
 def write_out_latest(name_latest_map):
-    for in_file in glob.glob('Rucio/mc16*/*_rucio.txt'):
+    for in_file in glob.glob('Rucio/data/*_rucio.txt'):
         lines_to_write=[]
         name = in_file.replace("_rucio.txt","")
+        if 'data' in name:
+            name = in_file.replace("_rucio.txt","")[:-2]
         if name in name_latest_map:
             ptag = name_latest_map[name]
         else :
@@ -62,7 +65,7 @@ for name in dsid_ptag_map:
         if int(ptag)>3954: continue
         #print("Checking for ptag: "+str(ptag))
         if all(ptag in ptags for dsid,ptags in dsid_ptag_map[name].items()):
-            #print("Current latest ptag for "+name+" is :"+str(ptag))
+            print("Current latest ptag for "+name+" is :"+str(ptag))
             name_latest_map[name]=ptag
             break
         elif ptag == ptag_list[-1]:
