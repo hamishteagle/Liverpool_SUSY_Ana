@@ -1,6 +1,0 @@
-data15_13TeV:data15_13TeV.periodH.physics_Main.PhysCont.DAOD_SUSY5.grp15_v01_p3704
-data15_13TeV:data15_13TeV.periodG.physics_Main.PhysCont.DAOD_SUSY5.grp15_v01_p3704
-data15_13TeV:data15_13TeV.periodJ.physics_Main.PhysCont.DAOD_SUSY5.grp15_v01_p3704
-data15_13TeV:data15_13TeV.periodE.physics_Main.PhysCont.DAOD_SUSY5.grp15_v01_p3704
-data15_13TeV:data15_13TeV.periodD.physics_Main.PhysCont.DAOD_SUSY5.grp15_v01_p3704
-data15_13TeV:data15_13TeV.periodF.physics_Main.PhysCont.DAOD_SUSY5.grp15_v01_p3704
