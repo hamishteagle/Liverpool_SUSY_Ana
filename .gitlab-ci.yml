@@ -1,6 +1,6 @@
 variables:
   #GIT_SUBMODULE_STRATEGY: recursive
-  ATHENA_RELEASE: 21.2.88
+  ATHENA_RELEASE: 21.2.100
 
 stages:
   - build
@@ -58,7 +58,7 @@ run_project:
     - cd build; cmake ../WorkDir; make;
     - source *-opt/setup.sh
     - cd ../run
-    - testRun ../$CI_OUTPUT_DIR /home/atlas/submitdir/ 0 0 1 -1 hteagle 21.2.88  TYPE 0
+    - testRun ../$CI_OUTPUT_DIR /home/atlas/submitdir/ 0 0 1 -1 hteagle 21.2.100  TYPE 0
     - cd ../WorkDir
     - ls -l /home/atlas/submitdir/
     - python Macros/Tests/basic_test.py -s /home/atlas/submitdir/data-output/
