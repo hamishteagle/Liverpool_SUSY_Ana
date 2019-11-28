@@ -131,6 +131,11 @@ TreeService::TreeService(TTree *outputTree, TDirectory *OutDir, bool do_syst, bo
   tree->Branch("phib2",&phib2);
   tree->Branch("phib3",&phib3);
   tree->Branch("phib4",&phib4);
+  tree->Branch("b1_quantile", &b1_quantile);
+  tree->Branch("b2_quantile", &b2_quantile);
+  tree->Branch("b3_quantile", &b3_quantile);
+  tree->Branch("b4_quantile", &b4_quantile);
+
   tree->Branch("truthFlavb1",&truthFlavb1);
   tree->Branch("truthFlavb2",&truthFlavb2);
 
@@ -195,7 +200,7 @@ TreeService::TreeService(TTree *outputTree, TDirectory *OutDir, bool do_syst, bo
   //tree->Branch("b1_ntrk", &b1_ntrk);
   //tree->Branch("b2_ntrk", &b2_ntrk);
 
-  //ISR varibles
+  //ISR variables
   tree->Branch("delPhi1",&delPhi1);
   tree->Branch("delPhi2",&delPhi2);
   tree->Branch("delPhi3",&delPhi3);
@@ -518,6 +523,10 @@ void TreeService::fillTree(NewObjectDef *objects , xAOD::TStore *evtStore, Preli
   phib2 = variables.phib2;
   phib3 = variables.phib3;
   phib4 = variables.phib4;
+  b1_quantile = variables.b1_quantile;
+  b2_quantile = variables.b2_quantile;
+  b3_quantile = variables.b3_quantile;
+  b4_quantile = variables.b4_quantile;
   truthFlavb1 = variables.truthFlavb1;
   truthFlavb2 = variables.truthFlavb2;
 

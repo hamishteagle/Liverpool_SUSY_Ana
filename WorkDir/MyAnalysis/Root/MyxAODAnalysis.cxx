@@ -387,29 +387,6 @@ EL::StatusCode MyxAODAnalysis :: histInitialize ()
 
   if (doTruthJets){
     h_dPhi_p30= new TH1F("h_dPhi_p30","h_dPhi_p30",1000, -0.5 , 0.5);
-    h_dPhi_p40= new TH1F("h_dPhi_p40","h_dPhi_p40",1000, -0.5 , 0.5);
-    h_dPhi_p80= new TH1F("h_dPhi_p80","h_dPhi_p80",1000, -0.5 , 0.5);
-    h_dPhi_p200= new TH1F("h_dPhi_p200","h_dPhi_p200",1000, -0.5 , 0.5);
-    h_dPhi_H= new TH1F("h_dPhi_H","h_dPhi_H",1000, -0.5 , 0.5);
-
-    h_dEta_p30= new TH1F("h_dEta_p30","h_dEta_p30",1000, -0.5 , 0.5);
-    h_dEta_p40= new TH1F("h_dEta_p40","h_dEta_p40",1000, -0.5 , 0.5);
-    h_dEta_p80= new TH1F("h_dEta_p80","h_dEta_p80",1000, -0.5 , 0.5);
-    h_dEta_p200= new TH1F("h_dEta_p200","h_dEta_p200",1000, -0.5 , 0.5);
-    h_dEta_H= new TH1F("h_dEta_H","h_dEta_H",1000, -0.5 , 0.5);
-
-    h_dPhi_p30->SetDirectory(wk()->getOutputFile("output"));
-    h_dPhi_p40->SetDirectory(wk()->getOutputFile("output"));
-    h_dPhi_p80->SetDirectory(wk()->getOutputFile("output"));
-    h_dPhi_p200->SetDirectory(wk()->getOutputFile("output"));
-    h_dPhi_H->SetDirectory(wk()->getOutputFile("output"));
-
-    h_dEta_p30->SetDirectory(wk()->getOutputFile("output"));
-    h_dEta_p40->SetDirectory(wk()->getOutputFile("output"));
-    h_dEta_p80->SetDirectory(wk()->getOutputFile("output"));
-    h_dEta_p200->SetDirectory(wk()->getOutputFile("output"));
-    h_dEta_H->SetDirectory(wk()->getOutputFile("output"));
-
   }
 
 
@@ -433,18 +410,20 @@ EL::StatusCode MyxAODAnalysis :: execute ()
 
       // std::string temp = "On systematic: " + syst.name();
       // ANA_MSG_INFO(temp);
-      int year = 0;
+      int year;
+      //Things we only need to do once:
+      if(output_tree_string == output_trees[0]){
 
-      if (!isTruth){
-        objTool->ApplyPRWTool();
-        year = objTool->treatAsYear();
+          if (!isTruth){
+            objTool->ApplyPRWTool();
+            year = objTool->treatAsYear();
+            ANA_CHECK(objTool->resetSystematics());
+            ANA_CHECK(objTool_PFlow->resetSystematics());
+            ANA_CHECK(objTool->applySystematicVariation(syst));
+            ANA_CHECK(objTool_PFlow->applySystematicVariation(syst));
+          }
+        }
 
-        ANA_CHECK(objTool->resetSystematics());
-        ANA_CHECK(objTool_PFlow->resetSystematics());
-
-        ANA_CHECK(objTool->applySystematicVariation(syst));
-        ANA_CHECK(objTool_PFlow->applySystematicVariation(syst));
-      }
 
       const xAOD::EventInfo* eventInfo =0;
       if (! evtStore()->retrieve(eventInfo, "EventInfo").isSuccess() ){
@@ -452,6 +431,9 @@ EL::StatusCode MyxAODAnalysis :: execute ()
         isyst++;
         continue;
       }
+      m_lumiBlockNumber = eventInfo->lumiBlock();
+      m_runNumber = eventInfo->runNumber();
+      EventNumber = (eventInfo->eventNumber());
 
       if(!isTruth && !isData){
         m_averageIntPerX=eventInfo->averageInteractionsPerCrossing();
@@ -462,11 +444,6 @@ EL::StatusCode MyxAODAnalysis :: execute ()
         m_actualIntPerX=1;
       }
 
-
-
-      m_lumiBlockNumber = eventInfo->lumiBlock();
-      m_runNumber = eventInfo->runNumber();
-      EventNumber = (eventInfo->eventNumber());
 
 
       mcChannel = 0;
@@ -517,7 +494,7 @@ EL::StatusCode MyxAODAnalysis :: execute ()
       //Do the trimming before we do anything else
       xAOD::TStore* store = wk()->xaodStore();
       std::unique_ptr<NewObjectDef> objs;
-      bool found_nominal = (output_tree_string.find("CollectionTree_") != std::string::npos);
+      bool found_nominal = (output_tree_string.find("CollectionTree_") != std::string::npos && output_tree_string.find("CollectionTree_PFlow_") == std::string::npos);
       bool found_PFlow   = (output_tree_string.find("CollectionTree_PFlow_")!= std::string::npos);
       if (found_nominal){
         objs.reset(new NewObjectDef(evtStore(), objTool.get(), store, mcChannel, EventNumber, mcWgt, m_lumiBlockNumber, syst.name(), doTruthJets, m_SUSY5, m_SUSY7));
@@ -782,7 +759,7 @@ EL::StatusCode MyxAODAnalysis :: execute ()
       if(coreFlag && sctFlag && LArTileFlag && passedPrimVertex && passedJetClean && passedCosmicMu && passedMuonClean){
         passedCleaningCuts=true;
       }
-
+ 
       auto m_varCalc = std::make_unique<CalculateVariables>(objs.get(), store, isTruth, doPhotons, isData, syst.name());
 
 
@@ -808,7 +785,6 @@ EL::StatusCode MyxAODAnalysis :: execute ()
       double P_init = -99;
       if (doTruthJets){
         //Compare truth jets and reco jets
-        std::cout<<"Inside truthJets....Shouldn't be here"<<std::endl;
         for (auto truth_jet: (*objs->getTruthJets())){
   	     for (auto reco_jet: (*objs->getGoodJets())){
         	  double dR = truth_jet->p4().DeltaR(reco_jet->p4());
@@ -821,30 +797,8 @@ EL::StatusCode MyxAODAnalysis :: execute ()
         	    dEta_init = dEta;
         	    P_init = truthP;
         	    dPhi_init = dPhi;
-  	         }
-  	     }
-      	if (P_init>0){
-      	  if (truth_jet->e()*0.001<30){
-      	    h_dPhi_p30->Fill(dPhi_init);
-      	    h_dEta_p30->Fill(dEta_init);
-      	  }
-      	  if (P_init*0.001<40){
-      	    h_dPhi_p40->Fill(dPhi_init);
-      	    h_dEta_p40->Fill(dEta_init);
-      	  }
-      	  if (P_init*0.001<80){
-      	    h_dPhi_p80->Fill(dPhi_init);
-      	    h_dEta_p80->Fill(dEta_init);
-      	  }
-      	  if (P_init*0.001<200){
-      	    h_dPhi_p200->Fill(dPhi_init);
-      	    h_dEta_p200->Fill(dEta_init);
-      	  }
-      	  if (P_init*0.001>200){
-      	    h_dPhi_H->Fill(dPhi_init);
-      	    h_dEta_H->Fill(dEta_init);
-      	  }
-      	}
+  	        }
+          }
         }
       }
 
@@ -869,6 +823,8 @@ EL::StatusCode MyxAODAnalysis :: execute ()
           }
         }
       	(m_treeServiceVector[isyst])->fillTree(objs.get(), store ,*m_regions, *m_varCalc,m_finalSumOfWeights, m_initialSumOfWeights, puWgt, SFmctbbll, passedMETTrigger, passedSingleMuTrigger, passedSingleElTrigger, passedDiLeptonTrigger, passedGammaTrigger, passedMultiJetTrigger, muon_triggers, muon_decisions, electron_triggers, electron_decisions, dilepton_triggers, dilepton_decisions,leptonTriggerSF, PUSumOfWeights, truthfilt_MET, truthfilt_HT, coreFlag, sctFlag, LArTileFlag, passGRL, passedPrimVertex, passedJetClean, passedCosmicMu, passedMuonClean, m_runNumber, renormedMcWgt, year, m_averageIntPerX, m_actualIntPerX, xsec, filteff, kfactor);
+        store->clear();
+	objs.reset();
       }
 
 

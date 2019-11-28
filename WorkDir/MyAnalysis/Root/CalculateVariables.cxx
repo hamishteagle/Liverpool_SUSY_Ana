@@ -225,6 +225,10 @@ CalculateVariables::CalculateVariables(NewObjectDef *objects,xAOD::TStore* evtSt
   etab2 = -99;
   phib1 = -99;
   phib2 = -99;
+  b1_quantile = -99;
+  b2_quantile = -99;
+  b3_quantile = -99;
+  b4_quantile = -99;
 
 
   pTZ = -99; //
@@ -532,7 +536,8 @@ CalculateVariables::CalculateVariables(NewObjectDef *objects,xAOD::TStore* evtSt
     etab1 = b1v.Eta();
     phib1 = b1v.Phi();
     //truthFlavour
-    int flavour =-1;
+    int flavour = -1;
+    b1_quantile = (*bJet_cont)[0]->auxdata<char>("bjet");
     if(!isData){(*(bJet_cont))[0]->getAttribute("ConeTruthLabelID",flavour);}
     truthFlavb1 = flavour;
     //
@@ -543,6 +548,7 @@ CalculateVariables::CalculateVariables(NewObjectDef *objects,xAOD::TStore* evtSt
     etab2 = b2v.Eta();
     phib2 = b2v.Phi();
     //truthFlavour
+    b2_quantile = (*bJet_cont)[1]->auxdata<char>("bjet");
     int flavour =-1;
     if(!isData){(*(bJet_cont))[1]->getAttribute("ConeTruthLabelID",flavour);}
     truthFlavb2 = flavour;
@@ -553,6 +559,7 @@ CalculateVariables::CalculateVariables(NewObjectDef *objects,xAOD::TStore* evtSt
     pTb3 = b3v.Pt();
     etab3 = b3v.Eta();
     phib3 = b3v.Phi();
+    b3_quantile = (*bJet_cont)[2]->auxdata<char>("bjet");
   }
 
   if(nbJets>=4){
@@ -560,6 +567,7 @@ CalculateVariables::CalculateVariables(NewObjectDef *objects,xAOD::TStore* evtSt
     pTb4 = b4v.Pt();
     etab4 = b4v.Eta();
     phib4 = b4v.Phi();
+    b4_quantile = (*bJet_cont)[3]->auxdata<char>("bjet");
     }
 
 

@@ -259,6 +259,10 @@ class TreeService
   double phib2;
   double phib3;
   double phib4;
+  int b1_quantile;
+  int b2_quantile;
+  int b3_quantile;
+  int b4_quantile;
   int truthFlavb1;
   int truthFlavb2;
 

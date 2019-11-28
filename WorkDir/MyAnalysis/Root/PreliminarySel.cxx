@@ -25,6 +25,7 @@ bool PreliminarySel::whichPreliminaryRegion(NewObjectDef *objects, xAOD::TStore*
   TLorentzVector b2v = (*bJet_cont)[1]->p4()*0.001;
   double m_bb = (b1v+b2v).M();
 
+
   if (((goodElectron_cont->size())+(goodMuon_cont->size())) ==1 && (objects->getMET()*0.001)>50 && goodJet_cont->size()<4 && objects->getMETsig()>5 && m_bb> 50 && m_bb<200){
     region = "Preselection";
     return true;

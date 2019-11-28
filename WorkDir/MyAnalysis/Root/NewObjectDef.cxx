@@ -232,7 +232,9 @@ void NewObjectDef::GetObjects() {
       if (jet_itr->auxdata<char>("bad")) badJets->push_back(jet_itr);
       if (jet_itr->auxdata<char>("signal") && jet_itr->auxdata<char>("baseline")) {
         goodJets->push_back(jet_itr);
-        if (jet_itr->auxdata<char>("bjet")>=3) BJets->push_back(jet_itr);
+        if (jet_itr->auxdata<char>("bjet")>=3) {
+          BJets->push_back(jet_itr);
+        }
         else if ((jet_itr)->auxdata<char>("bjet")<3) nonBJets->push_back(jet_itr);
       }
     }
@@ -242,6 +244,7 @@ void NewObjectDef::GetObjects() {
   nBadJets = badJets->size();
   goodJets->sort(pT_Sorter);
   BJets->sort(pT_Sorter);
+
   nonBJets->sort(pT_Sorter);
 
   //Get nVertex
@@ -295,7 +298,6 @@ void NewObjectDef::GetScaleFactors(){
         dilepTriggerSF = objTool->GetTriggerGlobalEfficiencySF(*goodElectrons_sf, *goodMuons_sf, "diLepton");
       }
   }
-
   return;
 }
 
