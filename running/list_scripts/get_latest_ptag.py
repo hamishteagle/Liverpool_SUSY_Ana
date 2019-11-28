@@ -12,21 +12,21 @@ def first(dict):
 def get_available_ptags():
     available_ptags ={}
     latest_tag_samples =[]
-    with open("Rucio/full_1LeptonSampleList.txt","r") as rucio_file:
+    with open("Rucio/old_sample_list.txt","r") as rucio_file:
         for line in rucio_file:
             if len(line.split('_r'))>2: continue
             if "Sample" in line:
-                available_ptags[line.split("Sample: ")[1].replace(".recon.AOD.","__").rstrip()]=[]
-                print(line.split("Sample: ")[1].replace(".recon.AOD.","__").rstrip())
+                available_ptags[line.split("Sample: ")[1].split("DAOD_SUSY5")[0]]=[]
+                print(line.split("Sample: ")[1].split("DAOD_SUSY5")[0])
             else:
-                print(line.replace(".deriv.DAOD_SUSY5.","")[:-7])
-                available_ptags[line.replace(".deriv.DAOD_SUSY5.","__")[:-7]].append(int(line[-5:]))
+                print(line.split("DAOD_SUSY5")[0])
+                available_ptags[line.split("DAOD_SUSY5")[0]].append(int(line[-5:]))
                 if "3990" in line:
                     latest_tag_samples.append(line)
     return available_ptags,latest_tag_samples
 
 def write_out(available_ptags,latest_tag_samples):
-    with open("1LeptonSampleList.txt", "w") as avaiable_list:
+    with open("current_sample_list.txt", "w") as avaiable_list:
         for line in latest_tag_samples:
             avaiable_list.write(line)
     with open("missing_latest_ptag_1Lepton.txt","w") as missing_list:
