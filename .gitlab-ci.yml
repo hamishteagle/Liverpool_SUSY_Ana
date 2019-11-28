@@ -40,7 +40,8 @@ run_project:
     - "/builds/hteagle/Liverpool_SbottomAnalysis_Rel21/WorkDir/Macros/Tests/default/*.pdf"
   stage: run
   <<: *variables_files
-  image: gitlab-registry.cern.ch/hteagle/liverpool_sbottomanalysis_rel21
+  #image: gitlab-registry.cern.ch/hteagle/liverpool_sbottomanalysis_rel21
+  image: ${CI_REGISTRY_IMAGE}:${CI_COMMIT_REF_NAME}
   script:
     #Get file from EOS
     - mkdir fromEOS #directory to download the files to
