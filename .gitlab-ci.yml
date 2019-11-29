@@ -12,8 +12,6 @@ stages:
 
 build_image:
   stage: build
-  only:
-  - master
   tags:
     - docker-image-build
   script: "echo 'Building image ...'"
