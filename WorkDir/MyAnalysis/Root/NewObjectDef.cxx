@@ -43,13 +43,14 @@ NewObjectDef::NewObjectDef(asg::SgTEvent* event, ST::SUSYObjDef_xAOD* SUSYTool, 
   this->GetBaselineObjects(m_SUSY5, m_SUSY7);
   //Get the objects after the OR with baseline
   this->GetObjects();
+
   eventStore->record(preOR_baselineJets.release(),"preOR_baselineJets"+systematic);
   eventStore->record(baselineElectrons.release(),"baselineElectrons"+systematic);
   eventStore->record(baselineMuons.release(),"baselineMuons"+systematic);
   eventStore->record(baselineTaus.release(),"baselineTaus"+systematic);
   eventStore->record(baselinePhotons.release(),"baselinePhotons"+systematic);
-  eventStore->record(goodElectrons.release(),"goodElectrons"+systematic);
 
+  eventStore->record(goodElectrons.release(),"goodElectrons"+systematic);
   eventStore->record(goodTaus.release(),"goodTaus"+systematic);
   eventStore->record(goodMuons.release(),"goodMuons"+systematic);
   eventStore->record(badMuons.release(),"badMuons"+systematic);
@@ -181,8 +182,8 @@ void NewObjectDef::GetObjects() {
 
   // Fill electrons
   for (const auto &el_itr: *preOR_baselineElectrons) {
+    if (el_itr->auxdata<char>("baseline")) baselineElectrons->push_back(el_itr);
     if (el_itr->auxdata<char>("passOR")) {
-      if (el_itr->auxdata<char>("baseline")) baselineElectrons->push_back(el_itr);
       if (el_itr->auxdata<char>("signal")) goodElectrons->push_back(el_itr);
     }
   }
@@ -190,14 +191,14 @@ void NewObjectDef::GetObjects() {
   goodElectrons->sort(pT_Sorter);
   // Fill muons
   for (const auto& mu_itr: *preOR_baselineMuons) {
+    if (mu_itr->auxdata<char>("baseline") && !(mu_itr)->auxdata<char>("cosmic")) baselineMuons->push_back(mu_itr);
     if (mu_itr->auxdata<char>("passOR")) {
-      if (mu_itr->auxdata<char>("baseline") && !(mu_itr)->auxdata<char>("cosmic")) baselineMuons->push_back(mu_itr);
       if (mu_itr->auxdata<char>("baseline") && mu_itr->auxdata<char>("cosmic")) cosmicMuons->push_back(mu_itr);
       if (mu_itr->auxdata<char>("signal") && !(mu_itr)->auxdata<char>("cosmic")) goodMuons->push_back(mu_itr);
     }
     else {
       if (mu_itr->auxdata<char>("baseline") && mu_itr->auxdata<char>("bad")){
-	badMuons->push_back(mu_itr);
+	      badMuons->push_back(mu_itr);
       }
     }
   }
@@ -209,8 +210,8 @@ void NewObjectDef::GetObjects() {
   goodMuons->sort(pT_Sorter);
   // Fill taus
   for (const auto& tau_itr: *preOR_baselineTaus) {
+    if (tau_itr->auxdata<char>("baseline")) baselineTaus->push_back(tau_itr);
     if (tau_itr->auxdata<char>("passOR")) {
-      if (tau_itr->auxdata<char>("baseline")) baselineTaus->push_back(tau_itr);
       if (tau_itr->auxdata<char>("signal")) goodTaus->push_back(tau_itr);
     }
   }
@@ -219,7 +220,7 @@ void NewObjectDef::GetObjects() {
   // Fill photons
   for (const auto& ph_itr: *preOR_baselinePhotons) {
     if (ph_itr->auxdata<char>("passOR")) {
-      if (ph_itr->auxdata<char>("baseline")) baselinePhotons->push_back(ph_itr);
+      if (ph_itr->auxdata<char>("baseline"))  baselinePhotons->push_back(ph_itr);
       if (ph_itr->auxdata<char>("signal")) goodPhotons->push_back(ph_itr);
     }
   }
@@ -293,6 +294,9 @@ void NewObjectDef::GetScaleFactors(){
         else {
           muonTriggerSF = objTool->GetTotalMuonSF(*goodMuons_sf,false,false, "HLT_mu26_ivarmedium_OR_HLT_mu50");
         }
+      }
+      //MuonTriggerSF is returned as 0 if the trigger hasn't fired, protect against this
+      if(muonTriggerSF==0){
       }
       if ((goodElectrons_sf->size() + goodMuons_sf->size()) >= 2) {
         dilepTriggerSF = objTool->GetTriggerGlobalEfficiencySF(*goodElectrons_sf, *goodMuons_sf, "diLepton");
