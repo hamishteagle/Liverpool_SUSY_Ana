@@ -53,7 +53,7 @@ class Livana(unittest.TestCase):
         if not os.path.isfile(default_runfile_path[0]):
             raise IOError('root file does not exist in given dir: "{0:s}"'.format(Livana.args["submit_dir"]))
         self.f = ROOT.TFile.Open(default_runfile_path[0])
-        self.t = self.f.Get('CollectionTree_')
+        self.t = self.f.Get('CollectionTree_PFlow_')
 
     def get_cuts_json(self):
         default_cuts_json_path = os.path.join(Livana.__location__,'default','cuts.json')
