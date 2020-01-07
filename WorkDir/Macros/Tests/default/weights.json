@@ -1,9 +1,10 @@
 {
+  "mcEventWeight":"50,0.5,1.5",
   "muonSF":"50,0.9,1.1",
+  "electronSF":"50,0.9,1.1",
   "JVTSF":"50,0.9,1.1",
   "bJetSF":"50,0.9,1.1",
   "puWgt":"50,0.9,1.1",
-  "puWgt":"50,0.9,1.1",
-  "leptonTriggerSF":"50,0.9,1.1",
-  "dilepTriggerSF":"50,0.9,1.1"
+  "muonTriggerSF":"50,0.9,1.1",
+  "electronTriggerSF":"50,0.9,1.1"
 }

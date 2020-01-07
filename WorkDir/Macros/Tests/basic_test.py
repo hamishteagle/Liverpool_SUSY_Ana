@@ -22,16 +22,28 @@ class Livana(unittest.TestCase):
         cuts_dict = {}
         #Things are nicer if they're ordered in the json file
         flow_dict = collections.OrderedDict()
+        weighted_flow_dict = collections.OrderedDict()
+        SumOfWgts = self.f.Get("h_SumOfWeights").Integral()
+        with open(self.weights_json,'r') as ofile:
+            weights_dict = json.load(ofile, object_pairs_hook=collections.OrderedDict)#Get the cuts from the json in the correct order
+        weighting="*".join(weights_dict.keys())+"*"
+        weighting+="*".join(["36.1/139","xsec","filteff","kfactor","(1/"+str(SumOfWgts)+")"])
+        print(weighting)
+
         with open(self.cuts_json,'r') as ofile:
             cuts_dict = json.load(ofile, object_pairs_hook=collections.OrderedDict)#Get the cuts from the json in the correct order
         cutnow = "1"
         for var, val in cuts_dict.items():
             cutnow += "*("+str(var)+str(val)+")" #Build the cuts iteratively
             flow_dict[var] = self.t.GetEntries(str(cutnow))
+            weighted_hist = ROOT.TH1F("weighted_hist","weighted_hist",1,0.5,1.5)
+            self.t.Draw("1>>weighted_hist",cutnow+"*"+weighting)
+            weighted_flow_dict[var]=weighted_hist.Integral()
+            del weighted_hist
             if (flow_dict[var]==0):
                 raise IOError('cut of "{0:s} {1:s}" is too tight (0 events) change this cut'.format(var, val))
             else:
-                print("cut: "+str(var)+" at: "+str(cuts_dict[var])+" events: "+str(flow_dict[var]))
+                print("cut: "+str(var)+" at: "+str(cuts_dict[var])+" raw: "+str(flow_dict[var])+" weighted: "+str(weighted_flow_dict[var]))
 
         with open(self.__location__+"/default/checkout_flow.json","w") as self.check_json:
             json.dump(flow_dict,self.check_json)
@@ -123,6 +135,7 @@ class Livana(unittest.TestCase):
 
         self.get_runfile()
         self.get_cuts_json()
+        self.get_weights_json()
         self.write_cutflow()
         #compare the flow we just wrote with the current one
         current_flow = collections.OrderedDict()

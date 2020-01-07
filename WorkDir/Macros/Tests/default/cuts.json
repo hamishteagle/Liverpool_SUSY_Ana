@@ -1,9 +1,11 @@
 {
+       "1":">0",
        "ETMiss":">150",
        "nJets":">=3",
        "nBJets":">=2",
        "nLeptons":"==1",
        "nBaselineLeptons":"==1",
+       "pTl1":">30",
        "m_bb":">30",
        "m_CTcorr":">30",
        "m_T":">50"
