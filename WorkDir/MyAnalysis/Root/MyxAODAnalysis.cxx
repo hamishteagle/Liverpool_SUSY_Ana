@@ -310,7 +310,8 @@ EL::StatusCode MyxAODAnalysis :: initialize ()
     bool syst_affects_electrons = ST::testAffectsObject(xAOD::Type::Electron, my_syst.affectsType);
     bool syst_affects_photons = ST::testAffectsObject(xAOD::Type::Photon, my_syst.affectsType);
     bool syst_affects_taus = ST::testAffectsObject(xAOD::Type::Tau, my_syst.affectsType);
-    if (syst_affects_taus || (syst_affects_photons && !syst_affects_electrons) || my_syst.affectsWeights){
+    bool syst_affects_fatJets = (my_syst.systset.name().find("JET_Rtrk") != std::string::npos);
+    if (syst_affects_taus || (syst_affects_photons && !syst_affects_electrons) || my_syst.affectsWeights || syst_affects_fatJets){
       std::string remove_syst = "Removing systematic: " + my_syst.systset.name();
       std::cout<<remove_syst<<std::endl;
       return true;
@@ -403,6 +404,12 @@ EL::StatusCode MyxAODAnalysis :: execute ()
   isyst = 0;
   std::vector<std::string>output_trees = {"CollectionTree_","CollectionTree_PFlow_"};
   //std::vector<std::string>output_trees = {"CollectionTree_"};
+  int year;
+  if (!isTruth){
+    objTool->ApplyPRWTool();
+    year = objTool->treatAsYear();
+  }
+
   for (const auto& output_tree_string: output_trees){
     for (const auto& sysInfo : systInfoList){
       const CP::SystematicSet& syst = sysInfo.systset;
@@ -410,13 +417,11 @@ EL::StatusCode MyxAODAnalysis :: execute ()
 
       // std::string temp = "On systematic: " + syst.name();
       // ANA_MSG_INFO(temp);
-      int year;
+
       //Things we only need to do once:
       if(output_tree_string == output_trees[0]){
 
           if (!isTruth){
-            objTool->ApplyPRWTool();
-            year = objTool->treatAsYear();
             ANA_CHECK(objTool->resetSystematics());
             ANA_CHECK(objTool_PFlow->resetSystematics());
             ANA_CHECK(objTool->applySystematicVariation(syst));
@@ -759,7 +764,7 @@ EL::StatusCode MyxAODAnalysis :: execute ()
       if(coreFlag && sctFlag && LArTileFlag && passedPrimVertex && passedJetClean && passedCosmicMu && passedMuonClean){
         passedCleaningCuts=true;
       }
- 
+
       auto m_varCalc = std::make_unique<CalculateVariables>(objs.get(), store, isTruth, doPhotons, isData, syst.name());
 
 
@@ -813,7 +818,7 @@ EL::StatusCode MyxAODAnalysis :: execute ()
             objs->GetScaleFactors();//We don't need to get all the objects again, just re-calculate the scale factors
 
             if ((syst_weight.name()).find("PRW") != std::string::npos){
-              objTool->ApplyPRWTool();//Reset PRW weights
+              //objTool->ApplyPRWTool();//Reset PRW weights
               puWgt = objTool->GetPileupWeight();
             }
             if (mu_triggers > 0)   leptonTriggerSF = objs->getMuonTriggerSF();
