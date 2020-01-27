@@ -13,7 +13,7 @@ class submit:
       # Parse arguments
 
         parser = argparse.ArgumentParser(description='Analysis submission script')
-        parser.add_argument( '-i', '--input_file', dest='input_file', action = 'store', help = 'Input file/directory for EventLoop', default='/hepstore/hteagle/reco_test_files/mc16_13TeV.410470.PhPy8EG_A14_ttbar_hdamp258p75_nonallhad.deriv.DAOD_SUSY5.e6337_s3126_r9364_p3712/')
+        parser.add_argument( '-i', '--input_file', dest='input_file', action = 'store', help = 'Input file/directory for EventLoop', default='/hepstore/hteagle/reco_test_files/mc16_13TeV.410470.PhPy8EG_A14_ttbar_hdamp258p75_nonallhad.deriv.DAOD_SUSY5.e6337_s3126_r9364_p3990/')
         parser.add_argument( '-s', '--submission-dir', dest = 'submission_dir', action = 'store', help = 'Submission directory for EventLoop',default=current_path+'/submitdir' )
         parser.add_argument('-l','--local', dest = 'local', type = int, default = True)
         parser.add_argument('--type',dest = 'PhysicsName', type = str, default = 'TYPE')

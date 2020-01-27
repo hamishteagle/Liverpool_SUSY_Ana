@@ -320,8 +320,8 @@ EL::StatusCode MyxAODAnalysis :: initialize ()
   }
   ),systInfoList.end());
 
-  std::vector<std::string> output_trees = {"CollectionTree_","CollectionTree_PFlow_"};
-  //std::vector<std::string> output_trees = {"CollectionTree_"};
+  //std::vector<std::string> output_trees = {"CollectionTree_","CollectionTree_PFlow_"};
+  std::vector<std::string> output_trees = {"CollectionTree_PFlow_"};
 
   for (const auto& output_tree_string: output_trees){
     for(auto sysInfo : systInfoList){
@@ -402,8 +402,8 @@ EL::StatusCode MyxAODAnalysis :: execute ()
   // code will go.
 
   isyst = 0;
-  std::vector<std::string>output_trees = {"CollectionTree_","CollectionTree_PFlow_"};
-  //std::vector<std::string>output_trees = {"CollectionTree_"};
+  //std::vector<std::string>output_trees = {"CollectionTree_","CollectionTree_PFlow_"};
+  std::vector<std::string>output_trees = {"CollectionTree_PFlow_"};
   int year;
   if (!isTruth){
     objTool->ApplyPRWTool();

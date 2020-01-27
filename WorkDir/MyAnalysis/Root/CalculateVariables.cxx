@@ -225,6 +225,10 @@ CalculateVariables::CalculateVariables(NewObjectDef *objects,xAOD::TStore* evtSt
   etab2 = -99;
   phib1 = -99;
   phib2 = -99;
+  j1_quantile = -99;
+  j2_quantile = -99;
+  j3_quantile = -99;
+  j4_quantile = -99;
   b1_quantile = -99;
   b2_quantile = -99;
   b3_quantile = -99;
@@ -410,6 +414,7 @@ CalculateVariables::CalculateVariables(NewObjectDef *objects,xAOD::TStore* evtSt
     pTj1 = (*(goodJet_cont))[0]->pt()*0.001;
     etaj1 = (*(goodJet_cont))[0]->eta();
     phij1 = (*(goodJet_cont))[0]->phi();
+    j1_quantile = (*goodJet_cont)[0]->auxdata<char>("bjet");
     delPhi1 = fabs(TVector2::Phi_mpi_pi( (*(goodJet_cont))[0]->phi()  - eTMissPhi));
     if (TruthFile == 0){
       jetVector->push_back((*goodJet_cont)[0]);
@@ -422,6 +427,7 @@ CalculateVariables::CalculateVariables(NewObjectDef *objects,xAOD::TStore* evtSt
       pTj2 = (*(goodJet_cont))[1]->pt()*0.001;
       etaj2 = (*(goodJet_cont))[1]->eta();
       phij2 = (*(goodJet_cont))[1]->phi();
+      j2_quantile = (*goodJet_cont)[1]->auxdata<char>("bjet");
       delPhi2 = fabs(TVector2::Phi_mpi_pi( (*(goodJet_cont))[1]->phi()  - eTMissPhi));
       if (TruthFile == 0){
 	jetVector->push_back((*goodJet_cont)[1]);
@@ -436,6 +442,7 @@ CalculateVariables::CalculateVariables(NewObjectDef *objects,xAOD::TStore* evtSt
 	pTj3 = (*(goodJet_cont))[2]->pt()*0.001;
 	etaj3 = (*(goodJet_cont))[2]->eta();
 	phij3 = (*(goodJet_cont))[2]->phi();
+  j3_quantile = (*goodJet_cont)[2]->auxdata<char>("bjet");
 	delPhi3 = fabs(TVector2::Phi_mpi_pi( (*(goodJet_cont))[2]->phi()  - eTMissPhi));
 	jet3v = (*goodJet_cont)[2]->p4()*0.001;
 	if (TruthFile == 0){
@@ -451,6 +458,7 @@ CalculateVariables::CalculateVariables(NewObjectDef *objects,xAOD::TStore* evtSt
 	  pTj4 = (*(goodJet_cont))[3]->pt()*0.001;
 	  etaj4 = (*(goodJet_cont))[3]->eta();
 	  phij4 = (*(goodJet_cont))[3]->phi();
+    j4_quantile = (*goodJet_cont)[3]->auxdata<char>("bjet");
 	  delPhi4 = fabs(TVector2::Phi_mpi_pi( (*(goodJet_cont))[3]->phi()  - eTMissPhi));
 	  jet4v = (*goodJet_cont)[3]->p4()*0.001;
 	  DRj1j4 = jet1v.DeltaR(jet4v);

@@ -73,7 +73,7 @@ TreeService::TreeService(TTree *outputTree, TDirectory *OutDir, bool do_syst, bo
 
   tree->Branch("m_bb", &m_bb);
   tree->Branch("m_CTcorr",&m_CTcorr);
-  tree->Branch("m_ll", &m_ll);
+  //tree->Branch("m_ll", &m_ll);
   tree->Branch("h_T", &h_T);
   tree->Branch("m_T", &m_T);
   tree->Branch("m_lbb", &m_lbb);
@@ -103,21 +103,21 @@ TreeService::TreeService(TTree *outputTree, TDirectory *OutDir, bool do_syst, bo
   tree->Branch("etaj3",&etaj3);
 
   tree->Branch("pTl1",&pTl1);
-  tree->Branch("pTl2",&pTl2);
+  //tree->Branch("pTl2",&pTl2);
   tree->Branch("etal1",&etal1);
-  tree->Branch("etal2",&etal2);
+  //tree->Branch("etal2",&etal2);
   tree->Branch("phil1",&phil1);
-  tree->Branch("phil2",&phil2);
+  //tree->Branch("phil2",&phil2);
   tree->Branch("lep1flavour",&lep1flavour);
-  tree->Branch("lep2flavour",&lep2flavour);
+  //tree->Branch("lep2flavour",&lep2flavour);
 
 
   tree->Branch("pTel1",&pTel1);
-  tree->Branch("pTel2",&pTel2);
+  //tree->Branch("pTel2",&pTel2);
   tree->Branch("pTmu1",&pTmu1);
-  tree->Branch("pTmu2",&pTmu2);
-  tree->Branch("pTtj1",&pTtj1);
-  tree->Branch("pTtj2",&pTtj2);
+  //tree->Branch("pTmu2",&pTmu2);
+  //tree->Branch("pTtj1",&pTtj1);
+  //tree->Branch("pTtj2",&pTtj2);
 
   tree->Branch("pTb1",&pTb1);
   tree->Branch("pTb2",&pTb2);
@@ -135,6 +135,10 @@ TreeService::TreeService(TTree *outputTree, TDirectory *OutDir, bool do_syst, bo
   tree->Branch("b2_quantile", &b2_quantile);
   tree->Branch("b3_quantile", &b3_quantile);
   tree->Branch("b4_quantile", &b4_quantile);
+  tree->Branch("j1_quantile", &j1_quantile);
+  tree->Branch("j2_quantile", &j2_quantile);
+  tree->Branch("j3_quantile", &j3_quantile);
+  tree->Branch("j4_quantile", &j4_quantile);
 
   tree->Branch("truthFlavb1",&truthFlavb1);
   tree->Branch("truthFlavb2",&truthFlavb2);
@@ -154,8 +158,8 @@ TreeService::TreeService(TTree *outputTree, TDirectory *OutDir, bool do_syst, bo
   //tree->Branch("nPhoton",&nPhoton);
   tree->Branch("ETMiss", &ETMiss);
   tree->Branch("ETMissPhi", &ETMissPhi);
-  tree->Branch("adjustedETMiss", &adjustedETMiss);
-  tree->Branch("adjustedETMissPhi", &adjustedETMissPhi);
+  //tree->Branch("adjustedETMiss", &adjustedETMiss);
+  //tree->Branch("adjustedETMissPhi", &adjustedETMissPhi);
 
   //tree->Branch("m_finalWeightSum", &m_finalWeightSum);
   //tree->Branch("m_intialWeightSum", &m_intialWeightSum);
@@ -523,6 +527,10 @@ void TreeService::fillTree(NewObjectDef *objects , xAOD::TStore *evtStore, Preli
   phib2 = variables.phib2;
   phib3 = variables.phib3;
   phib4 = variables.phib4;
+  j1_quantile = variables.j1_quantile;
+  j2_quantile = variables.j2_quantile;
+  j3_quantile = variables.j3_quantile;
+  j4_quantile = variables.j4_quantile;
   b1_quantile = variables.b1_quantile;
   b2_quantile = variables.b2_quantile;
   b3_quantile = variables.b3_quantile;
