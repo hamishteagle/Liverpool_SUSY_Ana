@@ -69,7 +69,7 @@ int main( int argc, char* argv[]) {
       RunningWithTruthJets = (bool) atoi(argv[10]);
       std::cout<<"RunningWithTruthJets = "<<RunningWithTruthJets<<std::endl;
     }
-    if (argv[11] != "") nFilesPerJob=argv[11];
+    if (argc>11 && argv[11] != "") nFilesPerJob=argv[11];
     fileType = get_file_type(sample_name);
     info_message("Input path: " + sample_path);
     info_message("Sample name: " + sample_name);
