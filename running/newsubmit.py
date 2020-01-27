@@ -22,6 +22,7 @@ class submit:
         parser.add_argument('--events', dest = 'events', type = int, default = -1)
         parser.add_argument('--username', dest = 'username', action = 'store' , default = "hteagle")
         parser.add_argument('--doTruthJets', dest = 'doTruthJets', type = int, default= 0)
+        parser.add_argument('--nFilesPerJob', dest = 'nFilesPerJob', type = str, default= "10")
         args = parser.parse_args()
 
 
@@ -75,6 +76,8 @@ class submit:
         command += str(PhysicsName)
         command += ' '
         command += str(doTruthJets)
+        command += ' '
+        command += str(args.nFilesPerJob)
         print str(command)
         os.system(command)
 

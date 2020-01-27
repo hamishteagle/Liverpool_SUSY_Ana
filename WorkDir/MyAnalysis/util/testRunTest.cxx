@@ -42,6 +42,7 @@ int main( int argc, char* argv[]) {
     bool RunningWithPhotons = false;
     bool RunningLocally = true;
     int NoEvents = -1;
+    std::string nFilesPerJob ="10";
     bool RunningWithTruthJets = false;
 
 
@@ -68,6 +69,7 @@ int main( int argc, char* argv[]) {
       RunningWithTruthJets = (bool) atoi(argv[10]);
       std::cout<<"RunningWithTruthJets = "<<RunningWithTruthJets<<std::endl;
     }
+    if (argv[11] != "") nFilesPerJob=argv[11];
     fileType = get_file_type(sample_name);
     info_message("Input path: " + sample_path);
     info_message("Sample name: " + sample_name);
@@ -77,6 +79,7 @@ int main( int argc, char* argv[]) {
     if (RunningWithPhotons) info_message("Photons: True" );
     if (!RunningLocally) info_message("--- Going to submit to grid ---" );
     if (NoEvents != -1) info_message("Events: " + std::to_string(NoEvents));
+    info_message("nFilesPerJob: "+nFilesPerJob);
 
     // Set up the job for xAOD access:
     xAOD::Init().ignore();
@@ -174,7 +177,7 @@ int main( int argc, char* argv[]) {
 
         //job.options()->setDouble (EL::Job::optRemoveSubmitDir, 1);
         job.sampleHandler( sh );
-        driver.options()->setString(EL::Job::optGridNFilesPerJob, "10");
+        driver.options()->setString(EL::Job::optGridNFilesPerJob, nFilesPerJob);
         // Use submit if you want to see all of the info about the submitted jobs. Use submitOnly if you want to send the jobs then Monitor online with panda
         std::string out_dir = CreateDir + "/" + output_name;
 	//std::cout<<"Would submit grid job with this output_name: "<<output_name<<std::endl;
