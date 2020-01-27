@@ -42,7 +42,7 @@ int main( int argc, char* argv[]) {
     bool RunningWithPhotons = false;
     bool RunningLocally = true;
     int NoEvents = -1;
-    std::string nFilesPerJob ="10";
+    std::string nFilesPerJob ="5";
     bool RunningWithTruthJets = false;
 
 
@@ -180,8 +180,8 @@ int main( int argc, char* argv[]) {
         driver.options()->setString(EL::Job::optGridNFilesPerJob, nFilesPerJob);
         // Use submit if you want to see all of the info about the submitted jobs. Use submitOnly if you want to send the jobs then Monitor online with panda
         std::string out_dir = CreateDir + "/" + output_name;
-	//std::cout<<"Would submit grid job with this output_name: "<<output_name<<std::endl;
-	std::cout<<"Going to submit now"<<std::endl;
+	      //std::cout<<"Would submit grid job with this output_name: "<<output_name<<std::endl;
+	      std::cout<<"Going to submit now"<<std::endl;
         driver.submitOnly( job, out_dir );
     }
   return 0;
