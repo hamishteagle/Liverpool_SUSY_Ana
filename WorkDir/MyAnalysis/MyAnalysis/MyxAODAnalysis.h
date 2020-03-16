@@ -125,7 +125,6 @@ public:
   std::vector <std::string> cutList; //!
   std::vector <std::string> runningOverSysts; //!
   asg::AnaToolHandle<IMETSignificance> m_metSignif; //!
-  //  EL::OutputStream out
 
 
   // Put our new containers here

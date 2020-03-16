@@ -21,13 +21,13 @@ class TreeService
 {
 
  public:
-  TreeService(TTree *outputTree, TDirectory *OutDir, bool do_syst, bool isNominal, std::vector<ST::SystInfo> systInfoList_weights);
+  TreeService(TTree *outputTree, TDirectory *OutDir, bool RunningLocally, bool do_syst, bool isNominal, std::vector<ST::SystInfo> systInfoList_weights);
 
   void InitialiseWeightsBranches(ST::SystInfo systInfo_weight);
 
   void fillTreeWeights(NewObjectDef *objects, double puWgt, double leptonTriggerSF, ST::SystInfo systInfo_weight);
 
-  void fillTree(NewObjectDef *objects, xAOD::TStore *evtStore, PreliminarySel &region, CalculateVariables &variables , double mFinalWeight, double mInitialWeight, double puWeight, double SFmCTbbll, bool TrigMET, bool TrigMu, bool TrigEl, bool TrigDilep, bool TrigGamma, bool Trig6j, std::vector<std::string> muon_triggers, std::vector<int> muon_decisions, std::vector<std::string> electron_triggers, std::vector<int> electron_decisions, std::vector<std::string> dilepton_triggers, std::vector<int> dilepton_decisions, double LeptonTriggerSF, double puSumWeights, double TRUTHMET, double TRUTHHT ,bool CoreFlags, bool SCTFlag, bool LArTileFlag, bool passGRL, bool passedPrimVertex, bool passedJetClean, bool passedCosmicMu, bool passedMuonClean, double RNo, double RenormedMCWgt, int LumiYear, double m_averageIntPerCrossing, double m_actualIntPerCrossing, double m_xsec, double m_filteff, double m_kfactor);
+  void fillTree(NewObjectDef *objects, xAOD::TStore *evtStore, PreliminarySel &region, CalculateVariables &variables , double mFinalWeight, double mInitialWeight, double puWeight, double SFmCTbbll, bool TrigMET, bool TrigMu, bool TrigEl, bool TrigDilep, bool TrigGamma, bool Trig6j, std::vector<std::string> muon_triggers, std::vector<int> muon_decisions, std::vector<std::string> electron_triggers, std::vector<int> electron_decisions, std::vector<std::string> dilepton_triggers, std::vector<int> dilepton_decisions, double LeptonTriggerSF, double puSumWeights, double TRUTHMET, double TRUTHHT ,bool CoreFlags, bool SCTFlag, bool LArFlag, bool tileFlag, bool passGRL, bool passedPrimVertex, bool passedJetClean, bool passedCosmicMu, bool passedMuonClean, double RNo, double RenormedMCWgt, int LumiYear, double m_averageIntPerCrossing, double m_actualIntPerCrossing, double m_xsec, double m_filteff, double m_kfactor);
 
   void writeTree();
 
@@ -65,7 +65,8 @@ class TreeService
   //Initial event cleaning
   bool coreFlag;
   bool sctFlag;
-  bool LArTileFlag;
+  bool LArFlag;
+  bool tileFlag;
   bool passedPrimVertex;
   bool passedGRL;
 
@@ -303,9 +304,11 @@ class TreeService
   double phitj1;
   double phitj2;
 
+  int nBaselineJets;
   int nJets;
   int nJets_beforeOR;
   int nBJets;
+  int nNonBJets;
   int nLeptons;
   int nBaselineLeptons;
   int nMuons;

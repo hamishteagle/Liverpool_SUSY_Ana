@@ -27,6 +27,7 @@ NewObjectDef::NewObjectDef(asg::SgTEvent* event, ST::SUSYObjDef_xAOD* SUSYTool, 
   baselineMuons =     std::make_unique<xAOD::MuonContainer>(SG::VIEW_ELEMENTS);
   baselineTaus =      std::make_unique<xAOD::TauJetContainer>(SG::VIEW_ELEMENTS);
   baselinePhotons =   std::make_unique<xAOD::PhotonContainer>(SG::VIEW_ELEMENTS);
+  baselineJets =      std::make_unique<xAOD::JetContainer>(SG::VIEW_ELEMENTS);
 
   goodElectrons =     std::make_unique<xAOD::ElectronContainer>(SG::VIEW_ELEMENTS);
   goodMuons =         std::make_unique<xAOD::MuonContainer>(SG::VIEW_ELEMENTS);
@@ -44,6 +45,7 @@ NewObjectDef::NewObjectDef(asg::SgTEvent* event, ST::SUSYObjDef_xAOD* SUSYTool, 
   //Get the objects after the OR with baseline
   this->GetObjects();
 
+  eventStore->record(baselineJets.release(),"baselineJets"+systematic);
   eventStore->record(preOR_baselineJets.release(),"preOR_baselineJets"+systematic);
   eventStore->record(baselineElectrons.release(),"baselineElectrons"+systematic);
   eventStore->record(baselineMuons.release(),"baselineMuons"+systematic);
@@ -151,6 +153,9 @@ void NewObjectDef::GetBaselineObjects(bool m_SUSY5, bool m_SUSY7) {
   METphi = (*met_it)->phi();
   objTool->GetMETSig(*met_nominal, METsig, true, false);
 
+  //Apply overlap removal with nominal (Raw SUSYTools objects) and no taus (ala 1L framework)
+  objTool->OverlapRemoval(electrons_nominal, muons_nominal, jets_nominal, photons_nominal);
+
   //Fill preOR electrons
   for (const auto &el_itr: *electrons) {
       if (el_itr->auxdata<char>("baseline")) preOR_baselineElectrons->push_back(el_itr);
@@ -166,13 +171,14 @@ void NewObjectDef::GetBaselineObjects(bool m_SUSY5, bool m_SUSY7) {
   }
   //Fill preOR jets
   for (const auto& jet_itr: *jets) {
-    if (jet_itr->auxdata<char>("baseline")) preOR_baselineJets->push_back(jet_itr);
+   if (jet_itr->auxdata<char>("baseline")) preOR_baselineJets->push_back(jet_itr);
   }
   //Fill preOR taus
   for (const auto& tau_itr: *taus) {
     if (tau_itr->auxdata<char>("baseline")) preOR_baselineTaus->push_back(tau_itr);
   }
-  objTool->OverlapRemoval(preOR_baselineElectrons.get(), preOR_baselineMuons.get(), preOR_baselineJets.get(), preOR_baselinePhotons.get(), preOR_baselineTaus.get());
+
+
 
   delete met_nominal;
   delete met_nominal_aux;
@@ -231,12 +237,15 @@ void NewObjectDef::GetObjects() {
     if (jet_itr->auxdata<char>("signal")) goodJetsBeforeOR->push_back(jet_itr);
     if (jet_itr->auxdata<char>("passOR")) {
       if (jet_itr->auxdata<char>("bad")) badJets->push_back(jet_itr);
-      if (jet_itr->auxdata<char>("signal") && jet_itr->auxdata<char>("baseline")) {
-        goodJets->push_back(jet_itr);
-        if (jet_itr->auxdata<char>("bjet")>=3) {
-          BJets->push_back(jet_itr);
+      if (jet_itr->auxdata<char>("baseline")) {
+        baselineJets->push_back(jet_itr);
+        if (jet_itr->auxdata<char>("signal")) {
+          goodJets->push_back(jet_itr);
+          if (jet_itr->auxdata<char>("bjet")>=3) {
+            BJets->push_back(jet_itr);
+          }
+          else if ((jet_itr)->auxdata<char>("bjet")<3) nonBJets->push_back(jet_itr);
         }
-        else if ((jet_itr)->auxdata<char>("bjet")<3) nonBJets->push_back(jet_itr);
       }
     }
   }

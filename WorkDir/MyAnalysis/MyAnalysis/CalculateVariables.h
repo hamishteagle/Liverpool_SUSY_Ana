@@ -28,9 +28,9 @@ class CalculateVariables
   xAOD::TauJetContainer *goodTau_cont = nullptr;
   xAOD::TauJetContainer *baselineTau_cont = nullptr;
   xAOD::PhotonContainer *goodPhoton_cont = nullptr;
+  xAOD::JetContainer *baselineJet_cont = nullptr;
   xAOD::JetContainer *goodJet_cont = nullptr;
   xAOD::JetContainer *goodJet_beforeOR_cont = nullptr;
-  xAOD::JetContainer *baselineJet_cont = nullptr;
   xAOD::JetContainer *bJet_cont = nullptr;
   xAOD::JetContainer *nonBJet_cont = nullptr;
   TVector2 *METvector_cont = nullptr;
@@ -66,6 +66,7 @@ class CalculateVariables
   double adjustedETMissPhi; //
   double PhotonETMiss; //
   double PhotonETMissPhi; //
+  int nBaselineJets; //
   int nJets; //
   int nJets_beforeOR; //
   int nbJets; //

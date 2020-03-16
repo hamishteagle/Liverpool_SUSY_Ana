@@ -6,7 +6,7 @@
 #include "xAODEgamma/Electron.h"
 #include "xAODMuon/Muon.h"
 
-TreeService::TreeService(TTree *outputTree, TDirectory *OutDir, bool do_syst, bool isNominal, std::vector<ST::SystInfo> systInfoList_weights){
+TreeService::TreeService(TTree *outputTree, TDirectory *OutDir, bool RunningLocally, bool do_syst, bool isNominal, std::vector<ST::SystInfo> systInfoList_weights){
 
   tree = outputTree;
 
@@ -34,17 +34,18 @@ TreeService::TreeService(TTree *outputTree, TDirectory *OutDir, bool do_syst, bo
 
 
   // //Initial event cleaning
-  // tree->Branch("Region", &CutsRegion);
-  // tree->Branch("coreFlag", &coreFlag);
-  // tree->Branch("sctFlag", &sctFlag);
-  // tree->Branch("LArTileFlag",&LArTileFlag);
-  // tree->Branch("passedPrimVertex", &passedPrimVertex);
-  // tree->Branch("passedGRL", &passedGRL);
-
+  if (RunningLocally){
+    tree->Branch("coreFlag", &coreFlag);
+    tree->Branch("sctFlag", &sctFlag);
+    tree->Branch("LArFlag",&LArFlag);
+    tree->Branch("tileFlag",&tileFlag);
+    tree->Branch("passedPrimVertex", &passedPrimVertex);
+    tree->Branch("passedGRL", &passedGRL);
+    tree->Branch("passedJetClean", &passedJetClean);
+    tree->Branch("passedCosmicMu", &passedCosmicMu);
+    tree->Branch("passedMuonClean", &passedMuonClean);
+  }
   // //Object cleaning cuts
-  // tree->Branch("passedJetClean", &passedJetClean);
-  // tree->Branch("passedCosmicMu", &passedCosmicMu);
-  // tree->Branch("passedMuonClean", &passedMuonClean);
 
   // Triggers
   tree->Branch("passedMETTrigger", &passedMETTrigger);
@@ -129,8 +130,8 @@ TreeService::TreeService(TTree *outputTree, TDirectory *OutDir, bool do_syst, bo
   tree->Branch("etab4",&etab4);
   tree->Branch("phib1",&phib1);
   tree->Branch("phib2",&phib2);
-  tree->Branch("phib3",&phib3);
-  tree->Branch("phib4",&phib4);
+  //tree->Branch("phib3",&phib3);
+  //tree->Branch("phib4",&phib4);
   tree->Branch("b1_quantile", &b1_quantile);
   tree->Branch("b2_quantile", &b2_quantile);
   tree->Branch("b3_quantile", &b3_quantile);
@@ -143,9 +144,11 @@ TreeService::TreeService(TTree *outputTree, TDirectory *OutDir, bool do_syst, bo
   tree->Branch("truthFlavb1",&truthFlavb1);
   tree->Branch("truthFlavb2",&truthFlavb2);
 
+  tree->Branch("nBaselineJets",&nBaselineJets);
   tree->Branch("nJets",&nJets);
-  //tree->Branch("nJets_beforeOR",&nJets_beforeOR);
+  tree->Branch("nJets_beforeOR",&nJets_beforeOR);
   tree->Branch("nBJets",&nBJets);
+  tree->Branch("nNonBJets",&nNonBJets);
   tree->Branch("nLeptons",&nLeptons);
   tree->Branch("nBaselineLeptons",&nBaselineLeptons);
   //tree->Branch("nBaselineElectrons",&nBaselineElectrons);
@@ -275,7 +278,7 @@ void TreeService::InitialiseWeightsBranches(ST::SystInfo systInfo_weight){
   }
 }
 
-void TreeService::fillTree(NewObjectDef *objects , xAOD::TStore *evtStore, PreliminarySel &region, CalculateVariables &variables, double mFinalWeight, double mInitialWeight, double puWeight, double SFmCTbbll, bool TrigMET, bool TrigMu, bool TrigEl, bool TrigDilep, bool TrigGamma, bool Trig6j, std::vector<std::string> muon_triggers, std::vector<int> muon_decisions, std::vector<std::string> electron_triggers, std::vector<int> electron_decisions, std::vector<std::string> dilepton_triggers, std::vector<int> dilepton_decisions, double LeptonTriggerSF, double puSumWeights, double TRUTHMET, double TRUTHHT, bool CoreFlags, bool SCTFlag,bool LArTileFlags, bool passGRL, bool passedPrimVertexes, bool passedJetCleans, bool passedCosmicMus, bool passedMuonCleans, double RNo,  double RenormedMCWgt, int LumiYear, double m_averageIntPerCrossing, double m_actualIntPerCrossing, double m_xsec, double m_filteff, double m_kfactor){
+void TreeService::fillTree(NewObjectDef *objects , xAOD::TStore *evtStore, PreliminarySel &region, CalculateVariables &variables, double mFinalWeight, double mInitialWeight, double puWeight, double SFmCTbbll, bool TrigMET, bool TrigMu, bool TrigEl, bool TrigDilep, bool TrigGamma, bool Trig6j, std::vector<std::string> muon_triggers, std::vector<int> muon_decisions, std::vector<std::string> electron_triggers, std::vector<int> electron_decisions, std::vector<std::string> dilepton_triggers, std::vector<int> dilepton_decisions, double LeptonTriggerSF, double puSumWeights, double TRUTHMET, double TRUTHHT, bool CoreFlags, bool SCTFlag,bool LArFlags, bool tileFlags, bool passGRL, bool passedPrimVertexes, bool passedJetCleans, bool passedCosmicMus, bool passedMuonCleans, double RNo,  double RenormedMCWgt, int LumiYear, double m_averageIntPerCrossing, double m_actualIntPerCrossing, double m_xsec, double m_filteff, double m_kfactor){
 
   xAOD::JetContainer *goodJet_cont = nullptr;
   evtStore->retrieve(goodJet_cont, "goodJets");
@@ -289,7 +292,8 @@ void TreeService::fillTree(NewObjectDef *objects , xAOD::TStore *evtStore, Preli
 
   coreFlag = CoreFlags;
   sctFlag = SCTFlag;
-  LArTileFlag =LArTileFlags;
+  LArFlag =LArFlags;
+  tileFlag = tileFlags;
   passedPrimVertex=passedPrimVertexes;
   passedJetClean=passedJetCleans;
   passedCosmicMu=passedCosmicMus;
@@ -476,9 +480,11 @@ void TreeService::fillTree(NewObjectDef *objects , xAOD::TStore *evtStore, Preli
   etagamma = variables.etagamma;
   phigamma = variables.phigamma;
 
+  nBaselineJets = variables.nBaselineJets;
   nJets = variables.nJets;
   nJets_beforeOR = variables.nJets_beforeOR;
   nBJets = variables.nbJets;
+  nNonBJets = variables.nNonBJets;
   nLeptons = variables.nLepton;
   nBaselineLeptons = variables.nBaselineLepton;
   nBaselineElectrons = variables.nBaselineElectron;

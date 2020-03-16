@@ -113,6 +113,7 @@ class NewObjectDef
     std::unique_ptr<xAOD::TauJetContainer> baselineTaus = nullptr;
     std::unique_ptr<xAOD::MuonContainer> baselineMuons = nullptr;
     std::unique_ptr<xAOD::PhotonContainer> baselinePhotons = nullptr;
+    std::unique_ptr<xAOD::JetContainer> baselineJets = nullptr;
 
     std::unique_ptr<xAOD::JetContainer> goodJets = nullptr;
     std::unique_ptr<xAOD::ElectronContainer> goodElectrons = nullptr;
