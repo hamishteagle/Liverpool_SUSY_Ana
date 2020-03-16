@@ -18,6 +18,7 @@
 #include <SampleHandler/MetaFields.h>
 
 #include <iostream>
+#include <AsgTools/MsgLevel.h>
 
 #include "MyAnalysis/MyxAODAnalysis.h"
 
@@ -44,6 +45,7 @@ int main( int argc, char* argv[]) {
     int NoEvents = -1;
     std::string nFilesPerJob ="5";
     bool RunningWithTruthJets = false;
+    bool debug = false;
 
 
     if (argv[1] != "") sample_path = argv[1];
@@ -70,11 +72,14 @@ int main( int argc, char* argv[]) {
       std::cout<<"RunningWithTruthJets = "<<RunningWithTruthJets<<std::endl;
     }
     if (argc>11 && argv[11] != "") nFilesPerJob=argv[11];
+    if (argc>12 && argv[12] != "") debug= (bool) atoi(argv[12]);
+
     fileType = get_file_type(sample_name);
     info_message("Input path: " + sample_path);
     info_message("Sample name: " + sample_name);
     info_message("Sample type: " + fileType);
     info_message("Submission directory: " + submit_dir);
+    if (debug) info_message("Running with message level DEBUG");
     if (RunningWithSyst) info_message("Systematics: True" );
     if (RunningWithPhotons) info_message("Photons: True" );
     if (!RunningLocally) info_message("--- Going to submit to grid ---" );
@@ -112,7 +117,8 @@ int main( int argc, char* argv[]) {
         // If you want to check that the filtering is working correctly, then set this to false
         alg->RunningLocally = true;
         //alg->RunningLocally = false;
-        alg->setMsgLevel(MSG::VERBOSE);
+        if (debug) alg->setMsgLevel(MSG::DEBUG);
+
 
         EL::DirectDriver driver;
         job.options()->setDouble (EL::Job::optRemoveSubmitDir, 1);

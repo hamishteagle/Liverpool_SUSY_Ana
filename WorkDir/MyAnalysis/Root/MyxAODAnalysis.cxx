@@ -17,6 +17,7 @@
 #include <TFile.h>
 #include <exception>
 #include <AsgTools/MessageCheck.h>
+#include <AsgTools/MsgLevel.h>
 #include <memory>
 #include <algorithm>
 
@@ -228,10 +229,11 @@ EL::StatusCode MyxAODAnalysis :: initialize ()
 
   //Initialise the nominal SUSYTools instance->We use this to get the metadata
   objTool = std::make_unique<ST::SUSYObjDef_xAOD>("SUSYObjDef_xAOD");
+  objTool_PFlow = std::make_unique<ST::SUSYObjDef_xAOD>("SUSYObjDef_xAOD_PFlow");
 
   //Get the metadata using SUSYTools
   const xAOD::FileMetaData* fmd = nullptr;
-  ANA_CHECK(objTool->inputMetaStore()->retrieve(fmd, "FileMetaData") );
+  ANA_CHECK(objTool_PFlow->inputMetaStore()->retrieve(fmd, "FileMetaData") );
   //Get the simulation flavour
   std::string simFlavour;
   if (!(isData = !fmd->value(xAOD::FileMetaData::simFlavour, simFlavour))){
@@ -255,11 +257,14 @@ EL::StatusCode MyxAODAnalysis :: initialize ()
   ST::ISUSYObjDef_xAODTool::DataSource datasource = (isData ? ST::ISUSYObjDef_xAODTool::Data : (isAtlfast ? ST::ISUSYObjDef_xAODTool::AtlfastII : ST::ISUSYObjDef_xAODTool::FullSim));
 
   //Initialse the other SUSYTools instances
-  objTool_PFlow = std::make_unique<ST::SUSYObjDef_xAOD>("SUSYObjDef_xAOD");
 
+  ANA_CHECK( objTool_PFlow->setProperty("OutputLevel", this->msg().level()) );
+  //ANA_CHECK( objTool->setProperty("OutputLevel", this->msg().level()) );
   //Set the config according to the Derivation
   ANA_CHECK(objTool->setProperty("DataSource",datasource) );
   ANA_CHECK(objTool_PFlow->setProperty("DataSource",datasource) );
+
+
   if (m_SUSY5){
     ANA_CHECK(objTool->setProperty("ConfigFile",PathResolverFindCalibFile("/MyAnalysis/MyAnalysis/configs/1Lbb_default.conf")));
     ANA_CHECK(objTool_PFlow->setProperty("ConfigFile",PathResolverFindCalibFile("/MyAnalysis/MyAnalysis/configs/1Lbb_PFlow.conf")));
@@ -274,7 +279,7 @@ EL::StatusCode MyxAODAnalysis :: initialize ()
   if (!isTruth){
     ANA_CHECK(objTool->setProperty("PRWLumiCalcFiles",lumicalcFiles));
     ANA_CHECK(objTool->setProperty("AutoconfigurePRWTool",true));
-    ANA_CHECK(objTool->initialize());
+    //ANA_CHECK(objTool->initialize());
     ANA_MSG_INFO("Initialised Nominal SUSYTools instance");
 
     //Add different settings in SUSYTools instances
@@ -293,7 +298,7 @@ EL::StatusCode MyxAODAnalysis :: initialize ()
   }
   else {
     ANA_MSG_INFO("Running with systematics.");
-    systInfoList = objTool->getSystInfoList();
+    systInfoList = objTool_PFlow->getSystInfoList();
   }
   //Build the weights systematics list
   for (auto sysInfo: systInfoList){
@@ -334,7 +339,7 @@ EL::StatusCode MyxAODAnalysis :: initialize ()
       std::string treeName = output_tree_string+std::string(sys.name());
       const char * cName = treeName.c_str();
       TTree *Temp = new TTree(cName, cName);
-      TreeService *Tree_Service = new TreeService(Temp, out_TDir, doSyst, sys.name()=="", systInfoList_weights);
+      TreeService *Tree_Service = new TreeService(Temp, out_TDir, RunningLocally, doSyst, sys.name()=="", systInfoList_weights);
       m_treeServiceVector.push_back(Tree_Service);
       Temp->Write();
     }
@@ -406,8 +411,8 @@ EL::StatusCode MyxAODAnalysis :: execute ()
   std::vector<std::string>output_trees = {"CollectionTree_PFlow_"};
   int year;
   if (!isTruth){
-    objTool->ApplyPRWTool();
-    year = objTool->treatAsYear();
+    objTool_PFlow->ApplyPRWTool();
+    year = objTool_PFlow->treatAsYear();
   }
 
   for (const auto& output_tree_string: output_trees){
@@ -422,9 +427,9 @@ EL::StatusCode MyxAODAnalysis :: execute ()
       if(output_tree_string == output_trees[0]){
 
           if (!isTruth){
-            ANA_CHECK(objTool->resetSystematics());
+            //ANA_CHECK(objTool->resetSystematics());
             ANA_CHECK(objTool_PFlow->resetSystematics());
-            ANA_CHECK(objTool->applySystematicVariation(syst));
+            //ANA_CHECK(objTool->applySystematicVariation(syst));
             ANA_CHECK(objTool_PFlow->applySystematicVariation(syst));
           }
         }
@@ -464,7 +469,7 @@ EL::StatusCode MyxAODAnalysis :: execute ()
 
       if (isMC){
         mcChannel = eventInfo->mcChannelNumber();
-        puWgt = objTool->GetPileupWeight();
+        puWgt = objTool_PFlow->GetPileupWeight();
 
         try {
           xsec = m_PMGCrossSectionTool->getAMIXsection(mcChannel);
@@ -502,6 +507,7 @@ EL::StatusCode MyxAODAnalysis :: execute ()
       bool found_nominal = (output_tree_string.find("CollectionTree_") != std::string::npos && output_tree_string.find("CollectionTree_PFlow_") == std::string::npos);
       bool found_PFlow   = (output_tree_string.find("CollectionTree_PFlow_")!= std::string::npos);
       if (found_nominal){
+        ANA_MSG_ERROR("Got the nominal objects for some reason..");
         objs.reset(new NewObjectDef(evtStore(), objTool.get(), store, mcChannel, EventNumber, mcWgt, m_lumiBlockNumber, syst.name(), doTruthJets, m_SUSY5, m_SUSY7));
       }
       else if (found_PFlow){
@@ -520,17 +526,17 @@ EL::StatusCode MyxAODAnalysis :: execute ()
 
       if (firstEvent == true) firstEvent = false;
 
-      bool passGRL = false;
+      bool passGRL = true;
 
       if (!isMC){
 
         if(!(m_grl->passRunLB(*eventInfo))){
-          isyst++;
-          store->clear();
-          continue;
-        }
-        else if (m_grl->passRunLB(*eventInfo)) {
-          passGRL = true;
+          passGRL=false;
+          if(!RunningLocally){
+            isyst++;
+            store->clear();
+            continue;
+          }
         }
       }
 
@@ -541,35 +547,52 @@ EL::StatusCode MyxAODAnalysis :: execute ()
 
       bool coreFlag = true;
       bool sctFlag = true;
-      bool LArTileFlag=true;
+      bool LArFlag=true;
+      bool tileFlag=true;
 
       if (!isMC){
         if ((eventInfo->errorState(xAOD::EventInfo::SCT) == xAOD::EventInfo::Error )){
           sctFlag = false;
-          isyst++;
-          store->clear();
-          continue;
+          if(!RunningLocally){
+            isyst++;
+            store->clear();
+            continue;
+          }
         }
         if (eventInfo->isEventFlagBitSet(xAOD::EventInfo::Core,18)){
         	coreFlag = false;
-        	isyst++;
-          store->clear();
-        	continue;
+        	if(!RunningLocally){
+            isyst++;
+            store->clear();
+            continue;
+          }
         }
-        if ((eventInfo->errorState(xAOD::EventInfo::LAr)==xAOD::EventInfo::Error) || (eventInfo->errorState(xAOD::EventInfo::Tile) == xAOD::EventInfo::Error)){
-          LArTileFlag=false;
-          isyst++;
-          store->clear();
-          continue;
+        if ((eventInfo->errorState(xAOD::EventInfo::LAr)==xAOD::EventInfo::Error)) {
+          LArFlag=false;
+          if(!RunningLocally){
+            isyst++;
+            store->clear();
+            continue;
+          }
+        }
+        if ((eventInfo->errorState(xAOD::EventInfo::Tile) == xAOD::EventInfo::Error)) {
+          tileFlag=false;
+          if(!RunningLocally){
+            isyst++;
+            store->clear();
+            continue;
+          }
         }
       }
 
       bool passedPrimVertex=true;
       if (objs->getPrimVertex() < 1){
         passedPrimVertex=false;
-        isyst++;
-        store->clear();
-        continue;
+        if(!RunningLocally){
+          isyst++;
+          store->clear();
+          continue;
+        }
       }
       double nBadJet = objs->getNBadJets();
       double nCosmicMu = objs->getNCosmicMuons();
@@ -578,25 +601,31 @@ EL::StatusCode MyxAODAnalysis :: execute ()
       bool passedJetClean=true;
       if (nBadJet > 0){
         passedJetClean=false;
-        isyst++;
-        store->clear();
-        continue;
+        if(!RunningLocally){
+          isyst++;
+          store->clear();
+          continue;
+        }
       }
 
       bool passedCosmicMu=true;
       if (nCosmicMu > 0){
         passedCosmicMu=false;
-        isyst++;
-        store->clear();
-        continue;
+        if(!RunningLocally){
+          isyst++;
+          store->clear();
+          continue;
+        }
       }
 
       bool passedMuonClean=true;
       if (nBadMu > 0){
         passedMuonClean=false;
-        isyst++;
-        store->clear();
-        continue;
+        if(!RunningLocally){
+          isyst++;
+          store->clear();
+          continue;
+        }
       }
 
 
@@ -638,7 +667,7 @@ EL::StatusCode MyxAODAnalysis :: execute ()
       std::vector<std::string> single_el_2018 = {"HLT_e26_lhtight_nod0_ivarloose", "HLT_e60_lhmedium_nod0", "HLT_e140_lhloose_nod0"};
       std::vector<std::string> single_mu_2018 = {"HLT_mu26_ivarmedium","HLT_mu50"};
       std::vector<std::string> di_lepton_2018 = {"HLT_2e17_lhvloose_nod0_L12EM15VHI","HLT_2e24_lhvloose_nod0","HLT_mu22_mu8noL1","HLT_e17_lhloose_nod0_mu14"};
-      //Use IsMETTriggerPassed() function which should chec the lowest un-prescaled triggers
+      //Use IsMETTriggerPassed() function which should check the lowest un-prescaled triggers
       if (isTruth){
         passedMETTrigger = true;
         passedGammaTrigger = true;
@@ -650,19 +679,19 @@ EL::StatusCode MyxAODAnalysis :: execute ()
       else {
         if (year == 2015) {
           for (auto mu_trig: single_mu_2015) {
-            int trigDecision = objTool->IsTrigPassed(mu_trig);
+            int trigDecision = objTool_PFlow->IsTrigPassed(mu_trig);
             mu_triggers += trigDecision;
             muon_triggers.push_back(mu_trig);
             muon_decisions.push_back(trigDecision);
           }
           for (auto el_trig: single_el_2015) {
-            int trigDecision = objTool->IsTrigPassed(el_trig);
+            int trigDecision = objTool_PFlow->IsTrigPassed(el_trig);
             el_triggers += trigDecision;
             electron_triggers.push_back(el_trig);
             electron_decisions.push_back(trigDecision);
           }
           for (auto dilep_trig: di_lepton_2015) {
-            int trigDecision = objTool->IsTrigPassed(dilep_trig);
+            int trigDecision = objTool_PFlow->IsTrigPassed(dilep_trig);
             dilep_triggers += trigDecision;
             dilepton_triggers.push_back(dilep_trig);
             dilepton_decisions.push_back(trigDecision);
@@ -670,19 +699,19 @@ EL::StatusCode MyxAODAnalysis :: execute ()
         }
         if (year == 2016) {
           for (auto mu_trig: single_mu_2016) {
-            int trigDecision = objTool->IsTrigPassed(mu_trig);
+            int trigDecision = objTool_PFlow->IsTrigPassed(mu_trig);
             mu_triggers += trigDecision;
             muon_triggers.push_back(mu_trig);
             muon_decisions.push_back(trigDecision);
           }
           for (auto el_trig: single_el_2016) {
-            int trigDecision = objTool->IsTrigPassed(el_trig);
+            int trigDecision = objTool_PFlow->IsTrigPassed(el_trig);
             el_triggers += trigDecision;
             electron_triggers.push_back(el_trig);
             electron_decisions.push_back(trigDecision);
           }
           for (auto dilep_trig: di_lepton_2016) {
-            int trigDecision = objTool->IsTrigPassed(dilep_trig);
+            int trigDecision = objTool_PFlow->IsTrigPassed(dilep_trig);
             dilep_triggers += trigDecision;
             dilepton_triggers.push_back(dilep_trig);
             dilepton_decisions.push_back(trigDecision);
@@ -690,26 +719,26 @@ EL::StatusCode MyxAODAnalysis :: execute ()
         }
         if (year == 2017) {
           for (auto mu_trig: single_mu_2017) {
-            int trigDecision = objTool->IsTrigPassed(mu_trig);
+            int trigDecision = objTool_PFlow->IsTrigPassed(mu_trig);
             mu_triggers += trigDecision;
             muon_triggers.push_back(mu_trig);
             muon_decisions.push_back(trigDecision);
           }
           for (auto el_trig: single_el_2017) {
-            int trigDecision = objTool->IsTrigPassed(el_trig);
+            int trigDecision = objTool_PFlow->IsTrigPassed(el_trig);
             el_triggers += trigDecision;
             electron_triggers.push_back(el_trig);
             electron_decisions.push_back(trigDecision);
           }
   	     if (m_runNumber>=326834 && m_runNumber <=328393){
-  	     int trigDecision = objTool->IsTrigPassed("HLT_2e24_lhvloose_nod0");
+  	     int trigDecision = objTool_PFlow->IsTrigPassed("HLT_2e24_lhvloose_nod0");
             dilep_triggers += trigDecision;
             dilepton_triggers.push_back("HLT_2e24_lhvloose_nod0");
             dilepton_decisions.push_back(trigDecision);
   	      }
   	      else{
         	  for (auto dilep_trig: di_lepton_2017) {
-        	    int trigDecision = objTool->IsTrigPassed(dilep_trig);
+        	    int trigDecision = objTool_PFlow->IsTrigPassed(dilep_trig);
         	    dilep_triggers += trigDecision;
         	    dilepton_triggers.push_back(dilep_trig);
         	    dilepton_decisions.push_back(trigDecision);
@@ -718,19 +747,19 @@ EL::StatusCode MyxAODAnalysis :: execute ()
         }
         if (year == 2018) {
           for (auto mu_trig: single_mu_2018) {
-            int trigDecision = objTool->IsTrigPassed(mu_trig);
+            int trigDecision = objTool_PFlow->IsTrigPassed(mu_trig);
             mu_triggers += trigDecision;
             muon_triggers.push_back(mu_trig);
             muon_decisions.push_back(trigDecision);
           }
           for (auto el_trig: single_el_2018) {
-            int trigDecision = objTool->IsTrigPassed(el_trig);
+            int trigDecision = objTool_PFlow->IsTrigPassed(el_trig);
             el_triggers += trigDecision;
             electron_triggers.push_back(el_trig);
             electron_decisions.push_back(trigDecision);
           }
           for (auto dilep_trig: di_lepton_2018) {
-            int trigDecision = objTool->IsTrigPassed(dilep_trig);
+            int trigDecision = objTool_PFlow->IsTrigPassed(dilep_trig);
             dilep_triggers += trigDecision;
             dilepton_triggers.push_back(dilep_trig);
             dilepton_decisions.push_back(trigDecision);
@@ -748,7 +777,7 @@ EL::StatusCode MyxAODAnalysis :: execute ()
   	      passedDiLeptonTrigger = true;
   	      leptonTriggerSF = objs->getDilepTriggerSF();
         }
-        if (objTool->IsMETTrigPassed()) {
+        if (objTool_PFlow->IsMETTrigPassed()) {
           passedMETTrigger = true;
         }
       }
@@ -761,7 +790,7 @@ EL::StatusCode MyxAODAnalysis :: execute ()
 
       //All cleaning cuts before trigger
       bool passedCleaningCuts=false;
-      if(coreFlag && sctFlag && LArTileFlag && passedPrimVertex && passedJetClean && passedCosmicMu && passedMuonClean){
+      if(coreFlag && sctFlag && LArFlag && tileFlag && passedPrimVertex && passedJetClean && passedCosmicMu && passedMuonClean){
         passedCleaningCuts=true;
       }
 
@@ -772,7 +801,7 @@ EL::StatusCode MyxAODAnalysis :: execute ()
       double SFmctbbll = 1;
 
       if (!isData && !isTruth) {
-        PUSumOfWeights = objTool->GetSumOfWeights(mcChannel);
+        PUSumOfWeights = objTool_PFlow->GetSumOfWeights(mcChannel);
       }
       else{
         PUSumOfWeights = 0;
@@ -810,16 +839,15 @@ EL::StatusCode MyxAODAnalysis :: execute ()
 
       if (!isTruth){
         //Loop through weights systematics and write to the nominal
-        if (output_tree_string=="CollectionTree_"){
+        if (output_tree_string=="CollectionTree_PFlow_"){
           for(auto systInfo_weight: systInfoList_weights){
             const CP::SystematicSet& syst_weight = systInfo_weight.systset;
-            ANA_CHECK(objTool->resetSystematics());
-            ANA_CHECK(objTool->applySystematicVariation(syst_weight));
+            ANA_CHECK(objTool_PFlow->resetSystematics());
+            ANA_CHECK(objTool_PFlow->applySystematicVariation(syst_weight));
             objs->GetScaleFactors();//We don't need to get all the objects again, just re-calculate the scale factors
 
             if ((syst_weight.name()).find("PRW") != std::string::npos){
-              //objTool->ApplyPRWTool();//Reset PRW weights
-              puWgt = objTool->GetPileupWeight();
+              puWgt = objTool_PFlow->GetPileupWeight();
             }
             if (mu_triggers > 0)   leptonTriggerSF = objs->getMuonTriggerSF();
             if (el_triggers > 0)   leptonTriggerSF = objs->getElectronTriggerSF();
@@ -827,9 +855,9 @@ EL::StatusCode MyxAODAnalysis :: execute ()
             (m_treeServiceVector[isyst])->fillTreeWeights(objs.get(), puWgt, leptonTriggerSF, systInfo_weight);
           }
         }
-      	(m_treeServiceVector[isyst])->fillTree(objs.get(), store ,*m_regions, *m_varCalc,m_finalSumOfWeights, m_initialSumOfWeights, puWgt, SFmctbbll, passedMETTrigger, passedSingleMuTrigger, passedSingleElTrigger, passedDiLeptonTrigger, passedGammaTrigger, passedMultiJetTrigger, muon_triggers, muon_decisions, electron_triggers, electron_decisions, dilepton_triggers, dilepton_decisions,leptonTriggerSF, PUSumOfWeights, truthfilt_MET, truthfilt_HT, coreFlag, sctFlag, LArTileFlag, passGRL, passedPrimVertex, passedJetClean, passedCosmicMu, passedMuonClean, m_runNumber, renormedMcWgt, year, m_averageIntPerX, m_actualIntPerX, xsec, filteff, kfactor);
+      	(m_treeServiceVector[isyst])->fillTree(objs.get(), store ,*m_regions, *m_varCalc,m_finalSumOfWeights, m_initialSumOfWeights, puWgt, SFmctbbll, passedMETTrigger, passedSingleMuTrigger, passedSingleElTrigger, passedDiLeptonTrigger, passedGammaTrigger, passedMultiJetTrigger, muon_triggers, muon_decisions, electron_triggers, electron_decisions, dilepton_triggers, dilepton_decisions,leptonTriggerSF, PUSumOfWeights, truthfilt_MET, truthfilt_HT, coreFlag, sctFlag, LArFlag, tileFlag, passGRL, passedPrimVertex, passedJetClean, passedCosmicMu, passedMuonClean, m_runNumber, renormedMcWgt, year, m_averageIntPerX, m_actualIntPerX, xsec, filteff, kfactor);
         store->clear();
-	objs.reset();
+        objs.reset();
       }
 
 
@@ -868,10 +896,6 @@ EL::StatusCode MyxAODAnalysis :: finalize ()
   // merged.  This is different from histFinalize() in that it only
   // gets called on worker nodes that processed input events.
 
-   //if (objTool) {
-   //delete objTool;
-   //objTool = 0;
-   //}
 
   delete noWeightHist;
   delete sherpaWeightHist;

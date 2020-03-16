@@ -23,6 +23,7 @@ class submit:
         parser.add_argument('--username', dest = 'username', action = 'store' , default = "hteagle")
         parser.add_argument('--doTruthJets', dest = 'doTruthJets', type = int, default= 0)
         parser.add_argument('--nFilesPerJob', dest = 'nFilesPerJob', type = str, default= "5")
+        parser.add_argument('-d','--debug', dest = 'debug', action='store_true', default= False)
         args = parser.parse_args()
 
 
@@ -30,9 +31,9 @@ class submit:
         self.input = args.input_file
         slashes = len(self.input.split('/'))
 
+        debug = int(args.debug)
         doSysts   = int(args.syst)
         doPhotons = int(args.photons)
-        print ('local : '+str(args.local))
         local     = int(args.local)
         PhysicsName = str(args.PhysicsName)
         doTruthJets = int(args.doTruthJets)
@@ -78,6 +79,8 @@ class submit:
         command += str(doTruthJets)
         command += ' '
         command += str(args.nFilesPerJob)
+        command += ' '
+        command += str(debug)
         print str(command)
         os.system(command)
 
