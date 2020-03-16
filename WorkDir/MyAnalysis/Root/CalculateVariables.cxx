@@ -63,6 +63,7 @@ CalculateVariables::CalculateVariables(NewObjectDef *objects,xAOD::TStore* evtSt
   evtStore->retrieve(goodTau_cont, "goodTaus"+systematic);
   evtStore->retrieve(baselineTau_cont, "baselineTaus"+systematic);
   evtStore->retrieve(goodPhoton_cont, "goodPhotons"+systematic);
+  evtStore->retrieve(baselineJet_cont, "baselineJets"+systematic);
   evtStore->retrieve(goodJet_cont, "goodJets"+systematic);
   evtStore->retrieve(goodJet_beforeOR_cont, "goodJets_beforeOR"+systematic);
   evtStore->retrieve(bJet_cont, "BJets"+systematic);
@@ -87,23 +88,18 @@ CalculateVariables::CalculateVariables(NewObjectDef *objects,xAOD::TStore* evtSt
   PhotonETMiss = eTMiss;
   PhotonETMissPhi = eTMissPhi;
 
+  nBaselineJets = baselineJet_cont->size();
   nJets = goodJet_cont->size();
   nJets_beforeOR = goodJet_beforeOR_cont->size();
   nbJets = bJet_cont->size();
   nNonBJets = nonBJet_cont->size();
-  njet20 = 0;
-  njet25 = 0;
   njet30 = 0;
   njet35 = 0;
   njet50 = 0;
 
-  njet20 = goodJet_cont->size();
 
   for (int iJet = 0; iJet < nJets; iJet++){
     TLorentzVector tempJet = (*goodJet_cont)[iJet]->p4()*0.001;
-    if (tempJet.Pt() > 25){
-      njet25++;
-    }
     if (tempJet.Pt() > 30){
       njet30++;
     }
@@ -152,7 +148,6 @@ CalculateVariables::CalculateVariables(NewObjectDef *objects,xAOD::TStore* evtSt
       }
     }
   }
-
 
   all_METSig = eTMiss/std::sqrt(all_HT);
   all_Meff = all_HT + eTMiss;
@@ -221,10 +216,14 @@ CalculateVariables::CalculateVariables(NewObjectDef *objects,xAOD::TStore* evtSt
 
   pTb1 = -99;
   pTb2 = -99;
+  pTb3 = -99;
+  pTb4 = -99;
   etab1 = -99;
   etab2 = -99;
   phib1 = -99;
   phib2 = -99;
+  phib3 = -99;
+  phib4 = -99;
   j1_quantile = -99;
   j2_quantile = -99;
   j3_quantile = -99;
@@ -430,7 +429,7 @@ CalculateVariables::CalculateVariables(NewObjectDef *objects,xAOD::TStore* evtSt
       j2_quantile = (*goodJet_cont)[1]->auxdata<char>("bjet");
       delPhi2 = fabs(TVector2::Phi_mpi_pi( (*(goodJet_cont))[1]->phi()  - eTMissPhi));
       if (TruthFile == 0){
-	jetVector->push_back((*goodJet_cont)[1]);
+        jetVector->push_back((*goodJet_cont)[1]);
       }
       mEff2j = mEff2j + pTj2;
       h_T = h_T + pTj2;
