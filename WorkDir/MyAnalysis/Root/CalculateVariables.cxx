@@ -58,8 +58,10 @@ CalculateVariables::CalculateVariables(NewObjectDef *objects,xAOD::TStore* evtSt
   evtStore->retrieve(goodMuon_cont, "goodMuons"+systematic);
   evtStore->retrieve(badMuon_cont, "badMuons"+systematic);
   evtStore->retrieve(baselineMuon_cont, "baselineMuons"+systematic);
+  evtStore->retrieve(baselineMuon_combi_cont, "baselineMuons_combi"+systematic);
   evtStore->retrieve(goodElectron_cont, "goodElectrons"+systematic);
   evtStore->retrieve(baselineElectron_cont, "baselineElectrons"+systematic);
+  evtStore->retrieve(baselineElectron_combi_cont, "baselineElectrons_combi"+systematic);
   evtStore->retrieve(goodTau_cont, "goodTaus"+systematic);
   evtStore->retrieve(baselineTau_cont, "baselineTaus"+systematic);
   evtStore->retrieve(goodPhoton_cont, "goodPhotons"+systematic);
@@ -75,10 +77,14 @@ CalculateVariables::CalculateVariables(NewObjectDef *objects,xAOD::TStore* evtSt
   nElectron = goodElectron_cont->size();
   nTau = goodTau_cont->size();
   nBaselineMuon = baselineMuon_cont->size();
-  nBaselineElectron = baselineElectron_cont->size();
+  nBaselineElectron= baselineElectron_cont->size();
+  nBaselineMuon_combi = baselineMuon_combi_cont->size();
+  nBaselineElectron_combi = baselineElectron_combi_cont->size();
   nBaselineTau = baselineTau_cont->size();
   nLepton = nMuon+nElectron;
+  nBaselineLepton_combi = nBaselineMuon_combi + nBaselineElectron_combi;
   nBaselineLepton = nBaselineMuon + nBaselineElectron;
+
   nPhoton = goodPhoton_cont->size();
   eTMiss = objects->getMET()*0.001;
   eTMissPhi = objects->getMETPhi();

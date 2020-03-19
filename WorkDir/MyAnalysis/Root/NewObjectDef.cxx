@@ -1,9 +1,12 @@
 #include <xAODJet/JetContainer.h>
 #include <xAODJet/JetAuxContainer.h>
 #include "MyAnalysis/NewObjectDef.h"
+#include "MyAnalysis/MyxAODAnalysis.h"
+
 bool pT_Sorter( const xAOD::IParticle* j1, const xAOD::IParticle* j2 );
 bool pT_TruthSorter( const xAOD::IParticle* j1, const xAOD::IParticle* j2 );
-NewObjectDef::NewObjectDef(asg::SgTEvent* event, ST::SUSYObjDef_xAOD* SUSYTool, xAOD::TStore* store, double mcChannel, double EventNumber, double mcWgt, double m_lumiScaled, std::string syst, bool doTruthJets, bool m_SUSY5, bool m_SUSY7) {
+
+NewObjectDef::NewObjectDef(asg::SgTEvent* event, ST::SUSYObjDef_xAOD* SUSYTool, xAOD::TStore* store, double mcChannel, double EventNumber, double mcWgt, double m_lumiScaled, std::string syst, bool doTruthJets, int m_doCombiLeptons) {
 
   objTool = SUSYTool;
   eventStore = store;
@@ -13,6 +16,7 @@ NewObjectDef::NewObjectDef(asg::SgTEvent* event, ST::SUSYObjDef_xAOD* SUSYTool, 
   mcEventWeight = mcWgt;
   lumiScaled = m_lumiScaled;
   currentEvent = event;
+  doCombiLeptons = m_doCombiLeptons;
 
 
   //Things not passed to the event store
@@ -41,10 +45,17 @@ NewObjectDef::NewObjectDef(asg::SgTEvent* event, ST::SUSYObjDef_xAOD* SUSYTool, 
 
 
   //Do the baseline get here, pass this to the OR
-  this->GetBaselineObjects(m_SUSY5, m_SUSY7);
+  this->GetBaselineObjects();
   //Get the objects after the OR with baseline
   this->GetObjects();
 
+  if (doCombiLeptons){
+    eventStore->record(preOR_baselineElectrons_combi.release(),"baselineElectrons_combi"+systematic);
+    eventStore->record(preOR_baselineMuons_combi.release(),"baselineMuons_combi"+systematic);
+    //Record these for checks
+    eventStore->record(preOR_baselineElectrons.release(),"preOR_baselineElectrons"+systematic);
+    eventStore->record(preOR_baselineMuons.release(),"preOR_baselineMuons"+systematic);
+  }
   eventStore->record(baselineJets.release(),"baselineJets"+systematic);
   eventStore->record(preOR_baselineJets.release(),"preOR_baselineJets"+systematic);
   eventStore->record(baselineElectrons.release(),"baselineElectrons"+systematic);
@@ -86,7 +97,7 @@ bool pT_TruthSorter( const xAOD::IParticle* j1, const xAOD::IParticle* j2 ) {
 }
 
 
-void NewObjectDef::GetBaselineObjects(bool m_SUSY5, bool m_SUSY7) {
+void NewObjectDef::GetBaselineObjects() {
 
 
   // Setup object containers
@@ -100,6 +111,10 @@ void NewObjectDef::GetBaselineObjects(bool m_SUSY5, bool m_SUSY7) {
   xAOD::ShallowAuxContainer* jets_nominal_aux(0);
   xAOD::PhotonContainer* photons_nominal(0);
   xAOD::ShallowAuxContainer* photons_nominal_aux(0);
+
+  //Create new lepton containers holding the combination leptons
+  preOR_baselineElectrons_combi = std::make_unique<xAOD::ElectronContainer>(SG::VIEW_ELEMENTS);
+  preOR_baselineMuons_combi = std::make_unique<xAOD::MuonContainer>(SG::VIEW_ELEMENTS);
 
   preOR_baselineElectrons = std::make_unique<xAOD::ElectronContainer>(SG::VIEW_ELEMENTS);
   preOR_baselineMuons = std::make_unique<xAOD::MuonContainer>(SG::VIEW_ELEMENTS);
@@ -139,10 +154,51 @@ void NewObjectDef::GetBaselineObjects(bool m_SUSY5, bool m_SUSY7) {
   xAOD::JetContainer* jets(jets_nominal);
   xAOD::TauJetContainer* taus(taus_nominal);
 
-  // Get MET
-  //Only jets electrons muons, NoPhotons, NoTaus
-  if (m_SUSY5) objTool->GetMET(*met_nominal, jets_nominal, electrons_nominal, muons_nominal, photons_nominal, NULL, true);
-  else if (m_SUSY7)  objTool->GetMET(*met_nominal, jets_nominal, electrons_nominal, muons_nominal, NULL, NULL, true);
+  //Apply overlap removal with nominal (Raw SUSYTools objects) and no taus (ala 1L framework)
+  objTool->OverlapRemoval(electrons_nominal, muons_nominal, jets_nominal, photons_nominal);
+  objTool->GetMET(*met_nominal, jets_nominal, electrons_nominal, muons_nominal, photons_nominal, NULL, true, true);
+
+
+  //Fill preOR photons
+  for (const auto &ph_itr: *photons) {
+    if (ph_itr->auxdata<char>("baseline")) preOR_baselinePhotons->push_back(ph_itr);
+  }
+  //Fill preOR jets
+  for (const auto& jet_itr: *jets) {
+   if (jet_itr->auxdata<char>("baseline") && jet_itr->pt()*0.001>30) preOR_baselineJets->push_back(jet_itr);
+  }
+  //Fill preOR taus
+  for (const auto& tau_itr: *taus) {
+    if (tau_itr->auxdata<char>("baseline")) preOR_baselineTaus->push_back(tau_itr);
+  }
+  if (doCombiLeptons){
+    //Apply extra selections
+    for (const auto &mu_itr: *muons) {
+        if (mu_itr->auxdata<char>("baseline") && mu_itr->pt()*0.001 >6 && TMath::Abs(mu_itr->eta())<2.5) preOR_baselineMuons->push_back(mu_itr);
+    }
+    for (const auto &el_itr: *electrons) {
+        if (el_itr->auxdata<char>("baseline") && el_itr->pt()*0.001 >7 && TMath::Abs(el_itr->eta())<2.47) preOR_baselineElectrons->push_back(el_itr);
+    }
+    for (const auto &el_itr: *electrons) {
+      if (el_itr->auxdata<char>("baseline")) preOR_baselineElectrons_combi->push_back(el_itr);
+    }
+    //Fill preOR combi muons
+    for (const auto &mu_itr: *muons) {
+      if (mu_itr->auxdata<char>("baseline")) preOR_baselineMuons_combi->push_back(mu_itr);
+      //Get the bad muons from the muon container directly
+      if (mu_itr->auxdata<char>("baseline") && mu_itr->auxdata<char>("bad"))  badMuons->push_back(mu_itr);
+    }
+  }
+  else{
+    //Fill preOR electrons
+    for (const auto &el_itr: *electrons) {
+      if (el_itr->auxdata<char>("baseline")) preOR_baselineElectrons->push_back(el_itr);
+    }
+    //Fill preOR muons
+    for (const auto &mu_itr: *muons) {
+      if (mu_itr->auxdata<char>("baseline")) preOR_baselineMuons->push_back(mu_itr);
+    }
+  }
   xAOD::MissingETContainer::const_iterator met_it = met_nominal->find("Final");
   if (met_it == met_nominal->end())
   {
@@ -153,32 +209,6 @@ void NewObjectDef::GetBaselineObjects(bool m_SUSY5, bool m_SUSY7) {
   METphi = (*met_it)->phi();
   objTool->GetMETSig(*met_nominal, METsig, true, false);
 
-  //Apply overlap removal with nominal (Raw SUSYTools objects) and no taus (ala 1L framework)
-  objTool->OverlapRemoval(electrons_nominal, muons_nominal, jets_nominal, photons_nominal);
-
-  //Fill preOR electrons
-  for (const auto &el_itr: *electrons) {
-      if (el_itr->auxdata<char>("baseline")) preOR_baselineElectrons->push_back(el_itr);
-  }
-
-  //Fill preOR muons
-  for (const auto &mu_itr: *muons) {
-      if (mu_itr->auxdata<char>("baseline")) preOR_baselineMuons->push_back(mu_itr);
-  }
-  //Fill preOR photons
-  for (const auto &ph_itr: *photons) {
-    if (ph_itr->auxdata<char>("baseline")) preOR_baselinePhotons->push_back(ph_itr);
-  }
-  //Fill preOR jets
-  for (const auto& jet_itr: *jets) {
-   if (jet_itr->auxdata<char>("baseline")) preOR_baselineJets->push_back(jet_itr);
-  }
-  //Fill preOR taus
-  for (const auto& tau_itr: *taus) {
-    if (tau_itr->auxdata<char>("baseline")) preOR_baselineTaus->push_back(tau_itr);
-  }
-
-
 
   delete met_nominal;
   delete met_nominal_aux;
@@ -188,8 +218,8 @@ void NewObjectDef::GetObjects() {
 
   // Fill electrons
   for (const auto &el_itr: *preOR_baselineElectrons) {
-    if (el_itr->auxdata<char>("baseline")) baselineElectrons->push_back(el_itr);
     if (el_itr->auxdata<char>("passOR")) {
+      if (el_itr->auxdata<char>("baseline")) baselineElectrons->push_back(el_itr);
       if (el_itr->auxdata<char>("signal")) goodElectrons->push_back(el_itr);
     }
   }
@@ -197,27 +227,21 @@ void NewObjectDef::GetObjects() {
   goodElectrons->sort(pT_Sorter);
   // Fill muons
   for (const auto& mu_itr: *preOR_baselineMuons) {
-    if (mu_itr->auxdata<char>("baseline") && !(mu_itr)->auxdata<char>("cosmic")) baselineMuons->push_back(mu_itr);
     if (mu_itr->auxdata<char>("passOR")) {
-      if (mu_itr->auxdata<char>("baseline") && mu_itr->auxdata<char>("cosmic")) cosmicMuons->push_back(mu_itr);
-      if (mu_itr->auxdata<char>("signal") && !(mu_itr)->auxdata<char>("cosmic")) goodMuons->push_back(mu_itr);
-    }
-    else {
-      if (mu_itr->auxdata<char>("baseline") && mu_itr->auxdata<char>("bad")){
-	      badMuons->push_back(mu_itr);
-      }
+      if (mu_itr->auxdata<char>("baseline")) baselineMuons->push_back(mu_itr);
+      if (mu_itr->auxdata<char>("baseline") && mu_itr->auxdata<char>("cosmic"))  cosmicMuons->push_back(mu_itr);
+      if (mu_itr->auxdata<char>("signal")) goodMuons->push_back(mu_itr);
     }
   }
   baselineMuons->sort(pT_Sorter);
   cosmicMuons->sort(pT_Sorter);
   nCosmicMuons=cosmicMuons->size();
-  //badMuons->sort(pT_Sorter);
   nBadMuons=badMuons->size();
   goodMuons->sort(pT_Sorter);
   // Fill taus
   for (const auto& tau_itr: *preOR_baselineTaus) {
-    if (tau_itr->auxdata<char>("baseline")) baselineTaus->push_back(tau_itr);
     if (tau_itr->auxdata<char>("passOR")) {
+      if (tau_itr->auxdata<char>("baseline")) baselineTaus->push_back(tau_itr);
       if (tau_itr->auxdata<char>("signal")) goodTaus->push_back(tau_itr);
     }
   }
@@ -234,21 +258,16 @@ void NewObjectDef::GetObjects() {
   goodPhotons->sort(pT_Sorter);
   //Fill jets
   for (const auto& jet_itr: *preOR_baselineJets) {
-    if (jet_itr->auxdata<char>("signal")) goodJetsBeforeOR->push_back(jet_itr);
+    if (jet_itr->auxdata<char>("signal"))                                               goodJetsBeforeOR->push_back(jet_itr);
     if (jet_itr->auxdata<char>("passOR")) {
-      if (jet_itr->auxdata<char>("bad")) badJets->push_back(jet_itr);
-      if (jet_itr->auxdata<char>("baseline")) {
-        baselineJets->push_back(jet_itr);
-        if (jet_itr->auxdata<char>("signal")) {
-          goodJets->push_back(jet_itr);
-          if (jet_itr->auxdata<char>("bjet")>=3) {
-            BJets->push_back(jet_itr);
-          }
-          else if ((jet_itr)->auxdata<char>("bjet")<3) nonBJets->push_back(jet_itr);
-        }
-      }
+      if (jet_itr->auxdata<char>("bad"))                                                badJets->push_back(jet_itr);
+      if (jet_itr->auxdata<char>("baseline"))                                           baselineJets->push_back(jet_itr);
+      if (jet_itr->auxdata<char>("signal"))                                             goodJets->push_back(jet_itr);
+      if (jet_itr->auxdata<char>("signal") && jet_itr->auxdata<char>("bjet")>=3)       BJets->push_back(jet_itr);
+      else if (jet_itr->auxdata<char>("signal") && (jet_itr)->auxdata<char>("bjet")<3) nonBJets->push_back(jet_itr);
     }
   }
+
   goodJetsBeforeOR->sort(pT_Sorter);
   badJets->sort(pT_Sorter);
   nBadJets = badJets->size();

@@ -24,6 +24,7 @@ class submit:
         parser.add_argument('--doTruthJets', dest = 'doTruthJets', type = int, default= 0)
         parser.add_argument('--nFilesPerJob', dest = 'nFilesPerJob', type = str, default= "5")
         parser.add_argument('-d','--debug', dest = 'debug', action='store_true', default= False)
+        parser.add_argument('--doCombiLeptons', dest = 'doCombiLeptons', action='store_true', default= True)
         args = parser.parse_args()
 
 
@@ -34,6 +35,7 @@ class submit:
         debug = int(args.debug)
         doSysts   = int(args.syst)
         doPhotons = int(args.photons)
+        doCombiLeptons = int(args.doCombiLeptons)
         local     = int(args.local)
         PhysicsName = str(args.PhysicsName)
         doTruthJets = int(args.doTruthJets)
@@ -81,6 +83,8 @@ class submit:
         command += str(args.nFilesPerJob)
         command += ' '
         command += str(debug)
+        command += ' '
+        command += str(doCombiLeptons)
         print str(command)
         os.system(command)
 

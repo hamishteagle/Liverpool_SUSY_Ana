@@ -22,8 +22,6 @@
 #include "AsgTools/ToolHandle.h"
 #include "AsgTools/AsgMetadataTool.h"
 
-//#include <AnaAlgorithm/AnaAlgorithm.h>
-
 // Added for new METSig
 #include "METUtilities/METSignificance.h"
 
@@ -34,10 +32,6 @@
 
 // GRL inclusion
 class GoodRunsListSelectionTool;
-//class JetCleaningTool;
-//class JERTool;
-
-
 
 namespace CP{
 //  class MuonCalibrationAndSmearingTool; // MuonSmearing
@@ -53,16 +47,11 @@ namespace SUSY{
 }
 
 
-//class ObjectDef;
-//class TreeService;
-
-
 class MyxAODAnalysis : public EL::Algorithm
 {
 #ifndef __CINT__
   std::unique_ptr<ST::SUSYObjDef_xAOD> objTool; //!
   std::unique_ptr<ST::SUSYObjDef_xAOD> objTool_PFlow; //!
-
 #endif // not __CINT__
 
 #ifndef __CINT__
@@ -70,47 +59,80 @@ class MyxAODAnalysis : public EL::Algorithm
 #endif // not __CINT__
 
 
-
-  //
-  //#ifndef __CINT__
-  //CP::MuonCalibrationAndSmearingTool *m_muonCalibrationAndSmearingTool;
-  //#endif // not__CINT__
-
 #ifndef __CINT__
-  //GoodRunsListSelectionTool *m_grl;
   CP::PileupReweightingTool *pu_tool; //!
-  //JetToolRunner* m_jetRecTool_kt12; //!
-  //JetToolRunner* m_jetRecTool_kt8; //!
-
 #endif // not__CINT__
 
   // put your configuration variables here as public variables.
   // that way they can be set directly from CINT and python.
 public:
-  // float cutValue;
 
-  xAOD::TEvent *m_event; //!
+  // this is needed to distribute the algorithm to the workers
+  ClassDef(MyxAODAnalysis, 1);//Commented out for compilation
 
-  TTree *MetaData; //!
+  MyxAODAnalysis ();
+
+  std::string inputFile;//!
+  std::string m_fileType;
+  std::string m_fileName;
+  std::string outputName;
+
   bool m_isDerivation; //!
   bool m_SUSY5= false; //!
   bool m_SUSY7= false; //!
+
 
   int m_eventCounter; //!
   int m_numCleanEvents; //!
   int m_numElectronEvents; //!
   int m_numMuonEvents; //!
 
-  double PUSumOfWeights; //!
+  int counter = 0;
+  bool RunningLocally=true;
+  int NoEvents = -1;
+  bool firstFile = true;
+  bool firstEvent = true;
 
+  //All the booleans that take their value directly from alg-><> =true/false they get interpreted as ints
+  int doSyst;
+  int doPhotons;
+  int doTruthJets;
+  int m_doCombiLeptons;
+
+  // these are the functions inherited from Algorithm
+  virtual EL::StatusCode setupJob (EL::Job& job);
+  virtual EL::StatusCode fileExecute ();
+  virtual EL::StatusCode beginInputFile (bool firstFile);
+  virtual EL::StatusCode histInitialize ();
+  virtual EL::StatusCode initialize ();
+  virtual EL::StatusCode execute ();
+  virtual EL::StatusCode postExecute ();
+  virtual EL::StatusCode finalize ();
+
+ private:
+
+  xAOD::TEvent *m_event; //!
+  TTree *MetaData; //!
+  bool isData; //!
+  bool isMC; //!
+  bool isAtlfast; //!
+  bool isTruth; //!
+
+  unsigned long long EventNumber; //!
+  int mcChannel; //!
+  std::vector<TreeService*> m_treeServiceVector; //!
+  double m_PUSumOfWeights; //!
+  double m_finalSumOfWeights; //!
+  double m_initialSumOfWeights; //!
+  double m_averageIntPerX; //!
+  double m_actualIntPerX; //!
+  double truth_pT_W; //!
+  double m_fileLumi; //!
   int m_runNumber; //!
   int m_lumiBlockNumber; //!
 
-  std::string m_fileType;
-  std::string m_fileName;
-  double m_fileLumi;
 
-
+  double PUSumOfWeights; //!
   int isyst; //!
   int m_totalEvents; //!
 
@@ -119,20 +141,6 @@ public:
   std::vector<ST::SystInfo> systInfoList; //!
   std::vector<ST::SystInfo> systInfoList_weights; //!
 
-
-  //TH1 *h_jetPt;
-  TH1 *h_cuts; //!
-  std::vector <std::string> cutList; //!
-  std::vector <std::string> runningOverSysts; //!
-  asg::AnaToolHandle<IMETSignificance> m_metSignif; //!
-
-
-  // Put our new containers here
-  // variables that don't get filled at submission time should be
-  // protected from being send from the submission node to the worker
-  // node (done by the )
- public:
-  // Tree *myTree;
 
   TH1 *noWeightHist; //!
   TH1 *sherpaWeightHist; //!
@@ -157,66 +165,11 @@ public:
   TH1F *h_dEta_p200; //!
   TH1F *h_dEta_H; //!
 
-  std::string outputName;
-
-  //TTree *tree;
-  unsigned long long EventNumber; //!
-
-  int mcChannel; //!
-
-  std::vector<TreeService*> m_treeServiceVector; //!
-  double m_PUSumOfWeights; //!
-  double m_finalSumOfWeights; //!
-  double m_initialSumOfWeights; //!
-  double m_averageIntPerX; //!
-  double m_actualIntPerX; //!
-  double truth_pT_W; //!
-
-  std::string inputFile;//!
-  int counter = 0;
-  bool RunningLocally=true;
-  bool RunningWithSyst = false;
-  bool RunningWithPhotons = false;
-  bool RunningWithTruthJets = false;
-  int NoEvents = -1;
-  bool firstFile = true;
-  bool firstEvent = true;
-  int doSyst;
-  int doPhotons;
-  int doTruthJets;
-
-  //  OutputStream *out;
-
-  // this is a standard constructor
-  MyxAODAnalysis ();
-
-  // these are the functions inherited from Algorithm
-  virtual EL::StatusCode setupJob (EL::Job& job);
-  virtual EL::StatusCode fileExecute ();
-  virtual EL::StatusCode beginInputFile (bool firstFile);
-  virtual EL::StatusCode histInitialize ();
-  virtual EL::StatusCode initialize ();
-  virtual EL::StatusCode execute ();
-  virtual EL::StatusCode postExecute ();
-  virtual EL::StatusCode finalize ();
-
- private:
-
-  bool isData; //!
-  bool isMC; //!
-  bool isAtlfast; //!
-  bool isTruth; //!
-
   asg::AnaToolHandle<PMGTools::IPMGCrossSectionTool> m_PMGCrossSectionTool; //!
   asg::AnaToolHandle<CP::IPileupReweightingTool> m_prw_tool; //!
-  asg::AnaToolHandle<CP::IMuonCalibrationAndSmearingTool> m_muonCalibrationAndSmearingTool; //!
   /*asg::AnaToolHandle<ST::SUSYObjDef_xAOD> objTool; //!*/
   asg::AnaToolHandle<IGoodRunsListSelectionTool> m_grl; //!
 
-  // put functions here?
- public:
 
-  // this is needed to distribute the algorithm to the workers
-  ClassDef(MyxAODAnalysis, 1);//Commented out for compilation
 };
 #endif

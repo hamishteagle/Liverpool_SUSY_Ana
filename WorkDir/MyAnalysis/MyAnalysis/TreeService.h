@@ -311,6 +311,7 @@ class TreeService
   int nNonBJets;
   int nLeptons;
   int nBaselineLeptons;
+  int nBaselineLeptons_combi;
   int nMuons;
   int nBadMuons;
 

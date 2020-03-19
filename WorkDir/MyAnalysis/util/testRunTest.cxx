@@ -46,6 +46,7 @@ int main( int argc, char* argv[]) {
     std::string nFilesPerJob ="5";
     bool RunningWithTruthJets = false;
     bool debug = false;
+    bool doCombiLeptons = false;
 
 
     if (argv[1] != "") sample_path = argv[1];
@@ -73,6 +74,7 @@ int main( int argc, char* argv[]) {
     }
     if (argc>11 && argv[11] != "") nFilesPerJob=argv[11];
     if (argc>12 && argv[12] != "") debug= (bool) atoi(argv[12]);
+    if (argc>13 && argv[13] != "") doCombiLeptons= (bool) atoi(argv[13]);
 
     fileType = get_file_type(sample_name);
     info_message("Input path: " + sample_path);
@@ -80,6 +82,7 @@ int main( int argc, char* argv[]) {
     info_message("Sample type: " + fileType);
     info_message("Submission directory: " + submit_dir);
     if (debug) info_message("Running with message level DEBUG");
+    if (doCombiLeptons) info_message("Running with separate baseline lepton definitions: "+std::to_string(doCombiLeptons));
     if (RunningWithSyst) info_message("Systematics: True" );
     if (RunningWithPhotons) info_message("Photons: True" );
     if (!RunningLocally) info_message("--- Going to submit to grid ---" );
@@ -114,6 +117,7 @@ int main( int argc, char* argv[]) {
         alg->doSyst = RunningWithSyst;
         alg->doPhotons = RunningWithPhotons;
 	      alg->doTruthJets = RunningWithTruthJets;
+        alg->m_doCombiLeptons = doCombiLeptons;
         // If you want to check that the filtering is working correctly, then set this to false
         alg->RunningLocally = true;
         //alg->RunningLocally = false;
@@ -179,6 +183,7 @@ int main( int argc, char* argv[]) {
         alg->doPhotons = RunningWithPhotons;
         alg->RunningLocally = false;
         alg->doTruthJets = RunningWithTruthJets;
+        alg->m_doCombiLeptons = doCombiLeptons;
         alg->setMsgLevel(MSG::DEBUG);
 
         //job.options()->setDouble (EL::Job::optRemoveSubmitDir, 1);

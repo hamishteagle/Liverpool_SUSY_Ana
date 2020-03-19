@@ -23,8 +23,10 @@ class CalculateVariables
   xAOD::MuonContainer *goodMuon_cont = nullptr;
   xAOD::MuonContainer *badMuon_cont = nullptr;
   xAOD::MuonContainer *baselineMuon_cont = nullptr;
+  xAOD::MuonContainer *baselineMuon_combi_cont = nullptr;
   xAOD::ElectronContainer *goodElectron_cont = nullptr;
   xAOD::ElectronContainer *baselineElectron_cont = nullptr;
+  xAOD::ElectronContainer *baselineElectron_combi_cont = nullptr;
   xAOD::TauJetContainer *goodTau_cont = nullptr;
   xAOD::TauJetContainer *baselineTau_cont = nullptr;
   xAOD::PhotonContainer *goodPhoton_cont = nullptr;
@@ -44,6 +46,9 @@ class CalculateVariables
   int nPhoton;
   double eTMiss; //
   double eTMissPhi; //
+  int nBaselineMuon_combi; //
+  int nBaselineElectron_combi; //
+  int nBaselineLepton_combi; //
   int nBaselineMuon; //
   int nBaselineElectron; //
   int nBaselineTau; //

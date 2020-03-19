@@ -1,12 +1,15 @@
 {
        "1":">0",
-       "ETMiss":">150",
-       "nJets":">=3",
-       "nBJets":">=2",
-       "nLeptons":"==1",
-       "nBaselineLeptons":"==1",
-       "pTl1":">30",
-       "m_bb":">30",
-       "m_CTcorr":">30",
+       "passedGRL":">0",
+       "LArFlag":">0",
+       "tileFlag":">0",
+       "sctFlag":">0",
+       "passedPrimVertex":">0",
+       "passedMuonClean":">0",
+       "passedJetClean":">0",
+       "nJets":">=1",
+       "nBaselineLeptons":"==1 || nBaselineLeptons==2",
+       "nLeptons":"==1 || nLeptons==2",
+       "ETMiss":">100",
        "m_T":">50"
 }

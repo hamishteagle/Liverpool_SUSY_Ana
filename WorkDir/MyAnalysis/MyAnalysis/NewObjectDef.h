@@ -22,16 +22,18 @@ class NewObjectDef
 
   public:
 
-    /*asg::AnaToolHandle<ST::SUSYObjDef_xAOD> objTool;*/
     ST::SUSYObjDef_xAOD* objTool;
+    asg::SgTEvent* currentEvent;
+    xAOD::TStore* eventStore;
+    std::string systematic;
 
-    NewObjectDef(asg::SgTEvent* event, ST::SUSYObjDef_xAOD* SUSYTool, xAOD::TStore* store, double mcChannel, double EventNumber, double mcWgt, double m_lumiScaled, std::string systematic, bool doTruthJets, bool m_SUSY5, bool m_SUSY7);
+    NewObjectDef(asg::SgTEvent* event, ST::SUSYObjDef_xAOD* SUSYTool, xAOD::TStore* store, double mcChannel, double EventNumber, double mcWgt, double m_lumiScaled, std::string systematic, bool doTruthJets, int m_doCombiLeptons);
 
     ~NewObjectDef(){
     };
     void GetScaleFactors();
     void GetObjects();
-    void GetBaselineObjects(bool m_SUSY5, bool m_SUSY7);
+    void GetBaselineObjects();
     void GetTruthJets();
 
     double getMET(){return MET;};
@@ -87,15 +89,14 @@ class NewObjectDef
 
 
 
-    asg::SgTEvent* currentEvent;
-    xAOD::TStore* eventStore;
-    std::string systematic;
+
     double mcID;
     double eventNumber;
     double mcEventWeight;
     double lumiScaled;
 
-
+    std::unique_ptr<xAOD::ElectronContainer> preOR_baselineElectrons_combi = nullptr;
+    std::unique_ptr<xAOD::MuonContainer>     preOR_baselineMuons_combi     = nullptr;
 
     std::unique_ptr<xAOD::JetContainer>      preOR_baselineJets      = nullptr;
     std::unique_ptr<xAOD::ElectronContainer> preOR_baselineElectrons = nullptr;
@@ -143,7 +144,7 @@ class NewObjectDef
     double muonTriggerSF;
     double dilepTriggerSF;
 
-
+    int doCombiLeptons;
     int nVertex = 0;
     int nBadMuons = 0;
     int nCosmicMuons = 0;
@@ -152,7 +153,5 @@ class NewObjectDef
     bool passMuonTriggerMatch = false;
     bool passTauTriggerMatch = false;
     bool passPhotonTriggerMatch = false;
-
-
 };
 #endif

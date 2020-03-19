@@ -305,7 +305,6 @@ EL::StatusCode MyxAODAnalysis :: initialize ()
     if(sysInfo.affectsWeights && sysInfo.systset.name()!="") {
       if (!ST::testAffectsObject(xAOD::Type::Tau, sysInfo.affectsType) && !ST::testAffectsObject(xAOD::Type::Photon, sysInfo.affectsType)){
         std::string push_back_string = "Adding systematic " +sysInfo.systset.name()+ " to systInfoList_weights";
-        ANA_MSG_INFO(push_back_string);
         systInfoList_weights.push_back(sysInfo);//Fill the vector of weights systs to append to nominal tree
       }
     }
@@ -420,19 +419,16 @@ EL::StatusCode MyxAODAnalysis :: execute ()
       const CP::SystematicSet& syst = sysInfo.systset;
 
 
-      // std::string temp = "On systematic: " + syst.name();
-      // ANA_MSG_INFO(temp);
-
       //Things we only need to do once:
       if(output_tree_string == output_trees[0]){
 
-          if (!isTruth){
-            //ANA_CHECK(objTool->resetSystematics());
-            ANA_CHECK(objTool_PFlow->resetSystematics());
-            //ANA_CHECK(objTool->applySystematicVariation(syst));
-            ANA_CHECK(objTool_PFlow->applySystematicVariation(syst));
-          }
+        if (!isTruth){
+          //ANA_CHECK(objTool->resetSystematics());
+          ANA_CHECK(objTool_PFlow->resetSystematics());
+          //ANA_CHECK(objTool->applySystematicVariation(syst));
+          ANA_CHECK(objTool_PFlow->applySystematicVariation(syst));
         }
+      }
 
 
       const xAOD::EventInfo* eventInfo =0;
@@ -508,10 +504,10 @@ EL::StatusCode MyxAODAnalysis :: execute ()
       bool found_PFlow   = (output_tree_string.find("CollectionTree_PFlow_")!= std::string::npos);
       if (found_nominal){
         ANA_MSG_ERROR("Got the nominal objects for some reason..");
-        objs.reset(new NewObjectDef(evtStore(), objTool.get(), store, mcChannel, EventNumber, mcWgt, m_lumiBlockNumber, syst.name(), doTruthJets, m_SUSY5, m_SUSY7));
+        objs.reset(new NewObjectDef(evtStore(), objTool.get(), store, mcChannel, EventNumber, mcWgt, m_lumiBlockNumber, syst.name(), doTruthJets, m_doCombiLeptons));
       }
       else if (found_PFlow){
-        objs.reset(new NewObjectDef(evtStore(), objTool_PFlow.get(), store, mcChannel, EventNumber, mcWgt, m_lumiBlockNumber, syst.name(), doTruthJets, m_SUSY5, m_SUSY7));
+        objs.reset(new NewObjectDef(evtStore(), objTool_PFlow.get(), store, mcChannel, EventNumber, mcWgt, m_lumiBlockNumber, syst.name(), doTruthJets, m_doCombiLeptons));
       }
       else{
       ANA_MSG_ERROR("Didn't pick up a correct output_tree_string...exiting");

@@ -151,6 +151,7 @@ TreeService::TreeService(TTree *outputTree, TDirectory *OutDir, bool RunningLoca
   tree->Branch("nNonBJets",&nNonBJets);
   tree->Branch("nLeptons",&nLeptons);
   tree->Branch("nBaselineLeptons",&nBaselineLeptons);
+  tree->Branch("nBaselineLeptons_combi",&nBaselineLeptons_combi);
   //tree->Branch("nBaselineElectrons",&nBaselineElectrons);
   //tree->Branch("nBaselineTaus",&nBaselineTaus);
   //tree->Branch("nBaselineMuons",&nBaselineMuons);
@@ -487,6 +488,8 @@ void TreeService::fillTree(NewObjectDef *objects , xAOD::TStore *evtStore, Preli
   nNonBJets = variables.nNonBJets;
   nLeptons = variables.nLepton;
   nBaselineLeptons = variables.nBaselineLepton;
+  nBaselineLeptons_combi = variables.nBaselineLepton_combi;
+
   nBaselineElectrons = variables.nBaselineElectron;
   nBaselineTaus = variables.nBaselineTau;
   nBaselineMuons = variables.nBaselineMuon;
