@@ -44,6 +44,7 @@ TreeService::TreeService(TTree *outputTree, TDirectory *OutDir, bool RunningLoca
     tree->Branch("passedJetClean", &passedJetClean);
     tree->Branch("passedCosmicMu", &passedCosmicMu);
     tree->Branch("passedMuonClean", &passedMuonClean);
+    tree->Branch("passedCrackVeto", &passedCrackVeto);
   }
   // //Object cleaning cuts
 
@@ -279,7 +280,7 @@ void TreeService::InitialiseWeightsBranches(ST::SystInfo systInfo_weight){
   }
 }
 
-void TreeService::fillTree(NewObjectDef *objects , xAOD::TStore *evtStore, PreliminarySel &region, CalculateVariables &variables, double mFinalWeight, double mInitialWeight, double puWeight, double SFmCTbbll, bool TrigMET, bool TrigMu, bool TrigEl, bool TrigDilep, bool TrigGamma, bool Trig6j, std::vector<std::string> muon_triggers, std::vector<int> muon_decisions, std::vector<std::string> electron_triggers, std::vector<int> electron_decisions, std::vector<std::string> dilepton_triggers, std::vector<int> dilepton_decisions, double LeptonTriggerSF, double puSumWeights, double TRUTHMET, double TRUTHHT, bool CoreFlags, bool SCTFlag,bool LArFlags, bool tileFlags, bool passGRL, bool passedPrimVertexes, bool passedJetCleans, bool passedCosmicMus, bool passedMuonCleans, double RNo,  double RenormedMCWgt, int LumiYear, double m_averageIntPerCrossing, double m_actualIntPerCrossing, double m_xsec, double m_filteff, double m_kfactor){
+void TreeService::fillTree(NewObjectDef *objects , xAOD::TStore *evtStore, PreliminarySel &region, CalculateVariables &variables, double mFinalWeight, double mInitialWeight, double puWeight, double SFmCTbbll, bool TrigMET, bool TrigMu, bool TrigEl, bool TrigDilep, bool TrigGamma, bool Trig6j, std::vector<std::string> muon_triggers, std::vector<int> muon_decisions, std::vector<std::string> electron_triggers, std::vector<int> electron_decisions, std::vector<std::string> dilepton_triggers, std::vector<int> dilepton_decisions, double LeptonTriggerSF, double puSumWeights, double TRUTHMET, double TRUTHHT, bool CoreFlags, bool SCTFlag,bool LArFlags, bool tileFlags, bool passGRL, bool passedPrimVertexes, bool passedJetCleans, bool passedCosmicMus, bool passedMuonCleans, bool passedCrackVetos, double RNo,  double RenormedMCWgt, int LumiYear, double m_averageIntPerCrossing, double m_actualIntPerCrossing, double m_xsec, double m_filteff, double m_kfactor){
 
   xAOD::JetContainer *goodJet_cont = nullptr;
   evtStore->retrieve(goodJet_cont, "goodJets");
@@ -299,6 +300,7 @@ void TreeService::fillTree(NewObjectDef *objects , xAOD::TStore *evtStore, Preli
   passedJetClean=passedJetCleans;
   passedCosmicMu=passedCosmicMus;
   passedMuonClean=passedMuonCleans;
+  passedCrackVeto=passedCrackVetos;
   //triggerDecisions = triggers;
   passedGRL = passGRL;
 

@@ -55,6 +55,7 @@ class NewObjectDef
     int getNBadMuons(){return nBadMuons;};
     int getNCosmicMuons(){return nCosmicMuons;};
     int getNBadJets(){return nBadJets;};
+    bool getPassedCrackVeto(){return passedCrackVeto;};
     bool elTriggerMatch(){return passElectronTriggerMatch;};
     bool muTriggerMatch(){return passMuonTriggerMatch;};
     bool taTriggerMatch(){return passTauTriggerMatch;};
@@ -144,11 +145,13 @@ class NewObjectDef
     double muonTriggerSF;
     double dilepTriggerSF;
 
+
     int doCombiLeptons;
     int nVertex = 0;
     int nBadMuons = 0;
     int nCosmicMuons = 0;
     int nBadJets = 0;
+    bool passedCrackVeto = false;
     bool passElectronTriggerMatch = false;
     bool passMuonTriggerMatch = false;
     bool passTauTriggerMatch = false;

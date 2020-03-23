@@ -256,7 +256,6 @@ EL::StatusCode MyxAODAnalysis :: initialize ()
   //Set the data type
   ST::ISUSYObjDef_xAODTool::DataSource datasource = (isData ? ST::ISUSYObjDef_xAODTool::Data : (isAtlfast ? ST::ISUSYObjDef_xAODTool::AtlfastII : ST::ISUSYObjDef_xAODTool::FullSim));
 
-  //Initialse the other SUSYTools instances
 
   ANA_CHECK( objTool_PFlow->setProperty("OutputLevel", this->msg().level()) );
   //ANA_CHECK( objTool->setProperty("OutputLevel", this->msg().level()) );
@@ -580,6 +579,14 @@ EL::StatusCode MyxAODAnalysis :: execute ()
           }
         }
       }
+      bool passedCrackVeto=objs->getPassedCrackVeto();
+      if (!passedCrackVeto){
+        if(!RunningLocally){
+          isyst++;
+          store->clear();
+          continue;
+        }
+      }
 
       bool passedPrimVertex=true;
       if (objs->getPrimVertex() < 1){
@@ -851,7 +858,7 @@ EL::StatusCode MyxAODAnalysis :: execute ()
             (m_treeServiceVector[isyst])->fillTreeWeights(objs.get(), puWgt, leptonTriggerSF, systInfo_weight);
           }
         }
-      	(m_treeServiceVector[isyst])->fillTree(objs.get(), store ,*m_regions, *m_varCalc,m_finalSumOfWeights, m_initialSumOfWeights, puWgt, SFmctbbll, passedMETTrigger, passedSingleMuTrigger, passedSingleElTrigger, passedDiLeptonTrigger, passedGammaTrigger, passedMultiJetTrigger, muon_triggers, muon_decisions, electron_triggers, electron_decisions, dilepton_triggers, dilepton_decisions,leptonTriggerSF, PUSumOfWeights, truthfilt_MET, truthfilt_HT, coreFlag, sctFlag, LArFlag, tileFlag, passGRL, passedPrimVertex, passedJetClean, passedCosmicMu, passedMuonClean, m_runNumber, renormedMcWgt, year, m_averageIntPerX, m_actualIntPerX, xsec, filteff, kfactor);
+      	(m_treeServiceVector[isyst])->fillTree(objs.get(), store ,*m_regions, *m_varCalc,m_finalSumOfWeights, m_initialSumOfWeights, puWgt, SFmctbbll, passedMETTrigger, passedSingleMuTrigger, passedSingleElTrigger, passedDiLeptonTrigger, passedGammaTrigger, passedMultiJetTrigger, muon_triggers, muon_decisions, electron_triggers, electron_decisions, dilepton_triggers, dilepton_decisions,leptonTriggerSF, PUSumOfWeights, truthfilt_MET, truthfilt_HT, coreFlag, sctFlag, LArFlag, tileFlag, passGRL, passedPrimVertex, passedJetClean, passedCosmicMu, passedMuonClean, passedCrackVeto,  m_runNumber, renormedMcWgt, year, m_averageIntPerX, m_actualIntPerX, xsec, filteff, kfactor);
         store->clear();
         objs.reset();
       }

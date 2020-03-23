@@ -154,8 +154,12 @@ void NewObjectDef::GetBaselineObjects() {
   xAOD::JetContainer* jets(jets_nominal);
   xAOD::TauJetContainer* taus(taus_nominal);
 
+
   //Apply overlap removal with nominal (Raw SUSYTools objects) and no taus (ala 1L framework)
   objTool->OverlapRemoval(electrons_nominal, muons_nominal, jets_nominal, photons_nominal);
+  //Veto events with objects in the crack
+  passedCrackVeto = objTool->IsPFlowCrackVetoCleaning(electrons, photons);
+  //retrieve the MET
   objTool->GetMET(*met_nominal, jets_nominal, electrons_nominal, muons_nominal, photons_nominal, NULL, true, true);
 
 
