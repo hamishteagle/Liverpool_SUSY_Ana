@@ -19,7 +19,16 @@ build_image:
     GIT_SSL_NO_VERIFY: "true"
     TO: ${CI_REGISTRY_IMAGE}:$CI_COMMIT_REF_SLUG
 
-# # Run CI tests in the docker image
+#################### analysisbase image ###############
+.analysis_image &image
+  image : atlas/analysisbase 21.2.116
+  tags:
+    cvmfs
+  before_script:
+    pwd
+    ls
+    source /home/atlas/release_setup.sh
+
 
 .variables_files: &variables_files #these variables are used to copy a file from EOS to the CI
   variables:
@@ -30,16 +39,18 @@ build_image:
     CI_BASE_DIR: fromEOS
     CI_OUTPUT_DIR: $CI_BASE_DIR/$SAMPLE #path at CI level to copy to
 
+# # Run CI tests in the docker image
 run_project:
   artifacts:
     name: "weights_plots"
     expire_in: "1 month"
     paths:
     - "/builds/hteagle/Liverpool_SbottomAnalysis_Rel21/WorkDir/Macros/Tests/default/*.pdf"
+  tags:
+    cvmfs
   stage: run
   <<: *variables_files
-  #image: gitlab-registry.cern.ch/hteagle/liverpool_sbottomanalysis_rel21
-  image: ${CI_REGISTRY_IMAGE}
+  <<: *image
   script:
     #Get file from EOS
     - mkdir fromEOS #directory to download the files to
