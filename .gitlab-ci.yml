@@ -16,7 +16,7 @@ build_image:
     - docker-image-build
   script: "echo 'Building image ...'"
   variables:
-    TO: ${CI_REGISTRY_IMAGE}:${CI_COMMIT_REF_NAME}
+    TO: ${CI_REGISTRY_IMAGE}
     FROM: atlas/analysisbase:$ATHENA_RELEASE
 
 # # Run CI tests in the docker image
@@ -39,7 +39,7 @@ run_project:
   stage: run
   <<: *variables_files
   #image: gitlab-registry.cern.ch/hteagle/liverpool_sbottomanalysis_rel21
-  image: ${CI_REGISTRY_IMAGE}:${CI_COMMIT_REF_NAME}
+  image: ${CI_REGISTRY_IMAGE}
   script:
     #Get file from EOS
     - mkdir fromEOS #directory to download the files to

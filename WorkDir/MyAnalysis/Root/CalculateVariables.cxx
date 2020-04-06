@@ -9,6 +9,7 @@
 #include <fstream>
 #include <unistd.h>
 #include <AsgTools/MessageCheck.h>
+#include "MyAnalysis/Timer.h"
 
 // restframes crap
 #include "RestFrames/RestFrame.h"
@@ -49,6 +50,7 @@ bool btag_wgt_Sorter( const xAOD::Jet* j1, const xAOD::Jet* j2 ) {
 
 CalculateVariables::CalculateVariables(NewObjectDef *objects,xAOD::TStore* evtStore, bool isTruth, bool doPhotons, bool isData, std::string systematic){
 
+  Timer::Instance()->Start("CalculateVariables::CalculateVariables");
   // Initialise the variables to sensible numbers
 
   TruthFile = isTruth;
@@ -226,6 +228,8 @@ CalculateVariables::CalculateVariables(NewObjectDef *objects,xAOD::TStore* evtSt
   pTb4 = -99;
   etab1 = -99;
   etab2 = -99;
+  etab3 = -99;
+  etab4 = -99;
   phib1 = -99;
   phib2 = -99;
   phib3 = -99;
@@ -234,6 +238,10 @@ CalculateVariables::CalculateVariables(NewObjectDef *objects,xAOD::TStore* evtSt
   j2_quantile = -99;
   j3_quantile = -99;
   j4_quantile = -99;
+  nonb1_quantile = -99;
+  nonb2_quantile = -99;
+  nonb3_quantile = -99;
+  nonb4_quantile = -99;
   b1_quantile = -99;
   b2_quantile = -99;
   b3_quantile = -99;
@@ -380,16 +388,6 @@ CalculateVariables::CalculateVariables(NewObjectDef *objects,xAOD::TStore* evtSt
   transformedAplan = -99;
   Sphericity = -99;
 
-
-
-
-  // Now require at least two jets in the event, one b-tagged, or else there's no point in calculating anything
-
-  //  if (nbJets == 0 || nbJets > 2 || nLepton > 2 || nJets < 2){
-  //  return;
-  // }
-
-
   // do initial jet things here:
 
   mctTool = std::make_unique<TMctLib>();
@@ -414,6 +412,7 @@ CalculateVariables::CalculateVariables(NewObjectDef *objects,xAOD::TStore* evtSt
   TLorentzVector jet3v(0,0,0,0);
   TLorentzVector jet4v(0,0,0,0);
 
+ //------------------------------------------------General Jet variables---------------------------------------------------------------------------------
   auto jetVector = std::make_unique<xAOD::JetContainer>(SG::VIEW_ELEMENTS);
   if (nJets >= 1){
     pTj1 = (*(goodJet_cont))[0]->pt()*0.001;
@@ -481,7 +480,36 @@ CalculateVariables::CalculateVariables(NewObjectDef *objects,xAOD::TStore* evtSt
     }
   }
 
+ //------------------------------------------------/General Jet variables---------------------------------------------------------------------------------
 
+
+ //------------------------------------------------General non B Jet variables---------------------------------------------------------------------------------
+
+  if (nNonBJets >= 1){
+    pTnonb1 = (*nonBJet_cont)[0]->pt()*0.001;
+    etanonb1 = (*nonBJet_cont)[0]->eta();
+    phinonb1 = (*nonBJet_cont)[0]->phi();
+    nonb1_quantile = (*nonBJet_cont)[0]->auxdata<char>("bjet");
+  }
+  if (nNonBJets >= 2){
+    pTnonb2 = (*nonBJet_cont)[1]->pt()*0.001;
+    etanonb2 = (*nonBJet_cont)[1]->eta();
+    phinonb2 = (*nonBJet_cont)[1]->phi();
+    nonb2_quantile = (*nonBJet_cont)[1]->auxdata<char>("bjet");
+  }
+  if (nNonBJets >= 3){
+    pTnonb3 = (*nonBJet_cont)[2]->pt()*0.001;
+    etanonb3 = (*nonBJet_cont)[2]->eta();
+    phinonb3 = (*nonBJet_cont)[2]->phi();
+    nonb3_quantile = (*nonBJet_cont)[2]->auxdata<char>("bjet");
+  }
+  if (nNonBJets >= 4){
+    pTnonb4 = (*nonBJet_cont)[3]->pt()*0.001;
+    etanonb4 = (*nonBJet_cont)[3]->eta();
+    phinonb4 = (*nonBJet_cont)[3]->phi();
+    nonb4_quantile = (*nonBJet_cont)[3]->auxdata<char>("bjet");
+  }
+  //------------------------------------------------/General non BJet variables---------------------------------------------------------------------------------
 
   if (TruthFile == 0){
     jetVector->sort(btag_wgt_Sorter);
@@ -543,6 +571,7 @@ CalculateVariables::CalculateVariables(NewObjectDef *objects,xAOD::TStore* evtSt
   b1_ntrk = 0;
   b2_ntrk = 0;
 
+  //General variables for bjets
   if (nbJets>=1){
     b1v = (*bJet_cont)[0]->p4()*0.001;
     pTb1 = b1v.Pt();
@@ -1253,7 +1282,7 @@ CalculateVariables::CalculateVariables(NewObjectDef *objects,xAOD::TStore* evtSt
 
   //SRB algorithms end
 
-
+  Timer::Instance()->End("CalculateVariables::CalculateVariables");
 }
 
 

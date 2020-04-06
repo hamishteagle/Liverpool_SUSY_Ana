@@ -8,7 +8,6 @@
 #include "NewObjectDef.h"
 #include "PreliminarySel.h"
 #include "CalculateVariables.h"
-#include "MapVariables.h"
 #include "MCChecks.h"
 #include "TTree.h"
 #include "TFile.h"
@@ -211,28 +210,11 @@ class TreeService
   double DRj2j4;
   double DRj3j4;
 
-  double pTj1;
-  double pTj2;
-  double pTj3;
-  double pTj4;
-  double pTj5;
-  double pTj6;
-  double pTj7;
-  double pTj8;
 
   //ISR variables
   double delPhi1;
   double delPhi2;
   double delPhi3;
-
-  double etaj1;
-  double etaj2;
-  double etaj3;
-  double etaj4;
-  double phij1;
-  double phij2;
-  double phij3;
-  double phij4;
 
   double pTl1;
   double pTl2;
@@ -249,6 +231,12 @@ class TreeService
   double phigamma;
   double nPhoton;
 
+  int b1_quantile;
+  int b2_quantile;
+  int b3_quantile;
+  int b4_quantile;
+  int truthFlavb1;
+  int truthFlavb2;
   double pTb1;
   double pTb2;
   double pTb3;
@@ -261,16 +249,44 @@ class TreeService
   double phib2;
   double phib3;
   double phib4;
+
   int j1_quantile;
   int j2_quantile;
   int j3_quantile;
   int j4_quantile;
-  int b1_quantile;
-  int b2_quantile;
-  int b3_quantile;
-  int b4_quantile;
-  int truthFlavb1;
-  int truthFlavb2;
+  double pTj1;
+  double pTj2;
+  double pTj3;
+  double pTj4;
+  double pTj5;
+  double pTj6;
+  double pTj7;
+  double pTj8;
+  double etaj1;
+  double etaj2;
+  double etaj3;
+  double etaj4;
+  double phij1;
+  double phij2;
+  double phij3;
+  double phij4;
+
+  int nonb1_quantile;
+  int nonb2_quantile;
+  int nonb3_quantile;
+  int nonb4_quantile;
+  double pTnonb1;
+  double pTnonb2;
+  double pTnonb3;
+  double pTnonb4;
+  double etanonb1;
+  double etanonb2;
+  double etanonb3;
+  double etanonb4;
+  double phinonb1;
+  double phinonb2;
+  double phinonb3;
+  double phinonb4;
 
   double delPhi_tj1MET;
   double delPhi_tj2MET;

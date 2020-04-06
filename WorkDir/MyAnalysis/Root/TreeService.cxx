@@ -52,7 +52,7 @@ TreeService::TreeService(TTree *outputTree, TDirectory *OutDir, bool RunningLoca
   tree->Branch("passedMETTrigger", &passedMETTrigger);
   tree->Branch("passedMuTrigger", &passedMuTrigger);
   tree->Branch("passedElTrigger", &passedElTrigger);
-  tree->Branch("passedDileptoonTrigger", &passedDileptonTrigger);
+  tree->Branch("passedDileptonTrigger", &passedDileptonTrigger);
   //tree->Branch("passedGammaTrigger", &passedGammaTrigger);
 
 
@@ -110,7 +110,7 @@ TreeService::TreeService(TTree *outputTree, TDirectory *OutDir, bool RunningLoca
   //tree->Branch("etal2",&etal2);
   tree->Branch("phil1",&phil1);
   //tree->Branch("phil2",&phil2);
-  tree->Branch("lep1flavour",&lep1flavour);
+  //tree->Branch("lep1flavour",&lep1flavour);
   //tree->Branch("lep2flavour",&lep2flavour);
 
 
@@ -137,6 +137,10 @@ TreeService::TreeService(TTree *outputTree, TDirectory *OutDir, bool RunningLoca
   tree->Branch("b2_quantile", &b2_quantile);
   tree->Branch("b3_quantile", &b3_quantile);
   tree->Branch("b4_quantile", &b4_quantile);
+  tree->Branch("nonb1_quantile", &nonb1_quantile);
+  tree->Branch("nonb2_quantile", &nonb2_quantile);
+  tree->Branch("nonb3_quantile", &nonb3_quantile);
+  tree->Branch("nonb4_quantile", &nonb4_quantile);
   tree->Branch("j1_quantile", &j1_quantile);
   tree->Branch("j2_quantile", &j2_quantile);
   tree->Branch("j3_quantile", &j3_quantile);
@@ -210,13 +214,13 @@ TreeService::TreeService(TTree *outputTree, TDirectory *OutDir, bool RunningLoca
   //tree->Branch("b2_ntrk", &b2_ntrk);
 
   //ISR variables
-  tree->Branch("delPhi1",&delPhi1);
-  tree->Branch("delPhi2",&delPhi2);
-  tree->Branch("delPhi3",&delPhi3);
-
-  //tree->Write();
-
-  tree->Branch("delPhiMinb",&delPhiMinb);
+  // tree->Branch("delPhi1",&delPhi1);
+  // tree->Branch("delPhi2",&delPhi2);
+  // tree->Branch("delPhi3",&delPhi3);
+  //
+  // //tree->Write();
+  //
+  // tree->Branch("delPhiMinb",&delPhiMinb);
   tree->Branch("all_HT",&all_HT);
   tree->Branch("all_METSig",&all_METSig);
   tree->Branch("all_Meff",&all_Meff);
@@ -407,15 +411,6 @@ void TreeService::fillTree(NewObjectDef *objects , xAOD::TStore *evtStore, Preli
   // MUR1_MUF1_PDF261002 = MCTruthInfo.MUR1_MUF1_PDF261002;
 
 
-  pTj1 = variables.pTj1;
-  pTj2 = variables.pTj2;
-  pTj3 = variables.pTj3;
-  pTj4 = variables.pTj4;
-
-  pTj5 = variables.pTj5;
-  pTj6 = variables.pTj6;
-  pTj7 = variables.pTj7;
-  pTj8 = variables.pTj8;
 
   njet20 = variables.njet20;
   njet25 = variables.njet25;
@@ -446,15 +441,6 @@ void TreeService::fillTree(NewObjectDef *objects , xAOD::TStore *evtStore, Preli
   DRj3j4 = variables.DRj3j4;
 
 
-  etaj1 = variables.etaj1;
-  etaj2 = variables.etaj2;
-  etaj3 = variables.etaj3;
-  etaj4 = variables.etaj4;
-
-  phij1 = variables.phij1;
-  phij2 = variables.phij2;
-  phij3 = variables.phij3;
-  phij4 = variables.phij4;
 
   pTl1 = variables.pTl1;
   pTl2 = variables.pTl2;
@@ -526,6 +512,10 @@ void TreeService::fillTree(NewObjectDef *objects , xAOD::TStore *evtStore, Preli
   ratioMETmEff2j = variables.ratioMETmEff2j;
   ratioMETmEff3j = variables.ratioMETmEff3j;
 
+  b1_quantile = variables.b1_quantile;
+  b2_quantile = variables.b2_quantile;
+  b3_quantile = variables.b3_quantile;
+  b4_quantile = variables.b4_quantile;
   pTb1 = variables.pTb1;
   pTb2 = variables.pTb2;
   pTb3 = variables.pTb3;
@@ -538,16 +528,50 @@ void TreeService::fillTree(NewObjectDef *objects , xAOD::TStore *evtStore, Preli
   phib2 = variables.phib2;
   phib3 = variables.phib3;
   phib4 = variables.phib4;
+  truthFlavb1 = variables.truthFlavb1;
+  truthFlavb2 = variables.truthFlavb2;
+
+
+
   j1_quantile = variables.j1_quantile;
   j2_quantile = variables.j2_quantile;
   j3_quantile = variables.j3_quantile;
   j4_quantile = variables.j4_quantile;
-  b1_quantile = variables.b1_quantile;
-  b2_quantile = variables.b2_quantile;
-  b3_quantile = variables.b3_quantile;
-  b4_quantile = variables.b4_quantile;
-  truthFlavb1 = variables.truthFlavb1;
-  truthFlavb2 = variables.truthFlavb2;
+  pTj1 = variables.pTj1;
+  pTj2 = variables.pTj2;
+  pTj3 = variables.pTj3;
+  pTj4 = variables.pTj4;
+  pTj5 = variables.pTj5;
+  pTj6 = variables.pTj6;
+  pTj7 = variables.pTj7;
+  pTj8 = variables.pTj8;
+  etaj1 = variables.etaj1;
+  etaj2 = variables.etaj2;
+  etaj3 = variables.etaj3;
+  etaj4 = variables.etaj4;
+  phij1 = variables.phij1;
+  phij2 = variables.phij2;
+  phij3 = variables.phij3;
+  phij4 = variables.phij4;
+
+
+  nonb1_quantile = variables.nonb1_quantile;
+  nonb2_quantile = variables.nonb2_quantile;
+  nonb3_quantile = variables.nonb3_quantile;
+  nonb4_quantile = variables.nonb4_quantile;
+  pTnonb1 = variables.pTnonb1;
+  pTnonb2 = variables.pTnonb2;
+  pTnonb3 = variables.pTnonb3;
+  pTnonb4 = variables.pTnonb4;
+  etanonb1 = variables.etanonb1;
+  etanonb2 = variables.etanonb2;
+  etanonb3 = variables.etanonb3;
+  etanonb4 = variables.etanonb4;
+  phinonb1 = variables.phinonb1;
+  phinonb2 = variables.phinonb2;
+  phinonb3 = variables.phinonb3;
+  phinonb4 = variables.phinonb4;
+
 
   dPhij1MET = variables.delPhi1;
   dPhij2MET = variables.delPhi2;

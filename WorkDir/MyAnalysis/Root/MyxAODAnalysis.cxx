@@ -26,10 +26,8 @@
 #include <TTreeFormula.h>
 #include "xAODEventInfo/EventInfo.h"
 #include "MyAnalysis/NewObjectDef.h"
-#include "MyAnalysis/AddPileUp.h"
 #include "MyAnalysis/PreliminarySel.h"
 #include "MyAnalysis/CalculateVariables.h"
-#include "MyAnalysis/MapVariables.h"
 #include "MyAnalysis/TreeService.h"
 #include "MyAnalysis/MCChecks.h"
 
@@ -37,6 +35,7 @@
 
 #include <EventLoop/OutputStream.h>
 #include <time.h>       /* time */
+#include "MyAnalysis/Timer.h"
 
 #include "SUSYTools/SUSYObjDef_xAOD.h"
 #include "SUSYTools/SUSYCrossSection.h"
@@ -228,7 +227,7 @@ EL::StatusCode MyxAODAnalysis :: initialize ()
   if(isMC16e){lumicalcFiles.push_back(PathResolverFindCalibFile("GoodRunsLists/data18_13TeV/20190219/ilumicalc_histograms_None_348885-364292_OflLumi-13TeV-010.root"));}
 
   //Initialise the nominal SUSYTools instance->We use this to get the metadata
-  objTool = std::make_unique<ST::SUSYObjDef_xAOD>("SUSYObjDef_xAOD");
+  //objTool = std::make_unique<ST::SUSYObjDef_xAOD>("SUSYObjDef_xAOD");
   objTool_PFlow = std::make_unique<ST::SUSYObjDef_xAOD>("SUSYObjDef_xAOD_PFlow");
 
   //Get the metadata using SUSYTools
@@ -260,24 +259,24 @@ EL::StatusCode MyxAODAnalysis :: initialize ()
   ANA_CHECK( objTool_PFlow->setProperty("OutputLevel", this->msg().level()) );
   //ANA_CHECK( objTool->setProperty("OutputLevel", this->msg().level()) );
   //Set the config according to the Derivation
-  ANA_CHECK(objTool->setProperty("DataSource",datasource) );
+  //ANA_CHECK(objTool->setProperty("DataSource",datasource) );
   ANA_CHECK(objTool_PFlow->setProperty("DataSource",datasource) );
 
 
   if (m_SUSY5){
-    ANA_CHECK(objTool->setProperty("ConfigFile",PathResolverFindCalibFile("/MyAnalysis/MyAnalysis/configs/1Lbb_default.conf")));
+    //ANA_CHECK(objTool->setProperty("ConfigFile",PathResolverFindCalibFile("/MyAnalysis/MyAnalysis/configs/1Lbb_default.conf")));
     ANA_CHECK(objTool_PFlow->setProperty("ConfigFile",PathResolverFindCalibFile("/MyAnalysis/MyAnalysis/configs/1Lbb_PFlow.conf")));
     ANA_MSG_INFO("This is SUSY5");
   }
   if (m_SUSY7){
-    ANA_CHECK(objTool->setProperty("ConfigFile",PathResolverFindCalibFile("/MyAnalysis/MyAnalysis/configs/topDM_Giulia.conf")));
+    //ANA_CHECK(objTool->setProperty("ConfigFile",PathResolverFindCalibFile("/MyAnalysis/MyAnalysis/configs/topDM_Giulia.conf")));
     ANA_CHECK(objTool_PFlow->setProperty("ConfigFile",PathResolverFindCalibFile("/MyAnalysis/MyAnalysis/configs/topDM_Giulia.conf")));
     ANA_MSG_INFO("This is SUSY7");
   }
 
   if (!isTruth){
-    ANA_CHECK(objTool->setProperty("PRWLumiCalcFiles",lumicalcFiles));
-    ANA_CHECK(objTool->setProperty("AutoconfigurePRWTool",true));
+    //ANA_CHECK(objTool->setProperty("PRWLumiCalcFiles",lumicalcFiles));
+    //ANA_CHECK(objTool->setProperty("AutoconfigurePRWTool",true));
     //ANA_CHECK(objTool->initialize());
     ANA_MSG_INFO("Initialised Nominal SUSYTools instance");
 
@@ -399,6 +398,7 @@ EL::StatusCode MyxAODAnalysis :: histInitialize ()
 
 EL::StatusCode MyxAODAnalysis :: execute ()
 {
+  Timer::Instance()->Start("MyxAODAnalysis::execute");
   // Here you do everything that needs to be done on every single
   // event, e.g. read input variables, apply cuts, and fill
   // histograms and trees.  This is where most of your actual analysis
@@ -420,7 +420,6 @@ EL::StatusCode MyxAODAnalysis :: execute ()
 
       //Things we only need to do once:
       if(output_tree_string == output_trees[0]){
-
         if (!isTruth){
           //ANA_CHECK(objTool->resetSystematics());
           ANA_CHECK(objTool_PFlow->resetSystematics());
@@ -875,11 +874,14 @@ EL::StatusCode MyxAODAnalysis :: execute ()
       dilepton_decisions.clear();
     }
   }
+  Timer::Instance()->End("MyxAODAnalysis::execute");
   return StatusCode::SUCCESS;
+
 }
 
 EL::StatusCode MyxAODAnalysis :: postExecute ()
 {
+
   // Here you do everything that needs to be done after the main event
   // processing.  This is typically very rare, particularly in user
   // code.  It is mainly used in implementing the NTuplSevc.
@@ -889,6 +891,7 @@ EL::StatusCode MyxAODAnalysis :: postExecute ()
 
 EL::StatusCode MyxAODAnalysis :: finalize ()
  {
+   Timer::Instance()->printPerformance();
   // This method is the mirror image of initialize(), meaning it gets
   // called after the last event has been processed on the worker node
   // and allows you to finish up any objects you created in
