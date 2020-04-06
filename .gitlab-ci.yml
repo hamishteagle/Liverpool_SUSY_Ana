@@ -1,6 +1,6 @@
 variables:
   #GIT_SUBMODULE_STRATEGY: recursive
-  ATHENA_RELEASE: 21.2.100
+  ATHENA_RELEASE: 21.2.116
 
 stages:
   - build
