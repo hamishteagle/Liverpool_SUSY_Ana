@@ -16,6 +16,7 @@ build_image:
     - docker-image-build
   script: "echo 'Building image ...'"
   variables:
+    GIT_SSL_NO_VERIFY: "true"
     TO: ${CI_REGISTRY_IMAGE}:$CI_COMMIT_REF_SLUG
 
 # # Run CI tests in the docker image
