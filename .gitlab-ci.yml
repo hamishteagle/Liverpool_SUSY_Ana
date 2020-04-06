@@ -21,7 +21,7 @@ stages:
 
 #################### analysisbase image ###############
 .analysis_image: &image
-  image : atlas/analysisbase 21.2.116
+  image : atlas/analysisbase:21.2.116
   tags:
     - cvmfs
   before_script:
