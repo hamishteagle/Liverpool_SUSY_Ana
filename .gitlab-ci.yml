@@ -20,7 +20,7 @@ build_image:
     TO: ${CI_REGISTRY_IMAGE}:$CI_COMMIT_REF_SLUG
 
 #################### analysisbase image ###############
-.analysis_image &image
+.analysis_image: &image
   image : atlas/analysisbase 21.2.116
   tags:
     cvmfs
