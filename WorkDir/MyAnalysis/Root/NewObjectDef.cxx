@@ -2,7 +2,7 @@
 #include <xAODJet/JetAuxContainer.h>
 #include "MyAnalysis/NewObjectDef.h"
 #include "MyAnalysis/MyxAODAnalysis.h"
-
+#include "MyAnalysis/Timer.h"
 bool pT_Sorter( const xAOD::IParticle* j1, const xAOD::IParticle* j2 );
 bool pT_TruthSorter( const xAOD::IParticle* j1, const xAOD::IParticle* j2 );
 
@@ -98,7 +98,7 @@ bool pT_TruthSorter( const xAOD::IParticle* j1, const xAOD::IParticle* j2 ) {
 
 
 void NewObjectDef::GetBaselineObjects() {
-
+  Timer::Instance()->Start( "NewObjectDef::GetBaselineObjects" );
 
   // Setup object containers
   xAOD::MuonContainer* muons_nominal(0);
@@ -216,10 +216,13 @@ void NewObjectDef::GetBaselineObjects() {
 
   delete met_nominal;
   delete met_nominal_aux;
+
+  Timer::Instance()->End( "NewObjectDef::GetBaselineObjects" );
+
 }
 
 void NewObjectDef::GetObjects() {
-
+  Timer::Instance()->Start( "NewObjectDef::GetObjects" );
   // Fill electrons
   for (const auto &el_itr: *preOR_baselineElectrons) {
     if (el_itr->auxdata<char>("passOR")) {
@@ -290,9 +293,11 @@ void NewObjectDef::GetObjects() {
       nVertex++ ;
     }
   }
+  Timer::Instance()->End( "NewObjectDef::GetObjects" );
 return;
 }
 void NewObjectDef::GetScaleFactors(){
+  Timer::Instance()->Start("NewObjectDef::GetScaleFactors");
   //As we have released the goodObject pointers to the evtstore already they are not available locally and we need to get them again
   //Use normal pointers, the eventStore should take care of the memory for these objects
   eventStore->retrieve(goodMuons_sf, "goodMuons"+systematic);
@@ -334,6 +339,7 @@ void NewObjectDef::GetScaleFactors(){
         dilepTriggerSF = objTool->GetTriggerGlobalEfficiencySF(*goodElectrons_sf, *goodMuons_sf, "diLepton");
       }
   }
+  Timer::Instance()->End("NewObjectDef::GetScaleFactors");
   return;
 }
 

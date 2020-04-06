@@ -67,8 +67,8 @@ class Livana(unittest.TestCase):
         SumOfWgts = self.f.Get("h_SumOfWeights").Integral()
         with open(self.weights_json,'r') as ofile:
             weights_dict = json.load(ofile, object_pairs_hook=collections.OrderedDict)#Get the cuts from the json in the correct order
-        weighting="*".join(weights_dict.keys())+"*"
-        weighting+="*".join([self.get_year_weight(),"xsec","filteff","kfactor","(1/"+str(SumOfWgts)+")"])
+        weighting="*".join(weights_dict.keys())
+        weighting+="*"+"*".join([self.get_year_weight(),"xsec","filteff","kfactor","(1/"+str(SumOfWgts)+")"])
         print(weighting)
 
         with open(self.cuts_json,'r') as ofile:

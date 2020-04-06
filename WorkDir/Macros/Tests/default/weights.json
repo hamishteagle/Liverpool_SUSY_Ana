@@ -5,6 +5,6 @@
   "JVTSF":"50,0.9,1.1",
   "bJetSF":"50,0.9,1.1",
   "puWgt":"50,0.9,1.1",
-  "muonTriggerSF":"50,0.9,1.1",
-  "electronTriggerSF":"50,0.9,1.1"
+  "electronTriggerSF":"50,0.9,1.1",
+  "muonTriggerSF":"50,0.9,1.1"
 }

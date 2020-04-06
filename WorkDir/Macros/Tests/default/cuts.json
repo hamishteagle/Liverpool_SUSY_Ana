@@ -12,5 +12,6 @@
        "nBaselineLeptons":"==1 || nBaselineLeptons==2",
        "nLeptons":"==1 || nLeptons==2",
        "ETMiss":">100",
-       "m_T":">50"
+       "m_T":">50",
+       "nBJets":"==2"
 }
