@@ -23,11 +23,11 @@ build_image:
 .analysis_image: &image
   image : atlas/analysisbase 21.2.116
   tags:
-    cvmfs
+    - cvmfs
   before_script:
-    pwd
-    ls
-    source /home/atlas/release_setup.sh
+    - pwd
+    - ls
+    - source /home/atlas/release_setup.sh
 
 
 .variables_files: &variables_files #these variables are used to copy a file from EOS to the CI
@@ -47,7 +47,7 @@ run_project:
     paths:
     - "/builds/hteagle/Liverpool_SbottomAnalysis_Rel21/WorkDir/Macros/Tests/default/*.pdf"
   tags:
-    cvmfs
+    - cvmfs
   stage: run
   <<: *variables_files
   <<: *image
