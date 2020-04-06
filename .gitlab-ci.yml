@@ -17,7 +17,6 @@ build_image:
   script: "echo 'Building image ...'"
   variables:
     TO: ${CI_REGISTRY_IMAGE}:$CI_COMMIT_REF_SLUG
-    FROM: atlas/analysisbase:$ATHENA_RELEASE
 
 # # Run CI tests in the docker image
 
