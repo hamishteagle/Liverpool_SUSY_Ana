@@ -119,8 +119,8 @@ int main( int argc, char* argv[]) {
 	      alg->doTruthJets = RunningWithTruthJets;
         alg->m_doCombiLeptons = doCombiLeptons;
         // If you want to check that the filtering is working correctly, then set this to false
-        //alg->RunningLocally = true;
-        alg->RunningLocally = false;
+        alg->RunningLocally = true;
+        //alg->RunningLocally = false;
         if (debug) alg->setMsgLevel(MSG::DEBUG);
 
 
