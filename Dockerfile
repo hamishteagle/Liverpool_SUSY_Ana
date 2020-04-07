@@ -8,7 +8,7 @@
 
 # Set up the base image:
 # This is overwritten in the gitlab-ci, in order to have the most up-to-date release always set it in the gitlab_ci.yaml?
-FROM atlas/analysisbase:21.2.116
+FROM atlas/analysisbase:21.2.115
 
 # Copy the project's sources into the image:
 # You need to copy this one by one, else unwanted files will be copied, too
