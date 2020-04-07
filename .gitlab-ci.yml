@@ -2,7 +2,7 @@ variables:
   -GIT_SSL_NO_VERIFY: "true"
 
 stages:
-#  - build
+  - build
   - run
 
 # Build Docker image
@@ -10,13 +10,12 @@ stages:
 # https://gitlab.cern.ch/vcs/gitlabci-docker-builder
 
 # build_image:
-#   stage: build
-#   tags:
-#     - docker-image-build
-#   script: "echo 'Building image ...'"
-#   variables:
-#     GIT_SSL_NO_VERIFY: "true"
-#     TO: ${CI_REGISTRY_IMAGE}:$CI_COMMIT_REF_SLUG
+  stage: build
+  tags:
+    - docker-image-build
+  script: "echo 'Building image ...'"
+  variables:
+    TO: ${CI_REGISTRY_IMAGE}:$CI_COMMIT_REF_SLUG
 
 #################### analysisbase image ###############
 .analysis_image: &image
