@@ -1,9 +1,10 @@
 #!bin/bash
-DOSYST=True
+DOSYST=0
 NFILESPERJOB=3
 function runtemp(){
     file="SampleLists_SUSY5/temp.txt"
     if [  -f $file ]; then
+      echo "python listsubmission.py -i $file -t MC --syst $DOSYST --nFilesPerJob $NFILESPERJOB"
     	python listsubmission.py -i $file -t MC --syst $DOSYST --nFilesPerJob $NFILESPERJOB
     else
     echo $file 'does not exist!!'
@@ -66,12 +67,11 @@ rundata18
 wait
 }
 
-#runtemp
-runMC
-wait
-rundata
-wait
+runtemp
+#runMC
+#wait
+#rundata
+#wait
 # runalternatives
 # wait
 echo "Completed all processes!"
-#  LocalWords:  runttbar

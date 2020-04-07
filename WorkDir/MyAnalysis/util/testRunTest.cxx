@@ -119,8 +119,8 @@ int main( int argc, char* argv[]) {
 	      alg->doTruthJets = RunningWithTruthJets;
         alg->m_doCombiLeptons = doCombiLeptons;
         // If you want to check that the filtering is working correctly, then set this to false
-        alg->RunningLocally = true;
-        //alg->RunningLocally = false;
+        //alg->RunningLocally = true;
+        alg->RunningLocally = false;
         if (debug) alg->setMsgLevel(MSG::DEBUG);
 
 
@@ -167,7 +167,9 @@ int main( int argc, char* argv[]) {
 	  sh.setMetaString ("nc_tree", "CollectionTree");
 	  sh.print();
 	  output_name = sample_name;
-	  driver.options()->setString("nc_outputSampleName", "user." + username + "." + CurrentDate+"." + physicsName+"_"+fileType+"."+release+".v1."+"%in:name[2]%.%in:name[3]%");
+    std::string grid_output_name = "user." + username + "." + CurrentDate+"." + physicsName+"_"+fileType+"."+release+".vTEST."+"%in:name[2]%.%in:name[3]%";
+    std::cout<<"Submitting as: "<<grid_output_name<<std::endl;
+	  driver.options()->setString("nc_outputSampleName", "user." + username + "." + CurrentDate+"." + physicsName+"_"+fileType+"."+release+".vTEST."+"%in:name[2]%.%in:name[3]%");
         }
         // Add our analysis to the job:
         MyxAODAnalysis* alg = new MyxAODAnalysis();
@@ -184,7 +186,7 @@ int main( int argc, char* argv[]) {
         alg->RunningLocally = false;
         alg->doTruthJets = RunningWithTruthJets;
         alg->m_doCombiLeptons = doCombiLeptons;
-        alg->setMsgLevel(MSG::DEBUG);
+        if(debug) alg->setMsgLevel(MSG::DEBUG);
 
         //job.options()->setDouble (EL::Job::optRemoveSubmitDir, 1);
         job.sampleHandler( sh );
