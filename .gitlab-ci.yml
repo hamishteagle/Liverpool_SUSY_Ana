@@ -1,23 +1,19 @@
-variables:
-  #GIT_SUBMODULE_STRATEGY: recursive
-  ATHENA_RELEASE: 21.2.116
-
 stages:
-  - build
+#  - build
   - run
 
 # Build Docker image
 # To see the available commands when building a docker image with Gitlab, see
 # https://gitlab.cern.ch/vcs/gitlabci-docker-builder
 
-build_image:
-  stage: build
-  tags:
-    - docker-image-build
-  script: "echo 'Building image ...'"
-  variables:
-    GIT_SSL_NO_VERIFY: "true"
-    TO: ${CI_REGISTRY_IMAGE}:$CI_COMMIT_REF_SLUG
+# build_image:
+#   stage: build
+#   tags:
+#     - docker-image-build
+#   script: "echo 'Building image ...'"
+#   variables:
+#     GIT_SSL_NO_VERIFY: "true"
+#     TO: ${CI_REGISTRY_IMAGE}:$CI_COMMIT_REF_SLUG
 
 #################### analysisbase image ###############
 .analysis_image: &image
