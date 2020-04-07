@@ -341,11 +341,14 @@ EL::StatusCode MyxAODAnalysis :: initialize ()
       Temp->Write();
     }
   }
+
   //PMGCrossSectionTool setup
+  std::string PMGTools_path = PathResolverFindCalibDirectory("dev/PMGTools/");
   ASG_SET_ANA_TOOL_TYPE( m_PMGCrossSectionTool, PMGTools::PMGCrossSectionTool);
   m_PMGCrossSectionTool.setName("myCrossSectionTool");
   ANA_CHECK(m_PMGCrossSectionTool.retrieve());
-  m_PMGCrossSectionTool->readInfosFromDir("/cvmfs/atlas.cern.ch/repo/sw/database/GroupData/dev/PMGTools/");
+  m_PMGCrossSectionTool->readInfosFromDir(PMGTools_path);
+  // m_PMGCrossSectionTool->readInfosFromDir("/cvmfs/atlas.cern.ch/repo/sw/database/GroupData/dev/PMGTools/");
   return StatusCode::SUCCESS;
 }
 
