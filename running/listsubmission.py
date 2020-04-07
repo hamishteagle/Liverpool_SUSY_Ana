@@ -27,9 +27,17 @@ class listsubmission:
         if (not doMultiSubmit):
             sample_list = open(args.input_file)
             for line in sample_list:
+                if "_r9364" in line:
+                    MCrun = "MC16a"
+                elif "_r10201" in line:
+                    MCrun = "MC16d"
+                elif "_r10724" in line:
+                    MCrun = "MC16e"
+                else:
+                    exit("Something wrong with this submission name: "+line)
                 line = line.strip('\n')
                 if "ttbar" in line: args.nFilesPerJob="1"
-                command = 'python newsubmit.py -i ' + line + ' -s ' + line.split('.')[1] + ' -l 0' +' --type '+str(args.PhysicsName) +' --syst '+str(int(doSystematics))+' --nFilesPerJob '+args.nFilesPerJob
+                command = 'python newsubmit.py -i ' + line + ' -s ' + line.split('.')[1]+MCrun + ' -l 0' +' --type '+str(args.PhysicsName) +' --syst '+str(int(doSystematics))+' --nFilesPerJob '+args.nFilesPerJob
                 print str(command)
                 os.system(command)
         else:

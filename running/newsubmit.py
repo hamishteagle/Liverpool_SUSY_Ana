@@ -57,45 +57,61 @@ class submit:
         ensure_dir(outdir)
 
 
-        print("doSyst:",doSysts)
-        print("doPhotons:",doPhotons)
-        print("local:",local)
-        print("events:",args.events)
-        print("username:",args.username)
-        print("release",release)
-        print("doCombiLeptons",doCombiLeptons)
-        print("debug",debug)
+        # print("doSyst:",doSysts)
+        # print("doPhotons:",doPhotons)
+        # print("local:",local)
+        # print("events:",args.events)
+        # print("username:",args.username)
+        # print("release",release)
+        # print("doCombiLeptons",doCombiLeptons)
+        # print("debug",debug)
         command = 'testRun '
+        command_attributes = 'testRun_attrs, '
         if doMultiSubmit :
             command += multi_submit
+            command_attributes+="input file,             "
         else:
             command += self.input
+            command_attributes+="input,                  "
         command += ' '
         command += outdir
+        command_attributes+="outdir, "
         command += ' '
         command += str(doSysts)
+        command_attributes+="doSysts, "
         command += ' '
         command += str(doPhotons)
+        command_attributes+="doPhotons, "
         command += ' '
         command += str(local)
+        command_attributes+="RunLocally, "
         command += ' '
         command += str(args.events)
+        command_attributes+="nEvents, "
         command += ' '
         command += str(args.username)
+        command_attributes+="username, "
         command += ' '
         command += str(release)
+        command_attributes+="release, "
         command += ' '
         command += str(PhysicsName)
+        command_attributes+="PhysicsName, "
         command += ' '
         command += str(doTruthJets)
+        command_attributes+="doTruthJets, "
         command += ' '
         command += str(args.nFilesPerJob)
+        command_attributes+="nFilesPerJob, "
         command += ' '
         command += str(debug)
+        command_attributes+="debug, "
         command += ' '
         command += str(doCombiLeptons)
+        command_attributes+="doCombiLeptons, "
+        print(str(command_attributes))
         print str(command)
-        #os.system(command)
+        os.system(command)
 
 
 def ensure_dir(d):
