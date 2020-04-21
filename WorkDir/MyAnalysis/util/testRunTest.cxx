@@ -161,15 +161,15 @@ int main( int argc, char* argv[]) {
 	  sh.add(sample.release());
 	  sh.setMetaString ("nc_tree", "CollectionTree");
 	  job.options()->setString( EL::Job::optSubmitFlags, "--addNthFieldOfInDSToLFN=2,3 --useContElementBoundary" );
-	  driver.options()->setString("nc_outputSampleName", "user." + username + "." + CurrentDate + "." + physicsName +  ".Combined." + fileType+ "." +release);
+	  driver.options()->setString("nc_outputSampleName", "user." + username + "." + CurrentDate + "." + physicsName +"."+release+".syst1.Combined." + fileType+ "." +release);
         } else {
 	  SH::scanRucio (sh, sample_name);
 	  sh.setMetaString ("nc_tree", "CollectionTree");
 	  sh.print();
 	  output_name = sample_name;
-    std::string grid_output_name = "user." + username + "." + CurrentDate+"." + physicsName+"_"+fileType+"."+release+".vTEST2."+"%in:name[2]%.%in:name[3]%";
+    std::string grid_output_name = "user." + username + "." + CurrentDate+"." + physicsName+"_"+fileType+"."+release+".sys1."+"%in:name[2]%.%in:name[3]%";
     std::cout<<"Submitting as: "<<grid_output_name<<std::endl;
-	  driver.options()->setString("nc_outputSampleName", "user." + username + "." + CurrentDate+"." + physicsName+"_"+fileType+"."+release+".vTEST2."+"%in:name[2]%.%in:name[3]%");
+	  driver.options()->setString("nc_outputSampleName", "user." + username + "." + CurrentDate+"." + physicsName+"_"+fileType+"."+release+".sys1."+"%in:name[2]%.%in:name[3]%");
         }
         // Add our analysis to the job:
         MyxAODAnalysis* alg = new MyxAODAnalysis();

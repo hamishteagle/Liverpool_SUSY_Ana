@@ -1,5 +1,5 @@
 #!bin/bash
-DOSYST=0
+DOSYST=1
 NFILESPERJOB=3
 function runtemp(){
     file="SampleLists_SUSY5/temp.txt"
@@ -67,11 +67,11 @@ rundata18
 wait
 }
 
-runtemp
-#runMC
-#wait
-#rundata
-#wait
+#runtemp
+runMC
+wait
+rundata
+wait
 # runalternatives
 # wait
 echo "Completed all processes!"
