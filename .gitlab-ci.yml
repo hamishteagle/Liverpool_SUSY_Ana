@@ -68,4 +68,4 @@ run_project:
     - testRun ../$CI_OUTPUT_DIR /home/atlas/submitdir/ 0 0 1 -1 hteagle 21.2.100  TYPE 0 5 0 1 ##This is what newsubmit.py does by default, sort this out at some point.
     - cd ../WorkDir
     - ls -l /home/atlas/submitdir/
-    - python Macros/Tests/basic_test.py -s /home/atlas/submitdir/data-output/
+    - python Macros/Tests/full_test.py -s /home/atlas/submitdir/data-output/
