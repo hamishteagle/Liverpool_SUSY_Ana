@@ -19,7 +19,7 @@ build_image:
 
 #################### analysisbase image ###############
 .analysis_image: &image
-  image : atlas/analysisbase:21.2.115
+  image : atlas/analysisbase:21.2.112
   tags:
     - cvmfs
   before_script:
