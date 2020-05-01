@@ -1,10 +1,10 @@
 {
-  "mcEventWeight":"50,0.5,1.5",
-  "muonSF":"50,0.9,1.1",
-  "electronSF":"50,0.9,1.1",
-  "JVTSF":"50,0.9,1.1",
-  "bJetSF":"50,0.9,1.1",
-  "puWgt":"50,0.9,1.1",
-  "electronTriggerSF":"50,0.9,1.1",
-  "muonTriggerSF":"50,0.9,1.1"
+  "mcEventWeight":"20,0.5,1.5",
+  "muonSF":"20,0.9,1.1",
+  "electronSF":"20,0.9,1.1",
+  "JVTSF":"20,0.9,1.1",
+  "bJetSF":"20,0.9,1.1",
+  "puWgt":"20,0.9,1.1",
+  "electronTriggerSF":"20,0.9,1.1",
+  "muonTriggerSF":"20,0.9,1.1"
 }
