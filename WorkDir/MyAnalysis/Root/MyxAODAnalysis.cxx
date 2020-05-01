@@ -10,7 +10,7 @@
 #include "xAODMetaData/FileMetaData.h"
 
 #include "JetSelectorTools/JetCleaningTool.h"
-#include "JetResolution/JERTool.h"
+#include "JetResolution/JERTool.h" 
 #include <TSystem.h>
 #include "MuonMomentumCorrections/MuonCalibrationAndSmearingTool.h"
 #include "PATInterfaces/CorrectionCode.h"
@@ -420,9 +420,8 @@ EL::StatusCode MyxAODAnalysis :: execute ()
     for (const auto& sysInfo : systInfoList){
       const CP::SystematicSet& syst = sysInfo.systset;
 
-
       //Things we only need to do once:
-      if(output_tree_string == output_trees[0]){
+      if(doSyst){
         if (!isTruth){
           //ANA_CHECK(objTool->resetSystematics());
           ANA_CHECK(objTool_PFlow->resetSystematics());
@@ -844,20 +843,20 @@ EL::StatusCode MyxAODAnalysis :: execute ()
 
       if (!isTruth){
         //Loop through weights systematics and write to the nominal
-        if (output_tree_string=="CollectionTree_PFlow_"){
+        if (doSyst && syst.name()==""){
           for(auto systInfo_weight: systInfoList_weights){
             const CP::SystematicSet& syst_weight = systInfo_weight.systset;
             ANA_CHECK(objTool_PFlow->resetSystematics());
             ANA_CHECK(objTool_PFlow->applySystematicVariation(syst_weight));
             objs->GetScaleFactors();//We don't need to get all the objects again, just re-calculate the scale factors
-
+            double puWgt_sys =1;
             if ((syst_weight.name()).find("PRW") != std::string::npos){
-              puWgt = objTool_PFlow->GetPileupWeight();
+              puWgt_sys = objTool_PFlow->GetPileupWeight();
             }
             if (mu_triggers > 0)   leptonTriggerSF = objs->getMuonTriggerSF();
             if (el_triggers > 0)   leptonTriggerSF = objs->getElectronTriggerSF();
             if (dilep_triggers >0) leptonTriggerSF = objs->getDilepTriggerSF();
-            (m_treeServiceVector[isyst])->fillTreeWeights(objs.get(), puWgt, leptonTriggerSF, systInfo_weight);
+            (m_treeServiceVector[isyst])->fillTreeWeights(objs.get(), puWgt_sys, leptonTriggerSF, systInfo_weight);
           }
         }
       	(m_treeServiceVector[isyst])->fillTree(objs.get(), store ,*m_regions, *m_varCalc,m_finalSumOfWeights, m_initialSumOfWeights, puWgt, SFmctbbll, passedMETTrigger, passedSingleMuTrigger, passedSingleElTrigger, passedDiLeptonTrigger, passedGammaTrigger, passedMultiJetTrigger, muon_triggers, muon_decisions, electron_triggers, electron_decisions, dilepton_triggers, dilepton_decisions,leptonTriggerSF, PUSumOfWeights, truthfilt_MET, truthfilt_HT, coreFlag, sctFlag, LArFlag, tileFlag, passGRL, passedPrimVertex, passedJetClean, passedCosmicMu, passedMuonClean, passedCrackVeto,  m_runNumber, renormedMcWgt, year, m_averageIntPerX, m_actualIntPerX, xsec, filteff, kfactor);
