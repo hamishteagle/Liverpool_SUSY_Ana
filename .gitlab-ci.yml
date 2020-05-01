@@ -4,6 +4,7 @@ variables:
 stages:
   - build
   - run
+  - run_sys
 
 # Build Docker image
 # To see the available commands when building a docker image with Gitlab, see
@@ -65,7 +66,11 @@ run_project:
     - cd build; cmake ../WorkDir; make;
     - source *-opt/setup.sh
     - cd ../run
-    - testRun ../$CI_OUTPUT_DIR /home/atlas/submitdir/ 0 0 1 -1 hteagle 21.2.100  TYPE 0 5 0 1 ##This is what newsubmit.py does by default, sort this out at some point.
+    - testRun ../$CI_OUTPUT_DIR /home/atlas/submitdir/ 0 0 1 -1 hteagle 21.2.100  TYPE 0 5 0 1 ##Running without systs for first test##This is what newsubmit.py does by default, sort this out at some point.
     - cd ../WorkDir
     - ls -l /home/atlas/submitdir/
     - python Macros/Tests/full_test.py -s /home/atlas/submitdir/data-output/
+
+run_project_sys:
+      - testRun ../$CI_OUTPUT_DIR /home/atlas/submitdir_sys/ 1 0 1 -1 hteagle 21.2.100  TYPE 0 5 0 1 ##Running without systs for first test##This is what newsubmit.py does by default, sort this out at some point.
+    - python Macros/Tests/full_test.py -s /home/atlas/submitdir_sys/data-output/
