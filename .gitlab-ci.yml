@@ -72,5 +72,10 @@ run_project:
     - python Macros/Tests/full_test.py -s /home/atlas/submitdir/data-output/
 
 run_project_sys:
-    - testRun ../$CI_OUTPUT_DIR /home/atlas/submitdir_sys/ 1 0 1 -1 hteagle 21.2.100  TYPE 0 5 0 1 ##Running without systs for first test##This is what newsubmit.py does by default, sort this out at some point.
-    - python Macros/Tests/full_test.py -s /home/atlas/submitdir_sys/data-output/
+    stage: run_sys
+    <<: *variables_files
+    <<: *image
+    script:
+        - mkdir -p /home/atlas/submitdir_sys/ #this is happening inside the Gitlab runner
+        - testRun ../$CI_OUTPUT_DIR /home/atlas/submitdir_sys/ 1 0 1 -1 hteagle 21.2.100  TYPE 0 5 0 1 ##Running without systs for first test##This is what newsubmit.py does by default, sort this out at some point.
+        - python Macros/Tests/full_test.py -s /home/atlas/submitdir_sys/data-output/
