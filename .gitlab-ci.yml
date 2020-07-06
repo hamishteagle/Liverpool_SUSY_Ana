@@ -4,7 +4,7 @@ variables:
 stages:
   - build
   - run
-  - run_sys
+# - run_sys
 
 # Build Docker image
 # To see the available commands when building a docker image with Gitlab, see
