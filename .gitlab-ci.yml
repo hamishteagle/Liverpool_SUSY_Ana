@@ -4,7 +4,7 @@ variables:
 stages:
   - build
   - run
-  - run_sys
+  #- run_sys
 
 # Build Docker image
 # To see the available commands when building a docker image with Gitlab, see
@@ -71,27 +71,27 @@ run_project:
     - ls -l /home/atlas/submitdir/
     - python Macros/Tests/full_test.py -s /home/atlas/submitdir/data-output/
 
-run_project_sys:
-    stage: run_sys
-    <<: *variables_files
-    <<: *image
-    script:
-    #Get file from EOS
-    - mkdir fromEOS #directory to download the files to
-    - mkdir fromEOS/mc16_13TeV.410470.PhPy8EG_A14_ttbar_hdamp258p75_nonallhad.deriv.DAOD_SUSY5.e6337_s3126_r9364_p3990/ #directory to download the files to
-    - git clone https://gitlab-ci-token:${CI_JOB_TOKEN}@gitlab.cern.ch/hteagle/livana-ci-web-deployer.git #this package allows us to copy stuff from EOS
-    - sudo cp livana-ci-web-deployer/bin/* /sbin/ #"install" the binaries
-    - deploy-eos #actually copy the files from EOS (part of upper repository)
-    - ls fromEOS/mc16_13TeV.410470.PhPy8EG_A14_ttbar_hdamp258p75_nonallhad.deriv.DAOD_SUSY5.e6337_s3126_r9364_p3990/ #make sure the files are there
-    #Run tests
-    - pwd
-    - mkdir -p run #this is happening inside the Gitlab runner
-    - mkdir -p /home/atlas/submitdir_sys/ #this is happening inside the Gitlab runner
-    - mkdir -p build
-    - cd build; cmake ../WorkDir; make;
-    - source *-opt/setup.sh
-    - cd ../run
-    - testRun ../$CI_OUTPUT_DIR /home/atlas/submitdir_sys/ 1 0 1 1000 hteagle 21.2.112  TYPE 0 5 0 1 ##Running without systs for first test##This is what newsubmit.py does by default, sort this out at some point.
-    - cd ../WorkDir
-    - ls -l /home/atlas/submitdir_sys/
-    - python Macros/Tests/full_test.py -s /home/atlas/submitdir_sys/data-output/
+# run_project_sys:
+#     stage: run_sys
+#     <<: *variables_files
+#     <<: *image
+#     script:
+#     #Get file from EOS
+#     - mkdir fromEOS #directory to download the files to
+#     - mkdir fromEOS/mc16_13TeV.410470.PhPy8EG_A14_ttbar_hdamp258p75_nonallhad.deriv.DAOD_SUSY5.e6337_s3126_r9364_p3990/ #directory to download the files to
+#     - git clone https://gitlab-ci-token:${CI_JOB_TOKEN}@gitlab.cern.ch/hteagle/livana-ci-web-deployer.git #this package allows us to copy stuff from EOS
+#     - sudo cp livana-ci-web-deployer/bin/* /sbin/ #"install" the binaries
+#     - deploy-eos #actually copy the files from EOS (part of upper repository)
+#     - ls fromEOS/mc16_13TeV.410470.PhPy8EG_A14_ttbar_hdamp258p75_nonallhad.deriv.DAOD_SUSY5.e6337_s3126_r9364_p3990/ #make sure the files are there
+#     #Run tests
+#     - pwd
+#     - mkdir -p run #this is happening inside the Gitlab runner
+#     - mkdir -p /home/atlas/submitdir_sys/ #this is happening inside the Gitlab runner
+#     - mkdir -p build
+#     - cd build; cmake ../WorkDir; make;
+#     - source *-opt/setup.sh
+#     - cd ../run
+#     - testRun ../$CI_OUTPUT_DIR /home/atlas/submitdir_sys/ 1 0 1 1000 hteagle 21.2.112  TYPE 0 5 0 1 ##Running without systs for first test##This is what newsubmit.py does by default, sort this out at some point.
+#     - cd ../WorkDir
+#     - ls -l /home/atlas/submitdir_sys/
+#     - python Macros/Tests/full_test.py -s /home/atlas/submitdir_sys/data-output/
