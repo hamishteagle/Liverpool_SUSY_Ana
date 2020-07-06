@@ -107,7 +107,7 @@ class Livana(unittest.TestCase):
         if branch ==self.branch_list[-1]:
             with open(self.__location__+"/default/checkout_flow.json","w") as self.check_json:
                 self.msg.info("Dumping json to checkout_flow.json")
-                json.dump(self.flow_dict,self.check_json)
+                json.dump(self.flow_dict,self.check_json, indent=3)
                 ##If we don't have a current cutflow to match, just copy the one we just made (will match by definition)
             if not os.path.exists(self.__location__+"/default/current_flow.json"):
                 self.msg.warn("No current_flow.json found->Overwriting with checkout_flow")
@@ -119,7 +119,7 @@ class Livana(unittest.TestCase):
         if branch ==self.branch_list[0]:
             self.msg.info("Dumping json to checkout_weights")
             with open(self.__location__+"/default/checkout_weights.json","w") as self.checkout_weights_json:
-                json.dump(self.weights_output_dict,self.checkout_weights_json)
+                json.dump(self.weights_output_dict,self.checkout_weights_json, indent=3)
             if not os.path.exists(self.__location__+"/default/current_weights.json"):
                 self.msg.warn("No current_weights.json found->Overwriting with checkout_weights")
                 os.system("cp "+self.__location__+"/default/checkout_weights.json "+self.__location__+"/default/current_weights.json")
