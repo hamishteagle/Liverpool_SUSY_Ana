@@ -191,9 +191,9 @@ int main(int argc, char *argv[])
       sh.setMetaString("nc_tree", "CollectionTree");
       sh.print();
       output_name = sample_name;
-      std::string grid_output_name = "user." + username + "." + CurrentDate + "." + physicsName + "_" + fileType + "." + release + ".sys2." + "%in:name[2]%.%in:name[3]%";
+      std::string grid_output_name = "user." + username + "." + CurrentDate + "." + physicsName + "_" + fileType + "." + release + ".v2." + "%in:name[2]%.%in:name[3]%";
       std::cout << "Submitting as: " << grid_output_name << std::endl;
-      driver.options()->setString("nc_outputSampleName", "user." + username + "." + CurrentDate + "." + physicsName + "_" + fileType + "." + release + ".sys2." + "%in:name[2]%.%in:name[3]%");
+      driver.options()->setString("nc_outputSampleName", "user." + username + "." + CurrentDate + "." + physicsName + "_" + fileType + "." + release + ".sys5." + "%in:name[2]%.%in:name[3]%");
     }
     // Add our analysis to the job:
     MyxAODAnalysis *alg = new MyxAODAnalysis();
