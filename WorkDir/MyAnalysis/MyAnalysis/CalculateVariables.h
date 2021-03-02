@@ -8,17 +8,15 @@
 class CalculateVariables
 
 {
- public:
- CalculateVariables(NewObjectDef *objects, xAOD::TStore* evtStore, bool isTruth, bool doPhotons, bool isData, std::string systematic);
+public:
+  CalculateVariables(NewObjectDef *objects, xAOD::TStore *evtStore, bool isTruth, bool doPhotons, bool isData, bool doTruthJets, std::string systematic);
   void CalculateOneLepVariables(NewObjectDef *objects, TLorentzVector b1v, TLorentzVector b2v, TLorentzVector tj1v);
   void CalculateTwoLepVariables(NewObjectDef *objects, TLorentzVector b1v, TLorentzVector b2v);
   void CalculatePhotonMET(NewObjectDef *objects);
   void CalculateShapeVariables(NewObjectDef *objects);
   void CalculateRazorVariables(NewObjectDef *objects);
 
-
- public:
-
+public:
   //Object containers
   xAOD::MuonContainer *goodMuon_cont = nullptr;
   xAOD::MuonContainer *badMuon_cont = nullptr;
@@ -35,25 +33,29 @@ class CalculateVariables
   xAOD::JetContainer *goodJet_beforeOR_cont = nullptr;
   xAOD::JetContainer *bJet_cont = nullptr;
   xAOD::JetContainer *nonBJet_cont = nullptr;
+  xAOD::JetContainer *goodTruthJets_cont = nullptr;
+
   TVector2 *METvector_cont = nullptr;
 
-
-  int nMuon; //
-  int nBadMuon; //
+  int nMuon;     //
+  int nBadMuon;  //
   int nElectron; //
-  int nTau; //
-  int nLepton; //
+  int nTau;      //
+  int nLepton;   //
   int nPhoton;
-  double eTMiss; //
-  double eTMissPhi; //
-  int nBaselineMuon_combi; //
+  double eTMiss;               //
+  double eTMissPhi;            //
+  int nBaselineMuon_combi;     //
   int nBaselineElectron_combi; //
-  int nBaselineLepton_combi; //
-  int nBaselineMuon; //
-  int nBaselineElectron; //
-  int nBaselineTau; //
-  int nBaselineLepton; //
-  bool Stop0L_tauVeto; //
+  int nBaselineLepton_combi;   //
+  int nBaselineMuon;           //
+  int nBaselineElectron;       //
+  int nBaselineTau;            //
+  int nBaselineLepton;         //
+  bool Stop0L_tauVeto;         //
+
+  bool m_doTruthJets = false; //
+  int nTruthJets;             //
 
   // scale factors
   double electronTrigSF;
@@ -66,17 +68,15 @@ class CalculateVariables
   double muonTrigSF;
   // adjusted ETMiss is for the regions with electrons to add to the MET
 
-
-  double adjustedETMiss; //
+  double adjustedETMiss;    //
   double adjustedETMissPhi; //
-  double PhotonETMiss; //
-  double PhotonETMissPhi; //
-  int nBaselineJets; //
-  int nJets; //
-  int nJets_beforeOR; //
-  int nbJets; //
-  int nNonBJets; //
-
+  double PhotonETMiss;      //
+  double PhotonETMissPhi;   //
+  int nBaselineJets;        //
+  int nJets;                //
+  int nJets_beforeOR;       //
+  int nbJets;               //
+  int nNonBJets;            //
 
   int njet20;
   int njet25;
@@ -84,20 +84,16 @@ class CalculateVariables
   int njet35;
   int njet50;
 
-
-
-
-
-  bool primaryB; //
-  bool secondB; //
+  bool primaryB;  //
+  bool secondB;   //
   bool leadingBs; //
 
   // Mass related variables
 
-  double m_bb; //
+  double m_bb;     //
   double m_tautau; //
   double m_taulep;
-  double m_CT; //
+  double m_CT;      //
   double m_CT_corr; //
   double m_ll;
   double h_T; //
@@ -131,7 +127,6 @@ class CalculateVariables
   std::vector<double> dRtj1v;
   std::vector<double> dRtj2v;
 
-
   double dRtj2b1;
   double dRtj2b2;
   double dRtj2b3;
@@ -142,7 +137,6 @@ class CalculateVariables
   int nb1;
   int nb2;
 
-
   double m_Tbmin;
   double m_Tb1;
   double m_Tb2;
@@ -150,11 +144,9 @@ class CalculateVariables
   double dPhib2_MET;
   double mindPhib_MET;
 
-
-
-  double m_jj; //
-  double m_jjb1; //
-  double m_jjb2; //
+  double m_jj;     //
+  double m_jjb1;   //
+  double m_jjb2;   //
   double maxm_jjb; //
   double minm_jjb; //
   double m_b1l;
@@ -173,11 +165,9 @@ class CalculateVariables
   double adjustedRatio2j;
   double adjustedRatio3j;
 
-
   // Jet and Lepton properties:
 
-
-  double pTZ; //
+  double pTZ;  //
   double etaZ; //
   double phiZ; //
   double DR_Zb1;
@@ -214,19 +204,18 @@ class CalculateVariables
   double phib3;
   double phib4;
 
-
   int j1_quantile;
   int j2_quantile;
   int j3_quantile;
   int j4_quantile;
-  double pTj1; //
-  double pTj2; //
-  double pTj3; //
-  double pTj4; //
-  double pTj5; //
-  double pTj6; //
-  double pTj7; //
-  double pTj8; //
+  double pTj1;  //
+  double pTj2;  //
+  double pTj3;  //
+  double pTj4;  //
+  double pTj5;  //
+  double pTj6;  //
+  double pTj7;  //
+  double pTj8;  //
   double etaj1; //
   double etaj2; //
   double etaj3; //
@@ -240,10 +229,10 @@ class CalculateVariables
   int nonb2_quantile;
   int nonb3_quantile;
   int nonb4_quantile;
-  double pTnonb1; //
-  double pTnonb2; //
-  double pTnonb3; //
-  double pTnonb4; //
+  double pTnonb1;  //
+  double pTnonb2;  //
+  double pTnonb3;  //
+  double pTnonb4;  //
   double etanonb1; //
   double etanonb2; //
   double etanonb3; //
@@ -276,22 +265,19 @@ class CalculateVariables
   double lep1flavour;
   double lep2flavour;
 
- public:
+public:
   double pTgamma;
   double etagamma;
   double phigamma;
 
-
-
   // Azimuthal Angle Variables
 
-
-  double delPhi1; //
-  double delPhi2; //
-  double delPhi3; //
-  double delPhi4; //
-  double minDelPhi; //
-  double minDelPhi_4; //
+  double delPhi1;      //
+  double delPhi2;      //
+  double delPhi3;      //
+  double delPhi4;      //
+  double minDelPhi;    //
+  double minDelPhi_4;  //
   double adjMinDelPhi; //
   double adjDelPhi1;
   double dPhib1b2;
@@ -334,32 +320,30 @@ class CalculateVariables
   double dRL1L2;
   double minDRLb;
 
-  double dRjjb1; //
-  double dRjjb2; //
+  double dRjjb1;   //
+  double dRjjb2;   //
   double minDRjjb; //
   double maxDRjjb; //
 
   double ratioDRbbHt;
 
-
   // Razor Variable Crap
 
-  double RJVars_QCD_Delta; //
-  double RJVarsSS_invGamma; //
-  double RJVarsSS_s_hat; //
-  double RJVarsSS_MDelR; //
+  double RJVars_QCD_Delta;    //
+  double RJVarsSS_invGamma;   //
+  double RJVarsSS_s_hat;      //
+  double RJVarsSS_MDelR;      //
   double RJVarsSS_wrongMDelR; //
 
   // Aplanarity stuff
 
-  double Aplanarity; //
+  double Aplanarity;       //
   double transformedAplan; //
-  double Sphericity; //
+  double Sphericity;       //
 
   bool elTriggerMatch;
   bool muTriggerMatch;
   bool phTriggerMatch;
-
 
   // b-jet related stuff
 
@@ -375,11 +359,9 @@ class CalculateVariables
 
   bool TruthFile;
 
-
   // Tools
 
   std::unique_ptr<TMctLib> mctTool;
-
 
   // DM Specific
 
@@ -404,7 +386,6 @@ class CalculateVariables
 
   bool calculatePhotons;
 
-
   // Multi b specific
   //MaxMin alg
   double maxDR;
@@ -424,21 +405,15 @@ class CalculateVariables
   double SRB_Higgsino_maxDR;
   double SRB_Higgsino_Hmbb;
 
-
-
   double JetAsymmR_min;
   double InvMass_Bij_minR;
   double JetAsymmR_min1;
   double InvMass_Bij_minR1;
 
-
   double tau1_TruthMatched;
   double tau2_TruthMatched;
 
   bool inMultiJetTriggerPlateau;
-
-
-
 };
 
 #endif

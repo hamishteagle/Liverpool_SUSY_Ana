@@ -6,7 +6,7 @@
 #include "xAODEgamma/Electron.h"
 #include "xAODMuon/Muon.h"
 
-TreeService::TreeService(TTree *outputTree, TDirectory *OutDir, bool RunningLocally, bool do_syst, bool isNominal, std::vector<ST::SystInfo> systInfoList_weights)
+TreeService::TreeService(TTree *outputTree, TDirectory *OutDir, bool RunningLocally, bool do_syst, bool isNominal, bool doTruthJets, std::vector<ST::SystInfo> systInfoList_weights)
 {
 
   tree = outputTree;
@@ -148,6 +148,8 @@ TreeService::TreeService(TTree *outputTree, TDirectory *OutDir, bool RunningLoca
 
   tree->Branch("nBaselineJets", &nBaselineJets);
   tree->Branch("nJets", &nJets);
+  if (doTruthJets)
+    tree->Branch("nTruthJets", &nTruthJets);
   tree->Branch("nJets_beforeOR", &nJets_beforeOR);
   tree->Branch("nBJets", &nBJets);
   tree->Branch("nNonBJets", &nNonBJets);
@@ -462,6 +464,8 @@ void TreeService::fillTree(NewObjectDef *objects, xAOD::TStore *evtStore, Prelim
 
   nBaselineJets = variables.nBaselineJets;
   nJets = variables.nJets;
+  if (doTruthJets)
+    nTruthJets = variables.nTruthJets;
   nJets_beforeOR = variables.nJets_beforeOR;
   nBJets = variables.nbJets;
   nNonBJets = variables.nNonBJets;

@@ -1,9 +1,7 @@
 // header file for tree service
 
-
 #ifndef TreeService_h
 #define TreeService_h
-
 
 #include "NewObjectDef.h"
 #include "PreliminarySel.h"
@@ -19,20 +17,18 @@ class TreeService
 
 {
 
- public:
-  TreeService(TTree *outputTree, TDirectory *OutDir, bool RunningLocally, bool do_syst, bool isNominal, std::vector<ST::SystInfo> systInfoList_weights);
+public:
+  TreeService(TTree *outputTree, TDirectory *OutDir, bool RunningLocally, bool do_syst, bool isNominal, bool doTruthJets, std::vector<ST::SystInfo> systInfoList_weights);
 
   void InitialiseWeightsBranches(ST::SystInfo systInfo_weight);
 
   void fillTreeWeights(NewObjectDef *objects, double puWgt, double leptonTriggerSF, ST::SystInfo systInfo_weight);
 
-  void fillTree(NewObjectDef *objects, xAOD::TStore *evtStore, PreliminarySel &region, CalculateVariables &variables , double mFinalWeight, double mInitialWeight, double puWeight, double SFmCTbbll, bool TrigMET, bool TrigMu, bool TrigEl, bool TrigDilep, bool TrigGamma, bool Trig6j, std::vector<std::string> muon_triggers, std::vector<int> muon_decisions, std::vector<std::string> electron_triggers, std::vector<int> electron_decisions, std::vector<std::string> dilepton_triggers, std::vector<int> dilepton_decisions, double LeptonTriggerSF, double puSumWeights, double TRUTHMET, double TRUTHHT ,bool CoreFlags, bool SCTFlag, bool LArFlag, bool tileFlag, bool passGRL, bool passedPrimVertex, bool passedJetClean, bool passedCosmicMu, bool passedMuonClean, bool passedCrackVeto, double RNo, double RenormedMCWgt, int LumiYear, double m_averageIntPerCrossing, double m_actualIntPerCrossing, double m_xsec, double m_filteff, double m_kfactor);
+  void fillTree(NewObjectDef *objects, xAOD::TStore *evtStore, PreliminarySel &region, CalculateVariables &variables, double mFinalWeight, double mInitialWeight, double puWeight, double SFmCTbbll, bool TrigMET, bool TrigMu, bool TrigEl, bool TrigDilep, bool TrigGamma, bool Trig6j, std::vector<std::string> muon_triggers, std::vector<int> muon_decisions, std::vector<std::string> electron_triggers, std::vector<int> electron_decisions, std::vector<std::string> dilepton_triggers, std::vector<int> dilepton_decisions, double LeptonTriggerSF, double puSumWeights, double TRUTHMET, double TRUTHHT, bool CoreFlags, bool SCTFlag, bool LArFlag, bool tileFlag, bool passGRL, bool passedPrimVertex, bool passedJetClean, bool passedCosmicMu, bool passedMuonClean, bool passedCrackVeto, double RNo, double RenormedMCWgt, int LumiYear, double m_averageIntPerCrossing, double m_actualIntPerCrossing, double m_xsec, double m_filteff, double m_kfactor);
 
   void writeTree();
 
-
- public:
-
+public:
   // Store our Trees. Need to set up the structure in the initialise
 
   TTree *tree;
@@ -145,9 +141,7 @@ class TreeService
   double dPhib2_MET;
   double mindPhib_MET;
 
-
-
-  double Reco_pTZ; //
+  double Reco_pTZ;  //
   double Reco_etaZ; //
   double Reco_phiZ; //
   double DR_Zb1;
@@ -157,7 +151,6 @@ class TreeService
   double DPhi_Zb2;
   double DEta_Zb1;
   double DEta_Zb2;
-
 
   double dPhij1MET;
   double dPhij2MET;
@@ -192,7 +185,6 @@ class TreeService
   double dEtaL2b2;
   double minDEtaLb;
 
-
   double dRtj1tj2;
 
   double dRb1b2;
@@ -202,14 +194,12 @@ class TreeService
   double dRL2b2;
   double minDRLb;
 
-
   double DRj1j2;
   double DRj1j3;
   double DRj1j4;
   double DRj2j3;
   double DRj2j4;
   double DRj3j4;
-
 
   //ISR variables
   double delPhi1;
@@ -323,6 +313,8 @@ class TreeService
 
   int nBaselineJets;
   int nJets;
+  bool doTruthJets;
+  int nTruthJets;
   int nJets_beforeOR;
   int nBJets;
   int nNonBJets;
@@ -335,7 +327,6 @@ class TreeService
   int nBaselineElectrons;
   int nBaselineTaus;
   int nBaselineMuons;
-
 
   int nElectrons;
   int nTaus;
@@ -357,7 +348,6 @@ class TreeService
   double truthBosonPt;
   double m_finalWeightSum;
   double m_intialWeightSum;
-
 
   double m_jj;
   double m_jjb1;
@@ -405,7 +395,7 @@ class TreeService
   double leptonTriggerSF;
 
   //Scale Factor variations
-  double muonSF_sys ;
+  double muonSF_sys;
   double muonTriggerSF_sys;
   double dilepTriggerSF_sys;
   double electronSF_sys;
@@ -438,7 +428,6 @@ class TreeService
   double nextrajets50;
   double amT2;
 
-
   double Weight;
   double MEWeight;
   double WeightNormalisation;
@@ -452,8 +441,6 @@ class TreeService
   double MUR2_MUF2_PDF261000;
   double MUR1_MUF1_PDF261001;
   double MUR1_MUF1_PDF261002;
-
-
 
   double maxDR;
   double InvMass_Bij_maxDR;
@@ -514,7 +501,6 @@ class TreeService
   std::vector<double> tau_SmallestDR;
   std::vector<int> tau_associatedTrue;
 
-
   std::vector<double> fatJet8_pT;
   std::vector<double> fatJet8_eta;
   std::vector<double> fatJet8_phi;
@@ -531,7 +517,5 @@ class TreeService
 
   int multiJetTriggerPlateau;
   bool multiJetTriggerPassed;
-
-
 };
 #endif
