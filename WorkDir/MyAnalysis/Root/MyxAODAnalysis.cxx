@@ -893,8 +893,8 @@ EL::StatusCode MyxAODAnalysis ::execute()
           h_eventsPerRun->Fill(m_runNumber, 1);
         }
       }
-
-      if (doTruthJets)
+      //Add the truth jets to the nominal tree
+      if (doTruthJets && syst.name() == "")
         *objs->getTruthJets();
 
       if (!isTruth)
