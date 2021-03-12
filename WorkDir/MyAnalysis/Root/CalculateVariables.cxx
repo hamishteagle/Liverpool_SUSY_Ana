@@ -87,8 +87,10 @@ CalculateVariables::CalculateVariables(NewObjectDef *objects, xAOD::TStore *evtS
   nBaselineLepton_combi = nBaselineMuon_combi + nBaselineElectron_combi;
   nBaselineLepton = nBaselineMuon + nBaselineElectron;
 
-  if (m_doTruthJets)
+  if (doTruthJets)
     nTruthJets = goodTruthJets_cont->size();
+  else
+    nTruthJets = -99;
 
   nPhoton = goodPhoton_cont->size();
   eTMiss = objects->getMET() * 0.001;
