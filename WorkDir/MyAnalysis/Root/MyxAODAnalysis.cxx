@@ -895,7 +895,7 @@ EL::StatusCode MyxAODAnalysis ::execute()
       }
       //Add the truth jets to the nominal tree
       if (doTruthJets && syst.name() == "")
-        *objs->getTruthJets();
+        objs->getTruthJets();
 
       if (!isTruth)
       {

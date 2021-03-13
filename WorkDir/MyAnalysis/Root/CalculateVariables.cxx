@@ -87,8 +87,12 @@ CalculateVariables::CalculateVariables(NewObjectDef *objects, xAOD::TStore *evtS
   nBaselineLepton_combi = nBaselineMuon_combi + nBaselineElectron_combi;
   nBaselineLepton = nBaselineMuon + nBaselineElectron;
 
-  if (doTruthJets)
+  //Only get the truth jets for the nominal branch
+  if (doTruthJets && systematic == "")
+  {
     nTruthJets = goodTruthJets_cont->size();
+  }
+
   else
     nTruthJets = -99;
 
