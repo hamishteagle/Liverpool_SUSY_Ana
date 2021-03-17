@@ -71,7 +71,7 @@ CalculateVariables::CalculateVariables(NewObjectDef *objects, xAOD::TStore *evtS
   evtStore->retrieve(bJet_cont, "BJets" + systematic);
   evtStore->retrieve(nonBJet_cont, "nonBJets" + systematic);
   evtStore->retrieve(METvector_cont, "METvector" + systematic);
-  if (doTruthJets)
+  if (doTruthJets && systematic == "")
     evtStore->retrieve(goodTruthJets_cont, "goodTruthJets" + systematic);
 
   nMuon = goodMuon_cont->size();

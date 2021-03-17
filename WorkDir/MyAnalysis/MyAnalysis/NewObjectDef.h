@@ -120,6 +120,8 @@ public:
 
   std::unique_ptr<xAOD::JetContainer> goodTruthJets = nullptr;
 
+  xAOD::JetContainer *truthJets = nullptr;
+
 private:
   double MET;
   double METphi;

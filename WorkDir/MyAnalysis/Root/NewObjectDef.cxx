@@ -401,14 +401,11 @@ void NewObjectDef::GetTruthJets()
 {
   Timer::Instance()->Start("NewObjectDef::GetTruthJets");
   //Get the truth Jets a' la SUSYTools
-  const xAOD::JetContainer *truthJets(0);   //The actual truthJets go here
   xAOD::JetContainer *truthJetContainer(0); //Shallow Copies go here
-  //xAOD::ShallowAuxContainer *truthJetContainer_aux(0); //aux for the shallow copy here
 
   currentEvent->retrieve(truthJets, "AntiKt4TruthJets");
   std::pair<xAOD::JetContainer *, xAOD::ShallowAuxContainer *> shallowcopy = xAOD::shallowCopyContainer(*truthJets);
   truthJetContainer = shallowcopy.first; //shallow copy to truthJet temp container
-  //truthJetContainer_aux = shallowcopy.second; //same with aux temp container
 
   for (const auto &jet : *truthJetContainer)
   {
@@ -420,7 +417,10 @@ void NewObjectDef::GetTruthJets()
   goodTruthJets->sort(pT_TruthSorter);
   //Clean up
   //delete truthJets;
-  delete truthJetContainer;
-  Timer::Instance()->End("NewObjectDef::GetTruthJets");
+  //delete truthJetContainer;
+  delete shallowcopy.first;
+  delete shallowcopy.second;
+  Timer::Instance()
+      ->End("NewObjectDef::GetTruthJets");
   return;
 }
