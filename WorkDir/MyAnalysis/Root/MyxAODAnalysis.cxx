@@ -25,6 +25,7 @@
 #include <fstream>
 #include <TTreeFormula.h>
 #include "xAODEventInfo/EventInfo.h"
+
 #include "MyAnalysis/NewObjectDef.h"
 #include "MyAnalysis/PreliminarySel.h"
 #include "MyAnalysis/CalculateVariables.h"
@@ -131,6 +132,26 @@ EL::StatusCode MyxAODAnalysis ::fileExecute()
       {
         maxCycle = cbk->cycle();
         allEventsCBK = cbk;
+      }
+    }
+
+    // Print all the cbk and see if LHE3 weights are stored
+    bool containsLHE3Weights = false;
+    if (doSyst)
+    {
+      for (auto cbk : *completeCBC)
+      {
+        if ((TString(cbk->name())).BeginsWith("LHE3Weight_"))
+        {
+          ANA_MSG_INFO("File contains LHE weights: Initialise PMGTruthWeightTool");
+
+          containsLHE3Weights = true;
+          m_MGTruthWeightTool.setTypeAndName("PMGTools::PMGTruthWeightTool/PMGTruthWeightTool");
+          ANA_CHECK(m_MGTruthWeightTool.retrieve());
+
+          ANA_MSG_INFO("Initialised PMGTruthWeightTool");
+          break;
+        }
       }
     }
 
