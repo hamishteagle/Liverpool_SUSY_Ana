@@ -136,7 +136,7 @@ EL::StatusCode MyxAODAnalysis ::fileExecute()
     }
 
     // Print all the cbk and see if LHE3 weights are stored
-    bool containsLHE3Weights = false;
+    m_containsLHEWeights = false;
     if (doSyst)
     {
       for (auto cbk : *completeCBC)
@@ -145,11 +145,12 @@ EL::StatusCode MyxAODAnalysis ::fileExecute()
         {
           ANA_MSG_INFO("File contains LHE weights: Initialise PMGTruthWeightTool");
 
-          containsLHE3Weights = true;
-          m_MGTruthWeightTool.setTypeAndName("PMGTools::PMGTruthWeightTool/PMGTruthWeightTool");
-          ANA_CHECK(m_MGTruthWeightTool.retrieve());
+          m_containsLHEWeights = true;
+          m_TruthWeightTool.setTypeAndName("PMGTools::PMGTruthWeightTool/PMGTruthWeightTool");
+          ANA_CHECK(m_TruthWeightTool.retrieve());
 
           ANA_MSG_INFO("Initialised PMGTruthWeightTool");
+          m_treeServiceVector[0]->InitialiseLHEWeightsBranches(m_saveAllLHE, m_TruthWeightTool);
           break;
         }
       }
@@ -209,7 +210,6 @@ EL::StatusCode MyxAODAnalysis ::initialize()
   m_numMuonEvents = 0;
 
   m_fileType = wk()->metaData()->castString("sample_name");
-  m_fileName = inputFile;
 
   // GRL
   m_grl.setTypeAndName("GoodRunsListSelectionTool/grl");
@@ -363,7 +363,6 @@ EL::StatusCode MyxAODAnalysis ::initialize()
                      }),
                      systInfoList.end());
 
-  //std::vector<std::string> output_trees = {"CollectionTree_","CollectionTree_PFlow_"};
   std::vector<std::string> output_trees = {"CollectionTree_PFlow_"};
 
   for (const auto &output_tree_string : output_trees)
@@ -379,7 +378,7 @@ EL::StatusCode MyxAODAnalysis ::initialize()
       std::string treeName = output_tree_string + std::string(sys.name());
       const char *cName = treeName.c_str();
       TTree *Temp = new TTree(cName, cName);
-      TreeService *Tree_Service = new TreeService(Temp, out_TDir, RunningLocally, doSyst, doTruthJets, sys.name() == "", systInfoList_weights);
+      TreeService *Tree_Service = new TreeService(Temp, out_TDir, RunningLocally, doSyst, sys.name() == "", doTruthJets, systInfoList_weights);
       m_treeServiceVector.push_back(Tree_Service);
       Temp->Write();
     }
@@ -391,7 +390,6 @@ EL::StatusCode MyxAODAnalysis ::initialize()
   m_PMGCrossSectionTool.setName("myCrossSectionTool");
   ANA_CHECK(m_PMGCrossSectionTool.retrieve());
   m_PMGCrossSectionTool->readInfosFromDir(PMGTools_path);
-  // m_PMGCrossSectionTool->readInfosFromDir("/cvmfs/atlas.cern.ch/repo/sw/database/GroupData/dev/PMGTools/");
   return StatusCode::SUCCESS;
 }
 
@@ -920,9 +918,14 @@ EL::StatusCode MyxAODAnalysis ::execute()
 
       if (!isTruth)
       {
-        //Loop through weights systematics and write to the nominal
+        //Systematics things that we only need on the nominal (weights systematics)
         if (doSyst && syst.name() == "")
         {
+          if (m_containsLHEWeights)
+          {
+            m_treeServiceVector[isyst]->fillLHETreeWeights(m_TruthWeightTool);
+          }
+          //Loop through weights systematics and write to the nominal
           for (auto systInfo_weight : systInfoList_weights)
           {
             const CP::SystematicSet &syst_weight = systInfo_weight.systset;

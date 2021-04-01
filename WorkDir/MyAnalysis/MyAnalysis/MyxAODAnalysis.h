@@ -77,9 +77,10 @@ public:
   std::string m_fileName;
   std::string outputName;
 
-  bool m_isDerivation;  //!
-  bool m_SUSY5 = false; //!
-  bool m_SUSY7 = false; //!
+  bool m_isDerivation;               //!
+  bool m_SUSY5 = false;              //!
+  bool m_SUSY7 = false;              //!
+  bool m_containsLHEWeights = false; //!
 
   int m_eventCounter;      //!
   int m_numCleanEvents;    //!
@@ -97,6 +98,10 @@ public:
   int doPhotons;
   int doTruthJets;
   int m_doCombiLeptons;
+  bool m_saveAllLHE;
+
+  //Systematics tools
+  asg::AnaToolHandle<PMGTools::IPMGTruthWeightTool> m_TruthWeightTool; //!
 
   // these are the functions inherited from Algorithm
   virtual EL::StatusCode setupJob(EL::Job &job);
@@ -143,9 +148,6 @@ private:
   //Systematics things
   std::vector<ST::SystInfo> systInfoList;         //!
   std::vector<ST::SystInfo> systInfoList_weights; //!
-
-  //Systematics tools
-  asg::AnaToolHandle<PMGTools::IPMGTruthWeightTool> m_MGTruthWeightTool; //!
 
   TH1 *noWeightHist;             //!
   TH1 *sherpaWeightHist;         //!
