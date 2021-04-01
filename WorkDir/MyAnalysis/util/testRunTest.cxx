@@ -25,6 +25,7 @@
 std::string get_sample_name(const std::string &s);
 std::string get_file_type(const std::string &s);
 std::string get_derivation_type(const std::string &s);
+//void get_MC_type(const std::string &s); Can get the MC type if needed
 bool is_multiple_submission(const std::string &s);
 void info_message(const std::string &s);
 
@@ -48,6 +49,7 @@ int main(int argc, char *argv[])
   bool RunningWithTruthJets = false;
   bool debug = false;
   bool doCombiLeptons = false;
+  bool SavePDFVars = false;
 
   if (argv[1] != "")
     sample_path = argv[1];
@@ -88,8 +90,11 @@ int main(int argc, char *argv[])
     debug = (bool)atoi(argv[12]);
   if (argc > 13 && argv[13] != "")
     doCombiLeptons = (bool)atoi(argv[13]);
+  if (argc > 14 && argv[14] != "")
+    SavePDFVars = (bool)atoi(argv[14]);
 
   fileType = get_file_type(sample_name);
+  //get_MC_type(sample_name);
   info_message("Input path: " + sample_path);
   info_message("Sample name: " + sample_name);
   info_message("Sample type: " + fileType);
@@ -100,6 +105,8 @@ int main(int argc, char *argv[])
     info_message("Running with separate baseline lepton definitions: " + std::to_string(doCombiLeptons));
   if (RunningWithSyst)
     info_message("Systematics: True");
+  if (SavePDFVars)
+    info_message("Saving PDF LHE variations");
   if (RunningWithPhotons)
     info_message("Photons: True");
   if (!RunningLocally)
@@ -139,6 +146,7 @@ int main(int argc, char *argv[])
     alg->doPhotons = RunningWithPhotons;
     alg->doTruthJets = RunningWithTruthJets;
     alg->m_doCombiLeptons = doCombiLeptons;
+    alg->m_saveAllLHE = SavePDFVars;
     // If you want to check that the filtering is working correctly, then set this to false
     alg->RunningLocally = true;
     //alg->RunningLocally = false;
@@ -183,7 +191,7 @@ int main(int argc, char *argv[])
       sh.add(sample.release());
       sh.setMetaString("nc_tree", "CollectionTree");
       job.options()->setString(EL::Job::optSubmitFlags, "--addNthFieldOfInDSToLFN=2,3 --useContElementBoundary");
-      driver.options()->setString("nc_outputSampleName", "user." + username + "." + CurrentDate + "." + physicsName + "." + release + ".nom.Combined." + fileType + "." + release);
+      driver.options()->setString("nc_outputSampleName", "user." + username + "." + CurrentDate + "." + physicsName + "." + release + ".sys1.Combined." + fileType + "." + release);
     }
     else
     {
@@ -191,9 +199,9 @@ int main(int argc, char *argv[])
       sh.setMetaString("nc_tree", "CollectionTree");
       sh.print();
       output_name = sample_name;
-      std::string grid_output_name = "user." + username + "." + CurrentDate + "." + physicsName + "_" + fileType + "." + release + ".nom." + "%in:name[2]%.%in:name[3]%";
+      std::string grid_output_name = "user." + username + "." + CurrentDate + "." + physicsName + "_" + fileType + "." + release + ".sys1." + "%in:name[2]%.%in:name[3]%";
       std::cout << "Submitting as: " << grid_output_name << std::endl;
-      driver.options()->setString("nc_outputSampleName", "user." + username + "." + CurrentDate + "." + physicsName + "_" + fileType + "." + release + ".nom." + "%in:name[2]%.%in:name[3]%");
+      driver.options()->setString("nc_outputSampleName", "user." + username + "." + CurrentDate + "." + physicsName + "_" + fileType + "." + release + ".sys1." + "%in:name[2]%.%in:name[3]%");
     }
     // Add our analysis to the job:
     MyxAODAnalysis *alg = new MyxAODAnalysis();
@@ -210,6 +218,7 @@ int main(int argc, char *argv[])
     alg->RunningLocally = false;
     alg->doTruthJets = RunningWithTruthJets;
     alg->m_doCombiLeptons = doCombiLeptons;
+    alg->m_saveAllLHE = SavePDFVars;
     if (debug)
       alg->setMsgLevel(MSG::DEBUG);
 
@@ -337,6 +346,29 @@ std::string get_file_type(const std::string &s)
 
   return fileType;
 }
+
+// void get_MC_type(const std::string &s)
+// {
+//   size_t found_PowhegPythia = s.find("PowhegPythia");
+//   size_t found_PhPy = s.find("PhPy");
+//   if (found_PowhegPythia != std::string::npos || found_PhPy != std::string::npos)
+//   {
+//     std::cout << "This is PowhegPythia " << std::endl;
+//     isPhPy = true;
+//   }
+//   size_t found_MadGraphPythia = s.find("MadGraphPythia");
+//   if (found_MadGraphPythia != std::string::npos)
+//   {
+//     std::cout << "This is PowhegPythia " << std::endl;
+//     isMGPy = true;
+//   }
+//   size_t found_Sherpa = s.find("Sherpa");
+//   if (found_Sherpa != std::string::npos)
+//   {
+//     std::cout << "This is Sherpa" << std::endl;
+//     isSherpa = true;
+//   }
+// }
 
 bool is_multiple_submission(const std::string &s)
 {
