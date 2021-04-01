@@ -1,10 +1,13 @@
 // source file for tree service
-
+#include "MyAnalysis/MyxAODAnalysis.h"
 #include "MyAnalysis/TreeService.h"
 #include "TFile.h"
 #include <string>
 #include "xAODEgamma/Electron.h"
 #include "xAODMuon/Muon.h"
+#include <AsgTools/MessageCheck.h>
+
+using namespace asg::msgUserCode;
 
 TreeService::TreeService(TTree *outputTree, TDirectory *OutDir, bool RunningLocally, bool do_syst, bool isNominal, bool doTruthJets, std::vector<ST::SystInfo> systInfoList_weights)
 {
@@ -13,11 +16,17 @@ TreeService::TreeService(TTree *outputTree, TDirectory *OutDir, bool RunningLoca
 
   if (do_syst && isNominal)
   {
+    ANA_MSG_INFO("Setting up weight systematics branches");
     for (auto sysInfo : systInfoList_weights)
     {
       InitialiseWeightsBranches(sysInfo);
     }
   }
+
+  // if (do_syst && isNominal && contains_LHE_weights)
+  // {
+  //   InitialiseLHEWeightsBranches(saveAllLHE, TruthWeightTool);
+  // }
 
   tree->SetDirectory(OutDir);
   tree->SetAutoFlush(500);
@@ -287,6 +296,31 @@ void TreeService::InitialiseWeightsBranches(ST::SystInfo systInfo_weight)
     }
     weights_map.insert(std::pair<std::string, double>("leptonTriggerSF_" + syst_name, 1.0));
     tree->Branch(("leptonTriggerSF_" + syst_name).c_str(), &weights_map["leptonTriggerSF_" + syst_name]);
+  }
+}
+
+void TreeService::InitialiseLHEWeightsBranches(bool saveAll, asg::AnaToolHandle<PMGTools::IPMGTruthWeightTool> TruthWeightTool)
+{
+  ANA_MSG_INFO("Setting up LHE weights branches");
+  if (saveAll)
+  {
+    for (auto name : TruthWeightTool->getWeightNames())
+    {
+      std::cout << "Saving weight:" << name << std::endl;
+      LHEWeightsMap.insert(std::pair<std::string, double>(name, -99.0));
+      tree->Branch(("LHE_" + name).c_str(), &LHEWeightsMap[name]);
+    }
+  }
+  else
+  {
+    for (auto name : TruthWeightTool->getWeightNames())
+    { //Skip the weights that have muR and muF equal to 1 as these are pdf variations \\Sherpa, \\PowhegPythia, \\Madgraph
+      if (name.find("MUR1_MUF1") != std::string::npos || name.find("PDF set") != std::string::npos || name.find("muR=0.10000E+01 muF=0.10000E+01") != std::string::npos)
+        continue;
+      std::cout << "Saving weight:" << name << std::endl;
+      LHEWeightsMap.insert(std::pair<std::string, double>(name, -99.0));
+      tree->Branch(("LHE_" + name).c_str(), &LHEWeightsMap[name]);
+    }
   }
 }
 
@@ -774,6 +808,13 @@ void TreeService::fillTreeWeights(NewObjectDef *objects, double puWgt, double le
   }
 }
 
+void TreeService::fillLHETreeWeights(asg::AnaToolHandle<PMGTools::IPMGTruthWeightTool> TruthWeightTool)
+{
+  for (auto &pair : LHEWeightsMap)
+  {
+    LHEWeightsMap[pair.first] = TruthWeightTool->getWeight(pair.first);
+  }
+}
 void TreeService::writeTree()
 {
 

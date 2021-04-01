@@ -13,6 +13,10 @@
 #include <EventLoopAlgs/NTupleSvc.h>
 #include <vector>
 
+//Includes for LHE weights
+#include "AsgTools/AnaToolHandle.h"
+#include "PMGAnalysisInterfaces/IPMGTruthWeightTool.h"
+
 class TreeService
 
 {
@@ -22,7 +26,11 @@ public:
 
   void InitialiseWeightsBranches(ST::SystInfo systInfo_weight);
 
+  void InitialiseLHEWeightsBranches(bool saveAll, asg::AnaToolHandle<PMGTools::IPMGTruthWeightTool> TruthWeightTool);
+
   void fillTreeWeights(NewObjectDef *objects, double puWgt, double leptonTriggerSF, ST::SystInfo systInfo_weight);
+
+  void fillLHETreeWeights(asg::AnaToolHandle<PMGTools::IPMGTruthWeightTool> TruthWeightTool);
 
   void fillTree(NewObjectDef *objects, xAOD::TStore *evtStore, PreliminarySel &region, CalculateVariables &variables, double mFinalWeight, double mInitialWeight, double puWeight, double SFmCTbbll, bool TrigMET, bool TrigMu, bool TrigEl, bool TrigDilep, bool TrigGamma, bool Trig6j, std::vector<std::string> muon_triggers, std::vector<int> muon_decisions, std::vector<std::string> electron_triggers, std::vector<int> electron_decisions, std::vector<std::string> dilepton_triggers, std::vector<int> dilepton_decisions, double LeptonTriggerSF, double puSumWeights, double TRUTHMET, double TRUTHHT, bool CoreFlags, bool SCTFlag, bool LArFlag, bool tileFlag, bool passGRL, bool passedPrimVertex, bool passedJetClean, bool passedCosmicMu, bool passedMuonClean, bool passedCrackVeto, double RNo, double RenormedMCWgt, int LumiYear, double m_averageIntPerCrossing, double m_actualIntPerCrossing, double m_xsec, double m_filteff, double m_kfactor);
 
@@ -34,6 +42,7 @@ public:
   TTree *tree;
   //Nominal Weights variables
   std::map<std::string, double> weights_map;
+  std::map<std::string, double> LHEWeightsMap;
   // General Variables
 
   double mcID;
@@ -431,16 +440,6 @@ public:
   double Weight;
   double MEWeight;
   double WeightNormalisation;
-  double NTrials;
-  double MUR0p5_MUF0p5_PDF261000;
-  double MUR0p5_MUF1_PDF261000;
-  double MUR1_MUF0p5_PDF261000;
-  double MUR1_MUF1_PDF261000;
-  double MUR1_MUF2_PDF261000;
-  double MUR2_MUF1_PDF261000;
-  double MUR2_MUF2_PDF261000;
-  double MUR1_MUF1_PDF261001;
-  double MUR1_MUF1_PDF261002;
 
   double maxDR;
   double InvMass_Bij_maxDR;
