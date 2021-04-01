@@ -9,6 +9,10 @@
 
 using namespace asg::msgUserCode;
 
+//Functions for cleaining up names
+bool replace(std::string &str, const std::string &from, const std::string &to);
+void replaceAll(std::string &str, const std::string &from, const std::string &to);
+
 TreeService::TreeService(TTree *outputTree, TDirectory *OutDir, bool RunningLocally, bool do_syst, bool isNominal, bool doTruthJets, std::vector<ST::SystInfo> systInfoList_weights)
 {
 
@@ -302,25 +306,21 @@ void TreeService::InitialiseWeightsBranches(ST::SystInfo systInfo_weight)
 void TreeService::InitialiseLHEWeightsBranches(bool saveAll, asg::AnaToolHandle<PMGTools::IPMGTruthWeightTool> TruthWeightTool)
 {
   ANA_MSG_INFO("Setting up LHE weights branches");
-  if (saveAll)
-  {
-    for (auto name : TruthWeightTool->getWeightNames())
-    {
-      std::cout << "Saving weight:" << name << std::endl;
-      LHEWeightsMap.insert(std::pair<std::string, double>(name, -99.0));
-      tree->Branch(("LHE_" + name).c_str(), &LHEWeightsMap[name]);
-    }
-  }
-  else
-  {
-    for (auto name : TruthWeightTool->getWeightNames())
-    { //Skip the weights that have muR and muF equal to 1 as these are pdf variations \\Sherpa, \\PowhegPythia, \\Madgraph
-      if (name.find("MUR1_MUF1") != std::string::npos || name.find("PDF set") != std::string::npos || name.find("muR=0.10000E+01 muF=0.10000E+01") != std::string::npos)
-        continue;
-      std::cout << "Saving weight:" << name << std::endl;
-      LHEWeightsMap.insert(std::pair<std::string, double>(name, -99.0));
-      tree->Branch(("LHE_" + name).c_str(), &LHEWeightsMap[name]);
-    }
+  for (auto name : TruthWeightTool->getWeightNames())
+  { //Skip the weights that have muR and muF equal to 1 as these are pdf variations \\Sherpa, \\PowhegPythia, \\Madgraph
+    if (!saveAll && (name.find("MUR1_MUF1") != std::string::npos || name.find("PDF set") != std::string::npos || name.find("muR=0.10000E+01 muF=0.10000E+01") != std::string::npos))
+      continue;
+    if (LHEWeightsMap.find(name) != LHEWeightsMap.end())
+      continue;
+    LHEWeightsMap.insert(std::pair<std::string, double>(name, -99.0));
+
+    //Clean up the name for storing the branch
+    std::string branch_name = name;
+    replaceAll(branch_name, " ", "");
+    replaceAll(branch_name, "=", "_");
+    replaceAll(branch_name, ":", "_");
+    std::cout << "Saving weight:" << name << " as:  LHE_" << branch_name << std::endl;
+    tree->Branch(("LHE_" + branch_name).c_str(), &LHEWeightsMap[name]);
   }
 }
 
@@ -822,4 +822,23 @@ void TreeService::writeTree()
   tree->Write();
 
   //std::cout << "Tree name:" + std::string(tree->GetName()) << std::endl;
+}
+bool replace(std::string &str, const std::string &from, const std::string &to)
+{
+  size_t start_pos = str.find(from);
+  if (start_pos == std::string::npos)
+    return false;
+  str.replace(start_pos, from.length(), to);
+  return true;
+}
+void replaceAll(std::string &str, const std::string &from, const std::string &to)
+{
+  if (from.empty())
+    return;
+  size_t start_pos = 0;
+  while ((start_pos = str.find(from, start_pos)) != std::string::npos)
+  {
+    str.replace(start_pos, from.length(), to);
+    start_pos += to.length(); // In case 'to' contains 'from', like replacing 'x' with 'yx'
+  }
 }
