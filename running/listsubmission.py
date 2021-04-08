@@ -18,10 +18,14 @@ class listsubmission:
         parser.add_argument('-d','--debug', dest = 'debug', action='store_true', default= False)
         parser.add_argument( '--nFilesPerJob', dest = 'nFilesPerJob',type = str, default = "5")
         parser.add_argument('--doCombiLeptons', dest = 'doCombiLeptons', action='store_true', default= True)
+        parser.add_argument('--doTruthJets', dest = 'doTruthJets', action='store_true', default= False)
+        parser.add_argument('--savePDFVars', dest = 'savePDFVars',type = int, default = 0)
         args = parser.parse_args()
 
         doMultiSubmit= args.doMultiSubmit
         doSystematics= args.doSystematics
+        doTruthJets = args.doTruthJets
+        savePDFVars = args.savePDFVars
         if args.doSystematics:
             print("True")
         if (not doMultiSubmit):
@@ -37,11 +41,11 @@ class listsubmission:
                     exit("Something wrong with this submission name: "+line)
                 line = line.strip('\n')
                 if "ttbar" in line: args.nFilesPerJob="1"
-                command = 'python newsubmit.py -i ' + line + ' -s ' + line.split('.')[1]+MCrun + ' -l 0' +' --type '+str(args.PhysicsName) +' --syst '+str(int(doSystematics))+' --nFilesPerJob '+args.nFilesPerJob
+                command = 'python newsubmit.py -i ' + line + ' -s ' + line.split('.')[1]+MCrun + ' -l 0' +' --type '+str(args.PhysicsName) +' --syst '+str(int(doSystematics))+' --nFilesPerJob '+args.nFilesPerJob + ' --doTruthJets '+ str(int(doTruthJets)) + ' --savePDFVars ' +str(int(savePDFVars))
                 print str(command)
                 os.system(command)
         else:
-            command = 'python newsubmit.py -i ' + args.input_file + ' -s ' + args.input_file.split('.')[0] + ' -l 0' +' --type '+str(args.PhysicsName)+' --syst '+str(doSystematics)
+            command = 'python newsubmit.py -i ' + args.input_file + ' -s ' + args.input_file.split('.')[0] + ' -l 0' +' --type '+str(args.PhysicsName)+' --syst '+str(doSystematics) + ' --doTruthJets '+ str(int(doTruthJets)) + ' --savePDFVars ' +str(int(savePDFVars))
             print str(command)
             os.system(command)
 
