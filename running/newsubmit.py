@@ -25,6 +25,7 @@ class submit:
         parser.add_argument('--nFilesPerJob', dest = 'nFilesPerJob', type = str, default= "5")
         parser.add_argument('-d','--debug', dest = 'debug', action='store_true', default= False)
         parser.add_argument('--doCombiLeptons', dest = 'doCombiLeptons', action='store_true', default= True)
+        parser.add_argument("--savePDFVars", dest='savePDFVars', type=int , default=0)
         args = parser.parse_args()
 
 
@@ -39,6 +40,7 @@ class submit:
         local     = int(args.local)
         PhysicsName = str(args.PhysicsName)
         doTruthJets = int(args.doTruthJets)
+        savePDFVars = int(args.savePDFVars)
         #Get the release directly from asetup (you will need to change the path to the build dir)
         release_string = os.popen('(cd '+current_path.replace('running','build')+' &&  source $AtlasSetup/scripts/asetup.sh $@ --printLast)').read()
         pos=release_string.find('Base/')
@@ -109,6 +111,9 @@ class submit:
         command += ' '
         command += str(doCombiLeptons)
         command_attributes+="doCombiLeptons, "
+        command += ' '
+        command += str(savePDFVars)
+        command_attributes+="savePDFVars, "
         print(str(command_attributes))
         print str(command)
         os.system(command)
