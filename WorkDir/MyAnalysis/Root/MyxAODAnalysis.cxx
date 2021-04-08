@@ -136,8 +136,8 @@ EL::StatusCode MyxAODAnalysis ::fileExecute()
     }
 
     // Print all the cbk and see if LHE3 weights are stored
-    m_containsLHEWeights = false;
-    if (doSyst)
+    // If the LHE weights have already been found, don't do this step (will duplicate setting up branches)
+    if (doSyst && !m_containsLHEWeights)
     {
       for (auto cbk : *completeCBC)
       {
@@ -242,6 +242,7 @@ EL::StatusCode MyxAODAnalysis ::initialize()
   bool isMC16a = (periodNumber == 284500);
   bool isMC16d = (periodNumber == 300000);
   bool isMC16e = (periodNumber == 310000);
+  m_containsLHEWeights = false;
 
   if (isMC16a)
   {
