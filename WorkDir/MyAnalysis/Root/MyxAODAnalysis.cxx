@@ -218,7 +218,7 @@ EL::StatusCode MyxAODAnalysis ::initialize()
   std::string fullGRLFilePath15 = PathResolverFindCalibFile("GoodRunsLists/data15_13TeV/20170619/physics_25ns_21.0.19.xml");
   std::string fullGRLFilePath16 = PathResolverFindCalibFile("GoodRunsLists/data16_13TeV/20180129/physics_25ns_21.0.19.xml");
   std::string fullGRLFilePath17 = PathResolverFindCalibFile("GoodRunsLists/data17_13TeV/20180619/physics_25ns_Triggerno17e33prim.xml");
-  std::string fullGRLFilePath18 = PathResolverFindCalibFile("GoodRunsLists/data18_13TeV/20190219/physics_25ns_Triggerno17e33prim.xml");
+  std::string fullGRLFilePath18 = PathResolverFindCalibFile("GoodRunsLists/data18_13TeV/20190318/physics_25ns_Triggerno17e33prim.xml");
 
   std::vector<std::string> vecStringGRL;
 
@@ -255,7 +255,7 @@ EL::StatusCode MyxAODAnalysis ::initialize()
   }
   if (isMC16e)
   {
-    lumicalcFiles.push_back(PathResolverFindCalibFile("GoodRunsLists/data18_13TeV/20190219/ilumicalc_histograms_None_348885-364292_OflLumi-13TeV-010.root"));
+    lumicalcFiles.push_back(PathResolverFindCalibFile("GoodRunsLists/data18_13TeV/20190318/ilumicalc_histograms_None_348885-364292_OflLumi-13TeV-010.root"));
   }
 
   //Initialise the nominal SUSYTools instance->We use this to get the metadata
@@ -576,7 +576,6 @@ EL::StatusCode MyxAODAnalysis ::execute()
 
       if (!isMC)
       {
-
         if (!(m_grl->passRunLB(*eventInfo)))
         {
           passGRL = false;
@@ -888,7 +887,7 @@ EL::StatusCode MyxAODAnalysis ::execute()
 
       //All cleaning cuts before trigger
       bool passedCleaningCuts = false;
-      if (coreFlag && sctFlag && LArFlag && tileFlag && passedPrimVertex && passedJetClean && passedCosmicMu && passedMuonClean)
+      if (coreFlag && sctFlag && LArFlag && tileFlag && passedPrimVertex && passedJetClean && passedCosmicMu && passedMuonClean && passGRL)
       {
         passedCleaningCuts = true;
       }
@@ -947,7 +946,7 @@ EL::StatusCode MyxAODAnalysis ::execute()
             (m_treeServiceVector[isyst])->fillTreeWeights(objs.get(), puWgt_sys, leptonTriggerSF, systInfo_weight);
           }
         }
-        (m_treeServiceVector[isyst])->fillTree(objs.get(), store, *m_regions, *m_varCalc, m_finalSumOfWeights, m_initialSumOfWeights, puWgt, SFmctbbll, passedMETTrigger, passedSingleMuTrigger, passedSingleElTrigger, passedDiLeptonTrigger, passedGammaTrigger, passedMultiJetTrigger, muon_triggers, muon_decisions, electron_triggers, electron_decisions, dilepton_triggers, dilepton_decisions, leptonTriggerSF, PUSumOfWeights, truthfilt_MET, truthfilt_HT, coreFlag, sctFlag, LArFlag, tileFlag, passGRL, passedPrimVertex, passedJetClean, passedCosmicMu, passedMuonClean, passedCrackVeto, m_runNumber, renormedMcWgt, year, m_averageIntPerX, m_actualIntPerX, xsec, filteff, kfactor);
+        (m_treeServiceVector[isyst])->fillTree(objs.get(), store, *m_regions, *m_varCalc, m_finalSumOfWeights, m_initialSumOfWeights, puWgt, SFmctbbll, passedMETTrigger, passedSingleMuTrigger, passedSingleElTrigger, passedDiLeptonTrigger, passedGammaTrigger, passedMultiJetTrigger, muon_triggers, muon_decisions, electron_triggers, electron_decisions, dilepton_triggers, dilepton_decisions, leptonTriggerSF, PUSumOfWeights, truthfilt_MET, truthfilt_HT, coreFlag, sctFlag, LArFlag, tileFlag, passGRL, passedPrimVertex, passedJetClean, passedCosmicMu, passedMuonClean, passedCrackVeto, passedCleaningCuts, m_runNumber, renormedMcWgt, year, m_averageIntPerX, m_actualIntPerX, xsec, filteff, kfactor);
         store->clear();
         objs.reset();
       }
