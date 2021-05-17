@@ -31,6 +31,8 @@ class listsubmission:
         if (not doMultiSubmit):
             sample_list = open(args.input_file)
             for line in sample_list:
+                if line.startswith("#"):
+                    continue
                 if "_r9364" in line:
                     MCrun = "MC16a"
                 elif "_r10201" in line:
